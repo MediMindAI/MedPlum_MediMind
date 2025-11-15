@@ -1,0 +1,182 @@
+/**
+ * TopNavBar Component Styles
+ *
+ * Horizontal navigation bar at the very top of the EMR layout (Row 1)
+ * - Gray background with subtle shadow
+ * - Left-aligned navigation items
+ * - Right-aligned user menu
+ * - Hover effects and transitions
+ */
+
+.topNavBar {
+  /* Layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  /* Sizing */
+  height: var(--emr-topnav-height);
+  width: 100%;
+
+  /* Background and visual styling - Gray background for TopNavBar (Row 1) */
+  background: var(--emr-topnav-bg);
+  border-bottom: 1px solid var(--emr-border-color);
+  box-shadow: var(--emr-shadow-sm);
+
+  /* Spacing */
+  padding: 0 20px;
+
+  /* Position at top */
+  position: relative;
+  z-index: var(--emr-z-topnav);
+}
+
+/* Left navigation container */
+.leftNav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+}
+
+/* Right navigation container */
+.rightNav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px; /* Increased gap to accommodate language selector */
+}
+
+/* Navigation item button styling */
+.navItem {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Spacing */
+  padding: 0 16px;
+  height: 40px;
+
+  /* Typography */
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--emr-text-primary);
+  white-space: nowrap;
+
+  /* Visual styling */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  /* Transitions */
+  transition: all 0.2s ease-in-out;
+
+  /* Prevent text selection */
+  user-select: none;
+}
+
+/* Hover state for navigation items */
+.navItem:hover {
+  background-color: var(--emr-gray-100);
+  color: var(--emr-gray-900);
+}
+
+/* User menu button styling - Match Medplum's style */
+.userButton {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  /* Spacing */
+  padding: 6px 12px;
+  height: 36px;
+  min-width: 120px;
+
+  /* Typography */
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--emr-text-primary);
+  white-space: nowrap;
+
+  /* Visual styling - Clean button like Medplum */
+  background-color: var(--emr-gray-50);
+  border: 1px solid var(--emr-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+
+  /* Transitions */
+  transition: all 0.15s ease;
+
+  /* Prevent text selection */
+  user-select: none;
+}
+
+/* Hover state for user button */
+.userButton:hover {
+  background-color: var(--emr-gray-100);
+  border-color: var(--emr-gray-300);
+  box-shadow: var(--emr-shadow-sm);
+}
+
+/* Focus styles for accessibility */
+.navItem:focus-visible,
+.userButton:focus-visible {
+  outline: 2px solid var(--emr-accent);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* Georgian text rendering support */
+.navItem,
+.userButton {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Georgian', 'Noto Sans', sans-serif;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .topNavBar {
+    padding: 0 8px;
+  }
+
+  .navItem {
+    font-size: 13px;
+    padding: 0 12px;
+  }
+
+  .userButton {
+    font-size: 13px;
+    padding: 0 12px;
+  }
+}
+
+/* Dark mode support (if enabled in the future) */
+@media (prefers-color-scheme: dark) {
+  .topNavBar {
+    background: var(--emr-gray-800);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .navItem {
+    color: var(--emr-gray-300);
+  }
+
+  .navItem:hover {
+    background-color: var(--emr-gray-700);
+    color: var(--emr-gray-100);
+  }
+
+  .userButton {
+    background-color: var(--emr-gray-700);
+    border-color: var(--emr-gray-600);
+    color: var(--emr-gray-300);
+  }
+
+  .userButton:hover {
+    background-color: var(--emr-gray-600);
+    border-color: var(--emr-gray-500);
+  }
+}

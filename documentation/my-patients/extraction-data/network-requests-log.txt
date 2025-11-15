@@ -1,0 +1,103 @@
+NETWORK REQUESTS LOG - My Patients Page
+==========================================
+
+Extraction Date: [PENDING]
+Page URL: http://178.134.21.82:8008/index.php
+Navigation: პაციენტის ისტორია >> ჩემი პაციენტები
+
+==========================================
+1. INITIAL PAGE LOAD
+==========================================
+
+Request URL: [TO BE EXTRACTED]
+HTTP Method: [GET/POST]
+Headers:
+  [TO BE EXTRACTED]
+
+Parameters:
+  [TO BE EXTRACTED]
+
+Response:
+  Status Code: [200/etc]
+  Content-Type: [text/html/application/json]
+
+Response Body (snippet):
+  [TO BE EXTRACTED]
+
+==========================================
+2. SEARCH/FILTER REQUEST (No filters)
+==========================================
+
+Request URL: [TO BE EXTRACTED]
+HTTP Method: [GET/POST]
+Headers:
+  [TO BE EXTRACTED]
+
+Parameters:
+  doctor: [value or empty]
+  department: [value or empty]
+  transferred: [0/1 or empty]
+  registration_number: [value or empty]
+
+Response:
+  Status Code: [200/etc]
+  Content-Type: [application/json/text/html]
+
+Response Body (snippet):
+  [TO BE EXTRACTED]
+
+==========================================
+3. SEARCH WITH DOCTOR FILTER
+==========================================
+
+Request URL: [TO BE EXTRACTED]
+HTTP Method: [GET/POST]
+
+Parameters:
+  doctor: [specific doctor ID]
+  [other parameters]
+
+Response:
+  [TO BE EXTRACTED]
+
+==========================================
+4. SEARCH WITH TRANSFERRED CHECKBOX
+==========================================
+
+Request URL: [TO BE EXTRACTED]
+HTTP Method: [GET/POST]
+
+Parameters:
+  transferred: [1/true/yes - document exact value]
+  [other parameters]
+
+Response:
+  [TO BE EXTRACTED]
+
+Notes on "Transferred" behavior:
+  [Document what changes in the results]
+  [Does it filter for patients transferred FROM or TO?]
+
+==========================================
+5. OTHER REQUESTS (AJAX, etc.)
+==========================================
+
+[Document any additional XHR/Fetch requests]
+[Include autocomplete, validation, etc.]
+
+==========================================
+OBSERVATIONS
+==========================================
+
+API Endpoint Pattern: [e.g., /api/patients/search.php]
+Authentication: [Cookie/Session/Token - document method]
+Data Format: [JSON/Form-encoded/XML]
+Error Handling: [How does API respond to errors?]
+
+==========================================
+NOTES
+==========================================
+
+[Add any observations about API behavior]
+[Note any inconsistencies or special cases]
+[Document rate limiting or pagination]

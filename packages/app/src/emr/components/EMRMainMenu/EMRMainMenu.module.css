@@ -1,0 +1,139 @@
+/**
+ * EMR Main Menu Component Styles
+ *
+ * Provides horizontal layout for 6 main menu items with active states
+ * - Horizontal arrangement of menu items
+ * - Clear visual feedback for active/inactive states
+ * - Hover effects for better UX
+ * - Consistent with EMR UI design system
+ */
+
+.mainMenu {
+  /* Horizontal layout */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+
+  /* Spacing and sizing */
+  height: var(--emr-mainmenu-height);
+  padding: 0 16px;
+  width: 100%;
+
+  /* Background and border */
+  background-color: var(--emr-mainmenu-bg);
+  border-bottom: 1px solid var(--emr-border-color);
+}
+
+/* Menu item button styling */
+.menuItem {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Spacing */
+  padding: 10px 20px;
+  margin: 0;
+
+  /* Typography */
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--emr-gray-500);
+  text-align: center;
+  white-space: nowrap;
+
+  /* Visual styling */
+  background-color: transparent;
+  border: none;
+  border-radius: var(--emr-border-radius);
+  cursor: pointer;
+
+  /* Transitions */
+  transition: var(--emr-transition-base);
+
+  /* Prevent text selection */
+  user-select: none;
+}
+
+/* Hover state for inactive menu items */
+.menuItem:hover:not(.active) {
+  background-color: var(--emr-light-accent);
+  color: var(--emr-text-primary);
+}
+
+/* Active menu item styling */
+.menuItem.active {
+  background: var(--emr-gradient-primary);
+  color: var(--emr-text-inverse);
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Active menu item hover - slightly enhanced gradient */
+.menuItem.active:hover {
+  background: var(--emr-gradient-secondary);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Focus styles for accessibility */
+.menuItem:focus-visible {
+  outline: 2px solid var(--emr-accent);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* Active focus state */
+.menuItem.active:focus-visible {
+  outline-color: var(--emr-text-inverse);
+}
+
+/* Georgian text rendering support */
+.menuItem {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Georgian', 'Noto Sans', sans-serif;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1024px) {
+  .menuItem {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mainMenu {
+    gap: 2px;
+    padding: 6px 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .menuItem {
+    font-size: 13px;
+    padding: 7px 12px;
+    flex-shrink: 0;
+  }
+}
+
+/* Dark mode disabled - keeping the menu always white like original Medplum */
+/* @media (prefers-color-scheme: dark) {
+  .mainMenu {
+    background-color: var(--mantine-color-dark-7);
+    border-bottom-color: var(--mantine-color-dark-5);
+  }
+
+  .menuItem {
+    color: var(--mantine-color-gray-4);
+  }
+
+  .menuItem:hover:not(.active) {
+    background-color: var(--mantine-color-dark-6);
+    color: var(--mantine-color-gray-2);
+  }
+
+  .menuItem.active {
+    background-color: var(--mantine-color-blue-6);
+    color: var(--mantine-color-white);
+  }
+} */

@@ -1,0 +1,143 @@
+/**
+ * EMR Sub-Menu Component Styles
+ *
+ * Provides vertical sidebar layout for sub-menu items with active states
+ * - Vertical arrangement of sub-menu items
+ * - Clear visual feedback for active/inactive states
+ * - Hover effects for better UX
+ * - Consistent with EMR UI design system
+ */
+
+.subMenu {
+  /* Vertical layout */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  /* Spacing and sizing */
+  padding: 12px 8px;
+  width: 240px;
+  min-height: 100%;
+
+  /* Background and border */
+  background-color: var(--mantine-color-gray-0);
+  border-right: 1px solid var(--mantine-color-gray-3);
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Sub-menu item button styling */
+.subMenuItem {
+  /* Layout */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  /* Spacing */
+  padding: 10px 16px;
+  margin: 0;
+  width: 100%;
+
+  /* Typography */
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mantine-color-gray-7);
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* Visual styling */
+  background-color: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  /* Transitions */
+  transition: all 0.2s ease-in-out;
+
+  /* Prevent text selection */
+  user-select: none;
+}
+
+/* Hover state for inactive sub-menu items */
+.subMenuItem:hover:not(.active) {
+  background-color: var(--mantine-color-gray-2);
+  color: var(--mantine-color-gray-9);
+}
+
+/* Active sub-menu item styling */
+.subMenuItem.active {
+  background-color: var(--mantine-color-blue-6);
+  color: var(--mantine-color-white);
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Active sub-menu item hover - slightly lighter */
+.subMenuItem.active:hover {
+  background-color: var(--mantine-color-blue-7);
+}
+
+/* Focus styles for accessibility */
+.subMenuItem:focus-visible {
+  outline: 2px solid var(--mantine-color-blue-5);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+/* Active focus state */
+.subMenuItem.active:focus-visible {
+  outline-color: var(--mantine-color-white);
+}
+
+/* Georgian text rendering support */
+.subMenuItem {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Georgian', 'Noto Sans', sans-serif;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1024px) {
+  .subMenu {
+    width: 200px;
+    padding: 10px 6px;
+  }
+
+  .subMenuItem {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .subMenu {
+    width: 180px;
+    padding: 8px 4px;
+  }
+
+  .subMenuItem {
+    font-size: 12px;
+    padding: 7px 10px;
+  }
+}
+
+/* Dark mode support (if enabled in the future) */
+@media (prefers-color-scheme: dark) {
+  .subMenu {
+    background-color: var(--mantine-color-dark-7);
+    border-right-color: var(--mantine-color-dark-5);
+  }
+
+  .subMenuItem {
+    color: var(--mantine-color-gray-4);
+  }
+
+  .subMenuItem:hover:not(.active) {
+    background-color: var(--mantine-color-dark-6);
+    color: var(--mantine-color-gray-2);
+  }
+
+  .subMenuItem.active {
+    background-color: var(--mantine-color-blue-6);
+    color: var(--mantine-color-white);
+  }
+}

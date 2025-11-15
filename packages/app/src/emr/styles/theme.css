@@ -1,0 +1,197 @@
+/* EMR Theme - CSS Custom Properties */
+/* This theme system provides consistent colors, gradients, and dimensions across the EMR UI */
+
+:root {
+  /* ==================== CORE COLORS ==================== */
+  /* Primary blue palette - used for main navigation and primary actions */
+  --emr-primary: #1a365d;
+  --emr-secondary: #2b6cb0;
+  --emr-accent: #63b3ed;
+  --emr-light-accent: #bee3f8;
+
+  /* Light blue palette - used for sub-menu tabs (changed from turquoise) */
+  --emr-turquoise: #63b3ed; /* Now using accent blue */
+  --emr-turquoise-light: #bee3f8; /* Now using light accent blue */
+  --emr-turquoise-dark: #3182ce; /* Now using medium blue */
+
+  /* Neutral colors */
+  --emr-gray-50: #f9fafb;
+  --emr-gray-100: #f3f4f6;
+  --emr-gray-200: #e5e7eb;
+  --emr-gray-300: #d1d5db;
+  --emr-gray-400: #9ca3af;
+  --emr-gray-500: #6b7280;
+  --emr-gray-600: #4b5563;
+  --emr-gray-700: #374151;
+  --emr-gray-800: #1f2937;
+  --emr-gray-900: #111827;
+
+  /* Text colors */
+  --emr-text-primary: #1f2937;
+  --emr-text-secondary: #6b7280;
+  --emr-text-inverse: #ffffff;
+
+  /* ==================== SEMANTIC COLORS ==================== */
+  /* Special purpose colors for UI feedback and highlighting */
+  --emr-highlight-search: #c6efce; /* Light green for search match highlighting */
+  --emr-section-header-bg: #f8f9fa; /* Section header background (lighter than gray-50) */
+  --emr-error-bg: #fff3f3; /* Error message background */
+  --emr-error-text: #c92a2a; /* Error message text */
+
+  /* ==================== COLLAPSIBLE SECTION COLORS ==================== */
+  /* Color-coded accents for different collapsible section types */
+  --emr-section-personal: #2b6cb0; /* Blue accent for personal information sections */
+  --emr-section-contact: #17a2b8; /* Turquoise accent for contact information sections */
+  --emr-section-additional: #63b3ed; /* Light blue accent for additional details sections */
+  --emr-section-hover-bg: rgba(99, 179, 237, 0.05); /* Light blue hover background */
+  --emr-section-active-bg: rgba(99, 179, 237, 0.08); /* Light blue active background */
+
+  /* ==================== NAVIGATION BACKGROUNDS ==================== */
+  --emr-topnav-bg: #e9ecef;
+  --emr-mainmenu-bg: #ffffff;
+  --emr-submenu-bg: #63b3ed; /* Light blue instead of turquoise */
+
+  /* ==================== GRADIENTS ==================== */
+  /* Primary blue gradient - used for active main menu items and action buttons */
+  --emr-gradient-primary: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%);
+
+  /* Secondary gradient - lighter blue for hover states */
+  --emr-gradient-secondary: linear-gradient(135deg, #2b6cb0 0%, #3182ce 50%, #63b3ed 100%);
+
+  /* Light blue gradient - used for sub-menu horizontal tabs (changed from turquoise) */
+  --emr-gradient-submenu: linear-gradient(90deg, #2b6cb0 0%, #3182ce 50%, #63b3ed 100%);
+
+  /* ==================== LAYOUT DIMENSIONS ==================== */
+  --emr-topnav-height: 40px;
+  --emr-mainmenu-height: 50px;
+  --emr-submenu-height: 45px;
+  --emr-content-padding: 24px;
+
+  /* ==================== SHADOWS ==================== */
+  --emr-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --emr-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --emr-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --emr-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* ==================== BORDERS ==================== */
+  --emr-border-radius: 6px;
+  --emr-border-radius-sm: 4px;
+  --emr-border-radius-lg: 8px;
+  --emr-border-color: #e5e7eb;
+
+  /* ==================== TRANSITIONS ==================== */
+  --emr-transition-fast: 0.15s ease;
+  --emr-transition-base: 0.2s ease;
+  --emr-transition-slow: 0.3s ease;
+
+  /* ==================== SPACING ==================== */
+  --emr-spacing-xs: 4px;
+  --emr-spacing-sm: 8px;
+  --emr-spacing-md: 12px;
+  --emr-spacing-lg: 16px;
+  --emr-spacing-xl: 20px;
+  --emr-spacing-2xl: 24px;
+
+  /* ==================== Z-INDEX LAYERS ==================== */
+  --emr-z-topnav: 1000;
+  --emr-z-mainmenu: 999;
+  --emr-z-submenu: 998;
+  --emr-z-action-buttons: 997;
+  --emr-z-dropdown: 1001;
+
+  /* ==================== RESPONSIVE BREAKPOINTS ==================== */
+  --emr-mobile-breakpoint: 768px;
+  --emr-tablet-breakpoint: 1024px;
+  --emr-desktop-breakpoint: 1440px;
+}
+
+/* ==================== FONT FAMILIES ==================== */
+/* Ensure Georgian characters are supported */
+body {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    'Noto Sans',
+    'Noto Sans Georgian',
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol';
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+.emr-text-gradient {
+  background: var(--emr-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.emr-bg-gradient-primary {
+  background: var(--emr-gradient-primary);
+}
+
+.emr-bg-gradient-secondary {
+  background: var(--emr-gradient-secondary);
+}
+
+.emr-bg-gradient-submenu {
+  background: var(--emr-gradient-submenu);
+}
+
+.emr-shadow-sm {
+  box-shadow: var(--emr-shadow-sm);
+}
+
+.emr-shadow-md {
+  box-shadow: var(--emr-shadow-md);
+}
+
+.emr-shadow-lg {
+  box-shadow: var(--emr-shadow-lg);
+}
+
+.emr-shadow-xl {
+  box-shadow: var(--emr-shadow-xl);
+}
+
+/* ==================== FOCUS STATES ==================== */
+.emr-focus-visible:focus-visible {
+  outline: 2px solid var(--emr-accent);
+  outline-offset: 2px;
+}
+
+/* ==================== SCROLLBAR STYLING ==================== */
+/* Custom scrollbar for EMR components */
+.emr-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.emr-scrollbar::-webkit-scrollbar-track {
+  background: var(--emr-gray-100);
+  border-radius: var(--emr-border-radius-sm);
+}
+
+.emr-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--emr-gray-400);
+  border-radius: var(--emr-border-radius-sm);
+}
+
+.emr-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--emr-gray-500);
+}
+
+/* Hide scrollbar but keep functionality */
+.emr-scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.emr-scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}

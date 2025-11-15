@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "supabase_medimind_expert": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "sbp_a1ec55956577fedbde2561bfc49f24479a5cd533"
+      ],
+      "env": {}
+    }
+  }
+}

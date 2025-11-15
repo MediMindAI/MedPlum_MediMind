@@ -1,0 +1,221 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EMR Translation File Schema",
+  "description": "JSON Schema for validating EMR translation files (ka.json, en.json, ru.json)",
+  "type": "object",
+  "required": [
+    "menu.registration",
+    "menu.patientHistory",
+    "menu.nomenclature",
+    "menu.administration",
+    "menu.forward",
+    "menu.reports",
+    "submenu.registration.registration",
+    "submenu.registration.receiver",
+    "submenu.registration.contracts",
+    "submenu.registration.inpatient",
+    "submenu.registration.debts",
+    "submenu.registration.advances",
+    "submenu.registration.archive",
+    "submenu.registration.referrals",
+    "submenu.registration.currency",
+    "submenu.patientHistory.history",
+    "submenu.patientHistory.myPatients",
+    "submenu.patientHistory.surrogacy",
+    "submenu.patientHistory.invoices",
+    "submenu.patientHistory.form100",
+    "submenu.patientHistory.prescriptions",
+    "submenu.patientHistory.execution",
+    "submenu.patientHistory.laboratory",
+    "submenu.patientHistory.duty",
+    "submenu.patientHistory.appointments",
+    "submenu.patientHistory.hospital",
+    "submenu.patientHistory.nutrition",
+    "submenu.patientHistory.moh",
+    "ui.toggleSidebar",
+    "ui.selectLanguage",
+    "ui.underDevelopment",
+    "ui.comingSoon",
+    "notification.languageChanged",
+    "notification.languageChangeFailed",
+    "notification.navigationFailed"
+  ],
+  "properties": {
+    "menu.registration": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Main menu: Registration"
+    },
+    "menu.patientHistory": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Main menu: Patient History"
+    },
+    "menu.nomenclature": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Main menu: Nomenclature"
+    },
+    "menu.administration": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Main menu: Administration"
+    },
+    "menu.forward": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Main menu: Forward"
+    },
+    "menu.reports": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Main menu: Reports"
+    },
+    "submenu.registration.registration": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registration sub-menu: Registration"
+    },
+    "submenu.registration.receiver": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registration sub-menu: Receiver"
+    },
+    "submenu.registration.contracts": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registration sub-menu: Contracts"
+    },
+    "submenu.registration.inpatient": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registration sub-menu: Inpatient"
+    },
+    "submenu.registration.debts": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registration sub-menu: Debts"
+    },
+    "submenu.registration.advances": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registration sub-menu: Advances"
+    },
+    "submenu.registration.archive": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registration sub-menu: Archive"
+    },
+    "submenu.registration.referrals": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registration sub-menu: Referrals"
+    },
+    "submenu.registration.currency": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Registration sub-menu: Currency"
+    },
+    "submenu.patientHistory.history": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: History"
+    },
+    "submenu.patientHistory.myPatients": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: My Patients"
+    },
+    "submenu.patientHistory.surrogacy": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Surrogacy"
+    },
+    "submenu.patientHistory.invoices": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Invoices"
+    },
+    "submenu.patientHistory.form100": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Form 100"
+    },
+    "submenu.patientHistory.prescriptions": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Prescriptions"
+    },
+    "submenu.patientHistory.execution": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Execution"
+    },
+    "submenu.patientHistory.laboratory": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Laboratory"
+    },
+    "submenu.patientHistory.duty": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Duty"
+    },
+    "submenu.patientHistory.appointments": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Appointments"
+    },
+    "submenu.patientHistory.hospital": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Hospital"
+    },
+    "submenu.patientHistory.nutrition": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Nutrition"
+    },
+    "submenu.patientHistory.moh": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Patient History sub-menu: Ministry of Health"
+    },
+    "ui.toggleSidebar": {
+      "type": "string",
+      "minLength": 1,
+      "description": "UI label: Toggle Sidebar"
+    },
+    "ui.selectLanguage": {
+      "type": "string",
+      "minLength": 1,
+      "description": "UI label: Select Language"
+    },
+    "ui.underDevelopment": {
+      "type": "string",
+      "minLength": 1,
+      "description": "UI label: Under Development"
+    },
+    "ui.comingSoon": {
+      "type": "string",
+      "minLength": 1,
+      "description": "UI label: Coming Soon"
+    },
+    "notification.languageChanged": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Notification: Language changed successfully"
+    },
+    "notification.languageChangeFailed": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Notification: Failed to change language"
+    },
+    "notification.navigationFailed": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Notification: Navigation failed"
+    }
+  },
+  "additionalProperties": false
+}

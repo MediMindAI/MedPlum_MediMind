@@ -1,0 +1,102 @@
+/**
+ * EMRPage Layout Styles
+ * 4-Row Layout Structure
+ * Uses theme CSS variables for consistent styling across the application
+ */
+
+/* ==================== MAIN PAGE CONTAINER ==================== */
+/* Full viewport height with column flex layout
+ * Row 1: TopNavBar (40px, gray background)
+ * Row 2: MainMenu (50px, white background)
+ * Row 3: HorizontalSubMenu (45px, turquoise gradient, conditional)
+ * Row 4+: Content Area (flex: 1, light gray background)
+ */
+.emrPage {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--emr-gray-50);
+}
+
+/* ==================== ROW 2: MAIN MENU ROW ==================== */
+/* Contains EMRMainMenu component with 6 main navigation items */
+.mainMenuRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--emr-mainmenu-height); /* 50px */
+  background-color: var(--emr-mainmenu-bg); /* white */
+  padding: 0 var(--emr-spacing-lg); /* 16px */
+  box-shadow: var(--emr-shadow-sm);
+  z-index: var(--emr-z-mainmenu); /* 999 */
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* ==================== ROW 4+: CONTENT AREA ==================== */
+/* Main content area that takes remaining height after navigation rows */
+.contentArea {
+  flex: 1; /* Takes all remaining vertical space */
+  overflow: auto;
+  background-color: var(--emr-gray-50);
+  padding: var(--emr-content-padding); /* 24px */
+  position: relative; /* For ActionButtons absolute positioning */
+  min-height: 0; /* Allow flex item to shrink below content size */
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+/* Mobile: Stack menu row items vertically */
+@media (max-width: 768px) {
+  .mainMenuRow {
+    flex-direction: column;
+    height: auto;
+    padding: var(--emr-spacing-sm);
+    gap: var(--emr-spacing-sm);
+  }
+
+  .contentArea {
+    padding: var(--emr-spacing-md);
+  }
+}
+
+/* Tablet: Adjust padding */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mainMenuRow {
+    padding: 0 var(--emr-spacing-md);
+  }
+
+  .contentArea {
+    padding: var(--emr-spacing-lg);
+  }
+}
+
+/* Desktop: Full layout with max width constraint */
+@media (min-width: 1025px) {
+  .contentArea {
+    max-width: 1920px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+/* Focus visible states for keyboard navigation */
+.contentArea:focus-visible {
+  outline: 2px solid var(--emr-accent);
+  outline-offset: -2px;
+}
+
+/* ==================== PRINT STYLES ==================== */
+/* Hide navigation when printing, show only content */
+@media print {
+  .mainMenuRow {
+    display: none;
+  }
+
+  .contentArea {
+    padding: 0;
+    overflow: visible;
+  }
+}

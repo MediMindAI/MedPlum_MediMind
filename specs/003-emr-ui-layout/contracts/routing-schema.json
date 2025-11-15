@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EMR UI Layout Routing Schema",
+  "description": "Defines all routes for the EMR UI Layout feature",
+  "type": "object",
+  "properties": {
+    "baseRoute": {
+      "type": "string",
+      "const": "/emr",
+      "description": "Base route for all EMR pages"
+    },
+    "routes": {
+      "type": "array",
+      "description": "All defined routes in the EMR system",
+      "items": {
+        "type": "object",
+        "required": ["path", "section", "view", "implemented"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Full route path",
+            "pattern": "^/emr/[a-z-]+(/[a-z-]+)?$"
+          },
+          "section": {
+            "type": "string",
+            "description": "Main menu section",
+            "enum": [
+              "registration",
+              "patient-history",
+              "nomenclature",
+              "administration",
+              "forward",
+              "reports"
+            ]
+          },
+          "view": {
+            "type": "string",
+            "description": "Sub-menu view (if applicable)"
+          },
+          "implemented": {
+            "type": "boolean",
+            "description": "Whether this route has functional content (false = placeholder)"
+          },
+          "requiresAuth": {
+            "type": "boolean",
+            "description": "Whether this route requires authentication",
+            "default": true
+          },
+          "translationKey": {
+            "type": "string",
+            "description": "Translation key for the route label"
+          }
+        }
+      }
+    },
+    "registrationRoutes": {
+      "type": "array",
+      "description": "Routes under the Registration section",
+      "items": {
+        "$ref": "#/definitions/route"
+      },
+      "minItems": 9,
+      "maxItems": 9
+    },
+    "patientHistoryRoutes": {
+      "type": "array",
+      "description": "Routes under the Patient History section",
+      "items": {
+        "$ref": "#/definitions/route"
+      },
+      "minItems": 13,
+      "maxItems": 13
+    }
+  },
+  "definitions": {
+    "route": {
+      "type": "object",
+      "required": ["path", "view", "translationKey", "order", "implemented"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Route path relative to section"
+        },
+        "view": {
+          "type": "string",
+          "description": "View identifier"
+        },
+        "translationKey": {
+          "type": "string",
+          "description": "Translation key for menu label"
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Display order in menu"
+        },
+        "implemented": {
+          "type": "boolean",
+          "description": "Whether view is implemented (false = placeholder)"
+        }
+      }
+    }
+  },
+  "example": {
+    "baseRoute": "/emr",
+    "registrationRoutes": [
+      {
+        "path": "/emr/registration/registration",
+        "view": "registration",
+        "translationKey": "submenu.registration.registration",
+        "order": 1,
+        "implemented": false
+      },
+      {
+        "path": "/emr/registration/receiver",
+        "view": "receiver",
+        "translationKey": "submenu.registration.receiver",
+        "order": 2,
+        "implemented": false
+      }
+    ],
+    "patientHistoryRoutes": [
+      {
+        "path": "/emr/patient-history/history",
+        "view": "history",
+        "translationKey": "submenu.patientHistory.history",
+        "order": 1,
+        "implemented": false
+      }
+    ]
+  }
+}

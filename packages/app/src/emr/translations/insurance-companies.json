@@ -1,0 +1,410 @@
+{
+  "companies": [
+    {
+      "code": "0",
+      "displayKa": "შიდა",
+      "displayEn": "Internal",
+      "displayRu": "Внутренний",
+      "type": "internal"
+    },
+    {
+      "code": "628",
+      "displayKa": "სსიპ ჯანმრთელობის ეროვნული სააგენტო",
+      "displayEn": "National Health Agency",
+      "displayRu": "Национальное агентство здравоохранения",
+      "type": "government"
+    },
+    {
+      "code": "6379",
+      "displayKa": "ს.ს. სადაზღვევო კომპანია \"ჯიპიაი ჰოლდინგი\"",
+      "displayEn": "GPI Holding Insurance Company",
+      "displayRu": "Страховая компания GPI Holding",
+      "type": "private"
+    },
+    {
+      "code": "6380",
+      "displayKa": "ალდაგი",
+      "displayEn": "Aldagi",
+      "displayRu": "Алдаги",
+      "type": "private"
+    },
+    {
+      "code": "6381",
+      "displayKa": "სს \"დაზღვევის კომპანია ქართუ\"",
+      "displayEn": "Qartu Insurance Company",
+      "displayRu": "Страховая компания Qartu",
+      "type": "private"
+    },
+    {
+      "code": "6382",
+      "displayKa": "სტანდარტ დაზღვევა",
+      "displayEn": "Standard Insurance",
+      "displayRu": "Стандарт страхование",
+      "type": "private"
+    },
+    {
+      "code": "6383",
+      "displayKa": "სს \"პსპ დაზღვევა\"",
+      "displayEn": "PSP Insurance",
+      "displayRu": "PSP страхование",
+      "type": "private"
+    },
+    {
+      "code": "6384",
+      "displayKa": "სს „სადაზღვევო კომპანია ევროინს ჯორჯია\"",
+      "displayEn": "Euroins Georgia Insurance Company",
+      "displayRu": "Страховая компания Euroins Georgia",
+      "type": "private"
+    },
+    {
+      "code": "6385",
+      "displayKa": "შპს სადაზღვევო კომპანია \"არდი ჯგუფი\"",
+      "displayEn": "Ardi Group Insurance Company",
+      "displayRu": "Страховая компания Ardi Group",
+      "type": "private"
+    },
+    {
+      "code": "7603",
+      "displayKa": "აჭარის ავტონომიური რესპუბლიკის ჯანმრთელობისა და სოციალური დაცვის სამინისტრო",
+      "displayEn": "Adjara Ministry of Health",
+      "displayRu": "Министерство здравоохранения Аджарии",
+      "type": "government"
+    },
+    {
+      "code": "8175",
+      "displayKa": "იმედი L",
+      "displayEn": "Imedi L",
+      "displayRu": "Имеди L",
+      "type": "private"
+    },
+    {
+      "code": "9155",
+      "displayKa": "ქ. თბილისის მუნიციპალიტეტის მერია",
+      "displayEn": "Tbilisi Municipality",
+      "displayRu": "Муниципалитет Тбилиси",
+      "type": "government"
+    },
+    {
+      "code": "10483",
+      "displayKa": "სამხრეთ ოსეთის ადმინისტრაცია",
+      "displayEn": "South Ossetia Administration",
+      "displayRu": "Администрация Южной Осетии",
+      "type": "government"
+    },
+    {
+      "code": "10520",
+      "displayKa": "ირაო",
+      "displayEn": "IRAO",
+      "displayRu": "IRAO",
+      "type": "private"
+    },
+    {
+      "code": "11209",
+      "displayKa": "ვია-ვიტა",
+      "displayEn": "Via-Vita",
+      "displayRu": "Виа-Вита",
+      "type": "private"
+    },
+    {
+      "code": "11213",
+      "displayKa": "რეფერალური დახმარების ცენტრი",
+      "displayEn": "Referral Assistance Center",
+      "displayRu": "Центр реферальной помощи",
+      "type": "hospital"
+    },
+    {
+      "code": "12078",
+      "displayKa": "\"კახეთი-იონი\"",
+      "displayEn": "Kakheti-Ioni",
+      "displayRu": "Кахети-Иони",
+      "type": "private"
+    },
+    {
+      "code": "12461",
+      "displayKa": "საქართველოს სასჯელაღსრულებისა და პრობაციის სამინისტროს სამედიცინო დეპარტამენტი",
+      "displayEn": "Prison & Probation Ministry Medical Dept",
+      "displayRu": "Медицинский департамент Министерства пенитенциарной системы",
+      "type": "government"
+    },
+    {
+      "code": "14134",
+      "displayKa": "ბინადრობის უფლება",
+      "displayEn": "Residence Right",
+      "displayRu": "Право на проживание",
+      "type": "other"
+    },
+    {
+      "code": "14137",
+      "displayKa": "დაზღვევის არ მქონე",
+      "displayEn": "No Insurance",
+      "displayRu": "Без страховки",
+      "type": "other"
+    },
+    {
+      "code": "16476",
+      "displayKa": "უნისონი",
+      "displayEn": "Unison",
+      "displayRu": "Юнисон",
+      "type": "private"
+    },
+    {
+      "code": "16803",
+      "displayKa": "ალფა",
+      "displayEn": "Alfa",
+      "displayRu": "Альфа",
+      "type": "private"
+    },
+    {
+      "code": "22108",
+      "displayKa": "IGG",
+      "displayEn": "IGG",
+      "displayRu": "IGG",
+      "type": "private"
+    },
+    {
+      "code": "41288",
+      "displayKa": "სს \"ნიუ ვიჟენ დაზღვევა\"",
+      "displayEn": "New Vision Insurance",
+      "displayRu": "Страхование New Vision",
+      "type": "private"
+    },
+    {
+      "code": "46299",
+      "displayKa": "სადაზღვევო კომპანია გლობალ ბენეფიტს ჯორჯია",
+      "displayEn": "Global Benefits Georgia Insurance",
+      "displayRu": "Страхование Global Benefits Georgia",
+      "type": "private"
+    },
+    {
+      "code": "49974",
+      "displayKa": "ინგოროყვას კლინიკა",
+      "displayEn": "Ingorokva Clinic",
+      "displayRu": "Клиника Ингорокова",
+      "type": "hospital"
+    },
+    {
+      "code": "51870",
+      "displayKa": "ონის მუნიციპალიტეტის მერია",
+      "displayEn": "Oni Municipality",
+      "displayRu": "Муниципалитет Они",
+      "type": "government"
+    },
+    {
+      "code": "52103",
+      "displayKa": "რეფერალი ონკოლოგია",
+      "displayEn": "Referral Oncology",
+      "displayRu": "Реферальная онкология",
+      "type": "hospital"
+    },
+    {
+      "code": "54184",
+      "displayKa": "შპს\" თბილისის ცენტრალური საავადმყოფო\" 203826645",
+      "displayEn": "Tbilisi Central Hospital",
+      "displayRu": "Тбилисская центральная больница",
+      "type": "hospital"
+    },
+    {
+      "code": "61677",
+      "displayKa": "ა(ა)იპ საქართველოს სოლიდარობის ფონდი. რეფერალური მომსახურების დეპარტამენტი",
+      "displayEn": "Georgia Solidarity Fund - Referral Dept",
+      "displayRu": "Фонд солидарности Грузии - Реферальный отдел",
+      "type": "government"
+    },
+    {
+      "code": "61768",
+      "displayKa": "ახალი მზერა",
+      "displayEn": "Akhali Mzera (New Sun)",
+      "displayRu": "Ахали Мзера (Новое Солнце)",
+      "type": "hospital"
+    },
+    {
+      "code": "63054",
+      "displayKa": "სს კურაციო",
+      "displayEn": "Curatio",
+      "displayRu": "Курацио",
+      "type": "private"
+    },
+    {
+      "code": "67209",
+      "displayKa": "გერმანული ჰოსპიტალი",
+      "displayEn": "German Hospital",
+      "displayRu": "Немецкий госпиталь",
+      "type": "hospital"
+    },
+    {
+      "code": "67469",
+      "displayKa": "რეგიონალური ჯანდაცვის ცენტრი",
+      "displayEn": "Regional Healthcare Center",
+      "displayRu": "Региональный центр здравоохранения",
+      "type": "hospital"
+    },
+    {
+      "code": "70867",
+      "displayKa": "სსიპ დევნილთა, ეკომიგრანტთა და საარსებო წყაროებით უზრუნველყოფის სააგენტო",
+      "displayEn": "IDPs & Livelihood Agency",
+      "displayRu": "Агентство ВПЛ и средств к существованию",
+      "type": "government"
+    },
+    {
+      "code": "79541",
+      "displayKa": "შპს გაგრა",
+      "displayEn": "Gagra Ltd",
+      "displayRu": "Гагра ООО",
+      "type": "hospital"
+    },
+    {
+      "code": "81614",
+      "displayKa": "შპს თბილისის გულის ცენტრი",
+      "displayEn": "Tbilisi Heart Center",
+      "displayRu": "Тбилисский кардиологический центр",
+      "type": "hospital"
+    },
+    {
+      "code": "86705",
+      "displayKa": "კონსილიუმ მედულა",
+      "displayEn": "Consilium Medulla",
+      "displayRu": "Консилиум Медулла",
+      "type": "hospital"
+    },
+    {
+      "code": "88950",
+      "displayKa": "ქართულ-ამერიკული რეპროდუქციული კლინიკა რეპროარტი",
+      "displayEn": "Georgian-American Reproductive Clinic ReproART",
+      "displayRu": "Грузино-американская репродуктивная клиника ReproART",
+      "type": "hospital"
+    },
+    {
+      "code": "89213",
+      "displayKa": "შპს ელიავას საერთაშორისო ფაგო თერაპიული  ცენტრი",
+      "displayEn": "Eliava Phage Therapy Center",
+      "displayRu": "Центр фаготерапии Элиава",
+      "type": "hospital"
+    },
+    {
+      "code": "89718",
+      "displayKa": "შპს ჯეო ჰოსპიტალს",
+      "displayEn": "Geo Hospitals",
+      "displayRu": "Гео Госпиталс",
+      "type": "hospital"
+    },
+    {
+      "code": "91685",
+      "displayKa": "სს \"საქართველოს კლინიკები\" - ხაშურის ჰოსპიტალი",
+      "displayEn": "Georgia Clinics - Khashuri Hospital",
+      "displayRu": "Клиники Грузии - Хашурская больница",
+      "type": "hospital"
+    },
+    {
+      "code": "5136",
+      "displayKa": "თერამედი",
+      "displayEn": "Theramedi",
+      "displayRu": "Терамеди",
+      "type": "hospital"
+    },
+    {
+      "code": "5419",
+      "displayKa": "ყელ-ყურ ცხვირის ჯაფარიძე-ქევანიშვილი",
+      "displayEn": "ENT Japaridze-Kevanishvili",
+      "displayRu": "ЛОР Джапаридзе-Кеванишвили",
+      "type": "hospital"
+    },
+    {
+      "code": "5809",
+      "displayKa": "ჰემა",
+      "displayEn": "Hema",
+      "displayRu": "Гема",
+      "type": "hospital"
+    },
+    {
+      "code": "6847",
+      "displayKa": "პეტრე სარაჯიშვილის სახელობის ნევროლოგიის ინსტიტუტი",
+      "displayEn": "Sarajishvili Neurology Institute",
+      "displayRu": "Неврологический институт Сараджишвили",
+      "type": "hospital"
+    },
+    {
+      "code": "6929",
+      "displayKa": "რეფერალური დახმარების ცენტრის კლინიკა",
+      "displayEn": "Referral Center Clinic",
+      "displayRu": "Клиника реферального центра",
+      "type": "hospital"
+    },
+    {
+      "code": "9068",
+      "displayKa": "არარეზიდენტი",
+      "displayEn": "Non-resident",
+      "displayRu": "Нерезидент",
+      "type": "other"
+    },
+    {
+      "code": "14019",
+      "displayKa": "შპს საგზაო პოლიკლინიკა + საოჯახო ნედიცინის ცენტრი დიდუბე",
+      "displayEn": "Railway Polyclinic + Family Medicine Didube",
+      "displayRu": "Железнодорожная поликлиника + Семейная медицина Дидубе",
+      "type": "hospital"
+    },
+    {
+      "code": "14647",
+      "displayKa": "შპს საოჯახო მედიცინის ეროვნული სასწავლო ცენტრი",
+      "displayEn": "National Family Medicine Training Center",
+      "displayRu": "Национальный учебный центр семейной медицины",
+      "type": "hospital"
+    },
+    {
+      "code": "15862",
+      "displayKa": "ხომასურიძის კლინიკა",
+      "displayEn": "Khomasuridze Clinic",
+      "displayRu": "Клиника Хомасуридзе",
+      "type": "hospital"
+    },
+    {
+      "code": "15863",
+      "displayKa": "მრჩეველი",
+      "displayEn": "Advisor",
+      "displayRu": "Советник",
+      "type": "other"
+    },
+    {
+      "code": "15864",
+      "displayKa": "ლიმბახი",
+      "displayEn": "Limbakh",
+      "displayRu": "Лимбах",
+      "type": "hospital"
+    },
+    {
+      "code": "20240",
+      "displayKa": "არენსია ექსპლორატორი მედისინ",
+      "displayEn": "Arencia Explorator Medicine",
+      "displayRu": "Аренсия Эксплоратор Медисин",
+      "type": "hospital"
+    },
+    {
+      "code": "30321",
+      "displayKa": "სამედიცინო პარაზიტოლოგიისა და ტროპიკული მედიცინის კვლევის ინსტიტუტი",
+      "displayEn": "Medical Parasitology & Tropical Medicine Institute",
+      "displayRu": "Институт медицинской паразитологии и тропической медицины",
+      "type": "hospital"
+    },
+    {
+      "code": "71575",
+      "displayKa": "უფასო",
+      "displayEn": "Free",
+      "displayRu": "Бесплатно",
+      "type": "other"
+    },
+    {
+      "code": "81051",
+      "displayKa": "თბილისის გულის ცენტრი",
+      "displayEn": "Tbilisi Heart Center (old ID)",
+      "displayRu": "Тбилисский кардиологический центр (старый ID)",
+      "type": "hospital"
+    },
+    {
+      "code": "102335",
+      "displayKa": "შპს არენსია",
+      "displayEn": "Arencia Ltd",
+      "displayRu": "Аренсия ООО",
+      "type": "hospital"
+    }
+  ]
+}

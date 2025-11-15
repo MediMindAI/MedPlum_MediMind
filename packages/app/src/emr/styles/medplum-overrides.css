@@ -1,0 +1,95 @@
+/**
+ * Medplum AppShell Theme Overrides for EMR
+ *
+ * This file overrides Medplum's default dark header styling
+ * to match the EMR theme colors (white background, blue gradients)
+ *
+ * IMPORTANT: Uses !important to override Medplum's inline styles
+ */
+
+/* ==================== HEADER BAR (Top Search/User Area) ==================== */
+/* Override the white header bar at the very top */
+.mantine-AppShell-header,
+header.mantine-AppShell-header {
+  background-color: var(--emr-mainmenu-bg) !important;
+  border-bottom: 1px solid var(--emr-border-color) !important;
+  box-shadow: var(--emr-shadow-sm) !important;
+}
+
+/* ==================== NAVIGATION BAR (Dark Menu) ==================== */
+/* This is the CRITICAL override - the dark navigation bar with menu items */
+.mantine-AppShell-navbar,
+nav.mantine-AppShell-navbar,
+.mantine-NavbarSection-root,
+aside.mantine-AppShell-navbar {
+  background-color: var(--emr-mainmenu-bg) !important;
+  background: var(--emr-mainmenu-bg) !important;
+  border-right: 1px solid var(--emr-border-color) !important;
+}
+
+/* Force white background on ALL navbar children */
+.mantine-AppShell-navbar * {
+  background-color: transparent !important;
+}
+
+/* Override dark mode navbar specifically */
+[data-mantine-color-scheme="auto"] .mantine-AppShell-navbar,
+[data-mantine-color-scheme="dark"] .mantine-AppShell-navbar {
+  background-color: var(--emr-mainmenu-bg) !important;
+  background: var(--emr-mainmenu-bg) !important;
+}
+
+/* ==================== MENU ITEMS ==================== */
+/* Navigation Links - Inactive State */
+.mantine-AppShell-navbar .mantine-UnstyledButton-root,
+.mantine-NavbarSection-root .mantine-UnstyledButton-root,
+.mantine-AppShell-navbar button,
+.mantine-NavbarSection-root button {
+  color: var(--emr-gray-500) !important;
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Navigation Links - Hover State */
+.mantine-AppShell-navbar .mantine-UnstyledButton-root:hover,
+.mantine-NavbarSection-root .mantine-UnstyledButton-root:hover,
+.mantine-AppShell-navbar button:hover {
+  background-color: var(--emr-light-accent) !important;
+  background: var(--emr-light-accent) !important;
+  color: var(--emr-text-primary) !important;
+}
+
+/* Navigation Links - Active State (CRITICAL) */
+.mantine-AppShell-navbar .mantine-UnstyledButton-root[data-active="true"],
+.mantine-NavbarSection-root .mantine-UnstyledButton-root[data-active="true"],
+.mantine-AppShell-navbar button[data-active="true"] {
+  background: var(--emr-gradient-primary) !important;
+  background-color: var(--emr-secondary) !important;
+  color: var(--emr-text-inverse) !important;
+  font-weight: 600 !important;
+}
+
+/* ==================== OVERRIDE MANTINE DARK THEME COMPLETELY ==================== */
+/* Force light theme variables */
+:root[data-mantine-color-scheme="auto"],
+:root[data-mantine-color-scheme="dark"] {
+  --mantine-color-body: #ffffff !important;
+  --mantine-color-default: #f9fafb !important;
+  --mantine-color-dark-6: #ffffff !important;
+  --mantine-color-dark-7: #ffffff !important;
+  --mantine-color-dark-8: #ffffff !important;
+}
+
+/* Force AppShell to use light background */
+.mantine-AppShell-root {
+  --mantine-color-body: var(--emr-mainmenu-bg) !important;
+}
+
+/* ==================== FIX DROPDOWN Z-INDEX ==================== */
+/* Ensure all Medplum dropdowns appear above EMR navigation rows */
+.mantine-Menu-dropdown,
+.mantine-Popover-dropdown,
+[role="menu"],
+[role="dialog"] {
+  z-index: 10000 !important; /* Much higher than any EMR row */
+}
