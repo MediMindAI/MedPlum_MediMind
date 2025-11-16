@@ -19,12 +19,13 @@ interface SearchFilters {
 
 interface PatientTableProps {
   searchFilters?: SearchFilters;
+  onPatientClick?: (patientId: string) => void;
 }
 
 /**
  * Patient table displaying registered patients with edit/delete actions
  */
-export function PatientTable({ searchFilters }: PatientTableProps) {
+export function PatientTable({ searchFilters, onPatientClick }: PatientTableProps) {
   const { t } = useTranslation();
   const medplum = useMedplum();
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -165,6 +166,7 @@ export function PatientTable({ searchFilters }: PatientTableProps) {
                 borderBottom: '1px solid var(--emr-gray-200)',
                 cursor: 'pointer',
               }}
+              onClick={() => onPatientClick?.(patient.id || '')}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = '#f0f7ff';
                 e.currentTarget.style.transform = 'translateX(2px)';

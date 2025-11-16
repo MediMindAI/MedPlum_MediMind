@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Stack, Group, TextInput, Paper } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
 import { useDebouncedValue } from '@mantine/hooks';
 import type { JSX } from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { InsuranceSelect } from './InsuranceSelect';
+import { EMRDatePicker } from '../common/EMRDatePicker';
 import type { PatientHistorySearchParams } from '../../types/patient-history';
 
 interface PatientHistoryFiltersProps {
@@ -86,26 +86,24 @@ export function PatientHistoryFilters({
 
         {/* Search Inputs Row 2 */}
         <Group wrap="wrap" grow>
-          <DateInput
+          <EMRDatePicker
             label={t('patientHistory.filter.dateFrom')}
             placeholder={t('patientHistory.filter.dateFromPlaceholder')}
             value={searchParams.dateFrom ? new Date(searchParams.dateFrom) : null}
             onChange={(date) => onSearchParamsChange({
               ...searchParams,
-              dateFrom: date ? new Date(date).toISOString() : undefined
+              dateFrom: date ? date.toISOString() : undefined
             })}
-            clearable
             maxDate={new Date()}
           />
-          <DateInput
+          <EMRDatePicker
             label={t('patientHistory.filter.dateTo')}
             placeholder={t('patientHistory.filter.dateToPlaceholder')}
             value={searchParams.dateTo ? new Date(searchParams.dateTo) : null}
             onChange={(date) => onSearchParamsChange({
               ...searchParams,
-              dateTo: date ? new Date(date).toISOString() : undefined
+              dateTo: date ? date.toISOString() : undefined
             })}
-            clearable
             maxDate={new Date()}
           />
           <TextInput

@@ -18,6 +18,7 @@ interface PatientHistoryTableProps {
   onSort: (field: string) => void;
   sortField: string | null;
   sortDirection: 'asc' | 'desc';
+  onRowClick?: (visitId: string) => void;
 }
 
 /**
@@ -32,6 +33,7 @@ export function PatientHistoryTable({
   onSort,
   sortField,
   sortDirection,
+  onRowClick,
 }: PatientHistoryTableProps): JSX.Element {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -65,10 +67,14 @@ export function PatientHistoryTable({
   };
 
   /**
-   * Handle row click for navigation
+   * Handle row click for navigation or custom handler
    */
   const handleRowClick = (visitId: string) => {
-    navigate(`/emr/patient-history/${visitId}`);
+    if (onRowClick) {
+      onRowClick(visitId);
+    } else {
+      navigate(`/emr/patient-history/${visitId}`);
+    }
   };
 
   /**
@@ -79,16 +85,16 @@ export function PatientHistoryTable({
       <Table>
         <Table.Thead style={{ background: 'var(--emr-gradient-submenu)' }}>
           <Table.Tr>
-            <Table.Th>{t('patientHistory.table.personalId')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.firstName')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.lastName')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.date')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.registrationNumber')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.total')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.discount')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.debt')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.payment')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.actions')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.personalId')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.firstName')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.lastName')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.date')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.registrationNumber')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.total')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.discount')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.debt')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.payment')}</Table.Th>
+            <Table.Th>{t('patientHistory.table.column.actions')}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -124,21 +130,21 @@ export function PatientHistoryTable({
     <Table highlightOnHover>
       <Table.Thead style={{ background: 'var(--emr-gradient-submenu)' }}>
         <Table.Tr>
-          <Table.Th>{t('patientHistory.table.personalId')}</Table.Th>
-          <Table.Th>{t('patientHistory.table.firstName')}</Table.Th>
-          <Table.Th>{t('patientHistory.table.lastName')}</Table.Th>
+          <Table.Th>{t('patientHistory.table.column.personalId')}</Table.Th>
+          <Table.Th>{t('patientHistory.table.column.firstName')}</Table.Th>
+          <Table.Th>{t('patientHistory.table.column.lastName')}</Table.Th>
           <Table.Th
             onClick={() => onSort('date')}
             style={{ cursor: 'pointer', userSelect: 'none' }}
           >
-            {t('patientHistory.table.date')} {sortField === 'date' && (sortDirection === 'asc' ? '↑' : '↓')}
+            {t('patientHistory.table.column.date')} {sortField === 'date' && (sortDirection === 'asc' ? '↑' : '↓')}
           </Table.Th>
-          <Table.Th>{t('patientHistory.table.registrationNumber')}</Table.Th>
-          <Table.Th style={{ textAlign: 'right' }}>{t('patientHistory.table.total')}</Table.Th>
-          <Table.Th style={{ textAlign: 'center' }}>{t('patientHistory.table.discount')}</Table.Th>
-          <Table.Th style={{ textAlign: 'right' }}>{t('patientHistory.table.debt')}</Table.Th>
-          <Table.Th style={{ textAlign: 'right' }}>{t('patientHistory.table.payment')}</Table.Th>
-          <Table.Th>{t('patientHistory.table.actions')}</Table.Th>
+          <Table.Th>{t('patientHistory.table.column.registrationNumber')}</Table.Th>
+          <Table.Th style={{ textAlign: 'right' }}>{t('patientHistory.table.column.total')}</Table.Th>
+          <Table.Th style={{ textAlign: 'center' }}>{t('patientHistory.table.column.discount')}</Table.Th>
+          <Table.Th style={{ textAlign: 'right' }}>{t('patientHistory.table.column.debt')}</Table.Th>
+          <Table.Th style={{ textAlign: 'right' }}>{t('patientHistory.table.column.payment')}</Table.Th>
+          <Table.Th>{t('patientHistory.table.column.actions')}</Table.Th>
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>

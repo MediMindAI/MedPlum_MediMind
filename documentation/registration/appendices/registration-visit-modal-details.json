@@ -1,0 +1,652 @@
+{
+  "modalInfo": {
+    "extractedDate": "2025-11-16T14:10:00Z",
+    "sourceUrl": "http://178.134.21.82:8008/clinic.php",
+    "modalContainerId": "shnek",
+    "patientName": "ლევან ჭილაია",
+    "visitBadge": "ვიზიტები: 1/0 (ამბუ/სტაც)"
+  },
+  "sections": [
+    {
+      "number": 1,
+      "nameKa": "რეგისტრაცია",
+      "nameEn": "Registration",
+      "headerText": "1 რეგისტრაცია"
+    },
+    {
+      "number": 2,
+      "nameKa": "დაზღვევა",
+      "nameEn": "Insurance",
+      "headerText": "2 დაზღვევა",
+      "hasToggle": true,
+      "toggleId": "mo_sbool"
+    },
+    {
+      "number": 3,
+      "nameKa": "საგარანტიო",
+      "nameEn": "Guarantee",
+      "headerText": "3 საგარანტიო"
+    },
+    {
+      "number": 4,
+      "nameKa": "დემოგრაფია",
+      "nameEn": "Demographics",
+      "headerText": "4 დემოგრაფია",
+      "hasCopyButton": true
+    }
+  ],
+  "textFields": [
+    {
+      "id": "mo_regdate",
+      "labelKa": "თარიღი",
+      "labelEn": "Date",
+      "type": "datetime",
+      "className": "nondrg datetime hasDatepicker",
+      "required": true,
+      "section": "1 რეგისტრაცია",
+      "defaultValue": "2025-11-16 14:10"
+    },
+    {
+      "id": "mo_patsendrdatetime",
+      "labelKa": "გამომგზავნ დაწესებულებაში მიმართვის თარიღი/დრო",
+      "labelEn": "Referral Date/Time to Sending Institution",
+      "type": "datetime",
+      "className": "nondrg datetime hasDatepicker",
+      "required": false,
+      "section": "1 რეგისტრაცია"
+    },
+    {
+      "id": "mo_polnmb",
+      "labelKa": "პოლისის #",
+      "labelEn": "Policy Number",
+      "type": "text",
+      "className": "nondrg disSel",
+      "required": false,
+      "section": "2 დაზღვევა",
+      "insurerNumber": 1,
+      "disabledUntilToggle": true
+    },
+    {
+      "id": "mo_vano",
+      "labelKa": "მიმართვის #",
+      "labelEn": "Referral Number",
+      "type": "text",
+      "className": "nondrg disSel",
+      "required": false,
+      "section": "2 დაზღვევა",
+      "insurerNumber": 1,
+      "disabledUntilToggle": true
+    },
+    {
+      "id": "mo_deldat",
+      "labelKa": "გაცემის თარიღი",
+      "labelEn": "Issue Date",
+      "type": "date",
+      "className": "nondrg disSel date hasDatepicker",
+      "required": false,
+      "section": "2 დაზღვევა",
+      "insurerNumber": 1,
+      "disabledUntilToggle": true
+    },
+    {
+      "id": "mo_valdat",
+      "labelKa": "მოქმედების ვადა",
+      "labelEn": "Expiration Date",
+      "type": "date",
+      "className": "nondrg disSel date hasDatepicker",
+      "required": false,
+      "section": "2 დაზღვევა",
+      "insurerNumber": 1,
+      "disabledUntilToggle": true
+    },
+    {
+      "id": "mo_insprsnt",
+      "labelKa": "თანაგადახდის %",
+      "labelEn": "Copay Percent",
+      "type": "text",
+      "className": "nondrg disSel",
+      "required": false,
+      "section": "2 დაზღვევა",
+      "insurerNumber": 1,
+      "disabledUntilToggle": true
+    },
+    {
+      "id": "mo_polnmb1",
+      "labelKa": "პოლისის #",
+      "labelEn": "Policy Number",
+      "type": "text",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 2
+    },
+    {
+      "id": "mo_vano1",
+      "labelKa": "მიმართვის #",
+      "labelEn": "Referral Number",
+      "type": "text",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 2
+    },
+    {
+      "id": "mo_deldat1",
+      "labelKa": "გაცემის თარიღი",
+      "labelEn": "Issue Date",
+      "type": "date",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 2
+    },
+    {
+      "id": "mo_valdat1",
+      "labelKa": "მოქმედების ვადა",
+      "labelEn": "Expiration Date",
+      "type": "date",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 2
+    },
+    {
+      "id": "mo_insprsnt1",
+      "labelKa": "თანაგადახდის %",
+      "labelEn": "Copay Percent",
+      "type": "text",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 2
+    },
+    {
+      "id": "mo_polnmb2",
+      "labelKa": "პოლისის #",
+      "labelEn": "Policy Number",
+      "type": "text",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 3
+    },
+    {
+      "id": "mo_vano2",
+      "labelKa": "მიმართვის #",
+      "labelEn": "Referral Number",
+      "type": "text",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 3
+    },
+    {
+      "id": "mo_deldat2",
+      "labelKa": "გაცემის თარიღი",
+      "labelEn": "Issue Date",
+      "type": "date",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 3
+    },
+    {
+      "id": "mo_valdat2",
+      "labelKa": "მოქმედების ვადა",
+      "labelEn": "Expiration Date",
+      "type": "date",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 3
+    },
+    {
+      "id": "mo_insprsnt2",
+      "labelKa": "თანაგადახდის %",
+      "labelEn": "Copay Percent",
+      "type": "text",
+      "section": "2 დაზღვევა",
+      "insurerNumber": 3
+    },
+    {
+      "id": "mo_timwh",
+      "labelKa": "დონორი",
+      "labelEn": "Donor",
+      "type": "text",
+      "className": "knop",
+      "section": "3 საგარანტიო"
+    },
+    {
+      "id": "mo_timamo",
+      "labelKa": "თანხა",
+      "labelEn": "Amount",
+      "type": "text",
+      "className": "isdoubl",
+      "section": "3 საგარანტიო"
+    },
+    {
+      "id": "mo_timltdat",
+      "labelKa": "თარიღი",
+      "labelEn": "Date",
+      "type": "date",
+      "className": "date hasDatepicker",
+      "section": "3 საგარანტიო"
+    },
+    {
+      "id": "mo_timdrdat",
+      "labelKa": "",
+      "labelEn": "End Date",
+      "type": "date",
+      "className": "date hasDatepicker",
+      "section": "3 საგარანტიო"
+    },
+    {
+      "id": "mo_letterno",
+      "labelKa": "ნომერი",
+      "labelEn": "Letter Number",
+      "type": "text",
+      "section": "3 საგარანტიო"
+    },
+    {
+      "id": "mo_city",
+      "labelKa": "ქალაქი",
+      "labelEn": "City",
+      "type": "text",
+      "className": "nondrg",
+      "section": "4 დემოგრაფია"
+    },
+    {
+      "id": "mo_otheraddress",
+      "labelKa": "ფაქტიური მისამართი",
+      "labelEn": "Actual Address",
+      "type": "text",
+      "className": "nondrg",
+      "section": "4 დემოგრაფია"
+    }
+  ],
+  "dropdowns": {
+    "mo_regtype": {
+      "id": "mo_regtype",
+      "labelKa": "შემოსვლის ტიპი",
+      "labelEn": "Admission Type",
+      "required": true,
+      "section": "1 რეგისტრაცია",
+      "options": [
+        {"value": "3", "textKa": "ამბულატორიული", "textEn": "Ambulatory"},
+        {"value": "1", "textKa": "გეგმიური სტაციონარული", "textEn": "Planned Inpatient"},
+        {"value": "2", "textKa": "გადაუდებელი სტაციონარული", "textEn": "Emergency Inpatient"}
+      ]
+    },
+    "mo_stat": {
+      "id": "mo_stat",
+      "labelKa": "სტატუსი",
+      "labelEn": "Status",
+      "required": false,
+      "section": "1 რეგისტრაცია",
+      "options": [
+        {"value": "1", "textKa": "", "textEn": ""},
+        {"value": "2", "textKa": "უფასო", "textEn": "Free"},
+        {"value": "3", "textKa": "კვლევის პაციენტები", "textEn": "Research Patients"},
+        {"value": "5", "textKa": "პროტოკოლი: R3767-ONC-2266", "textEn": "Protocol: R3767-ONC-2266"}
+      ]
+    },
+    "mo_incomgrp": {
+      "id": "mo_incomgrp",
+      "labelKa": "განყოფილება",
+      "labelEn": "Department",
+      "required": true,
+      "section": "1 რეგისტრაცია",
+      "options": [
+        {"value": "", "textKa": "", "textEn": ""},
+        {"value": "736", "textKa": "ამბულატორია", "textEn": "Ambulatory"},
+        {"value": "51442", "textKa": "ამბულატორიული ონკოლოგია", "textEn": "Ambulatory Oncology"}
+      ]
+    },
+    "mo_incmtp": {
+      "id": "mo_incmtp",
+      "labelKa": "მომართვის ტიპი",
+      "labelEn": "Referral Type",
+      "required": false,
+      "section": "1 რეგისტრაცია",
+      "options": [
+        {"value": "", "textKa": "", "textEn": ""},
+        {"value": "1", "textKa": "თვითდინება", "textEn": "Self-referral"},
+        {"value": "2", "textKa": "სასწრაფო", "textEn": "Emergency"},
+        {"value": "3", "textKa": "გადმოყვანილია კატასტროფით", "textEn": "Transferred by Disaster"}
+      ]
+    },
+    "mo_ddyastac": {
+      "id": "mo_ddyastac",
+      "labelKa": "სტაციონარის ტიპი",
+      "labelEn": "Hospital Type",
+      "required": false,
+      "section": "1 რეგისტრაცია",
+      "options": [
+        {"value": "3", "textKa": "გეგმიური ამბულატორია", "textEn": "Planned Ambulatory"},
+        {"value": "2", "textKa": "დღის სტაციონარი", "textEn": "Day Hospital"}
+      ]
+    },
+    "mo_ddyastac_all": {
+      "id": "mo_ddyastac_all",
+      "labelKa": "სტაციონარის ტიპი (ყველა)",
+      "labelEn": "Hospital Type (All)",
+      "required": false,
+      "section": "1 რეგისტრაცია",
+      "options": [
+        {"value": "1", "textKa": "სტაციონარი", "textEn": "Inpatient"},
+        {"value": "3", "textKa": "გეგმიური ამბულატორია", "textEn": "Planned Ambulatory"},
+        {"value": "2", "textKa": "დღის სტაციონარი", "textEn": "Day Hospital"}
+      ]
+    },
+    "mo_myp": {
+      "id": "mo_myp",
+      "labelKa": "მომყვანი",
+      "labelEn": "Referrer/Ambulance Service",
+      "required": false,
+      "section": "1 რეგისტრაცია",
+      "optionCount": 30,
+      "options": [
+        {"value": "", "textKa": "", "textEn": ""},
+        {"value": "1", "textKa": "112", "textEn": "112"},
+        {"value": "2", "textKa": "med life", "textEn": "med life"},
+        {"value": "3", "textKa": "გადაუდებელი სამედიცინო დახმარება", "textEn": "Emergency Medical Service"},
+        {"value": "4", "textKa": "ჯეო-მედი", "textEn": "Geo-Medi"},
+        {"value": "5", "textKa": "ტაო-მედი", "textEn": "Tao-Medi"},
+        {"value": "6", "textKa": "სასწრაფო და გადაუდებელი დახმარების ცენტრი", "textEn": "Emergency and Urgent Care Center"},
+        {"value": "7", "textKa": "კატასტროფის მედიცინის პედიატრიული ცენტრი", "textEn": "Disaster Medicine Pediatric Center"},
+        {"value": "8", "textKa": "კარდიოსერვისი", "textEn": "CardioService"},
+        {"value": "9", "textKa": "მკურნალი", "textEn": "Mkurnali"},
+        {"value": "10", "textKa": "სასწრაფო და სამედიცინო დახმარების ცენტრი", "textEn": "Emergency and Medical Aid Center"},
+        {"value": "11", "textKa": "კარდიოლოგიური სასწრაფო დახმარება \"გული\"", "textEn": "Cardiology Emergency Service \"Guli\""},
+        {"value": "12", "textKa": "კატასტროფის მედიცინის ცენტრი", "textEn": "Disaster Medicine Center"},
+        {"value": "13", "textKa": "რეფერალური დახმარების ცენტრი", "textEn": "Referral Assistance Center"},
+        {"value": "14", "textKa": "med care", "textEn": "med care"},
+        {"value": "15", "textKa": "LTD Disaster medical center", "textEn": "LTD Disaster medical center"},
+        {"value": "16", "textKa": "ემერჯენსის სერვისი", "textEn": "Emergency Service"},
+        {"value": "17", "textKa": "კარდიოექსპრესი", "textEn": "CardioExpress"},
+        {"value": "18", "textKa": "აისისი-ინტენსიური ზრუნვის ცენტრი", "textEn": "ISIS-Intensive Care Center"},
+        {"value": "19", "textKa": "ო. ღუდუშაურის სახ.ეროვნული სამედიცინო ცენტრი", "textEn": "O. Gudushauri National Medical Center"},
+        {"value": "20", "textKa": "ნეო მედი", "textEn": "Neo Medi"},
+        {"value": "21", "textKa": "სასწრაფო სამედიცინო დახმარება \"მკურნალი\"", "textEn": "Emergency Medical Service \"Mkurnali\""},
+        {"value": "22", "textKa": "გორმედი", "textEn": "GorMedi"},
+        {"value": "23", "textKa": "შპს Brothers", "textEn": "LLC Brothers"},
+        {"value": "24", "textKa": "საგანგებო სიტუაციების კოორდინაციისა და გადაუდებელი დახმარების ცენტრი", "textEn": "Emergency Situations Coordination and Urgent Aid Center"},
+        {"value": "25", "textKa": "წმინდა მიქაელ მთავარანგელოზის სახელობის მრავალპროფილიანი კლინიკური საავადმყოფო", "textEn": "St. Michael Archangel Multiprofile Clinical Hospital"},
+        {"value": "26", "textKa": "MediClubGeorgia", "textEn": "MediClubGeorgia"},
+        {"value": "27", "textKa": "ინტენსიური ზრუნვის ცენტრი", "textEn": "Intensive Care Center"},
+        {"value": "28", "textKa": "IGG", "textEn": "IGG"},
+        {"value": "29", "textKa": "კატასტროფის მედიცინის ბრიგადა ქალაქი წნორი", "textEn": "Disaster Medicine Brigade Tsnori"}
+      ]
+    },
+    "mo_patsender": {
+      "id": "mo_patsender",
+      "labelKa": "გამომგზავნი",
+      "labelEn": "Sending Institution",
+      "required": false,
+      "section": "1 რეგისტრაცია",
+      "options": [
+        {"value": "", "textKa": "", "textEn": ""},
+        {"value": "1", "textKa": "112", "textEn": "112"},
+        {"value": "2", "textKa": "არქიმედეს კლინიკა სიღნაღი", "textEn": "Archimedes Clinic Sighnaghi"}
+      ]
+    },
+    "mo_comp": {
+      "id": "mo_comp",
+      "labelKa": "კომპანია",
+      "labelEn": "Insurance Company",
+      "required": false,
+      "section": "2 დაზღვევა",
+      "insurerNumber": 1,
+      "optionCount": 42,
+      "options": [
+        {"value": "0", "textKa": "", "textEn": ""},
+        {"value": "628", "textKa": "სსიპ ჯანმრთელობის ეროვნული სააგენტო", "textEn": "National Health Agency"},
+        {"value": "6379", "textKa": "ს.ს. სადაზღვევო კომპანია \"ჯიპიაი ჰოლდინგი\"", "textEn": "GPI Holding Insurance Company"},
+        {"value": "6380", "textKa": "ალდაგი", "textEn": "Aldagi"},
+        {"value": "6381", "textKa": "სს \"დაზღვევის კომპანია ქართუ\"", "textEn": "Qartu Insurance Company"},
+        {"value": "6382", "textKa": "სტანდარტ დაზღვევა", "textEn": "Standard Insurance"},
+        {"value": "6383", "textKa": "სს \"პსპ დაზღვევა\"", "textEn": "PSP Insurance"},
+        {"value": "6384", "textKa": "სს „სადაზღვევო კომპანია ევროინს ჯორჯია"", "textEn": "Euroins Georgia Insurance Company"},
+        {"value": "6385", "textKa": "შპს სადაზღვევო კომპანია \"არდი ჯგუფი\"", "textEn": "Ardi Group Insurance Company"},
+        {"value": "7603", "textKa": "აჭარის ავტონომიური რესპუბლიკის ჯანმრთელობისა და სოციალური დაცვის სამინისტრო", "textEn": "Adjara Health and Social Protection Ministry"},
+        {"value": "8175", "textKa": "იმედი L", "textEn": "Imedi L"},
+        {"value": "9155", "textKa": "ქ. თბილისის მუნიციპალიტეტის მერია", "textEn": "Tbilisi City Hall"},
+        {"value": "10483", "textKa": "სამხრეთ ოსეთის ადმინისტრაცია", "textEn": "South Ossetia Administration"},
+        {"value": "10520", "textKa": "ირაო", "textEn": "IRAO"},
+        {"value": "11209", "textKa": "ვია-ვიტა", "textEn": "Via-Vita"},
+        {"value": "11213", "textKa": "რეფერალური დახმარების ცენტრი", "textEn": "Referral Assistance Center"},
+        {"value": "12078", "textKa": "\"კახეთი-იონი\"", "textEn": "Kakheti-Ioni"},
+        {"value": "12461", "textKa": "საქართველოს სასჯელაღსრულებისა და პრობაციის სამინისტროს სამედიცინო დეპარტამენტი", "textEn": "Ministry of Corrections Medical Department"},
+        {"value": "14134", "textKa": "ბინადრობის უფლება", "textEn": "Residence Permit"},
+        {"value": "14137", "textKa": "დაზღვევის არ მქონე", "textEn": "Uninsured"},
+        {"value": "16476", "textKa": "უნისონი", "textEn": "Unisoni"},
+        {"value": "16803", "textKa": "ალფა", "textEn": "Alpha"},
+        {"value": "22108", "textKa": "IGG", "textEn": "IGG"},
+        {"value": "41288", "textKa": "სს \"ნიუ ვიჟენ დაზღვევა\"", "textEn": "New Vision Insurance"},
+        {"value": "46299", "textKa": "სადაზღვევო კომპანია გლობალ ბენეფიტს ჯორჯია", "textEn": "Global Benefits Georgia Insurance"},
+        {"value": "49974", "textKa": "ინგოროყვას კლინიკა", "textEn": "Ingorokva Clinic"},
+        {"value": "51870", "textKa": "ონის მუნიციპალიტეტის მერია", "textEn": "Oni Municipality"},
+        {"value": "52103", "textKa": "რეფერალი ონკოლოგია", "textEn": "Referral Oncology"},
+        {"value": "54184", "textKa": "შპს\" თბილისის ცენტრალური საავადმყოფო\" 203826645", "textEn": "Tbilisi Central Hospital"},
+        {"value": "61677", "textKa": "ა(ა)იპ საქართველოს სოლიდარობის ფონდი. რეფერალური მომსახურების დეპარტამენტი", "textEn": "Georgia Solidarity Fund Referral Services"},
+        {"value": "61768", "textKa": "ახალი მზერა", "textEn": "New Vision"},
+        {"value": "63054", "textKa": "სს კურაციო", "textEn": "Curatio"},
+        {"value": "67209", "textKa": "გერმანული ჰოსპიტალი", "textEn": "German Hospital"},
+        {"value": "67469", "textKa": "რეგიონალური ჯანდაცვის ცენტრი", "textEn": "Regional Healthcare Center"},
+        {"value": "70867", "textKa": "სსიპ დევნილთა, ეკომიგრანტთა და საარსებო წყაროებით უზრუნველყოფის სააგენტო", "textEn": "IDPs, Eco-migrants and Livelihood Agency"},
+        {"value": "79541", "textKa": "შპს გაგრა", "textEn": "Gagra LLC"},
+        {"value": "81614", "textKa": "შპს თბილისის გულის ცენტრი", "textEn": "Tbilisi Heart Center"},
+        {"value": "86705", "textKa": "კონსილიუმ მედულა", "textEn": "Consilium Medula"},
+        {"value": "88950", "textKa": "ქართულ-ამერიკული რეპროდუქციული კლინიკა რეპროარტი", "textEn": "Georgian-American Reproductive Clinic ReproART"},
+        {"value": "89213", "textKa": "შპს ელიავას საერთაშორისო ფაგო თერაპიული ცენტრი", "textEn": "Eliava International Phage Therapy Center"},
+        {"value": "89718", "textKa": "შპს ჯეო ჰოსპიტალს", "textEn": "Geo Hospitals"},
+        {"value": "91685", "textKa": "სს \"საქართველოს კლინიკები\" - ხაშურის ჰოსპიტალი", "textEn": "Georgian Clinics - Khashuri Hospital"}
+      ]
+    },
+    "mo_instp": {
+      "id": "mo_instp",
+      "labelKa": "ტიპი",
+      "labelEn": "Insurance Type",
+      "required": false,
+      "section": "2 დაზღვევა",
+      "insurerNumber": 1,
+      "optionCount": 49,
+      "options": [
+        {"value": "0", "textKa": "", "textEn": ""},
+        {"value": "10", "textKa": "საპენსიო", "textEn": "Pensioner"},
+        {"value": "13", "textKa": "პედაგოგი", "textEn": "Teacher"},
+        {"value": "14", "textKa": "უმწეო", "textEn": "Vulnerable"},
+        {"value": "15", "textKa": "შშმპ", "textEn": "Disabled"},
+        {"value": "17", "textKa": "36-2-გადაუდებალი ამბულატორია (მინიმალური)", "textEn": "36-2-Emergency Ambulatory (Minimal)"},
+        {"value": "18", "textKa": "36-3-გადაუდებალი სტაციონარი", "textEn": "36-3-Emergency Inpatient"},
+        {"value": "19", "textKa": "36-3-გადაუდებელი სტაციონარი (მინიმალური)", "textEn": "36-3-Emergency Inpatient (Minimal)"},
+        {"value": "20", "textKa": "36-4-გეგმიური ქირურგიული მომსახურება", "textEn": "36-4-Planned Surgical Service"},
+        {"value": "21", "textKa": "36-5-კარდიოქირურგია", "textEn": "36-5-Cardiac Surgery"},
+        {"value": "22", "textKa": "165-2-გადაუდებელი ამბულატორია", "textEn": "165-2-Emergency Ambulatory"},
+        {"value": "23", "textKa": "165-3-გადაუდებალი სტაციონარი", "textEn": "165-3-Emergency Inpatient"},
+        {"value": "24", "textKa": "165-4-გეგმიური ქირურგიული მომსახურება", "textEn": "165-4-Planned Surgical Service"},
+        {"value": "25", "textKa": "165-5-კარდიოქირურგია", "textEn": "165-5-Cardiac Surgery"},
+        {"value": "26", "textKa": "218-2-გადაუდებალი ამბულატორია", "textEn": "218-2-Emergency Ambulatory"},
+        {"value": "27", "textKa": "218-3-გადაუდებალი სტაციონარი", "textEn": "218-3-Emergency Inpatient"},
+        {"value": "28", "textKa": "218-4-გეგმიური ქირურგიული მომსახურება", "textEn": "218-4-Planned Surgical Service"},
+        {"value": "29", "textKa": "218-5-კარდიოქირურგია", "textEn": "218-5-Cardiac Surgery"},
+        {"value": "30", "textKa": "კორპორატიული", "textEn": "Corporate"},
+        {"value": "32", "textKa": "რეფერალური მომსახურების სახელმწიფო პროგრამა", "textEn": "State Referral Service Program"},
+        {"value": "33", "textKa": "ვეტერანი", "textEn": "Veteran"},
+        {"value": "36", "textKa": "ქ. თბილისი მერიის სამედიცინო სერვისი", "textEn": "Tbilisi City Hall Medical Service"},
+        {"value": "37", "textKa": "სისხლძარღვოვანი მიდგომით უზრუნველყოფა", "textEn": "Vascular Approach Provision"},
+        {"value": "38", "textKa": "-", "textEn": "-"},
+        {"value": "39", "textKa": "საბაზისო < 1000", "textEn": "Basic < 1000"},
+        {"value": "40", "textKa": "საბაზისო >= 1000", "textEn": "Basic >= 1000"},
+        {"value": "41", "textKa": "36-2-გადაუდებელი ამბულატორია (ახალი)", "textEn": "36-2-Emergency Ambulatory (New)"},
+        {"value": "42", "textKa": "36-2-გადაუდებალი ამბულატორია (მინიმალური) (ახალი)", "textEn": "36-2-Emergency Ambulatory (Minimal) (New)"},
+        {"value": "43", "textKa": "36-3-გადაუდებალი სტაციონარი (ახალი)", "textEn": "36-3-Emergency Inpatient (New)"},
+        {"value": "44", "textKa": "36-3-გადაუდებელი სტაციონარი (მინიმალური) (ახალი)", "textEn": "36-3-Emergency Inpatient (Minimal) (New)"},
+        {"value": "45", "textKa": "36-4-გეგმიური ქირურგიული მომსახურება (ახალი)", "textEn": "36-4-Planned Surgical Service (New)"},
+        {"value": "46", "textKa": "36-5-კარდიოქირურგია (ახალი)", "textEn": "36-5-Cardiac Surgery (New)"},
+        {"value": "47", "textKa": "საბაზისო > 40000", "textEn": "Basic > 40000"},
+        {"value": "48", "textKa": "მინიმალური პაკეტი", "textEn": "Minimal Package"},
+        {"value": "49", "textKa": "70000-დან 100000 ქულამდე", "textEn": "70000 to 100000 Points"},
+        {"value": "50", "textKa": "მინიმალური < 1000", "textEn": "Minimal < 1000"},
+        {"value": "51", "textKa": "მინიმალური >= 1000", "textEn": "Minimal >= 1000"},
+        {"value": "52", "textKa": "საბაზისო, 2017 წლის 1 იანვრის მდგომარეობით დაზღვეული", "textEn": "Basic, Insured as of Jan 1, 2017"},
+        {"value": "53", "textKa": "საბაზისო, 2017 წლის 1 იანვრის შემდგომ დაზღვეული", "textEn": "Basic, Insured after Jan 1, 2017"},
+        {"value": "54", "textKa": "გადაუდებელი ამბულატორია 2", "textEn": "Emergency Ambulatory 2"},
+        {"value": "55", "textKa": "კარდიოქირურგია 5", "textEn": "Cardiac Surgery 5"},
+        {"value": "56", "textKa": "საბაზისო 6-დან 18 წლამდე", "textEn": "Basic 6 to 18 Years"},
+        {"value": "57", "textKa": "165-სტუდენტი", "textEn": "165-Student"},
+        {"value": "58", "textKa": "DRG გეგმიური ქირურგია", "textEn": "DRG Planned Surgery"},
+        {"value": "59", "textKa": "DRG გადაუდებელი სტაციონარი", "textEn": "DRG Emergency Inpatient"},
+        {"value": "60", "textKa": "პროგრამა რეფერალური მომსახურება, კომპონენტი ონკოლოგია-თანაგადახდა", "textEn": "Referral Service Program, Oncology-Copay Component"},
+        {"value": "61", "textKa": "ქიმიოთერაპია და ჰორმონოთერაპია", "textEn": "Chemotherapy and Hormone Therapy"},
+        {"value": "62", "textKa": "გულის ქირურგიის დამატებითი სამედიცინო მომსახურების ქვეპროგრამა", "textEn": "Cardiac Surgery Additional Medical Service Subprogram"},
+        {"value": "63", "textKa": "სსიპ დევნილთა,ეკომიგრანტთა და საარსებო წყაროებით უზრუნველყოფის სააგენტო", "textEn": "IDPs and Eco-migrants Agency"}
+      ]
+    },
+    "mo_regions": {
+      "id": "mo_regions",
+      "labelKa": "რეგიონი",
+      "labelEn": "Region",
+      "required": false,
+      "section": "4 დემოგრაფია",
+      "optionCount": 14,
+      "options": [
+        {"value": "", "textKa": "", "textEn": ""},
+        {"value": "1", "textKa": "01 - აფხაზეთი", "textEn": "01 - Abkhazia"},
+        {"value": "10", "textKa": "02 - აჭარა", "textEn": "02 - Adjara"},
+        {"value": "17", "textKa": "03 - გურია", "textEn": "03 - Guria"},
+        {"value": "21", "textKa": "04 - თბილისი", "textEn": "04 - Tbilisi"},
+        {"value": "39", "textKa": "05 - იმერეთი", "textEn": "05 - Imereti"},
+        {"value": "52", "textKa": "06 - კახეთი", "textEn": "06 - Kakheti"},
+        {"value": "61", "textKa": "07 - მცხეთა-მთიანეთი", "textEn": "07 - Mtskheta-Mtianeti"},
+        {"value": "67", "textKa": "08 - რაჭა-ლეჩხუმი და ქვემო სვანეთი", "textEn": "08 - Racha-Lechkhumi and Kvemo Svaneti"},
+        {"value": "72", "textKa": "09 - საზღვარგარეთი", "textEn": "09 - Abroad"},
+        {"value": "74", "textKa": "10 - სამეგრელო და ზემო სვანეთი", "textEn": "10 - Samegrelo and Zemo Svaneti"},
+        {"value": "84", "textKa": "11 - სამცხე-ჯავახეთი", "textEn": "11 - Samtskhe-Javakheti"},
+        {"value": "91", "textKa": "12 - ქვემო ქართლი", "textEn": "12 - Kvemo Kartli"},
+        {"value": "99", "textKa": "13 - შიდა ქართლი", "textEn": "13 - Shida Kartli"}
+      ]
+    },
+    "mo_ganatleba": {
+      "id": "mo_ganatleba",
+      "labelKa": "განათლება",
+      "labelEn": "Education",
+      "required": false,
+      "section": "4 დემოგრაფია",
+      "options": [
+        {"value": "", "textKa": "", "textEn": ""},
+        {"value": "4", "textKa": "უმაღლესი განათლება", "textEn": "Higher Education"},
+        {"value": "5", "textKa": "სკოლამდელი განათლება", "textEn": "Preschool Education"},
+        {"value": "6", "textKa": "საბაზისო განათლება (1-6 კლასი)", "textEn": "Basic Education (Grades 1-6)"},
+        {"value": "7", "textKa": "მეორე საფეხურის განათლება (7-9 კლასი)", "textEn": "Secondary Education (Grades 7-9)"},
+        {"value": "8", "textKa": "მეორე საფეხურის განათლება (9-12 კლასი)", "textEn": "Secondary Education (Grades 9-12)"},
+        {"value": "9", "textKa": "პროფესიული განათლება", "textEn": "Vocational Education"}
+      ]
+    },
+    "mo_ojaxi": {
+      "id": "mo_ojaxi",
+      "labelKa": "ოჯახური მდგომარეობა",
+      "labelEn": "Family Status",
+      "required": false,
+      "section": "4 დემოგრაფია",
+      "options": [
+        {"value": "", "textKa": "", "textEn": ""},
+        {"value": "1", "textKa": "დასაოჯახებელი", "textEn": "Single"},
+        {"value": "2", "textKa": "დაოჯახებული", "textEn": "Married"},
+        {"value": "3", "textKa": "განქორწინებული", "textEn": "Divorced"},
+        {"value": "4", "textKa": "ქვრივი", "textEn": "Widowed"},
+        {"value": "5", "textKa": "თანაცხოვრებაში მყოფი", "textEn": "Cohabiting"}
+      ]
+    },
+    "mo_dasaqmeba": {
+      "id": "mo_dasaqmeba",
+      "labelKa": "დასაქმება",
+      "labelEn": "Employment",
+      "required": false,
+      "section": "4 დემოგრაფია",
+      "options": [
+        {"value": "", "textKa": "", "textEn": ""},
+        {"value": "1", "textKa": "დასაქმებული", "textEn": "Employed"},
+        {"value": "2", "textKa": "უმუშევარი", "textEn": "Unemployed"},
+        {"value": "3", "textKa": "პენსიონერი", "textEn": "Pensioner"},
+        {"value": "4", "textKa": "სტუდენტი", "textEn": "Student"},
+        {"value": "5", "textKa": "მოსწავლე", "textEn": "Pupil"},
+        {"value": "6", "textKa": "მომუშავე პენსიაზე გასვლის შემდგომ", "textEn": "Working After Retirement"},
+        {"value": "7", "textKa": "თვითდასაქმებული", "textEn": "Self-employed"},
+        {"value": "8", "textKa": "მომუშავე სტუდენტი", "textEn": "Working Student"}
+      ]
+    },
+    "mo_raions_hid": {
+      "id": "mo_raions_hid",
+      "labelKa": "რაიონი",
+      "labelEn": "District",
+      "required": false,
+      "section": "4 დემოგრაფია",
+      "optionCount": 94,
+      "note": "This is a hidden select that contains all 94 districts, filtered dynamically based on selected region"
+    }
+  },
+  "checkboxes": [
+    {
+      "id": "mo_sbool",
+      "labelKa": "დაზღვევის ჩართვა",
+      "labelEn": "Enable Insurance",
+      "section": "2 დაზღვევა",
+      "purpose": "Toggle to enable/disable all insurance fields"
+    },
+    {
+      "id": "viravans",
+      "labelKa": "",
+      "labelEn": "Unknown Purpose",
+      "defaultChecked": true,
+      "note": "Found checked by default, purpose unclear"
+    },
+    {
+      "id": "cgbevb",
+      "labelKa": "",
+      "labelEn": "Unknown Purpose",
+      "defaultChecked": false,
+      "note": "Found unchecked, purpose unclear"
+    }
+  ],
+  "buttons": [
+    {
+      "id": "mo_fnlinstr",
+      "textKa": "შენახვა",
+      "textEn": "Save",
+      "className": "rgpap nondrg",
+      "purpose": "Main form submission button"
+    },
+    {
+      "id": "mo_tog",
+      "textKa": "+",
+      "textEn": "+",
+      "className": "whipap",
+      "purpose": "Add guarantee letter entry",
+      "section": "3 საგარანტიო"
+    },
+    {
+      "id": "",
+      "textKa": "კოპირება",
+      "textEn": "Copy",
+      "purpose": "Copy demographics from patient",
+      "section": "4 დემოგრაფია"
+    },
+    {
+      "id": "",
+      "textKa": "პჯდ შემოწმება",
+      "textEn": "Check Personal ID",
+      "className": "whipap nondrg",
+      "purpose": "Verify personal ID in database"
+    },
+    {
+      "id": "mo_timins",
+      "textKa": "",
+      "textEn": "Search Donor",
+      "className": "smadbut",
+      "purpose": "Search for guarantee donor",
+      "section": "3 საგარანტიო"
+    }
+  ],
+  "links": [
+    {
+      "textKa": "მეტი მზღვეველის დამატება",
+      "textEn": "Add More Insurer",
+      "purpose": "Add secondary/tertiary insurance sections",
+      "section": "2 დაზღვევა"
+    }
+  ],
+  "hiddenElements": {
+    "mo_incomhidf": {
+      "id": "mo_incomhidf",
+      "labelKa": "განყოფილების სრული სია",
+      "labelEn": "Full Department List",
+      "type": "select",
+      "optionCount": 46,
+      "note": "Hidden dropdown containing all departments (not just ambulatory ones)"
+    }
+  },
+  "screenshotPath": "/Users/toko/Desktop/medplum_medimind/.playwright-mcp/registration-visit-modal.png"
+}

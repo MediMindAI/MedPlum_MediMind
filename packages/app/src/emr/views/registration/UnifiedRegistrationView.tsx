@@ -9,6 +9,7 @@ import { PatientForm } from '../../components/registration/PatientForm';
 import { PatientTable } from '../../components/registration/PatientTable';
 import { SearchToggleButton } from '../../components/registration/SearchToggleButton';
 import { SearchPanel } from '../../components/registration/SearchPanel';
+import { RegistrationVisitModal } from '../../components/registration/RegistrationVisitModal';
 
 interface SearchFilters {
   personalId?: string;
@@ -30,6 +31,8 @@ export function UnifiedRegistrationView() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({});
   const [searchPanelOpen, setSearchPanelOpen] = useState(false);
+  const [visitModalOpen, setVisitModalOpen] = useState(false);
+  const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
 
   const handlePatientChange = () => {
     setRefreshKey((prev) => prev + 1);
@@ -39,6 +42,19 @@ export function UnifiedRegistrationView() {
     setSearchFilters(filters);
     setRefreshKey((prev) => prev + 1);
     setSearchPanelOpen(false); // Close panel after search
+  };
+
+  /**
+   * Handle patient row click - opens registration visit modal
+   */
+  const handlePatientClick = (patientId: string) => {
+    setSelectedPatientId(patientId);
+    setVisitModalOpen(true);
+  };
+
+  const handleVisitModalSuccess = () => {
+    setVisitModalOpen(false);
+    setRefreshKey((prev) => prev + 1);
   };
 
   return (
@@ -94,8 +110,16 @@ export function UnifiedRegistrationView() {
           border: '1px solid var(--emr-gray-200)',
         }}
       >
-        <PatientTable key={refreshKey} searchFilters={searchFilters} />
+        <PatientTable key={refreshKey} searchFilters={searchFilters} onPatientClick={handlePatientClick} />
       </Paper>
+
+      {/* Registration Visit Modal */}
+      <RegistrationVisitModal
+        opened={visitModalOpen}
+        onClose={() => setVisitModalOpen(false)}
+        patientId={selectedPatientId}
+        onSuccess={handleVisitModalSuccess}
+      />
     </Stack>
   );
 }

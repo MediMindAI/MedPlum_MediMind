@@ -1,0 +1,199 @@
+{
+  "metadata": {
+    "source": "SoftMedic EMR System - Registration Visit Modal",
+    "extractionDate": "2025-11-16",
+    "sourceUrl": "http://178.134.21.82:8008/clinic.php",
+    "regionSelectId": "mo_regions",
+    "districtSelectId": "mo_raions_hid",
+    "totalRegions": 13,
+    "totalDistricts": 94,
+    "notes": "Region values are internal database IDs (not sequential). District codes follow pattern: RRDD where RR is region code (01-13) and DD is district number."
+  },
+  "regionDistrictMapping": {
+    "1": {
+      "regionName": "01 - აფხაზეთი",
+      "regionCode": "01",
+      "regionNameKa": "აფხაზეთი",
+      "districts": [
+        { "code": "0101", "label": "გაგრა" },
+        { "code": "0102", "label": "გალი" },
+        { "code": "0103", "label": "გუდაუთა" },
+        { "code": "0104", "label": "გულრიფში" },
+        { "code": "0105", "label": "ზემო აფხაზეთი" },
+        { "code": "0106", "label": "ოჩამჩირე" },
+        { "code": "0107", "label": "სოხუმი" },
+        { "code": "0108", "label": "ტყვარჩელი" }
+      ]
+    },
+    "10": {
+      "regionName": "02 - აჭარა",
+      "regionCode": "02",
+      "regionNameKa": "აჭარა",
+      "districts": [
+        { "code": "0201", "label": "ბათუმი" },
+        { "code": "0202", "label": "ქედა" },
+        { "code": "0203", "label": "ქობულეთი" },
+        { "code": "0204", "label": "შუახევი" },
+        { "code": "0205", "label": "ხელვაჩაური" },
+        { "code": "0206", "label": "ხულო" }
+      ]
+    },
+    "17": {
+      "regionName": "03 - გურია",
+      "regionCode": "03",
+      "regionNameKa": "გურია",
+      "districts": [
+        { "code": "0301", "label": "ლანჩხუთი" },
+        { "code": "0302", "label": "ოზურგეთი" },
+        { "code": "0303", "label": "ჩოხატაური" }
+      ]
+    },
+    "21": {
+      "regionName": "04 - თბილისი",
+      "regionCode": "04",
+      "regionNameKa": "თბილისი",
+      "districts": [
+        { "code": "0401", "label": "გლდანი" },
+        { "code": "0402", "label": "გლდანი-ნაძალადევი" },
+        { "code": "0403", "label": "დიდგორი" },
+        { "code": "0404", "label": "დიდუბე" },
+        { "code": "0405", "label": "დიდუბე-ჩუღურეთი" },
+        { "code": "0406", "label": "ვაკე" },
+        { "code": "0407", "label": "ვაკე-საბურთალო" },
+        { "code": "0408", "label": "თბილისი" },
+        { "code": "0409", "label": "ისანი" },
+        { "code": "0410", "label": "ისანი-სამგორი" },
+        { "code": "0411", "label": "კრწანისი" },
+        { "code": "0412", "label": "მთაწმინდა" },
+        { "code": "0413", "label": "ნაძალადევი" },
+        { "code": "0414", "label": "საბურთალო" },
+        { "code": "0415", "label": "სამგორი" },
+        { "code": "0416", "label": "ჩუღურეთი" },
+        { "code": "0417", "label": "ძველი თბილისი" }
+      ]
+    },
+    "39": {
+      "regionName": "05 - იმერეთი",
+      "regionCode": "05",
+      "regionNameKa": "იმერეთი",
+      "districts": [
+        { "code": "0501", "label": "ბაღდათი" },
+        { "code": "0502", "label": "ვანი" },
+        { "code": "0503", "label": "ზესტაფონი" },
+        { "code": "0504", "label": "თერჯოლა" },
+        { "code": "0505", "label": "სამტრედია" },
+        { "code": "0506", "label": "საჩხერე" },
+        { "code": "0507", "label": "ტყიბული" },
+        { "code": "0508", "label": "ქუთაისი" },
+        { "code": "0509", "label": "წყალტუბო" },
+        { "code": "0510", "label": "ჭიათურა" },
+        { "code": "0511", "label": "ხარაგაული" },
+        { "code": "0512", "label": "ხონი" }
+      ]
+    },
+    "52": {
+      "regionName": "06 - კახეთი",
+      "regionCode": "06",
+      "regionNameKa": "კახეთი",
+      "districts": [
+        { "code": "0601", "label": "ახმეტა" },
+        { "code": "0602", "label": "გურჯაანი" },
+        { "code": "0603", "label": "დედოფლისწყარო" },
+        { "code": "0604", "label": "თელავი" },
+        { "code": "0605", "label": "ლაგოდეხი" },
+        { "code": "0606", "label": "საგარეჯო" },
+        { "code": "0607", "label": "სიღნაღი" },
+        { "code": "0608", "label": "ყვარელი" }
+      ]
+    },
+    "61": {
+      "regionName": "07 - მცხეთა-მთიანეთი",
+      "regionCode": "07",
+      "regionNameKa": "მცხეთა-მთიანეთი",
+      "districts": [
+        { "code": "0701", "label": "ახალგორი" },
+        { "code": "0702", "label": "დუშეთი" },
+        { "code": "0703", "label": "თიანეთი" },
+        { "code": "0704", "label": "მცხეთა" },
+        { "code": "0705", "label": "ყაზბეგი" }
+      ]
+    },
+    "67": {
+      "regionName": "08 - რაჭა-ლეჩხუმი და ქვემო სვანეთი",
+      "regionCode": "08",
+      "regionNameKa": "რაჭა-ლეჩხუმი და ქვემო სვანეთი",
+      "districts": [
+        { "code": "0801", "label": "ამბროლაური" },
+        { "code": "0802", "label": "ლენტეხი" },
+        { "code": "0803", "label": "ონი" },
+        { "code": "0804", "label": "ცაგერი" }
+      ]
+    },
+    "72": {
+      "regionName": "09 - საზღვარგარეთი",
+      "regionCode": "09",
+      "regionNameKa": "საზღვარგარეთი",
+      "districts": [
+        { "code": "0901", "label": "საზღვარგარეთი" }
+      ]
+    },
+    "74": {
+      "regionName": "10 - სამეგრელო და ზემო სვანეთი",
+      "regionCode": "10",
+      "regionNameKa": "სამეგრელო და ზემო სვანეთი",
+      "districts": [
+        { "code": "1001", "label": "აბაშა" },
+        { "code": "1002", "label": "ზუგდიდი" },
+        { "code": "1003", "label": "მარტვილი" },
+        { "code": "1004", "label": "მესტია" },
+        { "code": "1005", "label": "სენაკი" },
+        { "code": "1006", "label": "ფოთი" },
+        { "code": "1007", "label": "ჩხოროწყუ" },
+        { "code": "1008", "label": "წალენჯიხა" },
+        { "code": "1009", "label": "ხობი" }
+      ]
+    },
+    "84": {
+      "regionName": "11 - სამცხე-ჯავახეთი",
+      "regionCode": "11",
+      "regionNameKa": "სამცხე-ჯავახეთი",
+      "districts": [
+        { "code": "1101", "label": "ადიგენი" },
+        { "code": "1102", "label": "ასპინძა" },
+        { "code": "1103", "label": "ახალქალაქი" },
+        { "code": "1104", "label": "ახალციხე" },
+        { "code": "1105", "label": "ბორჯომი" },
+        { "code": "1106", "label": "ნინოწმინდა" }
+      ]
+    },
+    "91": {
+      "regionName": "12 - ქვემო ქართლი",
+      "regionCode": "12",
+      "regionNameKa": "ქვემო ქართლი",
+      "districts": [
+        { "code": "1201", "label": "ბოლნისი" },
+        { "code": "1202", "label": "გარდაბანი" },
+        { "code": "1203", "label": "დმანისი" },
+        { "code": "1204", "label": "თეთრიწყარო" },
+        { "code": "1205", "label": "მარნეული" },
+        { "code": "1206", "label": "რუსთავი" },
+        { "code": "1207", "label": "წალკა" }
+      ]
+    },
+    "99": {
+      "regionName": "13 - შიდა ქართლი",
+      "regionCode": "13",
+      "regionNameKa": "შიდა ქართლი",
+      "districts": [
+        { "code": "1301", "label": "გორი" },
+        { "code": "1302", "label": "კასპი" },
+        { "code": "1303", "label": "ქარელი" },
+        { "code": "1304", "label": "ქურთა" },
+        { "code": "1305", "label": "ყორნისი" },
+        { "code": "1306", "label": "ცხინვალი" },
+        { "code": "1307", "label": "ხაშური" },
+        { "code": "1308", "label": "ჯავა" }
+      ]
+    }
+  }
+}

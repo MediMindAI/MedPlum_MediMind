@@ -10,6 +10,7 @@ import { PatientHistoryTable } from '../../components/patient-history/PatientHis
 import { PatientHistoryFilters } from '../../components/patient-history/PatientHistoryFilters';
 import { VisitEditModal } from '../../components/patient-history/VisitEditModal';
 import { DeletionConfirmationModal } from '../../components/patient-history/DeletionConfirmationModal';
+import { PatientHistoryDetailModal } from '../../components/patient-history/PatientHistoryDetailModal';
 
 /**
  * Main Patient History page component
@@ -42,7 +43,16 @@ export function PatientHistoryView(): JSX.Element {
   // Modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedVisitId, setSelectedVisitId] = useState<string | null>(null);
+
+  /**
+   * Handle row click to open detail modal
+   */
+  const handleRowClick = (visitId: string) => {
+    setSelectedVisitId(visitId);
+    setDetailModalOpen(true);
+  };
 
   /**
    * Handle edit button click
@@ -107,8 +117,17 @@ export function PatientHistoryView(): JSX.Element {
           onSort={handleSort}
           sortField={sortField}
           sortDirection={sortDirection}
+          onRowClick={handleRowClick}
         />
       </Paper>
+
+      {/* Detail Modal (opens on row click) */}
+      <PatientHistoryDetailModal
+        opened={detailModalOpen}
+        onClose={() => setDetailModalOpen(false)}
+        encounterId={selectedVisitId}
+        onSuccess={handleSuccess}
+      />
 
       {/* Edit Modal */}
       <VisitEditModal

@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
+import { TranslationContext } from '../contexts/TranslationContext';
 import kaTranslations from '../translations/ka.json';
 import enTranslations from '../translations/en.json';
 import ruTranslations from '../translations/ru.json';
@@ -26,6 +27,7 @@ const DEFAULT_LANGUAGE: Language = 'ka';
  * - Switch between Georgian (ka), English (en), and Russian (ru)
  * - Persist language preference to localStorage
  * - Fallback to English if translation key not found
+ * - Automatically updates all components when language changes (no page refresh needed)
  *
  * Usage:
  * ```typescript
@@ -38,10 +40,15 @@ const DEFAULT_LANGUAGE: Language = 'ka';
  *   </div>
  * );
  * ```
+ *
+ * Note: Best used within a TranslationProvider (wrapped in EMRPage) for automatic updates
  */
 export function useTranslation() {
-  // Initialize language from localStorage or default
-  const [lang, setLangState] = useState<Language>(() => {
+  // Always call context hook first (follows rules of hooks)
+  const contextValue = useContext(TranslationContext);
+
+  // Always call local state hooks (follows rules of hooks - must be unconditional)
+  const [localLang, setLocalLangState] = useState<Language>(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === 'ka' || stored === 'en' || stored === 'ru') {
       return stored;
@@ -49,45 +56,37 @@ export function useTranslation() {
     return DEFAULT_LANGUAGE;
   });
 
-  /**
-   * Update language and persist to localStorage
-   */
-  const setLang = useCallback((newLang: Language) => {
-    setLangState(newLang);
+  const setLocalLang = useCallback((newLang: Language) => {
+    setLocalLangState(newLang);
     localStorage.setItem(STORAGE_KEY, newLang);
+    // Force page reload to update all components when not using context
+    window.location.reload();
   }, []);
 
-  /**
-   * Get translation by key
-   * Falls back to English if key not found, then to key itself
-   */
-  const t = useCallback((key: string, params?: Record<string, any>): string => {
-    // Try current language first
-    let value = translations[lang]?.[key];
+  const localT = useCallback(
+    (key: string, params?: Record<string, any>): string => {
+      let value = translations[localLang]?.[key];
+      if (!value) {
+        value = translations.en?.[key];
+      }
+      if (!value) {
+        return key;
+      }
+      if (params) {
+        return value.replace(/\{(\w+)\}/g, (match, paramKey) => {
+          return params[paramKey]?.toString() || match;
+        });
+      }
+      return value;
+    },
+    [localLang]
+  );
 
-    // Fallback to English if not found
-    if (!value) {
-      value = translations.en?.[key];
-    }
+  // If context is available (inside TranslationProvider), use it
+  // Otherwise fall back to local state (backwards compatibility)
+  if (contextValue) {
+    return contextValue;
+  }
 
-    // Return key itself if still not found
-    if (!value) {
-      return key;
-    }
-
-    // Replace parameters like {count}, {name}, etc.
-    if (params) {
-      return value.replace(/\{(\w+)\}/g, (match, paramKey) => {
-        return params[paramKey]?.toString() || match;
-      });
-    }
-
-    return value;
-  }, [lang]);
-
-  return {
-    t,
-    lang,
-    setLang,
-  };
+  return { t: localT, lang: localLang, setLang: setLocalLang };
 }

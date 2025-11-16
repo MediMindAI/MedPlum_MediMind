@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Grid, Select, TextInput, Stack } from '@mantine/core';
+import { Grid, Select, TextInput, Stack, Switch, Alert, LoadingOverlay, Box } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMedplum } from '@medplum/react-hooks';
 import { Patient } from '@medplum/fhirtypes';
 import { useState } from 'react';
-import { IconUser, IconPhone, IconFileText, IconUsers } from '@tabler/icons-react';
+import { IconUser, IconPhone, IconFileText, IconUsers, IconAlertTriangle } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { InternationalPhoneInput } from './InternationalPhoneInput';
 import { CitizenshipSelect } from './CitizenshipSelect';
@@ -15,6 +15,8 @@ import { CollapsibleSection } from './CollapsibleSection';
 import { validateGeorgianPersonalId, validateEmail } from '../../services/validators';
 import { notifications } from '@mantine/notifications';
 import { EMRDatePicker } from '../common/EMRDatePicker';
+import { createEncounterForPatient, VisitType } from '../../services/encounterService';
+import { generateUnknownPatientName, generateUnknownPatientIdentifier } from '../../services/unknownPatientService';
 
 interface PatientFormProps {
   onSuccess?: () => void;
@@ -31,9 +33,11 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
   const { t } = useTranslation();
   const medplum = useMedplum();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingUnknownName, setIsLoadingUnknownName] = useState(false);
 
   const form = useForm({
     initialValues: {
+      isUnknownPatient: false,
       personalId: '',
       firstName: '',
       lastName: '',
@@ -64,6 +68,10 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
       guardianPhone: '+995',
       guardianMaritalStatus: '',
       guardianAddress: '',
+      // Visit/Encounter type
+      visitType: 'ambulatory' as VisitType,
+      // Unknown patient specific fields
+      unknownPatientIdentifier: '',
     },
     validate: {
       personalId: (value) => {
@@ -71,9 +79,21 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
         const result = validateGeorgianPersonalId(value);
         return result.isValid ? null : result.error;
       },
-      firstName: (value) => (!value ? t('registration.validation.required') || 'Required' : null),
-      lastName: (value) => (!value ? t('registration.validation.required') || 'Required' : null),
-      gender: (value) => (!value ? t('registration.validation.required') || 'Required' : null),
+      firstName: (value, values) => {
+        // Skip validation for unknown patients
+        if (values.isUnknownPatient) return null;
+        return !value ? t('registration.validation.required') || 'Required' : null;
+      },
+      lastName: (value, values) => {
+        // Skip validation for unknown patients
+        if (values.isUnknownPatient) return null;
+        return !value ? t('registration.validation.required') || 'Required' : null;
+      },
+      gender: (value, values) => {
+        // Skip validation for unknown patients
+        if (values.isUnknownPatient) return null;
+        return !value ? t('registration.validation.required') || 'Required' : null;
+      },
       email: (value) => {
         if (!value) return null;
         const result = validateEmail(value);
@@ -82,23 +102,81 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
     },
   });
 
+  // Handle unknown patient toggle - auto-generate name and identifier
+  const handleUnknownPatientToggle = async (checked: boolean) => {
+    form.setFieldValue('isUnknownPatient', checked);
+
+    if (checked) {
+      setIsLoadingUnknownName(true);
+      try {
+        // Auto-generate unknown patient name and identifier
+        const [unknownName, unknownIdentifier] = await Promise.all([
+          generateUnknownPatientName(medplum),
+          generateUnknownPatientIdentifier(medplum),
+        ]);
+
+        // Set the auto-generated values
+        form.setFieldValue('lastName', unknownName);
+        form.setFieldValue('firstName', '');
+        form.setFieldValue('fatherName', '');
+        form.setFieldValue('personalId', '');
+        form.setFieldValue('gender', 'unknown');
+        form.setFieldValue('birthDate', null);
+        form.setFieldValue('unknownPatientIdentifier', unknownIdentifier);
+        form.setFieldValue('visitType', 'emergency'); // Default to emergency for unknown patients
+      } catch (error) {
+        console.error('Error generating unknown patient data:', error);
+        notifications.show({
+          title: t('registration.error.title') || 'Error',
+          message: t('registration.unknown.generationError') || 'Failed to generate unknown patient data',
+          color: 'red',
+        });
+      } finally {
+        setIsLoadingUnknownName(false);
+      }
+    } else {
+      // Clear the auto-generated values when toggling off
+      form.setFieldValue('lastName', '');
+      form.setFieldValue('firstName', '');
+      form.setFieldValue('fatherName', '');
+      form.setFieldValue('personalId', '');
+      form.setFieldValue('gender', '');
+      form.setFieldValue('birthDate', null);
+      form.setFieldValue('unknownPatientIdentifier', '');
+      form.setFieldValue('visitType', 'ambulatory');
+    }
+  };
+
   const handleSubmit = async (values: typeof form.values, action: 'save' | 'continue' | 'new' | 'view' = 'save') => {
     try {
       setIsSubmitting(true);
+
+      // Build identifiers array
+      const identifiers: Array<{ system: string; value: string }> = [];
+
+      // Add temporary identifier for unknown patients
+      if (values.isUnknownPatient && values.unknownPatientIdentifier) {
+        identifiers.push({
+          system: 'http://medimind.ge/identifiers/temporary-patient-id',
+          value: values.unknownPatientIdentifier,
+        });
+      }
+
+      // Add personal ID if provided
+      if (values.personalId) {
+        identifiers.push({
+          system: 'http://medimind.ge/identifiers/personal-id',
+          value: values.personalId,
+        });
+      }
+
       const patient: Patient = {
         resourceType: 'Patient',
-        identifier: values.personalId
-          ? [
-              {
-                system: 'http://medimind.ge/identifiers/personal-id',
-                value: values.personalId,
-              },
-            ]
-          : undefined,
+        identifier: identifiers.length > 0 ? identifiers : undefined,
         name: [
           {
             family: values.lastName,
-            given: [values.firstName],
+            given: values.firstName ? [values.firstName] : [],
             extension: values.fatherName
               ? [
                   {
@@ -109,7 +187,7 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
               : undefined,
           },
         ],
-        gender: values.gender as 'male' | 'female' | 'other',
+        gender: values.gender as 'male' | 'female' | 'other' | 'unknown',
         birthDate: values.birthDate ? values.birthDate.toISOString().split('T')[0] : undefined,
         telecom: [
           values.phoneNumber
@@ -133,6 +211,11 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
             ]
           : undefined,
         extension: [
+          // Unknown patient marker extension
+          values.isUnknownPatient && {
+            url: 'http://medimind.ge/fhir/StructureDefinition/unknown-patient',
+            valueBoolean: true,
+          },
           values.citizenship && {
             url: 'citizenship',
             valueCodeableConcept: {
@@ -224,9 +307,23 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
       };
 
       const createdPatient = await medplum.createResource(patient);
+
+      // Auto-create Encounter for the patient's visit
+      const createdEncounter = await createEncounterForPatient(
+        medplum,
+        createdPatient,
+        values.visitType as VisitType,
+        values.isUnknownPatient
+      );
+
+      // Show appropriate success message
+      const successMessage = values.isUnknownPatient
+        ? t('registration.unknown.success') || 'Unknown patient registered successfully'
+        : t('registration.success.patientCreated') || 'Patient registered successfully';
+
       notifications.show({
         title: t('registration.success.title') || 'Success',
-        message: t('registration.success.patientCreated') || 'Patient registered successfully',
+        message: `${successMessage} (${createdEncounter.identifier?.[0]?.value || ''})`,
         color: 'green',
       });
 
@@ -262,63 +359,145 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
           icon={<IconUser size={22} stroke={2} />}
           defaultOpen={true}
         >
-          <Stack gap="md">
-            <Grid>
-              <Grid.Col span={6}>
-                <TextInput
-                  label={t('registration.field.personalId')}
-                  placeholder="01234567891"
-                  {...form.getInputProps('personalId')}
-                />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <Select
-                  label={t('registration.field.gender')}
-                  placeholder={t('registration.field.selectGender') || 'Select gender'}
-                  data={[
-                    { value: 'male', label: t('registration.gender.male') || 'Male' },
-                    { value: 'female', label: t('registration.gender.female') || 'Female' },
-                    { value: 'other', label: t('registration.gender.other') || 'Other' },
-                  ]}
-                  {...form.getInputProps('gender')}
-                  required
-                />
-              </Grid.Col>
-            </Grid>
+          <Box pos="relative">
+            <LoadingOverlay visible={isLoadingUnknownName} overlayProps={{ blur: 2 }} />
+            <Stack gap="md">
+              {/* Visit Type and Unknown Patient Toggle - Compact Row */}
+              <Grid align="end">
+                <Grid.Col span={8}>
+                  <Select
+                    label={t('registration.field.visitType') || 'Visit Type'}
+                    placeholder={t('registration.field.selectVisitType') || 'Select visit type'}
+                    data={[
+                      { value: 'ambulatory', label: t('registration.visitType.ambulatory') || 'Ambulatory' },
+                      { value: 'stationary', label: t('registration.visitType.stationary') || 'Stationary' },
+                      { value: 'emergency', label: t('registration.visitType.emergency') || 'Emergency' },
+                    ]}
+                    {...form.getInputProps('visitType')}
+                    required
+                  />
+                </Grid.Col>
+                <Grid.Col span={4}>
+                  <Switch
+                    label={t('registration.unknownPatient') || 'უცნობი პაციენტი'}
+                    checked={form.values.isUnknownPatient}
+                    onChange={(event) => handleUnknownPatientToggle(event.currentTarget.checked)}
+                    size="sm"
+                    color="cyan"
+                    styles={{
+                      root: {
+                        padding: '8px 12px',
+                        backgroundColor: form.values.isUnknownPatient ? 'rgba(23, 162, 184, 0.08)' : 'transparent',
+                        borderRadius: '6px',
+                        border: form.values.isUnknownPatient ? '1px solid rgba(23, 162, 184, 0.3)' : '1px solid transparent',
+                        transition: 'all 0.2s ease',
+                      },
+                      label: {
+                        fontWeight: 500,
+                        fontSize: '13px',
+                        color: form.values.isUnknownPatient ? '#138496' : '#6b7280',
+                      },
+                      track: {
+                        cursor: 'pointer',
+                      },
+                    }}
+                  />
+                </Grid.Col>
+              </Grid>
 
-            <Grid>
-              <Grid.Col span={4}>
-                <TextInput
-                  label={t('registration.field.firstName')}
-                  placeholder="სახელი"
-                  {...form.getInputProps('firstName')}
-                  required
-                />
-              </Grid.Col>
-              <Grid.Col span={4}>
-                <TextInput
-                  label={t('registration.field.lastName')}
-                  placeholder="გვარი"
-                  {...form.getInputProps('lastName')}
-                  required
-                />
-              </Grid.Col>
-              <Grid.Col span={4}>
-                <TextInput
-                  label={t('registration.field.fatherName')}
-                  placeholder="მამის სახელი"
-                  {...form.getInputProps('fatherName')}
-                />
-              </Grid.Col>
-            </Grid>
+              {/* Compact Info Banner for Unknown Patient */}
+              {form.values.isUnknownPatient && (
+                <Box
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(23, 162, 184, 0.05) 0%, rgba(32, 196, 221, 0.08) 100%)',
+                    borderRadius: '6px',
+                    padding: '10px 14px',
+                    borderLeft: '3px solid #17a2b8',
+                  }}
+                >
+                  <Grid align="center" gutter="xs">
+                    <Grid.Col span="auto">
+                      <Box style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <IconAlertTriangle size={16} color="#138496" />
+                        <Box style={{ fontSize: '13px', color: '#138496', fontWeight: 500 }}>
+                          {t('registration.unknown.tempId') || 'Temporary ID'}:{' '}
+                          <Box component="span" fw={700} style={{ color: '#0d6470' }}>
+                            {form.values.unknownPatientIdentifier}
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Grid.Col>
+                    <Grid.Col span="content">
+                      <Box style={{ fontSize: '12px', color: '#6b7280' }}>
+                        {form.values.lastName}
+                      </Box>
+                    </Grid.Col>
+                  </Grid>
+                </Box>
+              )}
 
-            <EMRDatePicker
-              label={t('registration.field.birthDate')}
-              placeholder={t('registration.field.birthDatePlaceholder') || 'აირჩიეთ დაბადების თარიღი'}
-              maxDate={new Date()}
-              {...form.getInputProps('birthDate')}
-            />
-          </Stack>
+              <Grid>
+                <Grid.Col span={6}>
+                  <TextInput
+                    label={t('registration.field.personalId')}
+                    placeholder="01234567891"
+                    {...form.getInputProps('personalId')}
+                    disabled={form.values.isUnknownPatient}
+                  />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <Select
+                    label={t('registration.field.gender')}
+                    placeholder={t('registration.field.selectGender') || 'Select gender'}
+                    data={[
+                      { value: 'male', label: t('registration.gender.male') || 'Male' },
+                      { value: 'female', label: t('registration.gender.female') || 'Female' },
+                      { value: 'other', label: t('registration.gender.other') || 'Other' },
+                      { value: 'unknown', label: t('registration.gender.unknown') || 'Unknown' },
+                    ]}
+                    {...form.getInputProps('gender')}
+                    required={!form.values.isUnknownPatient}
+                  />
+                </Grid.Col>
+              </Grid>
+
+              <Grid>
+                <Grid.Col span={4}>
+                  <TextInput
+                    label={t('registration.field.firstName')}
+                    placeholder="სახელი"
+                    {...form.getInputProps('firstName')}
+                    required={!form.values.isUnknownPatient}
+                    disabled={form.values.isUnknownPatient}
+                  />
+                </Grid.Col>
+                <Grid.Col span={4}>
+                  <TextInput
+                    label={t('registration.field.lastName')}
+                    placeholder={form.values.isUnknownPatient ? form.values.lastName : 'გვარი'}
+                    {...form.getInputProps('lastName')}
+                    required={!form.values.isUnknownPatient}
+                    disabled={form.values.isUnknownPatient}
+                  />
+                </Grid.Col>
+                <Grid.Col span={4}>
+                  <TextInput
+                    label={t('registration.field.fatherName')}
+                    placeholder="მამის სახელი"
+                    {...form.getInputProps('fatherName')}
+                    disabled={form.values.isUnknownPatient}
+                  />
+                </Grid.Col>
+              </Grid>
+
+              <EMRDatePicker
+                label={t('registration.field.birthDate')}
+                placeholder={t('registration.field.birthDatePlaceholder') || 'აირჩიეთ დაბადების თარიღი'}
+                maxDate={new Date()}
+                {...form.getInputProps('birthDate')}
+              />
+            </Stack>
+          </Box>
         </CollapsibleSection>
 
         {/* Section 2: Contact Information - Default CLOSED */}
