@@ -12,6 +12,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router';
 import { App } from './App';
 import { getConfig } from './config';
 import './index.css';
+import './emr/styles/theme.css';
 
 export async function initApp(): Promise<void> {
   const config = getConfig();

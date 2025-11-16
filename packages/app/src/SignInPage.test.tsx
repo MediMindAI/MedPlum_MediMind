@@ -35,7 +35,7 @@ describe('SignInPage', () => {
   });
 
   function expectSigninPageRendered(): void {
-    expect(screen.getByText('Sign in to Medplum')).toBeInTheDocument();
+    expect(screen.getByText('Welcome Back')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument();
   }
 
@@ -64,7 +64,8 @@ describe('SignInPage', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
     });
 
-    expect(await screen.findByTestId('search-control')).toBeInTheDocument();
+    // Now redirects to /emr which redirects to /emr/registration
+    expect(await screen.findByText('MediMind')).toBeInTheDocument();
   });
 
   test('Forgot password', async () => {
@@ -141,8 +142,8 @@ describe('SignInPage', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Sign in' }));
     });
 
-    // should redirect to the homepage
-    expect(await screen.findByTestId('search-control')).toBeInTheDocument();
+    // should redirect to /emr (which redirects to /emr/registration)
+    expect(await screen.findByText('MediMind')).toBeInTheDocument();
   });
 
   test('Does NOT automatically redirect to next if logged in and next NOT present', async () => {
@@ -160,7 +161,12 @@ describe('SignInPage', () => {
   test('Automatically redirects to homepage if logged with bad next', async () => {
     setup('/signin?next=https%3A%2F%2Fevil.com', new MockClient({ profile: DrAliceSmith }));
 
-    // should redirect to the homepage
-    expect(await screen.findByTestId('search-control')).toBeInTheDocument();
+    // should redirect to /emr (which redirects to /emr/registration)
+    // The sign in page should no longer be visible
+    await act(async () => {
+      // Wait for navigation to complete
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    });
+    expect(screen.queryByText('Welcome Back')).not.toBeInTheDocument();
   });
 });

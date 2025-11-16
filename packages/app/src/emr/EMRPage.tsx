@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box } from '@mantine/core';
+import type { JSX } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { EMRMainMenu } from './components/EMRMainMenu/EMRMainMenu';
 import { HorizontalSubMenu } from './components/HorizontalSubMenu/HorizontalSubMenu';
-import { LanguageSelector } from './components/LanguageSelector/LanguageSelector';
 import { TranslationProvider } from './contexts/TranslationContext';
 
 /**
@@ -42,23 +42,23 @@ export function EMRPage(): JSX.Element {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          height: '100vh',
+          height: 'calc(100vh - 92px)', // Account for Medplum AppShell header (80px) + padding (12px)
           overflow: 'hidden',
         }}
       >
-        {/* Row 1: MainMenu with LanguageSelector */}
+        {/* Row 1: Main Navigation Menu */}
         <Box
           style={{
-            height: '50px',
+            height: '52px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 1rem',
-            borderBottom: '1px solid #dee2e6',
+            padding: '0 24px',
+            background: 'white',
+            borderBottom: '1px solid #e5e7eb',
           }}
         >
           <EMRMainMenu />
-          <LanguageSelector />
         </Box>
 
         {/* Row 2: HorizontalSubMenu (conditional - only for registration and patient-history) */}

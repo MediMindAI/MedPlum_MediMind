@@ -39,7 +39,7 @@ export function EMRMainMenu() {
   };
 
   return (
-    <Box style={{ display: 'flex', gap: '0.5rem' }}>
+    <Box style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
       {menuItems.map((item) => {
         const active = isActive(item.path);
         return (
@@ -47,26 +47,35 @@ export function EMRMainMenu() {
             key={item.key}
             onClick={() => navigate(item.path)}
             style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '4px',
-              fontSize: '14px',
-              fontWeight: 500,
+              padding: '10px 20px',
+              borderRadius: '8px',
+              fontSize: '15px',
+              fontWeight: 600,
               cursor: 'pointer',
-              color: active ? 'white' : '#495057',
+              color: active ? 'white' : '#374151',
               background: active
                 ? 'linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)'
                 : 'transparent',
-              transition: 'all 0.2s ease',
+              transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
               border: 'none',
+              boxShadow: active ? '0 4px 12px rgba(26, 54, 93, 0.3)' : 'none',
+              transform: active ? 'translateY(-1px)' : 'none',
+              letterSpacing: '-0.2px',
             }}
             onMouseEnter={(e) => {
               if (!active) {
-                e.currentTarget.style.backgroundColor = '#f1f3f5';
+                e.currentTarget.style.backgroundColor = '#f3f4f6';
+                e.currentTarget.style.color = '#1a365d';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
               }
             }}
             onMouseLeave={(e) => {
               if (!active) {
                 e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#374151';
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = 'none';
               }
             }}
           >

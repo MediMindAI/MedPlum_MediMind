@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
-import { Alert, Title } from '@mantine/core';
-import { Document, Logo, RegisterForm, useMedplum } from '@medplum/react';
+import { Alert } from '@mantine/core';
+import { RegisterForm, useMedplum } from '@medplum/react';
 import { IconAlertCircle } from '@tabler/icons-react';
 import type { JSX } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { AuthLayout } from './components/AuthLayout';
 import { getConfig, isRegisterEnabled } from './config';
 
 export function RegisterPage(): JSX.Element | null {
@@ -21,28 +22,33 @@ export function RegisterPage(): JSX.Element | null {
 
   if (!isRegisterEnabled()) {
     return (
-      <Document width={450}>
+      <AuthLayout title="Registration Disabled" subtitle="New account creation is not available">
         <Alert icon={<IconAlertCircle size={16} />} title="New projects disabled" color="red">
           New projects are disabled on this server.
         </Alert>
-      </Document>
+      </AuthLayout>
     );
   }
 
   return (
-    <RegisterForm
-      type="project"
-      projectId="new"
-      onSuccess={() => {
-        // Use window.location.href to force a reload
-        // Otherwise we get caught in a React render loop
-        window.location.href = '/';
-      }}
-      googleClientId={config.googleClientId}
-      recaptchaSiteKey={config.recaptchaSiteKey}
+    <AuthLayout
+      title="Create Account"
+      subtitle="Join MediMind to manage your healthcare data"
+      footerText="Already have an account?"
+      footerLinkText="Sign in"
+      footerLinkHref="/signin"
     >
-      <Logo size={32} />
-      <Title>Create a new account</Title>
-    </RegisterForm>
+      <RegisterForm
+        type="project"
+        projectId="new"
+        onSuccess={() => {
+          // Use window.location.href to force a reload
+          // Otherwise we get caught in a React render loop
+          window.location.href = '/';
+        }}
+        googleClientId={config.googleClientId}
+        recaptchaSiteKey={config.recaptchaSiteKey}
+      />
+    </AuthLayout>
   );
 }

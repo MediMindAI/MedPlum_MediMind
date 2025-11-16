@@ -207,6 +207,7 @@
   "registration.message.deleteConfirm": "Are you sure you want to delete this patient?",
   "registration.message.deleteSuccess": "Patient deleted successfully",
   "registration.message.deleteError": "Failed to delete patient",
+  "registration.delete.warning": "This action cannot be undone!",
   "registration.message.noResults": "No patients found",
   "registration.message.loadingPatients": "Loading patients...",
   "registration.message.loadingError": "Failed to load patients",

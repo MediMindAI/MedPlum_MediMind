@@ -40,8 +40,8 @@ export function CalendarHeader({
   return (
     <Box
       style={{
-        marginBottom: '16px',
-        paddingBottom: '12px',
+        marginBottom: '10px',
+        paddingBottom: '8px',
         borderBottom: '1px solid var(--emr-gray-200)',
       }}
     >
@@ -49,12 +49,12 @@ export function CalendarHeader({
         {/* Previous Button */}
         <ActionIcon
           variant="subtle"
-          size="lg"
+          size="md"
           onClick={onPrevious}
           style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '8px',
+            width: '28px',
+            height: '28px',
+            borderRadius: '6px',
             transition: 'all 0.2s ease',
             color: 'var(--emr-primary)',
           }}
@@ -69,7 +69,7 @@ export function CalendarHeader({
             e.currentTarget.style.transform = 'scale(1)';
           }}
         >
-          <IconChevronLeft size={20} stroke={2.5} />
+          <IconChevronLeft size={16} stroke={2.5} />
         </ActionIcon>
 
         {/* Clickable Header Text */}
@@ -77,8 +77,8 @@ export function CalendarHeader({
           onClick={view !== 'year' ? onHeaderClick : undefined}
           style={{
             cursor: view !== 'year' ? 'pointer' : 'default',
-            padding: '8px 20px',
-            borderRadius: '10px',
+            padding: '6px 12px',
+            borderRadius: '8px',
             transition: 'all 0.2s ease',
             userSelect: 'none',
           }}
@@ -98,10 +98,10 @@ export function CalendarHeader({
         >
           <Text
             fw={700}
-            size="lg"
+            size="md"
             style={{
               color: 'var(--emr-primary)',
-              fontSize: '17px',
+              fontSize: '14px',
               letterSpacing: '-0.2px',
             }}
           >
@@ -112,12 +112,12 @@ export function CalendarHeader({
         {/* Next Button */}
         <ActionIcon
           variant="subtle"
-          size="lg"
+          size="md"
           onClick={onNext}
           style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '8px',
+            width: '28px',
+            height: '28px',
+            borderRadius: '6px',
             transition: 'all 0.2s ease',
             color: 'var(--emr-primary)',
           }}
@@ -132,7 +132,7 @@ export function CalendarHeader({
             e.currentTarget.style.transform = 'scale(1)';
           }}
         >
-          <IconChevronRight size={20} stroke={2.5} />
+          <IconChevronRight size={16} stroke={2.5} />
         </ActionIcon>
       </Group>
     </Box>

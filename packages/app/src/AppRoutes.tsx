@@ -111,6 +111,9 @@ export function AppRoutes(): JSX.Element {
         <Route path="/lab/assays" element={<AssaysPage />} />
         <Route path="/lab/panels" element={<PanelsPage />} />
         <Route path="/emr" element={<EMRPage />}>
+          {/* Default route - redirect to registration */}
+          <Route index element={<Navigate to="registration" replace />} />
+
           {/* Registration Section */}
           <Route path="registration" element={<RegistrationSection />}>
             {/* Default route - redirect to registration page */}

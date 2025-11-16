@@ -90,11 +90,170 @@ npm run lint:fix              # Lint and auto-fix issues
 - TypeScript strict mode enabled across all packages
 - ESM modules used throughout (type: "module" in package.json)
 
+### UI Component Reuse (CRITICAL)
+**When we add UI elements that repeat between pages, either reuse an existing shared component or refactor the repeated markup into a shared component before finishing the task.**
+
+This means:
+- Before creating new UI elements, check if similar components already exist
+- If you find yourself copying UI code between pages, extract it into a shared component
+- Place shared components in appropriate locations:
+  - EMR-specific: `packages/app/src/emr/components/`
+  - App-wide: `packages/app/src/components/`
+  - Cross-package: `packages/react/src/`
+- This ensures consistency, reduces maintenance burden, and prevents code duplication
+
 ### Testing Patterns
 - Jest for unit/integration tests
 - `@medplum/mock` provides MockClient for testing without a server
 - Use `MemoryRouter` for route testing
 - Clear `localStorage` in `beforeEach` blocks
+
+### Mobile-First Development (CRITICAL)
+**All UI components MUST be built with mobile-first responsive design. Every component should work flawlessly on mobile devices before being enhanced for larger screens.**
+
+#### Core Principles
+- **Mobile-First CSS**: Write styles for mobile first, then use `@media (min-width: ...)` for larger screens
+- **Touch-Friendly**: All interactive elements must be at least 44x44px (Apple's minimum tap target)
+- **Responsive Layouts**: Use flexbox/grid with `flex-wrap`, avoid fixed widths
+- **Viewport Units**: Use `vw`, `vh`, `dvh` for full-screen layouts
+- **Font Scaling**: Use `rem` units, minimum 16px base font size for readability
+
+#### Mantine Responsive Utilities
+```typescript
+// Use Mantine's responsive props (preferred)
+<Grid>
+  <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>Content</Grid.Col>
+</Grid>
+
+<Stack gap={{ base: 'xs', sm: 'md', lg: 'xl' }}>
+  <Box p={{ base: 'sm', md: 'lg' }}>Responsive padding</Box>
+</Stack>
+
+// Use useMediaQuery hook for conditional rendering
+import { useMediaQuery } from '@mantine/hooks';
+
+function MyComponent() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isTablet = useMediaQuery('(max-width: 1024px)');
+
+  return isMobile ? <MobileView /> : <DesktopView />;
+}
+```
+
+#### Required Breakpoints
+```css
+/* Mobile First Breakpoints */
+--breakpoint-xs: 576px;   /* Small phones */
+--breakpoint-sm: 768px;   /* Tablets portrait */
+--breakpoint-md: 992px;   /* Tablets landscape */
+--breakpoint-lg: 1200px;  /* Desktops */
+--breakpoint-xl: 1400px;  /* Large desktops */
+```
+
+#### Component Guidelines
+1. **Forms**:
+   - Stack form fields vertically on mobile (single column)
+   - Use `size="md"` or larger for inputs (better touch targets)
+   - Labels above inputs, not inline
+   - Submit buttons full-width on mobile
+   ```typescript
+   <TextInput
+     size="md"
+     style={{ minHeight: '44px' }}
+   />
+   <Button fullWidth={isMobile} size="md">Submit</Button>
+   ```
+
+2. **Tables**:
+   - Horizontal scroll wrapper on mobile: `<Box style={{ overflowX: 'auto' }}>`
+   - Consider card-based layout for mobile instead of tables
+   - Minimum column width to prevent text cramping
+   - Sticky first column for identification
+   ```typescript
+   <Box style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+     <Table style={{ minWidth: '600px' }}>...</Table>
+   </Box>
+   ```
+
+3. **Navigation**:
+   - Hamburger menu or bottom navigation on mobile
+   - Horizontal tabs should scroll or collapse on mobile
+   - Ensure clickable areas are large enough (44px min)
+
+4. **Modals**:
+   - Full-screen on mobile: `fullScreen={isMobile}`
+   - Proper padding for safe areas (notch, home indicator)
+   - Close button easily accessible
+
+5. **Typography**:
+   - Minimum 16px font size (prevents iOS zoom on input focus)
+   - Line height at least 1.5 for readability
+   - Adequate contrast ratios (WCAG AA: 4.5:1)
+
+#### Testing Requirements
+- **Test on actual devices** or Chrome DevTools device emulation
+- Test these viewport sizes: 320px, 375px, 414px, 768px, 1024px, 1440px
+- Test landscape and portrait orientations
+- Test touch interactions (tap, swipe, pinch)
+- Test with on-screen keyboard visible
+- Verify no horizontal scrolling on body
+
+#### Performance Optimization for Mobile
+- Lazy load images: `loading="lazy"`
+- Use `will-change` sparingly for animations
+- Avoid heavy JavaScript on initial load
+- Minimize layout shifts (CLS)
+- Touch event handlers should be passive: `{ passive: true }`
+
+#### Example Mobile-First Component
+```typescript
+import { Box, Stack, TextInput, Button, Grid } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+
+export function ResponsiveForm() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
+  return (
+    <Box p={{ base: 'sm', md: 'lg' }}>
+      <Grid gutter={{ base: 'xs', md: 'md' }}>
+        {/* Full width on mobile, half on desktop */}
+        <Grid.Col span={{ base: 12, md: 6 }}>
+          <TextInput
+            label="First Name"
+            size="md" // Touch-friendly size
+            styles={{ input: { minHeight: '44px' } }}
+          />
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6 }}>
+          <TextInput
+            label="Last Name"
+            size="md"
+            styles={{ input: { minHeight: '44px' } }}
+          />
+        </Grid.Col>
+      </Grid>
+
+      <Button
+        mt="md"
+        size="md"
+        fullWidth={isMobile} // Full width only on mobile
+      >
+        Submit
+      </Button>
+    </Box>
+  );
+}
+```
+
+#### Common Mobile Issues to Avoid
+- ❌ Fixed pixel widths (use %, vw, or fr units)
+- ❌ Hover-only interactions (no hover on touch devices)
+- ❌ Small tap targets (< 44px)
+- ❌ Horizontal scrolling on body
+- ❌ Text too small to read (< 16px)
+- ❌ Forms that break with on-screen keyboard
+- ❌ Unoptimized images causing slow load
+- ❌ Blocking touch events with JavaScript
 
 ## EMR UI Layout Feature
 

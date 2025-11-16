@@ -207,6 +207,7 @@
   "registration.message.deleteConfirm": "დარწმუნებული ხართ, რომ გსურთ ამ პაციენტის წაშლა?",
   "registration.message.deleteSuccess": "პაციენტი წარმატებით წაშლილია",
   "registration.message.deleteError": "პაციენტის წაშლა ვერ მოხერხდა",
+  "registration.delete.warning": "ეს მოქმედება ვერ გაუქმდება!",
   "registration.message.noResults": "პაციენტი ვერ მოიძებნა",
   "registration.message.loadingPatients": "პაციენტების ჩატვირთვა...",
   "registration.message.loadingError": "პაციენტების ჩატვირთვა ვერ მოხერხდა",

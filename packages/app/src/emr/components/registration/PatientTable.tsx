@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from '../../hooks/useTranslation';
 import { PatientEditModal } from './PatientEditModal';
+import { PatientDeletionConfirmationModal } from './PatientDeletionConfirmationModal';
 
 interface SearchFilters {
   personalId?: string;
@@ -32,6 +33,8 @@ export function PatientTable({ searchFilters, onPatientClick }: PatientTableProp
   const [loading, setLoading] = useState(true);
   const [editModalOpened, setEditModalOpened] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState<string>('');
+  const [deleteModalOpened, setDeleteModalOpened] = useState(false);
+  const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null);
 
   useEffect(() => {
     loadPatients();
@@ -96,6 +99,17 @@ export function PatientTable({ searchFilters, onPatientClick }: PatientTableProp
 
   const handleEditSuccess = () => {
     setEditModalOpened(false);
+    loadPatients(); // Refresh table
+  };
+
+  const handleDelete = (patient: Patient) => {
+    setPatientToDelete(patient);
+    setDeleteModalOpened(true);
+  };
+
+  const handleDeleteSuccess = () => {
+    setDeleteModalOpened(false);
+    setPatientToDelete(null);
     loadPatients(); // Refresh table
   };
 
@@ -227,6 +241,7 @@ export function PatientTable({ searchFilters, onPatientClick }: PatientTableProp
                     title={t('registration.action.delete') || 'წაშლა'}
                     onClick={(e) => {
                       e.stopPropagation();
+                      handleDelete(patient);
                     }}
                     style={{
                       color: '#ef4444',
@@ -255,6 +270,16 @@ export function PatientTable({ searchFilters, onPatientClick }: PatientTableProp
         onClose={() => setEditModalOpened(false)}
         patientId={selectedPatientId}
         onSuccess={handleEditSuccess}
+      />
+
+      <PatientDeletionConfirmationModal
+        opened={deleteModalOpened}
+        onClose={() => {
+          setDeleteModalOpened(false);
+          setPatientToDelete(null);
+        }}
+        patient={patientToDelete}
+        onSuccess={handleDeleteSuccess}
       />
     </>
   );

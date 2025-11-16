@@ -207,6 +207,7 @@
   "registration.message.deleteConfirm": "Вы уверены, что хотите удалить этого пациента?",
   "registration.message.deleteSuccess": "Пациент успешно удален",
   "registration.message.deleteError": "Не удалось удалить пациента",
+  "registration.delete.warning": "Это действие невозможно отменить!",
   "registration.message.noResults": "Пациенты не найдены",
   "registration.message.loadingPatients": "Загрузка пациентов...",
   "registration.message.loadingError": "Не удалось загрузить пациентов",

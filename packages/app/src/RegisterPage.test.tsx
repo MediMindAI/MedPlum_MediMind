@@ -51,7 +51,7 @@ describe('RegisterPage', () => {
   test('Redirect if signed in', async () => {
     const medplum = new MockClient();
     await setup(medplum);
-    expect(screen.getByText('Sign in to Medplum')).toBeInTheDocument();
+    expect(screen.getByText('Welcome Back')).toBeInTheDocument();
   });
 
   test('Submit success', async () => {

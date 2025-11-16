@@ -6,16 +6,19 @@ import type { Bundle, Encounter } from '@medplum/fhirtypes';
 import type { PatientHistorySearchParams } from '../types/patient-history';
 
 /**
- * Search for Encounter resources with Patient and Coverage includes
+ * Search for Encounter resources with Patient includes
  *
  * FHIR search parameters:
- * - _include: Encounter:patient, Encounter:coverage
+ * - _include: Encounter:patient (includes referenced Patient resources)
  * - _sort: -date (descending) or date (ascending)
  * - _count: 100 (default pagination)
  * - patient.identifier: Filter by personal ID
  * - date: Filter by date range (ge/le prefixes)
  * - identifier: Filter by registration number
- * - coverage.payor: Filter by insurance company
+ *
+ * Note: Coverage resources are not directly linked to Encounters in FHIR R4.
+ * Coverage references Patient, not Encounter, so _include=Encounter:coverage is invalid.
+ * Insurance/Coverage data should be fetched separately if needed.
  *
  * @param medplum - MedplumClient instance
  * @param params - Search parameters for filtering Encounters
@@ -25,45 +28,50 @@ export async function searchEncounters(
   medplum: MedplumClient,
   params: PatientHistorySearchParams
 ): Promise<Bundle> {
-  const searchParams: Record<string, string | string[]> = {
-    _sort: params._sort || '-date',
-    _count: params._count || '100',
-    _include: ['Encounter:patient', 'Encounter:coverage'],
-  };
+  // Use URLSearchParams to properly handle multiple _include parameters
+  const searchParams = new URLSearchParams();
+
+  searchParams.append('_sort', params._sort || '-date');
+  searchParams.append('_count', params._count || '100');
+
+  // Include Patient data with Encounters
+  // Note: Encounter:coverage is NOT valid - Coverage references Patient, not Encounter
+  searchParams.append('_include', 'Encounter:patient');
 
   // Filter by personal ID (Patient identifier)
   if (params.personalId) {
-    searchParams['patient.identifier'] = `http://medimind.ge/identifiers/personal-id|${params.personalId}`;
+    searchParams.append('patient.identifier', `http://medimind.ge/identifiers/personal-id|${params.personalId}`);
   }
 
   // Filter by patient name
   if (params.firstName) {
-    searchParams['patient.given'] = params.firstName;
+    searchParams.append('patient.given', params.firstName);
   }
   if (params.lastName) {
-    searchParams['patient.family'] = params.lastName;
+    searchParams.append('patient.family', params.lastName);
   }
 
   // Filter by date range
   if (params.dateFrom) {
-    searchParams['date'] = `ge${params.dateFrom}`;
+    searchParams.append('date', `ge${params.dateFrom}`);
   }
   if (params.dateTo) {
-    const existingDate = searchParams['date'];
-    searchParams['date'] = existingDate ? `${existingDate},le${params.dateTo}` : `le${params.dateTo}`;
+    searchParams.append('date', `le${params.dateTo}`);
   }
 
   // Filter by registration number
   if (params.registrationNumber) {
-    searchParams['identifier'] = params.registrationNumber;
+    searchParams.append('identifier', params.registrationNumber);
   }
 
-  // Filter by insurance company (via Coverage.payor)
-  if (params.insuranceCompanyId && params.insuranceCompanyId !== '0') {
-    searchParams['coverage.payor'] = `Organization/${params.insuranceCompanyId}`;
-  }
+  // TODO: Insurance filtering not supported via direct Encounter search
+  // Coverage resources reference Patient, not Encounter, so coverage.payor is invalid
+  // Insurance filtering would require a separate query or custom implementation
+  // if (params.insuranceCompanyId && params.insuranceCompanyId !== '0') {
+  //   searchParams.append('coverage.payor', `Organization/${params.insuranceCompanyId}`);
+  // }
 
-  return medplum.searchResources('Encounter', searchParams);
+  return medplum.search('Encounter', searchParams);
 }
 
 /**

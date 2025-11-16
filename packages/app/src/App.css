@@ -10,3 +10,136 @@ body,
 .grecaptcha-badge {
   visibility: hidden;
 }
+
+/* ==================== MEDPLUM APPSHELL HEADER STYLING ==================== */
+/* Professional styling for the Medplum header when on EMR routes */
+
+/* Style the main AppShell header */
+[class*='AppShell-header'] {
+  background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%) !important;
+  border-bottom: none !important;
+  box-shadow: 0 6px 20px rgba(26, 54, 93, 0.2) !important;
+  position: relative !important;
+  z-index: 1000 !important;
+}
+
+/* Style the header content */
+[class*='AppShell-header'] > div {
+  height: 80px !important;
+  padding: 0 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+}
+
+/* Ensure the header itself uses flexbox centering */
+[class*='AppShell-header'] {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* Style the logo area */
+[class*='AppShell-header'] [class*='Logo'] svg {
+  fill: white !important;
+}
+
+/* Style all text in header to be white */
+[class*='AppShell-header'] [class*='Text'],
+[class*='AppShell-header'] span,
+[class*='AppShell-header'] button {
+  color: white !important;
+}
+
+/* Style header buttons and links */
+[class*='AppShell-header'] button,
+[class*='AppShell-header'] a {
+  color: white !important;
+  transition: background 0.2s ease !important;
+}
+
+[class*='AppShell-header'] button:hover,
+[class*='AppShell-header'] a:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 6px !important;
+}
+
+/* Style the user avatar */
+[class*='AppShell-header'] [class*='Avatar'] {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* Style any icons in the header */
+[class*='AppShell-header'] svg {
+  color: white !important;
+  stroke: white !important;
+}
+
+/* Style the bookmark/star button */
+[class*='AppShell-header'] [class*='ActionIcon'] {
+  color: white !important;
+}
+
+[class*='AppShell-header'] [class*='ActionIcon']:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Style the search input if visible */
+[class*='AppShell-header'] input {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  border-radius: 6px !important;
+}
+
+[class*='AppShell-header'] input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[class*='AppShell-header'] input:focus {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Style the notification button */
+[class*='AppShell-header'] [class*='Indicator'] {
+  color: white !important;
+}
+
+/* Ensure dropdown menus still have proper contrast */
+[class*='Menu-dropdown'] {
+  background: white !important;
+}
+
+[class*='Menu-dropdown'] [class*='Menu-item'] {
+  color: #1f2937 !important;
+}
+
+[class*='Menu-dropdown'] [class*='Menu-item']:hover {
+  background: #f3f4f6 !important;
+}
+
+/* Style the version text */
+[class*='AppShell-header'] [style*='opacity'] {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Remove padding from AppShell main content area */
+[class*='AppShell-main'] {
+  padding: 0 !important;
+  margin: 0 !important;
+  padding-top: 12px !important; /* Reduced padding (15% of 80px) */
+}
+
+/* Remove any spacing from the AppShell root */
+[class*='AppShell-root'] {
+  padding: 0 !important;
+}
+
+/* Ensure header is fixed at top */
+[class*='AppShell-header'] {
+  height: 80px !important;
+}

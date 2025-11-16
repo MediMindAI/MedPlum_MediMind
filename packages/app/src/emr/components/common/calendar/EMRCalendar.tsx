@@ -143,11 +143,12 @@ export function EMRCalendar({
   return (
     <Box
       style={{
-        padding: '16px',
+        padding: '12px',
         background: 'white',
-        borderRadius: '12px',
+        borderRadius: '10px',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-        minWidth: '320px',
+        minWidth: '260px',
+        maxWidth: '280px',
         transition: 'opacity 0.3s ease',
         opacity: isAnimating ? 0.7 : 1,
       }}

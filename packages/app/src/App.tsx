@@ -24,6 +24,7 @@ import type { FunctionComponent, JSX } from 'react';
 import { Suspense } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
 import { AppRoutes } from './AppRoutes';
+import { MediMindLogo } from './components/MediMindLogo';
 import { LanguageSelector } from './emr/components/LanguageSelector/LanguageSelector';
 
 import './App.css';
@@ -41,11 +42,11 @@ export function App(): JSX.Element {
   // Check if current route is an EMR route
   const isEMRRoute = location.pathname.startsWith('/emr');
 
-  // For EMR routes, render with AppShell but without logo, without search, and with LanguageSelector
+  // For EMR routes, render with AppShell but with custom branding and styling
   // For non-EMR routes, render with AppShell and logo with search enabled
   return (
     <AppShell
-      logo={isEMRRoute ? undefined : <Logo size={24} />}
+      logo={isEMRRoute ? <MediMindLogo size={32} /> : <Logo size={24} />}
       pathname={location.pathname}
       searchParams={searchParams}
       version={MEDPLUM_VERSION}
