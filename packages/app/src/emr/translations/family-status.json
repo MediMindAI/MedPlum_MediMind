@@ -1,0 +1,10 @@
+{
+  "statuses": [
+    { "value": "", "displayKa": "-", "displayEn": "Not specified", "displayRu": "Не указано" },
+    { "value": "1", "displayKa": "დასაოჯახებელი", "displayEn": "Single", "displayRu": "Холост/Не замужем" },
+    { "value": "2", "displayKa": "დაოჯახებული", "displayEn": "Married", "displayRu": "Женат/Замужем" },
+    { "value": "3", "displayKa": "განქორწინებული", "displayEn": "Divorced", "displayRu": "Разведен/а" },
+    { "value": "4", "displayKa": "ქვრივი", "displayEn": "Widowed", "displayRu": "Вдовец/Вдова" },
+    { "value": "5", "displayKa": "თანაცხოვრებაში მყოფი", "displayEn": "Cohabiting", "displayRu": "Сожительство" }
+  ]
+}

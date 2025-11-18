@@ -24,12 +24,15 @@ export function EMRPage(): JSX.Element {
   const location = useLocation();
 
   // Determine which section we're in for the sub-menu
-  const getSubMenuSection = (): 'registration' | 'patient-history' | null => {
+  const getSubMenuSection = (): 'registration' | 'patient-history' | 'nomenclature' | null => {
     if (location.pathname.startsWith('/emr/registration')) {
       return 'registration';
     }
     if (location.pathname.startsWith('/emr/patient-history')) {
       return 'patient-history';
+    }
+    if (location.pathname.startsWith('/emr/nomenclature')) {
+      return 'nomenclature';
     }
     return null;
   };
@@ -61,7 +64,7 @@ export function EMRPage(): JSX.Element {
           <EMRMainMenu />
         </Box>
 
-        {/* Row 2: HorizontalSubMenu (conditional - only for registration and patient-history) */}
+        {/* Row 2: HorizontalSubMenu (conditional - only for registration, patient-history, and nomenclature) */}
         {subMenuSection && <HorizontalSubMenu section={subMenuSection} />}
 
         {/* Row 3: Content Area */}

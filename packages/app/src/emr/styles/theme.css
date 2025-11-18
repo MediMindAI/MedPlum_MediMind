@@ -41,7 +41,7 @@
   /* ==================== COLLAPSIBLE SECTION COLORS ==================== */
   /* Color-coded accents for different collapsible section types */
   --emr-section-personal: #2b6cb0; /* Blue accent for personal information sections */
-  --emr-section-contact: #17a2b8; /* Turquoise accent for contact information sections */
+  --emr-section-contact: #3182ce; /* Medium blue accent for contact information sections */
   --emr-section-additional: #63b3ed; /* Light blue accent for additional details sections */
   --emr-section-hover-bg: rgba(99, 179, 237, 0.05); /* Light blue hover background */
   --emr-section-active-bg: rgba(99, 179, 237, 0.08); /* Light blue active background */

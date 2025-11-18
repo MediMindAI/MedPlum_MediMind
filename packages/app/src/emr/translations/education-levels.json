@@ -1,0 +1,11 @@
+{
+  "levels": [
+    { "value": "", "displayKa": "-", "displayEn": "Not specified", "displayRu": "Не указано" },
+    { "value": "4", "displayKa": "უმაღლესი განათლება", "displayEn": "Higher Education", "displayRu": "Высшее образование" },
+    { "value": "5", "displayKa": "სკოლამდელი განათლება", "displayEn": "Pre-school Education", "displayRu": "Дошкольное образование" },
+    { "value": "6", "displayKa": "საბაზისო განათლება (1-6 კლასი)", "displayEn": "Basic Education (Grades 1-6)", "displayRu": "Базовое образование (1-6 класс)" },
+    { "value": "7", "displayKa": "მეორე საფეხურის განათლება (7-9 კლასი)", "displayEn": "Secondary Education (Grades 7-9)", "displayRu": "Среднее образование (7-9 класс)" },
+    { "value": "8", "displayKa": "მეორე საფეხურის განათლება (9-12 კლასი)", "displayEn": "Secondary Education (Grades 9-12)", "displayRu": "Среднее образование (9-12 класс)" },
+    { "value": "9", "displayKa": "პროფესიული განათლება", "displayEn": "Vocational Education", "displayRu": "Профессиональное образование" }
+  ]
+}

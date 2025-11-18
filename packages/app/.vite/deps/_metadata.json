@@ -2,7 +2,126 @@
   "hash": "3c199353",
   "configHash": "bca51348",
   "lockfileHash": "5cab2b14",
-  "browserHash": "ed5d663c",
-  "optimized": {},
-  "chunks": {}
+  "browserHash": "8d70a916",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "717fa63e",
+      "needsInterop": true
+    },
+    "@mantine/core": {
+      "src": "../../../../node_modules/@mantine/core/esm/index.mjs",
+      "file": "@mantine_core.js",
+      "fileHash": "3f92a336",
+      "needsInterop": false
+    },
+    "@mantine/notifications": {
+      "src": "../../../../node_modules/@mantine/notifications/esm/index.mjs",
+      "file": "@mantine_notifications.js",
+      "fileHash": "d3194758",
+      "needsInterop": false
+    },
+    "react": {
+      "src": "../../../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "325ee35f",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "4a44ff33",
+      "needsInterop": true
+    },
+    "react-router": {
+      "src": "../../../../node_modules/react-router/dist/development/index.mjs",
+      "file": "react-router.js",
+      "fileHash": "9eefa3cd",
+      "needsInterop": false
+    },
+    "@tabler/icons-react": {
+      "src": "../../../../node_modules/@tabler/icons-react/dist/esm/tabler-icons-react.mjs",
+      "file": "@tabler_icons-react.js",
+      "fileHash": "7cbe0a85",
+      "needsInterop": false
+    },
+    "react/jsx-runtime": {
+      "src": "../../../../node_modules/react/jsx-runtime.js",
+      "file": "react_jsx-runtime.js",
+      "fileHash": "3c44edbd",
+      "needsInterop": true
+    },
+    "@mantine/hooks": {
+      "src": "../../../../node_modules/@mantine/hooks/esm/index.mjs",
+      "file": "@mantine_hooks.js",
+      "fileHash": "d2c0514f",
+      "needsInterop": false
+    },
+    "@mantine/dropzone": {
+      "src": "../../../../node_modules/@mantine/dropzone/esm/index.mjs",
+      "file": "@mantine_dropzone.js",
+      "fileHash": "f3f166e2",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "01d9229b",
+      "needsInterop": false
+    },
+    "rfc6902": {
+      "src": "../../../../node_modules/rfc6902/index.js",
+      "file": "rfc6902.js",
+      "fileHash": "22329f38",
+      "needsInterop": true
+    },
+    "@mantine/form": {
+      "src": "../../../../node_modules/@mantine/form/esm/index.mjs",
+      "file": "@mantine_form.js",
+      "fileHash": "d461b4cb",
+      "needsInterop": false
+    },
+    "clsx": {
+      "src": "../../../../node_modules/clsx/dist/clsx.mjs",
+      "file": "clsx.js",
+      "fileHash": "74289634",
+      "needsInterop": false
+    },
+    "@mantine/dates": {
+      "src": "../../../../node_modules/@mantine/dates/esm/index.mjs",
+      "file": "@mantine_dates.js",
+      "fileHash": "53012d59",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-Q2PAWS2P": {
+      "file": "chunk-Q2PAWS2P.js"
+    },
+    "chunk-7LTASYLD": {
+      "file": "chunk-7LTASYLD.js"
+    },
+    "chunk-V765E7CT": {
+      "file": "chunk-V765E7CT.js"
+    },
+    "chunk-DULOE64R": {
+      "file": "chunk-DULOE64R.js"
+    },
+    "chunk-O4RQ6KKY": {
+      "file": "chunk-O4RQ6KKY.js"
+    },
+    "chunk-K6G2NAGI": {
+      "file": "chunk-K6G2NAGI.js"
+    },
+    "chunk-FG6ULWAI": {
+      "file": "chunk-FG6ULWAI.js"
+    },
+    "chunk-E6K43OEW": {
+      "file": "chunk-E6K43OEW.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
 }

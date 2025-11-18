@@ -5,7 +5,7 @@
  * Validation functions for EMR forms
  *
  * Includes validators for:
- * - Georgian Personal ID (11-digit with Luhn checksum)
+ * - Georgian Personal ID (11 digits)
  * - Email addresses (RFC 5322)
  * - Birthdates
  */
@@ -16,14 +16,15 @@ export interface ValidationResult {
 }
 
 /**
- * Validate Georgian Personal ID (11 digits with Luhn checksum)
+ * Validate Georgian Personal ID (11 digits)
  *
  * Format: XXXXXXXXXXX (11 digits)
- * Last digit is a Luhn checksum
+ * Georgian personal IDs are 11-digit numbers without checksum validation
  *
  * Valid examples:
- * - 26001014632 (თენგიზი ხოზვრია)
- * - 01001011116 (Test ID from HL7 FHIR validator)
+ * - 01011076709
+ * - 26001014632
+ * - 01001011116
  */
 export function validateGeorgianPersonalId(id: string): ValidationResult {
   // Check length
@@ -39,14 +40,6 @@ export function validateGeorgianPersonalId(id: string): ValidationResult {
     return {
       isValid: false,
       error: 'Personal ID must contain only digits',
-    };
-  }
-
-  // Validate Luhn checksum
-  if (!validateLuhnChecksum(id)) {
-    return {
-      isValid: false,
-      error: 'Invalid personal ID checksum',
     };
   }
 
@@ -112,36 +105,4 @@ export function validateBirthdate(birthdate: Date | string): ValidationResult {
   }
 
   return { isValid: true };
-}
-
-/**
- * Validate Luhn checksum (used for Georgian Personal IDs)
- *
- * The Luhn algorithm:
- * 1. Starting from the rightmost digit (check digit) and moving left,
- *    double the value of every second digit
- * 2. If the result of doubling is greater than 9, subtract 9
- * 3. Sum all the digits
- * 4. If the total modulo 10 is 0, the number is valid
- */
-function validateLuhnChecksum(value: string): boolean {
-  let sum = 0;
-  let isEven = false;
-
-  // Loop through digits from right to left
-  for (let i = value.length - 1; i >= 0; i--) {
-    let digit = parseInt(value[i], 10);
-
-    if (isEven) {
-      digit *= 2;
-      if (digit > 9) {
-        digit -= 9;
-      }
-    }
-
-    sum += digit;
-    isEven = !isEven;
-  }
-
-  return sum % 10 === 0;
 }

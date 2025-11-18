@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Modal, Box, Title, Group, ActionIcon, ScrollArea } from '@mantine/core';
+import { Modal, Box, Title, Group, ActionIcon } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
 import { ReactNode } from 'react';
 
@@ -129,9 +129,16 @@ export function EMRModal({
       </Box>
 
       {/* Modal Content - Scrollable */}
-      <ScrollArea style={{ maxHeight }} p={padding}>
+      <Box
+        style={{
+          maxHeight,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+        }}
+        p={padding}
+      >
         {children}
-      </ScrollArea>
+      </Box>
     </Modal>
   );
 }

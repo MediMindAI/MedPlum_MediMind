@@ -1,0 +1,50 @@
+{
+  "regions": [
+    { "value": "", "code": "", "displayKa": "-", "displayEn": "Not specified", "displayRu": "Не указано" },
+    { "value": "1", "code": "01", "displayKa": "01 - აფხაზეთი", "displayEn": "01 - Abkhazia", "displayRu": "01 - Абхазия" },
+    { "value": "10", "code": "02", "displayKa": "02 - აჭარა", "displayEn": "02 - Adjara", "displayRu": "02 - Аджария" },
+    { "value": "17", "code": "03", "displayKa": "03 - გურია", "displayEn": "03 - Guria", "displayRu": "03 - Гурия" },
+    { "value": "21", "code": "04", "displayKa": "04 - თბილისი", "displayEn": "04 - Tbilisi", "displayRu": "04 - Тбилиси" },
+    { "value": "39", "code": "05", "displayKa": "05 - იმერეთი", "displayEn": "05 - Imereti", "displayRu": "05 - Имерети" },
+    { "value": "52", "code": "06", "displayKa": "06 - კახეთი", "displayEn": "06 - Kakheti", "displayRu": "06 - Кахети" },
+    { "value": "61", "code": "07", "displayKa": "07 - მცხეთა-მთიანეთი", "displayEn": "07 - Mtskheta-Mtianeti", "displayRu": "07 - Мцхета-Мтианети" },
+    { "value": "67", "code": "08", "displayKa": "08 - რაჭა-ლეჩხუმი და ქვემო სვანეთი", "displayEn": "08 - Racha-Lechkhumi", "displayRu": "08 - Рача-Лечхуми" },
+    { "value": "72", "code": "09", "displayKa": "09 - საზღვარგარეთი", "displayEn": "09 - Abroad", "displayRu": "09 - Заграница" },
+    { "value": "74", "code": "10", "displayKa": "10 - სამეგრელო და ზემო სვანეთი", "displayEn": "10 - Samegrelo-Zemo Svaneti", "displayRu": "10 - Самегрело-Земо Сванети" },
+    { "value": "84", "code": "11", "displayKa": "11 - სამცხე-ჯავახეთი", "displayEn": "11 - Samtskhe-Javakheti", "displayRu": "11 - Самцхе-Джавахети" },
+    { "value": "91", "code": "12", "displayKa": "12 - ქვემო ქართლი", "displayEn": "12 - Kvemo Kartli", "displayRu": "12 - Квемо Картли" },
+    { "value": "99", "code": "13", "displayKa": "13 - შიდა ქართლი", "displayEn": "13 - Shida Kartli", "displayRu": "13 - Шида Картли" }
+  ],
+  "districts": {
+    "21": [
+      { "value": "22", "code": "0401", "displayKa": "0401 - მთაწმინდა", "displayEn": "0401 - Mtatsminda", "displayRu": "0401 - Мтацминда" },
+      { "value": "23", "code": "0402", "displayKa": "0402 - ვაკე", "displayEn": "0402 - Vake", "displayRu": "0402 - Ваке" },
+      { "value": "24", "code": "0403", "displayKa": "0403 - საბურთალო", "displayEn": "0403 - Saburtalo", "displayRu": "0403 - Сабуртало" },
+      { "value": "25", "code": "0404", "displayKa": "0404 - კრწანისი", "displayEn": "0404 - Krtsanisi", "displayRu": "0404 - Крцаниси" },
+      { "value": "26", "code": "0405", "displayKa": "0405 - ისანი", "displayEn": "0405 - Isani", "displayRu": "0405 - Исани" },
+      { "value": "27", "code": "0406", "displayKa": "0406 - სამგორი", "displayEn": "0406 - Samgori", "displayRu": "0406 - Самгори" },
+      { "value": "28", "code": "0407", "displayKa": "0407 - ჩუღურეთი", "displayEn": "0407 - Chughureti", "displayRu": "0407 - Чугурети" },
+      { "value": "29", "code": "0408", "displayKa": "0408 - დიდუბე", "displayEn": "0408 - Didube", "displayRu": "0408 - Дидубе" },
+      { "value": "30", "code": "0409", "displayKa": "0409 - ნაძალადევი", "displayEn": "0409 - Nadzaladevi", "displayRu": "0409 - Надзаладеви" },
+      { "value": "31", "code": "0410", "displayKa": "0410 - გლდანი", "displayEn": "0410 - Gldani", "displayRu": "0410 - Глдани" },
+      { "value": "32", "code": "0411", "displayKa": "0411 - ძველი თბილისი", "displayEn": "0411 - Old Tbilisi", "displayRu": "0411 - Старый Тбилиси" },
+      { "value": "33", "code": "0412", "displayKa": "0412 - წყნეთი", "displayEn": "0412 - Tskneti", "displayRu": "0412 - Цкнети" },
+      { "value": "34", "code": "0413", "displayKa": "0413 - კოჯორი", "displayEn": "0413 - Kojori", "displayRu": "0413 - Коджори" },
+      { "value": "35", "code": "0414", "displayKa": "0414 - თაბახმელა", "displayEn": "0414 - Tabakhmela", "displayRu": "0414 - Табахмела" },
+      { "value": "36", "code": "0415", "displayKa": "0415 - ოქროყანა", "displayEn": "0415 - Okrokana", "displayRu": "0415 - Окрокана" },
+      { "value": "37", "code": "0416", "displayKa": "0416 - რუდურნეთი", "displayEn": "0416 - Rudurneti", "displayRu": "0416 - Рудурнети" },
+      { "value": "38", "code": "0417", "displayKa": "0417 - სხვა", "displayEn": "0417 - Other", "displayRu": "0417 - Другое" }
+    ],
+    "74": [
+      { "value": "75", "code": "1001", "displayKa": "1001 - აბაშა", "displayEn": "1001 - Abasha", "displayRu": "1001 - Абаша" },
+      { "value": "76", "code": "1002", "displayKa": "1002 - ზუგდიდი", "displayEn": "1002 - Zugdidi", "displayRu": "1002 - Зугдиди" },
+      { "value": "77", "code": "1003", "displayKa": "1003 - მარტვილი", "displayEn": "1003 - Martvili", "displayRu": "1003 - Мартвили" },
+      { "value": "78", "code": "1004", "displayKa": "1004 - მესტია", "displayEn": "1004 - Mestia", "displayRu": "1004 - Местия" },
+      { "value": "79", "code": "1005", "displayKa": "1005 - სენაკი", "displayEn": "1005 - Senaki", "displayRu": "1005 - Сенаки" },
+      { "value": "80", "code": "1006", "displayKa": "1006 - ფოთი", "displayEn": "1006 - Poti", "displayRu": "1006 - Поти" },
+      { "value": "81", "code": "1007", "displayKa": "1007 - ჩხოროწყუ", "displayEn": "1007 - Chkhorotsku", "displayRu": "1007 - Чхороцку" },
+      { "value": "82", "code": "1008", "displayKa": "1008 - წალენჯიხა", "displayEn": "1008 - Tsalenjikha", "displayRu": "1008 - Цаленджиха" },
+      { "value": "83", "code": "1009", "displayKa": "1009 - ხობი", "displayEn": "1009 - Khobi", "displayRu": "1009 - Хоби" }
+    ]
+  }
+}

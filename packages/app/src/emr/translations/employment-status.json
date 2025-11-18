@@ -1,0 +1,13 @@
+{
+  "statuses": [
+    { "value": "", "displayKa": "-", "displayEn": "Not specified", "displayRu": "Не указано" },
+    { "value": "1", "displayKa": "დასაქმებული", "displayEn": "Employed", "displayRu": "Работает" },
+    { "value": "2", "displayKa": "უმუშევარი", "displayEn": "Unemployed", "displayRu": "Безработный" },
+    { "value": "3", "displayKa": "პენსიონერი", "displayEn": "Retired", "displayRu": "Пенсионер" },
+    { "value": "4", "displayKa": "სტუდენტი", "displayEn": "Student", "displayRu": "Студент" },
+    { "value": "5", "displayKa": "მოსწავლე", "displayEn": "Pupil", "displayRu": "Школьник" },
+    { "value": "6", "displayKa": "მომუშავე პენსიაზე გასვლის შემდგომ", "displayEn": "Working after Retirement", "displayRu": "Работающий пенсионер" },
+    { "value": "7", "displayKa": "თვითდასაქმებული", "displayEn": "Self-employed", "displayRu": "Самозанятый" },
+    { "value": "8", "displayKa": "მომუშავე სტუდენტი", "displayEn": "Working Student", "displayRu": "Работающий студент" }
+  ]
+}

@@ -14,12 +14,22 @@ import {
   Checkbox,
   Badge,
   Grid,
-  Divider,
   Box,
   ActionIcon,
+  ThemeIcon,
 } from '@mantine/core';
 import { TimeInput } from '@mantine/dates';
-import { IconPlus, IconNotes, IconSearch, IconTrash } from '@tabler/icons-react';
+import {
+  IconPlus,
+  IconSearch,
+  IconTrash,
+  IconUser,
+  IconClipboardList,
+  IconShieldCheck,
+  IconCertificate,
+  IconMapPin,
+  IconX,
+} from '@tabler/icons-react';
 import type { JSX } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
@@ -30,6 +40,8 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { getExtensionValue } from '../../services/fhirHelpers';
 import { EMRDatePicker } from '../common/EMRDatePicker';
 import { generateRegistrationNumber } from '../../services/encounterService';
+import { SectionCard } from '../common/SectionCard';
+import { GRADIENTS, SHADOWS, COLORS } from '../common/theme.constants';
 
 interface RegistrationVisitModalProps {
   opened: boolean;
@@ -501,7 +513,6 @@ export function RegistrationVisitModal({
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [patient, setPatient] = useState<Patient | null>(null);
-  const [existingEncounter, setExistingEncounter] = useState<Encounter | null>(null);
   const [ambulatoryCount, setAmbulatoryCount] = useState(0);
   const [stationaryCount, setStationaryCount] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
@@ -716,9 +727,8 @@ export function RegistrationVisitModal({
           ? getExtensionValue(patientResource, 'http://medimind.ge/fhir/StructureDefinition/employment') || ''
           : '';
 
-        // Get the most recent encounter (first one since sorted by -date)
+        // Get the most recent encounter (first one since sorted by -date) for pre-filling form
         const mostRecentEncounter = encounters.length > 0 ? encounters[0] : null;
-        setExistingEncounter(mostRecentEncounter);
 
         // Extract data from most recent encounter if it exists
         let encRegDate = new Date();
@@ -1177,16 +1187,9 @@ export function RegistrationVisitModal({
         }
       }
 
-      // Determine if we're creating or updating
-      if (existingEncounter) {
-        // Update existing encounter
-        newEncounter.id = existingEncounter.id;
-        newEncounter.identifier = existingEncounter.identifier; // Keep original identifier
-        await medplum.updateResource(newEncounter);
-      } else {
-        // Create new encounter
-        await medplum.createResource(newEncounter);
-      }
+      // Always create a NEW Encounter (patient stay) - never update existing
+      // This ensures each save from this modal creates a new visit/stay
+      await medplum.createResource(newEncounter);
 
       // Update Patient with demographics if changed
       if (values.mo_regions || values.mo_city || values.mo_otheraddress || values.mo_ganatleba || values.mo_ojaxi || values.mo_dasaqmeba) {
@@ -1238,9 +1241,7 @@ export function RegistrationVisitModal({
 
       notifications.show({
         title: t('registration.success.title') || 'Success',
-        message: existingEncounter
-          ? (t('registration.success.visitUpdated') || 'Visit updated successfully')
-          : (t('registration.success.visitCreated') || 'Visit registered successfully'),
+        message: t('registration.success.newStayCreated') || 'New patient stay registered successfully',
         color: 'green',
       });
 
@@ -1268,63 +1269,124 @@ export function RegistrationVisitModal({
       onClose={onClose}
       size="90%"
       centered
-      title={
-        <Group gap="lg">
-          <Text fw={700} size="xl" c="dark">
-            {patientName}
-          </Text>
-          <Badge
-            size="lg"
-            variant="filled"
-            style={{
-              background: 'linear-gradient(135deg, #17a2b8 0%, #20c4dd 100%)',
-              fontSize: '14px',
-              padding: '8px 16px',
-            }}
-          >
-            ვიზიტები: {ambulatoryCount}/{stationaryCount} (ამბუ/სტაც)
-          </Badge>
-        </Group>
-      }
+      withCloseButton={false}
+      padding={0}
       styles={{
         root: {
-          zIndex: 1000,
+          zIndex: 9999,
+        },
+        overlay: {
+          zIndex: 9998,
         },
         inner: {
-          paddingTop: '80px',
-        },
-        header: {
-          borderBottom: '2px solid #e9ecef',
-          paddingBottom: 12,
-          marginBottom: 0,
+          zIndex: 9999,
+          paddingTop: '60px',
         },
         body: {
-          padding: '20px 24px',
-          maxHeight: 'calc(100vh - 240px)',
-          overflowY: 'auto',
+          padding: 0,
         },
         content: {
-          borderRadius: '12px',
+          borderRadius: '16px',
+          overflow: 'hidden',
         },
       }}
     >
-      <LoadingOverlay visible={initialLoading} />
+      {/* Premium Gradient Header */}
+      <Box
+        style={{
+          background: GRADIENTS.header,
+          padding: '20px 30px',
+          position: 'relative',
+        }}
+      >
+        <Group justify="space-between" align="flex-start">
+          <Group gap="md">
+            <ThemeIcon
+              size={50}
+              radius="xl"
+              style={{
+                background: 'rgba(255, 255, 255, 0.2)',
+                backdropFilter: 'blur(10px)',
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              }}
+            >
+              <IconUser size={28} color="white" />
+            </ThemeIcon>
+            <Box>
+              <Text
+                fw={700}
+                size="xl"
+                c="white"
+                style={{
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+                  letterSpacing: '-0.01em',
+                }}
+              >
+                {patientName || 'ანრი ხოშტარია'}
+              </Text>
+              <Badge
+                size="lg"
+                variant="filled"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.25)',
+                  backdropFilter: 'blur(8px)',
+                  fontSize: '13px',
+                  padding: '6px 14px',
+                  marginTop: '6px',
+                }}
+              >
+                ვიზიტები: {ambulatoryCount}/{stationaryCount} (ამბუ/სტაც)
+              </Badge>
+            </Box>
+          </Group>
+
+          <ActionIcon
+            variant="transparent"
+            onClick={onClose}
+            size="lg"
+            style={{
+              color: 'white',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.1)';
+              e.currentTarget.style.opacity = '0.8';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.opacity = '1';
+            }}
+          >
+            <IconX size={24} />
+          </ActionIcon>
+        </Group>
+      </Box>
+
+      {/* Scrollable Content Area */}
+      <Box
+        style={{
+          maxHeight: 'calc(100vh - 280px)',
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          padding: '24px',
+          backgroundColor: COLORS.gray[50],
+        }}
+      >
+        <LoadingOverlay visible={initialLoading} />
 
       <form ref={formRef} onSubmit={form.onSubmit(handleFormSubmit, handleFormError)}>
         <Stack gap="lg">
           {/* Section 1: Registration */}
-          <Paper p="lg" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-            <Group justify="space-between" mb="md">
-              <Text fw={700} size="lg" c="blue">
-                1 რეგისტრაცია
-              </Text>
-              <IconNotes size={24} color="#6c757d" />
-            </Group>
-
+          <SectionCard
+            number={1}
+            title="რეგისტრაცია"
+            badgeText="Basic Info"
+            badgeIcon={<IconClipboardList size={12} />}
+          >
             <Grid gutter="md">
               <Grid.Col span={3}>
                 <Box>
-                  <Text size="sm" fw={500} mb={4}>
+                  <Text size="sm" fw={600} mb={6} c={COLORS.gray[700]}>
                     თარიღი *
                   </Text>
                   <Group gap="xs">
@@ -1335,7 +1397,16 @@ export function RegistrationVisitModal({
                       required
                       error={form.errors.mo_regdate as string | undefined}
                     />
-                    <TimeInput style={{ width: '100px' }} {...form.getInputProps('mo_regtime')} />
+                    <TimeInput
+                      style={{ width: '100px' }}
+                      styles={{
+                        input: {
+                          border: `1px solid ${COLORS.gray[300]}`,
+                          borderRadius: '8px',
+                        },
+                      }}
+                      {...form.getInputProps('mo_regtime')}
+                    />
                   </Group>
                 </Box>
               </Grid.Col>
@@ -1344,16 +1415,32 @@ export function RegistrationVisitModal({
                   label="შემოსვლის ტიპი *"
                   required
                   data={ADMISSION_TYPES}
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
                   {...form.getInputProps('mo_regtype')}
                 />
               </Grid.Col>
               <Grid.Col span={3}>
-                <Select label="სტატუსი" data={STATUS_OPTIONS} {...form.getInputProps('mo_stat')} />
+                <Select
+                  label="სტატუსი"
+                  data={STATUS_OPTIONS}
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
+                  {...form.getInputProps('mo_stat')}
+                />
               </Grid.Col>
               <Grid.Col span={3}>
                 <Select
                   label="მომართვის ტიპი"
                   data={referralTypeOptions}
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
                   {...form.getInputProps('mo_ddyastac')}
                 />
               </Grid.Col>
@@ -1366,37 +1453,67 @@ export function RegistrationVisitModal({
                   required
                   data={departmentOptions}
                   searchable
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
                   {...form.getInputProps('mo_incomgrp')}
                 />
               </Grid.Col>
             </Grid>
-          </Paper>
+          </SectionCard>
 
           {/* Section 2: Insurance */}
-          <Paper p="lg" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-            <Group justify="space-between" mb="md">
-              <Text fw={700} size="lg" c="blue">
-                2 დაზღვევა
-              </Text>
+          <SectionCard
+            number={2}
+            title="დაზღვევა"
+            badgeText="Insurance"
+            badgeIcon={<IconShieldCheck size={12} />}
+            rightContent={
               <Checkbox
                 label="დაზღვევის ჩართვა"
+                styles={{
+                  label: { fontWeight: 500, color: COLORS.gray[700] },
+                }}
                 {...form.getInputProps('mo_sbool', { type: 'checkbox' })}
               />
-            </Group>
-
+            }
+          >
             {form.values.mo_sbool && (
               <Stack gap="md">
                 {/* Primary Insurer */}
-                <Box>
-                  <Text fw={600} mb="sm" c="dimmed">
-                    პირველი მზღვეველი
-                  </Text>
+                <Paper
+                  p="md"
+                  radius="md"
+                  style={{
+                    backgroundColor: COLORS.gray[50],
+                    border: `1px solid ${COLORS.gray[200]}`,
+                  }}
+                >
+                  <Group justify="space-between" mb="sm">
+                    <Group gap="xs">
+                      <Badge
+                        variant="filled"
+                        size="sm"
+                        style={{ backgroundColor: COLORS.primary[900] }}
+                      >
+                        #1
+                      </Badge>
+                      <Text fw={600} size="sm" c={COLORS.gray[700]}>
+                        პირველი მზღვეველი
+                      </Text>
+                    </Group>
+                  </Group>
                   <Grid gutter="sm">
                     <Grid.Col span={3}>
                       <Select
                         label="კომპანია"
                         data={INSURANCE_COMPANIES}
                         searchable
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
                         {...form.getInputProps('mo_comp')}
                       />
                     </Grid.Col>
@@ -1405,17 +1522,42 @@ export function RegistrationVisitModal({
                         label="ტიპი"
                         data={INSURANCE_TYPES}
                         searchable
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
                         {...form.getInputProps('mo_instp')}
                       />
                     </Grid.Col>
                     <Grid.Col span={2}>
-                      <TextInput label="პოლისის #" {...form.getInputProps('mo_polnmb')} />
+                      <TextInput
+                        label="პოლისის #"
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
+                        {...form.getInputProps('mo_polnmb')}
+                      />
                     </Grid.Col>
                     <Grid.Col span={2}>
-                      <TextInput label="მიმართვის #" {...form.getInputProps('mo_vano')} />
+                      <TextInput
+                        label="მიმართვის #"
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
+                        {...form.getInputProps('mo_vano')}
+                      />
                     </Grid.Col>
                     <Grid.Col span={2}>
-                      <TextInput label="თანაგადახდის %" {...form.getInputProps('mo_insprsnt')} />
+                      <TextInput
+                        label="თანაგადახდის %"
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
+                        {...form.getInputProps('mo_insprsnt')}
+                      />
                     </Grid.Col>
                   </Grid>
                   <Grid gutter="sm" mt="xs">
@@ -1435,16 +1577,31 @@ export function RegistrationVisitModal({
                     </Grid.Col>
                     <Grid.Col span={6} />
                   </Grid>
-                </Box>
+                </Paper>
 
                 {/* Secondary Insurer */}
                 {form.values.insurerCount >= 2 && (
-                  <Box>
-                    <Divider my="sm" />
+                  <Paper
+                    p="md"
+                    radius="md"
+                    style={{
+                      backgroundColor: COLORS.gray[50],
+                      border: `1px solid ${COLORS.gray[200]}`,
+                    }}
+                  >
                     <Group justify="space-between" mb="sm">
-                      <Text fw={600} c="dimmed">
-                        მეორე მზღვეველი
-                      </Text>
+                      <Group gap="xs">
+                        <Badge
+                          variant="filled"
+                          size="sm"
+                          style={{ backgroundColor: COLORS.primary[700] }}
+                        >
+                          #2
+                        </Badge>
+                        <Text fw={600} size="sm" c={COLORS.gray[700]}>
+                          მეორე მზღვეველი
+                        </Text>
+                      </Group>
                       <ActionIcon
                         variant="subtle"
                         color="red"
@@ -1461,6 +1618,10 @@ export function RegistrationVisitModal({
                           label="კომპანია"
                           data={INSURANCE_COMPANIES}
                           searchable
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
                           {...form.getInputProps('mo_comp1')}
                         />
                       </Grid.Col>
@@ -1469,17 +1630,42 @@ export function RegistrationVisitModal({
                           label="ტიპი"
                           data={INSURANCE_TYPES}
                           searchable
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
                           {...form.getInputProps('mo_instp1')}
                         />
                       </Grid.Col>
                       <Grid.Col span={2}>
-                        <TextInput label="პოლისის #" {...form.getInputProps('mo_polnmb1')} />
+                        <TextInput
+                          label="პოლისის #"
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
+                          {...form.getInputProps('mo_polnmb1')}
+                        />
                       </Grid.Col>
                       <Grid.Col span={2}>
-                        <TextInput label="მიმართვის #" {...form.getInputProps('mo_vano1')} />
+                        <TextInput
+                          label="მიმართვის #"
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
+                          {...form.getInputProps('mo_vano1')}
+                        />
                       </Grid.Col>
                       <Grid.Col span={2}>
-                        <TextInput label="თანაგადახდის %" {...form.getInputProps('mo_insprsnt1')} />
+                        <TextInput
+                          label="თანაგადახდის %"
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
+                          {...form.getInputProps('mo_insprsnt1')}
+                        />
                       </Grid.Col>
                     </Grid>
                     <Grid gutter="sm" mt="xs">
@@ -1499,17 +1685,32 @@ export function RegistrationVisitModal({
                       </Grid.Col>
                       <Grid.Col span={6} />
                     </Grid>
-                  </Box>
+                  </Paper>
                 )}
 
                 {/* Tertiary Insurer */}
                 {form.values.insurerCount >= 3 && (
-                  <Box>
-                    <Divider my="sm" />
+                  <Paper
+                    p="md"
+                    radius="md"
+                    style={{
+                      backgroundColor: COLORS.gray[50],
+                      border: `1px solid ${COLORS.gray[200]}`,
+                    }}
+                  >
                     <Group justify="space-between" mb="sm">
-                      <Text fw={600} c="dimmed">
-                        მესამე მზღვეველი
-                      </Text>
+                      <Group gap="xs">
+                        <Badge
+                          variant="filled"
+                          size="sm"
+                          style={{ backgroundColor: COLORS.primary[600] }}
+                        >
+                          #3
+                        </Badge>
+                        <Text fw={600} size="sm" c={COLORS.gray[700]}>
+                          მესამე მზღვეველი
+                        </Text>
+                      </Group>
                       <ActionIcon
                         variant="subtle"
                         color="red"
@@ -1526,6 +1727,10 @@ export function RegistrationVisitModal({
                           label="კომპანია"
                           data={INSURANCE_COMPANIES}
                           searchable
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
                           {...form.getInputProps('mo_comp2')}
                         />
                       </Grid.Col>
@@ -1534,17 +1739,42 @@ export function RegistrationVisitModal({
                           label="ტიპი"
                           data={INSURANCE_TYPES}
                           searchable
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
                           {...form.getInputProps('mo_instp2')}
                         />
                       </Grid.Col>
                       <Grid.Col span={2}>
-                        <TextInput label="პოლისის #" {...form.getInputProps('mo_polnmb2')} />
+                        <TextInput
+                          label="პოლისის #"
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
+                          {...form.getInputProps('mo_polnmb2')}
+                        />
                       </Grid.Col>
                       <Grid.Col span={2}>
-                        <TextInput label="მიმართვის #" {...form.getInputProps('mo_vano2')} />
+                        <TextInput
+                          label="მიმართვის #"
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
+                          {...form.getInputProps('mo_vano2')}
+                        />
                       </Grid.Col>
                       <Grid.Col span={2}>
-                        <TextInput label="თანაგადახდის %" {...form.getInputProps('mo_insprsnt2')} />
+                        <TextInput
+                          label="თანაგადახდის %"
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
+                          {...form.getInputProps('mo_insprsnt2')}
+                        />
                       </Grid.Col>
                     </Grid>
                     <Grid gutter="sm" mt="xs">
@@ -1564,7 +1794,7 @@ export function RegistrationVisitModal({
                       </Grid.Col>
                       <Grid.Col span={6} />
                     </Grid>
-                  </Box>
+                  </Paper>
                 )}
 
                 {/* Add More Button */}
@@ -1581,27 +1811,28 @@ export function RegistrationVisitModal({
                 )}
               </Stack>
             )}
-          </Paper>
+          </SectionCard>
 
           {/* Section 3: Guarantee - Letter Management System */}
-          <Paper p="lg" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-            <Group justify="space-between" mb="md">
-              <Text fw={700} size="lg" c="blue">
-                3 საგარანტიო
-              </Text>
-              {form.values.guaranteeCount < 3 && (
+          <SectionCard
+            number={3}
+            title="საგარანტიო"
+            badgeText="Guarantee"
+            badgeIcon={<IconCertificate size={12} />}
+            rightContent={
+              form.values.guaranteeCount < 3 && (
                 <ActionIcon
-                  variant="subtle"
-                  size="sm"
+                  variant="light"
+                  size="md"
                   onClick={addGuarantee}
                   color="blue"
                   title="დამატება"
                 >
                   <IconPlus size={16} />
                 </ActionIcon>
-              )}
-            </Group>
-
+              )
+            }
+          >
             {form.values.guaranteeCount === 0 && (
               <Text c="dimmed" size="sm" ta="center" py="md">
                 საგარანტიო წერილი არ არის დამატებული. დააჭირეთ + ღილაკს დასამატებლად.
@@ -1611,11 +1842,27 @@ export function RegistrationVisitModal({
             <Stack gap="md">
               {/* Primary Guarantee */}
               {form.values.guaranteeCount >= 1 && (
-                <Box>
+                <Paper
+                  p="md"
+                  radius="md"
+                  style={{
+                    backgroundColor: COLORS.gray[50],
+                    border: `1px solid ${COLORS.gray[200]}`,
+                  }}
+                >
                   <Group justify="space-between" mb="sm">
-                    <Text fw={600} c="dimmed">
-                      პირველი საგარანტიო
-                    </Text>
+                    <Group gap="xs">
+                      <Badge
+                        variant="filled"
+                        size="sm"
+                        style={{ backgroundColor: COLORS.primary[900] }}
+                      >
+                        #1
+                      </Badge>
+                      <Text fw={600} size="sm" c={COLORS.gray[700]}>
+                        პირველი საგარანტიო
+                      </Text>
+                    </Group>
                     <ActionIcon
                       variant="subtle"
                       color="red"
@@ -1632,15 +1879,26 @@ export function RegistrationVisitModal({
                         <TextInput
                           label="დონორი"
                           style={{ flex: 1 }}
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
                           {...form.getInputProps('mo_timwh')}
                         />
-                        <ActionIcon variant="light" size="lg">
+                        <ActionIcon variant="light" size="lg" color="blue">
                           <IconSearch size={16} />
                         </ActionIcon>
                       </Group>
                     </Grid.Col>
                     <Grid.Col span={2}>
-                      <TextInput label="თანხა" {...form.getInputProps('mo_timamo')} />
+                      <TextInput
+                        label="თანხა"
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
+                        {...form.getInputProps('mo_timamo')}
+                      />
                     </Grid.Col>
                     <Grid.Col span={2}>
                       <EMRDatePicker
@@ -1657,20 +1915,42 @@ export function RegistrationVisitModal({
                       />
                     </Grid.Col>
                     <Grid.Col span={3}>
-                      <TextInput label="ნომერი" {...form.getInputProps('mo_letterno')} />
+                      <TextInput
+                        label="ნომერი"
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
+                        {...form.getInputProps('mo_letterno')}
+                      />
                     </Grid.Col>
                   </Grid>
-                </Box>
+                </Paper>
               )}
 
               {/* Secondary Guarantee */}
               {form.values.guaranteeCount >= 2 && (
-                <Box>
-                  <Divider my="sm" />
+                <Paper
+                  p="md"
+                  radius="md"
+                  style={{
+                    backgroundColor: COLORS.gray[50],
+                    border: `1px solid ${COLORS.gray[200]}`,
+                  }}
+                >
                   <Group justify="space-between" mb="sm">
-                    <Text fw={600} c="dimmed">
-                      მეორე საგარანტიო
-                    </Text>
+                    <Group gap="xs">
+                      <Badge
+                        variant="filled"
+                        size="sm"
+                        style={{ backgroundColor: COLORS.primary[700] }}
+                      >
+                        #2
+                      </Badge>
+                      <Text fw={600} size="sm" c={COLORS.gray[700]}>
+                        მეორე საგარანტიო
+                      </Text>
+                    </Group>
                     <ActionIcon
                       variant="subtle"
                       color="red"
@@ -1687,15 +1967,26 @@ export function RegistrationVisitModal({
                         <TextInput
                           label="დონორი"
                           style={{ flex: 1 }}
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
                           {...form.getInputProps('mo_timwh1')}
                         />
-                        <ActionIcon variant="light" size="lg">
+                        <ActionIcon variant="light" size="lg" color="blue">
                           <IconSearch size={16} />
                         </ActionIcon>
                       </Group>
                     </Grid.Col>
                     <Grid.Col span={2}>
-                      <TextInput label="თანხა" {...form.getInputProps('mo_timamo1')} />
+                      <TextInput
+                        label="თანხა"
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
+                        {...form.getInputProps('mo_timamo1')}
+                      />
                     </Grid.Col>
                     <Grid.Col span={2}>
                       <EMRDatePicker
@@ -1712,20 +2003,42 @@ export function RegistrationVisitModal({
                       />
                     </Grid.Col>
                     <Grid.Col span={3}>
-                      <TextInput label="ნომერი" {...form.getInputProps('mo_letterno1')} />
+                      <TextInput
+                        label="ნომერი"
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
+                        {...form.getInputProps('mo_letterno1')}
+                      />
                     </Grid.Col>
                   </Grid>
-                </Box>
+                </Paper>
               )}
 
               {/* Tertiary Guarantee */}
               {form.values.guaranteeCount >= 3 && (
-                <Box>
-                  <Divider my="sm" />
+                <Paper
+                  p="md"
+                  radius="md"
+                  style={{
+                    backgroundColor: COLORS.gray[50],
+                    border: `1px solid ${COLORS.gray[200]}`,
+                  }}
+                >
                   <Group justify="space-between" mb="sm">
-                    <Text fw={600} c="dimmed">
-                      მესამე საგარანტიო
-                    </Text>
+                    <Group gap="xs">
+                      <Badge
+                        variant="filled"
+                        size="sm"
+                        style={{ backgroundColor: COLORS.primary[600] }}
+                      >
+                        #3
+                      </Badge>
+                      <Text fw={600} size="sm" c={COLORS.gray[700]}>
+                        მესამე საგარანტიო
+                      </Text>
+                    </Group>
                     <ActionIcon
                       variant="subtle"
                       color="red"
@@ -1742,15 +2055,26 @@ export function RegistrationVisitModal({
                         <TextInput
                           label="დონორი"
                           style={{ flex: 1 }}
+                          styles={{
+                            label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                            input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                          }}
                           {...form.getInputProps('mo_timwh2')}
                         />
-                        <ActionIcon variant="light" size="lg">
+                        <ActionIcon variant="light" size="lg" color="blue">
                           <IconSearch size={16} />
                         </ActionIcon>
                       </Group>
                     </Grid.Col>
                     <Grid.Col span={2}>
-                      <TextInput label="თანხა" {...form.getInputProps('mo_timamo2')} />
+                      <TextInput
+                        label="თანხა"
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
+                        {...form.getInputProps('mo_timamo2')}
+                      />
                     </Grid.Col>
                     <Grid.Col span={2}>
                       <EMRDatePicker
@@ -1767,10 +2091,17 @@ export function RegistrationVisitModal({
                       />
                     </Grid.Col>
                     <Grid.Col span={3}>
-                      <TextInput label="ნომერი" {...form.getInputProps('mo_letterno2')} />
+                      <TextInput
+                        label="ნომერი"
+                        styles={{
+                          label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                          input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                        }}
+                        {...form.getInputProps('mo_letterno2')}
+                      />
                     </Grid.Col>
                   </Grid>
-                </Box>
+                </Paper>
               )}
 
               {/* Add More Button */}
@@ -1780,31 +2111,37 @@ export function RegistrationVisitModal({
                   leftSection={<IconPlus size={16} />}
                   onClick={addGuarantee}
                   size="sm"
+                  color="blue"
                   style={{ alignSelf: 'flex-start' }}
                 >
                   მეტი საგარანტიოს დამატება
                 </Button>
               )}
             </Stack>
-          </Paper>
+          </SectionCard>
 
           {/* Section 4: Demographics - EDITABLE */}
-          <Paper p="lg" style={{ backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
-            <Group justify="space-between" mb="md">
-              <Text fw={700} size="lg" c="blue">
-                4 დემოგრაფია
-              </Text>
-              <Button variant="subtle" size="xs">
+          <SectionCard
+            number={4}
+            title="დემოგრაფია"
+            badgeText="Demographics"
+            badgeIcon={<IconMapPin size={12} />}
+            rightContent={
+              <Button variant="subtle" size="xs" color="blue">
                 კოპირება
               </Button>
-            </Group>
-
+            }
+          >
             <Grid gutter="sm">
               <Grid.Col span={3}>
                 <Select
                   label="რეგიონი"
                   data={REGIONS}
                   searchable
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
                   {...form.getInputProps('mo_regions')}
                 />
               </Grid.Col>
@@ -1815,14 +2152,32 @@ export function RegistrationVisitModal({
                   searchable
                   disabled={!form.values.mo_regions}
                   placeholder={form.values.mo_regions ? 'აირჩიეთ რაიონი' : 'ჯერ აირჩიეთ რეგიონი'}
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
                   {...form.getInputProps('mo_raions_hid')}
                 />
               </Grid.Col>
               <Grid.Col span={3}>
-                <TextInput label="ქალაქი" {...form.getInputProps('mo_city')} />
+                <TextInput
+                  label="ქალაქი"
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
+                  {...form.getInputProps('mo_city')}
+                />
               </Grid.Col>
               <Grid.Col span={3}>
-                <TextInput label="ფაქტიური მისამართი" {...form.getInputProps('mo_otheraddress')} />
+                <TextInput
+                  label="ფაქტიური მისამართი"
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
+                  {...form.getInputProps('mo_otheraddress')}
+                />
               </Grid.Col>
             </Grid>
             <Grid gutter="sm" mt="xs">
@@ -1830,6 +2185,10 @@ export function RegistrationVisitModal({
                 <Select
                   label="განათლება"
                   data={EDUCATION_OPTIONS}
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
                   {...form.getInputProps('mo_ganatleba')}
                 />
               </Grid.Col>
@@ -1837,6 +2196,10 @@ export function RegistrationVisitModal({
                 <Select
                   label="ოჯახური მდგომარეობა"
                   data={FAMILY_STATUS_OPTIONS}
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
                   {...form.getInputProps('mo_ojaxi')}
                 />
               </Grid.Col>
@@ -1844,36 +2207,75 @@ export function RegistrationVisitModal({
                 <Select
                   label="დასაქმება"
                   data={EMPLOYMENT_OPTIONS}
+                  styles={{
+                    label: { fontWeight: 600, color: COLORS.gray[700], marginBottom: '6px' },
+                    input: { border: `1px solid ${COLORS.gray[300]}`, borderRadius: '8px' },
+                  }}
                   {...form.getInputProps('mo_dasaqmeba')}
                 />
               </Grid.Col>
               <Grid.Col span={3} />
             </Grid>
-          </Paper>
-
-          <Divider />
-
-          {/* Save Button */}
-          <Group justify="flex-end">
-            <Button variant="default" onClick={onClose} disabled={loading}>
-              გაუქმება
-            </Button>
-            <Button
-              type="submit"
-              loading={loading}
-              size="lg"
-              style={{
-                background: 'linear-gradient(135deg, #17a2b8 0%, #20c4dd 100%)',
-                border: 'none',
-                fontWeight: 600,
-                padding: '12px 32px',
-              }}
-            >
-              შენახვა
-            </Button>
-          </Group>
+          </SectionCard>
         </Stack>
       </form>
+      </Box>
+
+      {/* Sticky Footer with Premium Save Button */}
+      <Paper
+        p="md"
+        shadow="xl"
+        style={{
+          position: 'sticky',
+          bottom: 0,
+          borderTop: `1px solid ${COLORS.gray[200]}`,
+          borderRadius: '0 0 16px 16px',
+          backgroundColor: 'white',
+        }}
+      >
+        <Group justify="flex-end">
+          <Button
+            variant="default"
+            onClick={onClose}
+            disabled={loading}
+            size="md"
+            style={{
+              borderRadius: '8px',
+            }}
+          >
+            {t('registration.actions.cancel') || 'გაუქმება'}
+          </Button>
+          <Button
+            type="submit"
+            form="registrationForm"
+            loading={loading}
+            size="lg"
+            style={{
+              background: GRADIENTS.primary,
+              border: 'none',
+              fontWeight: 600,
+              padding: '12px 32px',
+              borderRadius: '10px',
+              boxShadow: SHADOWS.button,
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = SHADOWS.buttonHover;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = SHADOWS.button;
+            }}
+            onClick={() => {
+              // Trigger form submit
+              formRef.current?.requestSubmit();
+            }}
+          >
+            {t('registration.actions.newStay') || 'ახალი ვიზიტი'}
+          </Button>
+        </Group>
+      </Paper>
     </Modal>
   );
 }

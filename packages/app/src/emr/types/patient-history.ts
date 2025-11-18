@@ -27,6 +27,7 @@ export interface VisitTableRow {
 // Search/filter parameters
 export interface PatientHistorySearchParams {
   insuranceCompanyId?: string;    // Filter by insurance company
+  departmentId?: string;          // Filter by department
   personalId?: string;            // 11-digit search
   firstName?: string;
   lastName?: string;

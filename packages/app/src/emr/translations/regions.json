@@ -1,0 +1,32 @@
+{
+  "regions": [
+    { "value": "1", "code": "01", "displayKa": "აფხაზეთი", "displayEn": "Abkhazia", "displayRu": "Абхазия" },
+    { "value": "10", "code": "02", "displayKa": "აჭარა", "displayEn": "Adjara", "displayRu": "Аджария" },
+    { "value": "17", "code": "03", "displayKa": "გურია", "displayEn": "Guria", "displayRu": "Гурия" },
+    { "value": "21", "code": "04", "displayKa": "თბილისი", "displayEn": "Tbilisi", "displayRu": "Тбилиси" },
+    { "value": "39", "code": "05", "displayKa": "იმერეთი", "displayEn": "Imereti", "displayRu": "Имерети" },
+    { "value": "52", "code": "06", "displayKa": "კახეთი", "displayEn": "Kakheti", "displayRu": "Кахети" },
+    { "value": "61", "code": "07", "displayKa": "მცხეთა-მთიანეთი", "displayEn": "Mtskheta-Mtianeti", "displayRu": "Мцхета-Мтианети" },
+    { "value": "67", "code": "08", "displayKa": "რაჭა-ლეჩხუმი და ქვემო სვანეთი", "displayEn": "Racha-Lechkhumi & Lower Svaneti", "displayRu": "Рача-Лечхуми и Нижняя Сванетия" },
+    { "value": "72", "code": "09", "displayKa": "საზღვარგარეთი", "displayEn": "Foreign Country", "displayRu": "Заграница" },
+    { "value": "74", "code": "10", "displayKa": "სამეგრელო და ზემო სვანეთი", "displayEn": "Samegrelo & Upper Svaneti", "displayRu": "Самегрело и Верхняя Сванетия" },
+    { "value": "84", "code": "11", "displayKa": "სამცხე-ჯავახეთი", "displayEn": "Samtskhe-Javakheti", "displayRu": "Самцхе-Джавахети" },
+    { "value": "91", "code": "12", "displayKa": "ქვემო ქართლი", "displayEn": "Kvemo Kartli", "displayRu": "Квемо Картли" },
+    { "value": "99", "code": "13", "displayKa": "შიდა ქართლი", "displayEn": "Shida Kartli", "displayRu": "Шида Картли" }
+  ],
+  "districts": {
+    "1": [
+      { "value": "2", "code": "0101", "displayKa": "გაგრა", "displayEn": "Gagra", "displayRu": "Гагра" },
+      { "value": "3", "code": "0102", "displayKa": "გალი", "displayEn": "Gali", "displayRu": "Гали" },
+      { "value": "4", "code": "0103", "displayKa": "გუდაუთა", "displayEn": "Gudauta", "displayRu": "Гудаута" },
+      { "value": "5", "code": "0104", "displayKa": "გულრიფში", "displayEn": "Gulripshi", "displayRu": "Гульрипши" },
+      { "value": "6", "code": "0105", "displayKa": "ზემო აფხაზეთი", "displayEn": "Upper Abkhazia", "displayRu": "Верхняя Абхазия" },
+      { "value": "7", "code": "0106", "displayKa": "ოჩამჩირე", "displayEn": "Ochamchire", "displayRu": "Очамчира" },
+      { "value": "8", "code": "0107", "displayKa": "სოხუმი", "displayEn": "Sokhumi", "displayRu": "Сухуми" },
+      { "value": "9", "code": "0108", "displayKa": "ტყვარჩელი", "displayEn": "Tkvarcheli", "displayRu": "Ткварчели" }
+    ],
+    "21": [
+      { "value": "22", "code": "0401", "displayKa": "თბილისი", "displayEn": "Tbilisi", "displayRu": "Тбилиси" }
+    ]
+  }
+}

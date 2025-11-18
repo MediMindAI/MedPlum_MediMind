@@ -19,6 +19,7 @@ interface PatientHistoryTableProps {
   sortField: string | null;
   sortDirection: 'asc' | 'desc';
   onRowClick?: (visitId: string) => void;
+  selectedPatientId?: string;
 }
 
 /**
@@ -34,6 +35,7 @@ export function PatientHistoryTable({
   sortField,
   sortDirection,
   onRowClick,
+  selectedPatientId,
 }: PatientHistoryTableProps): JSX.Element {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -150,12 +152,17 @@ export function PatientHistoryTable({
       <Table.Tbody>
         {visits.map((visit) => {
           const hasDebt = visit.debt > 0;
+          const isSelected = selectedPatientId === visit.id;
 
           return (
             <Table.Tr
               key={visit.id}
               onClick={() => handleRowClick(visit.id)}
-              style={{ cursor: 'pointer' }}
+              style={{
+                cursor: 'pointer',
+                backgroundColor: isSelected ? 'rgba(23, 162, 184, 0.15)' : undefined,
+                borderLeft: isSelected ? '3px solid #17a2b8' : undefined,
+              }}
             >
               <Table.Td>{visit.personalId}</Table.Td>
               <Table.Td>{visit.firstName}</Table.Td>

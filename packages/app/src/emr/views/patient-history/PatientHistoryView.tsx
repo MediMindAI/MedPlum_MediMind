@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Paper, Text, Group, Stack } from '@mantine/core';
+import { Paper, Text, Group, Stack, Box } from '@mantine/core';
 import type { JSX } from 'react';
 import { useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -11,6 +11,8 @@ import { PatientHistoryFilters } from '../../components/patient-history/PatientH
 import { VisitEditModal } from '../../components/patient-history/VisitEditModal';
 import { DeletionConfirmationModal } from '../../components/patient-history/DeletionConfirmationModal';
 import { PatientHistoryDetailModal } from '../../components/patient-history/PatientHistoryDetailModal';
+import { PatientHistorySidebar } from '../../components/patient-history/PatientHistorySidebar';
+import type { VisitTableRow } from '../../types/patient-history';
 
 /**
  * Main Patient History page component
@@ -46,10 +48,19 @@ export function PatientHistoryView(): JSX.Element {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [selectedVisitId, setSelectedVisitId] = useState<string | null>(null);
 
+  // Sidebar state
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [selectedPatient, setSelectedPatient] = useState<VisitTableRow | undefined>(undefined);
+
   /**
-   * Handle row click to open detail modal
+   * Handle row click to select patient and open detail modal
    */
   const handleRowClick = (visitId: string) => {
+    // Find the selected visit/patient
+    const visit = visits.find((v) => v.id === visitId);
+    if (visit) {
+      setSelectedPatient(visit);
+    }
     setSelectedVisitId(visitId);
     setDetailModalOpen(true);
   };
@@ -78,48 +89,62 @@ export function PatientHistoryView(): JSX.Element {
   };
 
   return (
-    <Stack gap="md" p="md">
-      {/* Page Title */}
-      <Group justify="space-between" align="center">
-        <Text size="xl" fw={700}>
-          {t('patientHistory.title')}
-        </Text>
-        <Text c="dimmed" size="sm">
-          {t('patientHistory.recordCount', { count: visits.length })}
-        </Text>
-      </Group>
+    <Box style={{ display: 'flex', height: '100%', position: 'relative' }}>
+      {/* Main Content Area */}
+      <Box style={{ flex: 1, overflow: 'auto' }}>
+        <Stack gap="md" p="md">
+          {/* Page Title */}
+          <Group justify="space-between" align="center">
+            <Text size="xl" fw={700}>
+              {t('patientHistory.title')}
+            </Text>
+            <Text c="dimmed" size="sm">
+              {t('patientHistory.recordCount', { count: visits.length })}
+            </Text>
+          </Group>
 
-      {/* Error Alert */}
-      {error && (
-        <Paper bg="red.1" p="md" withBorder>
-          <Text c="red" fw={600}>
-            {t('patientHistory.error.loadFailed')}
-          </Text>
-          <Text c="red" size="sm">
-            {error}
-          </Text>
-        </Paper>
-      )}
+          {/* Error Alert */}
+          {error && (
+            <Paper bg="red.1" p="md" withBorder>
+              <Text c="red" fw={600}>
+                {t('patientHistory.error.loadFailed')}
+              </Text>
+              <Text c="red" size="sm">
+                {error}
+              </Text>
+            </Paper>
+          )}
 
-      {/* Filters */}
-      <PatientHistoryFilters
-        searchParams={searchParams}
-        onSearchParamsChange={setSearchParams}
+          {/* Filters */}
+          <PatientHistoryFilters
+            searchParams={searchParams}
+            onSearchParamsChange={setSearchParams}
+            onSearch={refresh}
+          />
+
+          {/* Table */}
+          <Paper withBorder>
+            <PatientHistoryTable
+              visits={visits}
+              loading={loading}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onSort={handleSort}
+              sortField={sortField}
+              sortDirection={sortDirection}
+              onRowClick={handleRowClick}
+              selectedPatientId={selectedPatient?.id}
+            />
+          </Paper>
+        </Stack>
+      </Box>
+
+      {/* Collapsible Right Sidebar */}
+      <PatientHistorySidebar
+        selectedPatient={selectedPatient}
+        isOpen={sidebarOpen}
+        onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
-
-      {/* Table */}
-      <Paper withBorder>
-        <PatientHistoryTable
-          visits={visits}
-          loading={loading}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onSort={handleSort}
-          sortField={sortField}
-          sortDirection={sortDirection}
-          onRowClick={handleRowClick}
-        />
-      </Paper>
 
       {/* Detail Modal (opens on row click) */}
       <PatientHistoryDetailModal
@@ -144,6 +169,6 @@ export function PatientHistoryView(): JSX.Element {
         visitId={selectedVisitId}
         onSuccess={handleSuccess}
       />
-    </Stack>
+    </Box>
   );
 }

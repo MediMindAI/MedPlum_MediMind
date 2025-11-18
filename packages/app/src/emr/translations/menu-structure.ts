@@ -58,6 +58,21 @@ export const mainMenuItems: MenuItem[] = [
     key: 'nomenclature',
     translationKey: 'menu.nomenclature',
     path: '/emr/nomenclature',
+    subMenu: [
+      { key: 'medical1', translationKey: 'submenu.nomenclature.medical1', path: '/emr/nomenclature/medical-1' },
+      { key: 'medical2', translationKey: 'submenu.nomenclature.medical2', path: '/emr/nomenclature/medical-2' },
+      { key: 'goods', translationKey: 'submenu.nomenclature.goods', path: '/emr/nomenclature/goods' },
+      { key: 'laboratory', translationKey: 'submenu.nomenclature.laboratory', path: '/emr/nomenclature/laboratory' },
+      { key: 'prices', translationKey: 'submenu.nomenclature.prices', path: '/emr/nomenclature/prices' },
+      { key: 'priceList', translationKey: 'submenu.nomenclature.priceList', path: '/emr/nomenclature/price-list' },
+      { key: 'icd10', translationKey: 'submenu.nomenclature.icd10', path: '/emr/nomenclature/icd10-ncsp-icpc2' },
+      { key: 'labAliases', translationKey: 'submenu.nomenclature.labAliases', path: '/emr/nomenclature/lab-aliases' },
+      { key: 'groups', translationKey: 'submenu.nomenclature.groups', path: '/emr/nomenclature/groups' },
+      { key: 'physical', translationKey: 'submenu.nomenclature.physical', path: '/emr/nomenclature/physical' },
+      { key: 'forms', translationKey: 'submenu.nomenclature.forms', path: '/emr/nomenclature/forms' },
+      { key: 'settings', translationKey: 'submenu.nomenclature.settings', path: '/emr/nomenclature/settings' },
+      { key: 'tests', translationKey: 'submenu.nomenclature.tests', path: '/emr/nomenclature/tests' },
+    ],
   },
   {
     key: 'administration',
@@ -90,10 +105,11 @@ export const topNavItems: MenuItem[] = [
 /**
  * Get sub-menu items for a specific section
  */
-export function getSubMenuItems(section: 'registration' | 'patient-history'): MenuItem[] {
+export function getSubMenuItems(section: 'registration' | 'patient-history' | 'nomenclature'): MenuItem[] {
   const mainItem = mainMenuItems.find((item) => {
     if (section === 'registration') return item.key === 'registration';
     if (section === 'patient-history') return item.key === 'patientHistory';
+    if (section === 'nomenclature') return item.key === 'nomenclature';
     return false;
   });
 

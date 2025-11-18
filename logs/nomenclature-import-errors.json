@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-11-18T11:29:22.142Z",
+  "summary": {
+    "total": 2222,
+    "success": 2217,
+    "failed": 0,
+    "skipped": 5
+  },
+  "errors": [
+    {
+      "row": 537,
+      "code": "N/A",
+      "error": "Missing code (კოდი)"
+    },
+    {
+      "row": 551,
+      "code": "N/A",
+      "error": "Missing code (კოდი)"
+    },
+    {
+      "row": 2129,
+      "code": "N/A",
+      "error": "Missing code (კოდი)"
+    },
+    {
+      "row": 2134,
+      "code": "N/A",
+      "error": "Missing code (კოდი)"
+    },
+    {
+      "row": 2143,
+      "code": "N/A",
+      "error": "Missing code (კოდი)"
+    }
+  ]
+}

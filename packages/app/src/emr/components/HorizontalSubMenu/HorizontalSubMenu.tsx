@@ -38,8 +38,17 @@ const patientHistorySubMenu: SubMenuItem[] = [
   { key: 'moh', translationKey: 'submenu.patientHistory.moh', path: '/emr/patient-history/moh' },
 ];
 
+const nomenclatureSubMenu: SubMenuItem[] = [
+  { key: 'medical1', translationKey: 'submenu.nomenclature.medical1', path: '/emr/nomenclature/medical-1' },
+  { key: 'medical2', translationKey: 'submenu.nomenclature.medical2', path: '/emr/nomenclature/medical-2' },
+  { key: 'additional', translationKey: 'submenu.nomenclature.additional', path: '/emr/nomenclature/additional' },
+  { key: 'pharmacy', translationKey: 'submenu.nomenclature.pharmacy', path: '/emr/nomenclature/pharmacy' },
+  { key: 'laboratory', translationKey: 'submenu.nomenclature.laboratory', path: '/emr/nomenclature/laboratory' },
+  { key: 'materials', translationKey: 'submenu.nomenclature.materials', path: '/emr/nomenclature/materials' },
+];
+
 interface HorizontalSubMenuProps {
-  section: 'registration' | 'patient-history';
+  section: 'registration' | 'patient-history' | 'nomenclature';
 }
 
 /**
@@ -56,7 +65,12 @@ export function HorizontalSubMenu({ section }: HorizontalSubMenuProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const subMenuItems = section === 'registration' ? registrationSubMenu : patientHistorySubMenu;
+  const subMenuItems =
+    section === 'registration'
+      ? registrationSubMenu
+      : section === 'patient-history'
+      ? patientHistorySubMenu
+      : nomenclatureSubMenu;
 
   const isActive = (path: string) => {
     // Check if current path matches or starts with the menu item path

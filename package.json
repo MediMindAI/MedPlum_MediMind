@@ -84,5 +84,9 @@
   "packageManager": "npm@10.9.4",
   "engines": {
     "node": "^22.18.0 || >=24.2.0"
+  },
+  "dependencies": {
+    "@tanstack/react-virtual": "^3.13.12",
+    "xlsx": "^0.18.5"
   }
 }

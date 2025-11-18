@@ -47,8 +47,17 @@ export function getExtensionValue(resource: { extension?: Extension[] } | undefi
  * Map FHIR Encounter + Patient to table row
  */
 export function mapEncounterToTableRow(encounter: Encounter, bundle: Bundle): VisitTableRow {
-  // Find Patient in bundle
-  const patient = bundle.entry?.find((e) => e.resource?.resourceType === 'Patient')?.resource as Patient;
+  // Find the CORRECT Patient in bundle by matching encounter.subject.reference
+  // encounter.subject.reference is like "Patient/123" or full URL
+  const subjectRef = encounter.subject?.reference || '';
+  const patientId = subjectRef.split('/').pop() || ''; // Extract ID from "Patient/123"
+
+  const patient = bundle.entry?.find((e) => {
+    if (e.resource?.resourceType !== 'Patient') return false;
+    const pat = e.resource as Patient;
+    // Match by ID or full URL
+    return pat.id === patientId || e.fullUrl?.includes(patientId);
+  })?.resource as Patient;
 
   const personalId = getIdentifierValue(patient, 'http://medimind.ge/identifiers/personal-id');
 
@@ -61,7 +70,7 @@ export function mapEncounterToTableRow(encounter: Encounter, bundle: Bundle): Vi
   return {
     id: encounter.id!,
     encounterId: encounter.id!,
-    patientId: patient?.id || '',
+    patientId: patient?.id || patientId,
     personalId,
     firstName,
     lastName,

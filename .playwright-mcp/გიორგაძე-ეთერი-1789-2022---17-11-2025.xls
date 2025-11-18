@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet" xmlns:html="http://www.w3.org/TR/REC-html40"><ss:Styles>
+						<ss:Style ss:ID="s1">
+							<ss:Font ss:Bold="1"/>
+							<Alignment ss:Horizontal="Center" ss:WrapText="1"/>
+						</ss:Style>
+						<ss:Style ss:ID="s0">
+							 <Alignment ss:Horizontal="Center" ss:WrapText="1"/>
+							 <Font ss:Size="10"/>
+						</ss:Style>
+						<ss:Style ss:ID="s2">
+                             <Borders>
+								<Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+							 </Borders> 
+							 <Font ss:Size="10"/>
+						</ss:Style>
+						<ss:Style ss:ID="s3">
+                             <Borders>
+								<Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+							 </Borders> 
+							 <Font ss:Size="10"/>
+						</ss:Style>
+						<ss:Style ss:ID="s4">
+                             <Borders>
+								<Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+							 </Borders> 
+							 <Font ss:Size="10"/>
+						</ss:Style>
+						<ss:Style ss:ID="s5">
+                             <Borders>
+								<Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+							 </Borders> 
+							 <Font ss:Size="10"/>
+						</ss:Style>
+						<ss:Style ss:ID="s6">
+						     <Alignment ss:Horizontal="Center" ss:WrapText="1"/>
+                             <Borders>
+								<Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+							 </Borders> 
+							 <Font ss:Size="10" ss:Bold="1"/>
+						</ss:Style>
+						<ss:Style ss:ID="s7">
+						  <Font ss:Size="10"/>
+						</ss:Style>
+						  <ss:Style ss:ID="s8">
+                             <Borders>
+								<Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+							 </Borders> 
+							 <Font ss:Size="10"/>
+						  </ss:Style>
+						  <ss:Style ss:ID="s9">
+								<Borders>
+								<Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+							    </Borders>
+							 <Alignment ss:Horizontal="Center" ss:WrapText="1"/>
+							 <Font ss:Size="10"/>
+						  </ss:Style>
+						  <ss:Style ss:ID="st">
+                             <Borders>
+								<Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+							 </Borders> 
+							 <Font ss:Size="10"/>
+						</ss:Style>
+						<ss:Style ss:ID="bg">
+						  <Interior ss:Color="#F18074" ss:Pattern="Solid"/>
+						</ss:Style>
+						<ss:Style ss:ID="wp">
+						     <Alignment ss:Vertical="Bottom" ss:Horizontal="Center" ss:WrapText="1"/>
+                             <Borders>
+								<Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+								<Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/>
+							 </Borders> 
+							 <Font ss:Size="10"/>
+						 </ss:Style>
+			           </ss:Styles>
+<Worksheet ss:Name="Softmedic">
+<Table>
+<ss:Column ss:Width="80"/><ss:Column ss:Width="275"/><Row>
+<Cell ss:StyleID="s1" ss:MergeAcross="3"><Data ss:Type="String">შპს "ისრაელი საქართველოს სამედიცინო კვლევითი კლინიკა ჰელსიკორი"</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s0" ss:MergeAcross="0"><Data ss:Type="String"> </Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s1" ss:MergeAcross="0"><Data ss:Type="String"> </Data></Cell>
+<Cell ss:StyleID="s1" ss:MergeAcross="0"><Data ss:Type="String">კალკულაცია</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s0" ss:MergeAcross="0"><Data ss:Type="String"> </Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String">გვარი, სახელი</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String">გიორგაძე ეთერი 31001043320</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String">ისტ. #</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String">1789-2022</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String">პერიოდი</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="2"><Data ss:Type="String">17-11-2025 16:20 - 17-11-2025  16:39</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="2"><Data ss:Type="String">NCSP</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String">ICD10</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="3"><Data ss:Type="String">თერაპია - ტაბლეტირებული ფორმის მედიკამენტებით ***</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="3"><Data ss:Type="String">საწოლდღე: 0 დღე</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="3"><Data ss:Type="String">დაზღვევა: სსიპ ჯანმრთელობის ეროვნული სააგენტო</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s0" ss:MergeAcross="3"><Data ss:Type="String"> </Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s0" ss:MergeAcross="3"><Data ss:Type="String"> </Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="1"><Data ss:Type="String">სტანდარტი</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="1"><Data ss:Type="String">დიაგნოსტიკური გამოკვლევები</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="Number">0</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="1"><Data ss:Type="String">მკურნალობა</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="Number">0</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="1"><Data ss:Type="String">არაპირდაპირი ხარჯი</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="1"><Data ss:Type="String">ხელფასი</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="1"><Data ss:Type="String">მოგება</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s8" ss:MergeAcross="1"><Data ss:Type="String">სულ</Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="String"></Data></Cell>
+<Cell ss:StyleID="s8" ss:MergeAcross="0"><Data ss:Type="Number">0</Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s0" ss:MergeAcross="3"><Data ss:Type="String"> </Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s0" ss:MergeAcross="3"><Data ss:Type="String"> </Data></Cell>
+</Row>
+<Row>
+<Cell ss:StyleID="s0" ss:MergeAcross="3"><Data ss:Type="String"> </Data></Cell>
+</Row>
+</Table>
+
+			<WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <PageSetup>
+    <Footer x:Data="&amp;C&amp;P"/>
+   </PageSetup>
+   <Print>
+    <ValidPrinterInfo/>
+    <PaperSizeIndex>9</PaperSizeIndex>
+    <HorizontalResolution>600</HorizontalResolution>
+    <VerticalResolution>600</VerticalResolution>
+   </Print>
+   <Selected/>
+   <TopRowVisible>0</TopRowVisible>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <RangeSelection>R1C1:R1C4</RangeSelection>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+			</Worksheet>
+</Workbook>

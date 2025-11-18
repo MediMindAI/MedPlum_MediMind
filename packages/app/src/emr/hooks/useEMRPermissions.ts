@@ -14,6 +14,9 @@ export const EMRPermission = {
   VIEW_VISITS: 'view_visits',
   EDIT_VISITS: 'edit_visits',
   DELETE_VISITS: 'delete_visits',
+  VIEW_NOMENCLATURE: 'view_nomenclature',
+  EDIT_NOMENCLATURE: 'edit_nomenclature',
+  DELETE_NOMENCLATURE: 'delete_nomenclature',
   ADMIN: 'admin',
 } as const;
 
@@ -81,12 +84,15 @@ export function useEMRPermissions() {
         return isAdmin();
       case EMRPermission.DELETE_PATIENTS:
       case EMRPermission.DELETE_VISITS:
+      case EMRPermission.DELETE_NOMENCLATURE:
         return canDelete();
       case EMRPermission.EDIT_PATIENTS:
       case EMRPermission.EDIT_VISITS:
+      case EMRPermission.EDIT_NOMENCLATURE:
         return canEdit();
       case EMRPermission.VIEW_PATIENTS:
       case EMRPermission.VIEW_VISITS:
+      case EMRPermission.VIEW_NOMENCLATURE:
         return canView();
       default:
         return false;

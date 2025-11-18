@@ -68,9 +68,11 @@ import { ProtectedRoute } from './emr/components/ProtectedRoute/ProtectedRoute';
 import { EMRPermission } from './emr/hooks/useEMRPermissions';
 import { PatientHistorySection } from './emr/sections/PatientHistorySection';
 import { RegistrationSection } from './emr/sections/RegistrationSection';
+import { NomenclatureSection } from './emr/sections/NomenclatureSection';
 import { PatientEditView } from './emr/views/registration/PatientEditView';
 import { UnifiedRegistrationView } from './emr/views/registration/UnifiedRegistrationView';
 import { PatientHistoryView } from './emr/views/patient-history/PatientHistoryView';
+import { NomenclatureMedical1View } from './emr/views/nomenclature/NomenclatureMedical1View';
 import { ErrorBoundary } from '@medplum/react';
 
 export function AppRoutes(): JSX.Element {
@@ -286,17 +288,23 @@ export function AppRoutes(): JSX.Element {
             />
           </Route>
 
-          {/* Other main menu items */}
-          <Route
-            path="nomenclature"
-            element={
-              <PlaceholderView
-                titleKey="placeholder.nomenclature.title"
-                messageKey="placeholder.nomenclature.message"
-                testId="nomenclature-placeholder"
-              />
-            }
-          />
+          {/* Nomenclature Section with 13 sub-routes */}
+          <Route path="nomenclature" element={<NomenclatureSection />}>
+            <Route index element={<Navigate to="medical-1" replace />} />
+            <Route path="medical-1" element={<NomenclatureMedical1View />} />
+            <Route path="medical-2" element={<PlaceholderView titleKey="submenu.nomenclature.medical2" messageKey="ui.underDevelopment" />} />
+            <Route path="goods" element={<PlaceholderView titleKey="submenu.nomenclature.goods" messageKey="ui.underDevelopment" />} />
+            <Route path="laboratory" element={<PlaceholderView titleKey="submenu.nomenclature.laboratory" messageKey="ui.underDevelopment" />} />
+            <Route path="prices" element={<PlaceholderView titleKey="submenu.nomenclature.prices" messageKey="ui.underDevelopment" />} />
+            <Route path="price-list" element={<PlaceholderView titleKey="submenu.nomenclature.priceList" messageKey="ui.underDevelopment" />} />
+            <Route path="icd10-ncsp-icpc2" element={<PlaceholderView titleKey="submenu.nomenclature.icd10" messageKey="ui.underDevelopment" />} />
+            <Route path="lab-aliases" element={<PlaceholderView titleKey="submenu.nomenclature.labAliases" messageKey="ui.underDevelopment" />} />
+            <Route path="groups" element={<PlaceholderView titleKey="submenu.nomenclature.groups" messageKey="ui.underDevelopment" />} />
+            <Route path="physical" element={<PlaceholderView titleKey="submenu.nomenclature.physical" messageKey="ui.underDevelopment" />} />
+            <Route path="forms" element={<PlaceholderView titleKey="submenu.nomenclature.forms" messageKey="ui.underDevelopment" />} />
+            <Route path="settings" element={<PlaceholderView titleKey="submenu.nomenclature.settings" messageKey="ui.underDevelopment" />} />
+            <Route path="tests" element={<PlaceholderView titleKey="submenu.nomenclature.tests" messageKey="ui.underDevelopment" />} />
+          </Route>
           <Route
             path="administration"
             element={

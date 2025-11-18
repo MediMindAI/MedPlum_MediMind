@@ -102,6 +102,17 @@ This means:
   - Cross-package: `packages/react/src/`
 - This ensures consistency, reduces maintenance burden, and prevents code duplication
 
+### Theme Colors Only (CRITICAL)
+**When building UI components, ALWAYS use theme colors defined in `packages/app/src/emr/styles/theme.css`. NEVER hardcode color values directly in components.**
+
+This means:
+- Use CSS custom properties: `var(--emr-primary)`, `var(--emr-secondary)`, `var(--emr-accent)`, etc.
+- Reference theme gradients: `var(--emr-gradient-primary)`, `var(--emr-gradient-submenu)`
+- For Mantine components, use theme tokens or CSS variables
+- Check `theme.css` for available colors before adding any new color
+- If a new color is needed, add it to `theme.css` first with proper naming convention
+- This ensures visual consistency across the entire EMR system
+
 ### Testing Patterns
 - Jest for unit/integration tests
 - `@medplum/mock` provides MockClient for testing without a server
@@ -1182,11 +1193,284 @@ npm test -- --watch patient-history
 1. **Modal** (Recommended) - Quick edits without leaving unified view
 2. **Route** (Alternative) - Full-page editing for deep linking
 
+## Medical Services Nomenclature System
+
+### Overview
+
+The Medical Services Nomenclature System manages a catalog of 2,217+ medical services (operations, consultations, lab studies) stored as FHIR ActivityDefinition resources. Services are fully integrated with the EMR system and ready to link to patient encounters.
+
+**Status**: ✅ **PRODUCTION READY** (2,217 services imported)
+**FHIR Resource**: ActivityDefinition
+**Languages**: Georgian (ka), English (en), Russian (ru)
+
+### Recent Updates (Updated: 2025-11-18)
+
+**Implementation Complete:**
+- ✅ **2,217 Services Imported** - Full medical services catalog from Excel/Numbers file
+- ✅ **FHIR Mapping** - All services stored as ActivityDefinition resources with extensions
+- ✅ **Service Management UI** - Add, edit, delete services via `/emr/nomenclature/medical-1`
+- ✅ **Multilingual Support** - Service groups, types, categories in ka/en/ru
+- ✅ **Import Scripts** - Automated import with rate-limit handling
+- ✅ **15-Field Data Model** - Complete service details (code, name, group, type, price, LIS integration, GIS codes)
+
+### File Structure
+
+```
+packages/app/src/emr/
+├── views/nomenclature/
+│   └── NomenclatureMedical1View.tsx      # Main nomenclature page
+├── components/nomenclature/
+│   ├── ServiceTable.tsx                  # 10-column service table
+│   ├── ServiceEntryForm.tsx              # Inline add/edit form
+│   ├── ServiceEditModal.tsx              # Modal edit dialog
+│   ├── ServiceDeletionModal.tsx          # Delete confirmation
+│   ├── ServiceGroupSelect.tsx            # Group dropdown
+│   ├── ServiceTypeSelect.tsx             # Type dropdown
+│   ├── ServiceCategorySelect.tsx         # Category dropdown
+│   └── ServiceSubgroupSelect.tsx         # Subgroup dropdown
+├── services/
+│   ├── nomenclatureService.ts            # ActivityDefinition CRUD operations
+│   ├── nomenclatureHelpers.ts            # FHIR data extraction utilities
+│   └── excelExportService.ts             # Excel export functionality (placeholder)
+├── hooks/
+│   ├── useNomenclature.ts                # Service data fetching with pagination
+│   └── useServiceForm.ts                 # Form state management
+├── types/
+│   └── nomenclature.ts                   # TypeScript interfaces (ServiceFormValues, etc.)
+├── translations/
+│   ├── service-groups.json               # Service group options (ka/en/ru)
+│   ├── service-types.json                # Service type options
+│   ├── service-categories.json           # Category options
+│   └── service-subgroups.json            # Subgroup options (50 medical specialties)
+└── sections/
+    └── NomenclatureSection.tsx           # Route wrapper
+
+scripts/
+├── import-with-token.ts                  # Main import script (used for 2,217 services)
+├── import-nomenclature.ts                # OAuth version for production
+├── convert-numbers-to-xlsx.ts            # File format converter
+├── GET-TOKEN-INSTRUCTIONS.md             # Token extraction guide
+├── IMPORT-READY.md                       # Quick start guide
+└── README-IMPORT.md                      # Full documentation
+
+documentation/xsl/
+└── სამედიცინო სერვისების ცხრილი.xlsx     # Source data (2,217 services)
+```
+
+### Routing
+
+**Main Nomenclature Route:**
+- `/emr/nomenclature` → redirects to `/emr/nomenclature/medical-1`
+
+**Active Routes:**
+```typescript
+/emr/nomenclature                      // Redirects to /medical-1
+/emr/nomenclature/medical-1            // Main service catalog ✅ IMPLEMENTED
+/emr/nomenclature/medical-2            // Placeholder (not implemented)
+/emr/nomenclature/diagnosis            // Placeholder (not implemented)
+/emr/nomenclature/hospitals            // Placeholder (not implemented)
+// ... 10 more placeholder routes
+```
+
+### Key Features
+
+#### Service Catalog Management
+- **2,217 Medical Services** imported from Excel/Numbers file
+- **10-Column Table** displaying all service data
+- **Inline Add/Edit Form** for quick service creation/modification
+- **Modal Edit Dialog** for detailed service editing
+- **Delete Confirmation** with soft delete (status='retired')
+- **Multilingual Display** with automatic language switching
+- **Pagination Support** (backend ready for 100 services per page)
+
+#### Service Data Model
+
+Each service includes:
+- **code** - Unique service code (კოდი)
+- **name** - Service name (დასახელება)
+- **group** - Service group (ჯგუფი): consultations, operations, lab studies, etc.
+- **subgroup** - Medical specialty or DRG category (50 options)
+- **type** - Service type (ტიპი): internal (შიდა), other clinics, limbach, etc.
+- **serviceCategory** - Ambulatory/Stationary/Both
+- **price** - Base price in GEL (ფასი)
+- **totalAmount** - Total amount in GEL (ჯამი)
+- **calHed** - Calculation method (კალკულაციის დათვლა)
+- **printable** - Printable flag
+- **itemGetPrice** - Item pricing count
+- **departments** - Assigned department IDs
+- **lisIntegration** - LIS integration flag
+- **lisProvider** - LIS provider name
+- **externalOrderCode** - External order code
+- **gisCode** - GIS code
+- **status** - active | retired | draft
+
+### FHIR Resource Mappings
+
+#### ActivityDefinition Resource
+- **code** → `identifier[].value` (system: `http://medimind.ge/nomenclature/service-code`)
+- **name** → `title`
+- **group** → `topic[].text`
+- **subgroup** → `extension[service-subgroup]`
+- **type** → `extension[service-type]`
+- **serviceCategory** → `extension[service-category]`
+- **price** → `extension[base-price]` (valueMoney with GEL currency)
+- **totalAmount** → `extension[total-amount]`
+- **calHed** → `extension[cal-hed]`
+- **printable** → `extension[printable]`
+- **itemGetPrice** → `extension[item-get-price]`
+- **departments** → `extension[assigned-departments]` (comma-separated IDs)
+- **lisIntegration** → `extension[lis-integration]` (boolean)
+- **lisProvider** → `extension[lis-provider]`
+- **externalOrderCode** → `extension[external-order-code]`
+- **gisCode** → `extension[gis-code]`
+- **status** → `status` (active, retired, draft)
+
+### Common Patterns
+
+#### Searching for Services
+```typescript
+import { searchServices } from '@/emr/services/nomenclatureService';
+
+// Search by code
+const byCode = await searchServices(medplum, {
+  code: 'JXDD3A'
+});
+
+// Search by name (partial match)
+const byName = await searchServices(medplum, {
+  name: 'ექოსკოპია'
+});
+
+// Filter by group and type
+const filtered = await searchServices(medplum, {
+  group: 'ინსტრუმენტული კვლევები',
+  type: 'შიდა',
+  status: 'active'
+});
+
+// Pagination
+const page2 = await searchServices(medplum, {
+  page: 2,
+  count: 100
+});
+```
+
+#### Creating a New Service
+```typescript
+import { createService } from '@/emr/services/nomenclatureService';
+
+const values: ServiceFormValues = {
+  code: 'NEW001',
+  name: 'ახალი სერვისი',
+  group: 'კონსულტაციები',
+  type: 'შიდა',
+  serviceCategory: 'ambulatory',
+  price: 50,
+  status: 'active'
+};
+
+const service = await createService(medplum, values);
+```
+
+#### Updating a Service
+```typescript
+import { updateService } from '@/emr/services/nomenclatureService';
+
+const updatedValues: ServiceFormValues = {
+  code: 'JXDD3A',
+  name: 'მუცლის ღრუს ექოსკოპია (სტაციონარი) - განახლებული',
+  group: 'ინსტრუმენტული კვლევები',
+  type: 'შიდა',
+  serviceCategory: 'stationary',
+  price: 150, // Updated price
+  status: 'active'
+};
+
+const service = await updateService(medplum, serviceId, updatedValues);
+```
+
+#### Soft Delete (Recommended)
+```typescript
+import { deleteService } from '@/emr/services/nomenclatureService';
+
+// Sets status='retired', preserves data for audit
+await deleteService(medplum, serviceId);
+```
+
+#### Hard Delete (Admin Only)
+```typescript
+import { hardDeleteService } from '@/emr/services/nomenclatureService';
+
+// Permanently removes the service (use with caution!)
+await hardDeleteService(medplum, serviceId);
+```
+
+### Importing Services
+
+**One-Time Import (Already Completed):**
+```bash
+# 2,217 services already imported on 2025-11-18
+# If you need to re-import or add more services:
+
+# Step 1: Get access token from browser (DevTools → Local Storage → activeLogin)
+export MEDPLUM_TOKEN="your-access-token"
+
+# Step 2: Run import script
+npx tsx scripts/import-with-token.ts
+
+# Features:
+# - Automatic rate-limit handling (pauses when hitting API limits)
+# - Progress tracking (updates every 100 services)
+# - Error logging (saves to logs/nomenclature-import-errors.json)
+# - Validation (checks required fields before import)
+```
+
+**Import Documentation:**
+- **Quick Start**: `documentation/nomenclature/IMPORT-READY.md`
+- **Token Guide**: `documentation/nomenclature/GET-TOKEN-INSTRUCTIONS.md`
+- **Full Docs**: `documentation/nomenclature/README-IMPORT.md`
+- **Future Imports**: `documentation/nomenclature/TableImportGuide.md` ⭐
+
+### Performance Considerations
+
+- **Pagination**: Use `count` and `page` parameters for large result sets
+- **Filtering**: Use FHIR search parameters to reduce dataset before fetching
+- **Virtual Scrolling**: Can be added for smooth scrolling of 2,217+ services
+- **Caching**: Consider caching service groups/types/categories (rarely change)
+
+### Testing
+
+```bash
+cd packages/app
+
+# Run all nomenclature tests
+npm test -- nomenclature
+
+# Run specific component tests
+npm test -- ServiceTable.test.tsx
+npm test -- ServiceEditModal.test.tsx
+
+# Run service tests
+npm test -- nomenclatureService.test.ts
+npm test -- nomenclatureHelpers.test.ts
+```
+
+### Future Enhancements (Optional)
+
+1. **ServiceFilters Component** - Advanced search/filter UI
+2. **Virtual Scrolling** - Smooth scrolling for 2,217+ services
+3. **Excel Export** - Export services back to Excel (placeholder exists)
+4. **Bulk Import UI** - File upload interface in the app
+5. **Service Templates** - Pre-configured service templates
+6. **Price History** - Track price changes over time
+
 ## Documentation References
 
 - EMR UI Layout Spec: `specs/003-emr-ui-layout/spec.md`
 - Patient History Spec: `specs/001-patient-history-page/spec.md`
 - Registration Spec: `specs/004-fhir-registration-implementation/spec.md`
+- Nomenclature Documentation: `documentation/nomenclature/README.md` ⭐
+- Nomenclature Import Guide: `documentation/nomenclature/TableImportGuide.md`
 - Official Docs: https://www.medplum.com/docs
 - FHIR R4 Spec: https://hl7.org/fhir/R4/
 - Contributing Guide: https://medplum.com/docs/contributing

@@ -1,11 +1,10 @@
 # EMR Theme Color Palette Reference
 
 ## Overview
-This document defines the complete color palette for the EMR (Electronic Medical Records) system. The theme features a professional blue and turquoise color scheme with a 4-row horizontal navigation layout. All colors are defined in `packages/app/src/emr/styles/theme.css`.
+This document defines the complete color palette for the EMR (Electronic Medical Records) system. The theme features a professional **primary blue color scheme** with a 4-row horizontal navigation layout. All colors are defined in `packages/app/src/emr/styles/theme.css`.
 
 ## Color Philosophy
 - **Primary Blues**: Deep navy blue for trust, professionalism, and primary actions
-- **Turquoise/Cyan**: Modern turquoise for sub-menu navigation and interactive elements
 - **Neutral Grays**: Sophisticated grays for backgrounds, borders, and text
 - **Gradients**: Multi-color gradients for visual depth and modern appeal
 
@@ -25,15 +24,6 @@ Used for main navigation, primary actions, and brand elements.
 
 **Extended Blue (not in variables but used in gradients):**
 - `#3182ce` - Medium-light blue used in gradient transitions
-
-### Turquoise/Cyan Palette
-**CRITICAL** - Used specifically for the horizontal sub-menu tabs (Row 3).
-
-```css
---emr-turquoise: #17a2b8;         /* Main turquoise - sub-menu background */
---emr-turquoise-light: #20c4dd;   /* Light turquoise - gradient end, hover effects */
---emr-turquoise-dark: #138496;    /* Dark turquoise - gradient start, shadows */
-```
 
 ### Neutral Gray Palette
 Used for backgrounds, borders, text, and UI elements.
@@ -74,7 +64,7 @@ Each row of the EMR navigation has a specific background color:
 --emr-mainmenu-bg: #ffffff;       /* White background */
 
 /* Row 3: HorizontalSubMenu (Conditional) */
---emr-submenu-bg: #17a2b8;        /* Turquoise background */
+--emr-submenu-bg: #2b6cb0;        /* Primary blue background */
 ```
 
 **Visual Reference:**
@@ -84,7 +74,7 @@ Each row of the EMR navigation has a specific background color:
 ├─────────────────────────────────────┤
 │ Row 2: MainMenu (#ffffff - white)  │
 ├─────────────────────────────────────┤
-│ Row 3: SubMenu (#17a2b8 - turq)    │ ← Turquoise tabs
+│ Row 3: SubMenu (#2b6cb0 - blue)    │ ← Primary blue tabs
 ├─────────────────────────────────────┤
 │ Row 4+: Content Area                │
 └─────────────────────────────────────┘
@@ -127,20 +117,6 @@ Used for **lighter hover states** and **secondary interactions**.
 - Hover states on primary elements
 - Secondary buttons
 - Highlight effects
-
-### Turquoise Submenu Gradient
-Used **exclusively** for **Row 3 HorizontalSubMenu tabs**.
-
-```css
---emr-gradient-submenu: linear-gradient(90deg, #138496 0%, #17a2b8 50%, #20c4dd 100%);
-```
-
-**Color stops:**
-- Start: `#138496` (Dark turquoise)
-- Middle: `#17a2b8` (Main turquoise)
-- End: `#20c4dd` (Light turquoise)
-
-**Used in:**
 - HorizontalSubMenu background
 - PatientTable headers
 - PatientSearchForm search button
@@ -237,7 +213,7 @@ Used **exclusively** for **Row 3 HorizontalSubMenu tabs**.
 - Hover items: `#bee3f8` (light accent)
 
 ### HorizontalSubMenu (Row 3)
-- Background: `--emr-gradient-submenu` (turquoise gradient)
+- Background: `--emr-gradient-secondary` (blue gradient)
 - Tab text: `#ffffff` (white)
 - Active tab: **White 3px bottom border** + bold text
 - Inactive tabs: Regular weight, no border
@@ -254,13 +230,13 @@ Used **exclusively** for **Row 3 HorizontalSubMenu tabs**.
 - Hover: Slightly lighter opacity
 
 ### PatientTable
-- Header background: `--emr-gradient-submenu` (turquoise gradient)
+- Header background: `--emr-gradient-secondary` (blue gradient)
 - Header text: `#ffffff` (white)
 - Row hover: `#f9fafb` (gray-50)
 - Search match highlight: `#c6efce` (light green)
 
 ### PatientSearchForm
-- Search button: `--emr-gradient-submenu` (turquoise gradient)
+- Search button: `--emr-gradient-secondary` (blue gradient)
 - Input borders: `#e5e7eb` (gray-200)
 - Section headers: `#f8f9fa` background
 
@@ -286,10 +262,6 @@ Used **exclusively** for **Row 3 HorizontalSubMenu tabs**.
 
 .emr-bg-gradient-secondary {
   background: var(--emr-gradient-secondary);
-}
-
-.emr-bg-gradient-submenu {
-  background: var(--emr-gradient-submenu);
 }
 ```
 
@@ -319,8 +291,7 @@ All color combinations meet or exceed the 4.5:1 minimum contrast ratio:
 **White text on backgrounds:**
 - White on `#1a365d` (deep navy): **8.2:1** ✅ AAA
 - White on `#2b6cb0` (vibrant blue): **4.8:1** ✅ AA
-- White on `#17a2b8` (turquoise): **3.2:1** ⚠️ Large text only
-- White on `#138496` (dark turquoise): **4.1:1** ✅ AA Large
+- White on `#3182ce` (medium blue): **4.5:1** ✅ AA
 
 **Dark text on backgrounds:**
 - `#1f2937` on `#f9fafb`: **14.5:1** ✅ AAA
@@ -373,11 +344,6 @@ font-family:
 - `#63b3ed` - Light blue (Accent)
 - `#bee3f8` - Very light blue (Light accent)
 
-**Turquoise/Cyan:**
-- `#138496` - Dark turquoise (Gradient start)
-- `#17a2b8` - Main turquoise (Submenu background)
-- `#20c4dd` - Light turquoise (Gradient end)
-
 **Neutrals:**
 - `#f9fafb` - Gray-50 (Lightest)
 - `#f3f4f6` - Gray-100
@@ -401,11 +367,11 @@ font-family:
 ## Implementation Notes
 
 1. **Always use CSS custom properties** (`var(--emr-*)`) instead of hardcoded hex values
-2. **Turquoise gradient is exclusive** to Row 3 HorizontalSubMenu - don't use elsewhere
-3. **Blue gradients** are for primary actions and active states
+2. **Primary blue gradients** are for all actions and active states
+3. **Blue gradient variations** - use primary (#1a365d → #2b6cb0 → #3182ce) or secondary (#2b6cb0 → #3182ce → #63b3ed)
 4. **Test Georgian characters** when changing fonts to ensure proper rendering
 5. **Maintain contrast ratios** when adding new color combinations
-6. **Use utility classes** (`.emr-bg-gradient-submenu`, etc.) for consistency
+6. **Use utility classes** (`.emr-bg-gradient-primary`, `.emr-bg-gradient-secondary`) for consistency
 
 ---
 

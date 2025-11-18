@@ -383,19 +383,19 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
                     checked={form.values.isUnknownPatient}
                     onChange={(event) => handleUnknownPatientToggle(event.currentTarget.checked)}
                     size="sm"
-                    color="cyan"
+                    color="blue"
                     styles={{
                       root: {
                         padding: '8px 12px',
-                        backgroundColor: form.values.isUnknownPatient ? 'rgba(23, 162, 184, 0.08)' : 'transparent',
+                        backgroundColor: form.values.isUnknownPatient ? 'rgba(43, 108, 176, 0.08)' : 'transparent',
                         borderRadius: '6px',
-                        border: form.values.isUnknownPatient ? '1px solid rgba(23, 162, 184, 0.3)' : '1px solid transparent',
+                        border: form.values.isUnknownPatient ? '1px solid rgba(43, 108, 176, 0.3)' : '1px solid transparent',
                         transition: 'all 0.2s ease',
                       },
                       label: {
                         fontWeight: 500,
                         fontSize: '13px',
-                        color: form.values.isUnknownPatient ? '#138496' : '#6b7280',
+                        color: form.values.isUnknownPatient ? '#2b6cb0' : '#6b7280',
                       },
                       track: {
                         cursor: 'pointer',
@@ -409,19 +409,19 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
               {form.values.isUnknownPatient && (
                 <Box
                   style={{
-                    background: 'linear-gradient(135deg, rgba(23, 162, 184, 0.05) 0%, rgba(32, 196, 221, 0.08) 100%)',
+                    background: 'linear-gradient(135deg, rgba(43, 108, 176, 0.05) 0%, rgba(49, 130, 206, 0.08) 100%)',
                     borderRadius: '6px',
                     padding: '10px 14px',
-                    borderLeft: '3px solid #17a2b8',
+                    borderLeft: '3px solid #2b6cb0',
                   }}
                 >
                   <Grid align="center" gutter="xs">
                     <Grid.Col span="auto">
                       <Box style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <IconAlertTriangle size={16} color="#138496" />
-                        <Box style={{ fontSize: '13px', color: '#138496', fontWeight: 500 }}>
+                        <IconAlertTriangle size={16} color="#2b6cb0" />
+                        <Box style={{ fontSize: '13px', color: '#2b6cb0', fontWeight: 500 }}>
                           {t('registration.unknown.tempId') || 'Temporary ID'}:{' '}
-                          <Box component="span" fw={700} style={{ color: '#0d6470' }}>
+                          <Box component="span" fw={700} style={{ color: '#1a365d' }}>
                             {form.values.unknownPatientIdentifier}
                           </Box>
                         </Box>
@@ -746,7 +746,6 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
           onSaveAndNew={() => form.onSubmit((values) => handleSubmit(values, 'new'))()}
           onSaveAndView={() => form.onSubmit((values) => handleSubmit(values, 'view'))()}
           loading={isSubmitting}
-          disabled={!form.isValid()}
         />
       </Stack>
     </form>
