@@ -70,11 +70,14 @@ export default function ServiceGroupSelect({
       onChange={onChange}
       data={options}
       required={required}
+      withAsterisk={required}
       disabled={disabled}
       searchable
       clearable
       error={error}
       nothingFoundMessage={t('nomenclature.serviceGroup.noResults') || 'ვერ მოიძებნა'}
+      size="md"
+      styles={{ input: { minHeight: '44px' } }}
     />
   );
 }

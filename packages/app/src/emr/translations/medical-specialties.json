@@ -1,0 +1,229 @@
+{
+  "specialties": [
+    {
+      "code": "207RC0000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "კარდიოლოგია",
+        "en": "Cardiovascular Disease",
+        "ru": "Сердечно-сосудистые заболевания"
+      }
+    },
+    {
+      "code": "207RS0010X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ქირურგია",
+        "en": "General Surgery",
+        "ru": "Общая хирургия"
+      }
+    },
+    {
+      "code": "207R00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "შიდა მედიცინა",
+        "en": "Internal Medicine",
+        "ru": "Внутренняя медицина"
+      }
+    },
+    {
+      "code": "207P00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "გადაუდებელი მედიცინა",
+        "en": "Emergency Medicine",
+        "ru": "Неотложная медицина"
+      }
+    },
+    {
+      "code": "207Q00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ოჯახის მედიცინა",
+        "en": "Family Medicine",
+        "ru": "Семейная медицина"
+      }
+    },
+    {
+      "code": "207RA0000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ანესთეზიოლოგია",
+        "en": "Anesthesiology",
+        "ru": "Анестезиология"
+      }
+    },
+    {
+      "code": "207RX0202X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ორთოპედიული ქირურგია",
+        "en": "Orthopedic Surgery",
+        "ru": "Ортопедическая хирургия"
+      }
+    },
+    {
+      "code": "207T00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ნევროქირურგია",
+        "en": "Neurological Surgery",
+        "ru": "Нейрохирургия"
+      }
+    },
+    {
+      "code": "207N00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "დერმატოლოგია",
+        "en": "Dermatology",
+        "ru": "Дерматология"
+      }
+    },
+    {
+      "code": "207V00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "აკუშერ-გინეკოლოგია",
+        "en": "Obstetrics & Gynecology",
+        "ru": "Акушерство и гинекология"
+      }
+    },
+    {
+      "code": "207W00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ოფთალმოლოგია",
+        "en": "Ophthalmology",
+        "ru": "Офтальмология"
+      }
+    },
+    {
+      "code": "207Y00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ოტორინოლარინგოლოგია",
+        "en": "Otolaryngology",
+        "ru": "Оториноларингология"
+      }
+    },
+    {
+      "code": "207RP1001X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "პედიატრია",
+        "en": "Pediatrics",
+        "ru": "Педиатрия"
+      }
+    },
+    {
+      "code": "207RR0500X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "რადიოლოგია",
+        "en": "Radiology",
+        "ru": "Радиология"
+      }
+    },
+    {
+      "code": "207RE0101X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ენდოკრინოლოგია",
+        "en": "Endocrinology",
+        "ru": "Эндокринология"
+      }
+    },
+    {
+      "code": "207RG0300X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "გასტროენტეროლოგია",
+        "en": "Gastroenterology",
+        "ru": "Гастроэнтерология"
+      }
+    },
+    {
+      "code": "207RH0000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ჰემატოლოგია",
+        "en": "Hematology",
+        "ru": "Гематология"
+      }
+    },
+    {
+      "code": "207RI0200X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ინფექციური დაავადებები",
+        "en": "Infectious Disease",
+        "ru": "Инфекционные заболевания"
+      }
+    },
+    {
+      "code": "207RN0300X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ნეფროლოგია",
+        "en": "Nephrology",
+        "ru": "Нефрология"
+      }
+    },
+    {
+      "code": "207PN0001X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ონკოლოგია",
+        "en": "Medical Oncology",
+        "ru": "Медицинская онкология"
+      }
+    },
+    {
+      "code": "207RB0002X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "პულმონოლოგია",
+        "en": "Pulmonary Disease",
+        "ru": "Пульмонология"
+      }
+    },
+    {
+      "code": "207RM0200X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "რევმატოლოგია",
+        "en": "Rheumatology",
+        "ru": "Ревматология"
+      }
+    },
+    {
+      "code": "2080P0216X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "ფსიქიატრია",
+        "en": "Psychiatry",
+        "ru": "Психиатрия"
+      }
+    },
+    {
+      "code": "207U00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "უროლოგია",
+        "en": "Urology",
+        "ru": "Урология"
+      }
+    },
+    {
+      "code": "204F00000X",
+      "system": "http://nucc.org/provider-taxonomy",
+      "name": {
+        "ka": "კლინიკური ფსიქოლოგია",
+        "en": "Clinical Psychology",
+        "ru": "Клиническая психология"
+      }
+    }
+  ]
+}

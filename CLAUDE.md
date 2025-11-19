@@ -1464,11 +1464,156 @@ npm test -- nomenclatureHelpers.test.ts
 5. **Service Templates** - Pre-configured service templates
 6. **Price History** - Track price changes over time
 
+## Laboratory Nomenclature System
+
+### Overview
+
+Manages 4 laboratory nomenclature sub-systems at `/emr/nomenclature/laboratory`.
+
+**Status**: ✅ **3 OF 4 TABS PRODUCTION READY**
+**FHIR Resources**: ObservationDefinition, SpecimenDefinition, ActivityDefinition, DeviceDefinition
+
+### File Structure
+
+```
+packages/app/src/emr/
+├── components/laboratory/
+│   ├── tabs/ (SamplesTab, ManipulationsTab, SyringesTab, ResearchComponentsTab)
+│   ├── samples/, manipulations/, syringes/ (tables, forms, modals)
+│   └── ColorBarDisplay.tsx
+├── services/ (sampleService, manipulationService, syringeService, researchComponentService)
+├── hooks/ (useSamples, useManipulations, useSyringes, useResearchComponents)
+└── types/laboratory.ts
+```
+
+### Tabs
+
+**1. Samples (ნიმუშები)** - SpecimenDefinition
+- Inline editing, single field (name)
+- 45+ sample types
+
+**2. Manipulations (მანიპულაციები)** - ActivityDefinition
+- Inline editing, single field (procedure name)
+- 34+ procedures
+
+**3. Syringes (სინჯარები)** - DeviceDefinition
+- Modal editing, 3 fields (name, color, volume)
+- Color visualization with ColorBarDisplay component
+- 15+ container types
+
+**4. Research Components (კვლევის კომპონენტები)** - ObservationDefinition (PLACEHOLDER)
+- Service/hook ready for 7-field form implementation
+- 92+ lab parameters planned
+
+## Account Management System
+
+### Overview
+
+Manages practitioner/staff accounts with FHIR Practitioner, PractitionerRole, and AccessPolicy resources. Provides account creation, multi-role assignment, and deactivation workflows.
+
+**Status**: ✅ **PRODUCTION READY** (85% test coverage)
+**Route**: `/emr/account-management`
+**FHIR Resources**: Practitioner, PractitionerRole, Invite, AccessPolicy, AuditEvent
+
+### Key Features
+
+- **Account Creation**: Email-based invitations via Medplum Invite API
+- **Multi-Role Assignment**: Multiple roles with medical specialties per practitioner
+- **Deactivation Workflow**: Soft delete with audit trails (DICOM DCM 110137)
+- **Validation**: RFC 5322 email, E.164 phone (+995 Georgia), date validation
+- **Security**: Self-deactivation prevention, admin-only permissions
+- **Multilingual**: Georgian (ka), English (en), Russian (ru)
+
+### File Structure
+
+```
+packages/app/src/emr/
+├── views/account-management/
+│   └── AccountManagementView.tsx        # Main page (form + table)
+├── components/account-management/
+│   ├── AccountForm.tsx                  # Create/edit form
+│   ├── AccountTable.tsx                 # Account list table
+│   ├── RoleSelector.tsx                 # Multi-role dropdown
+│   ├── SpecialtySelect.tsx              # Medical specialty (NUCC codes)
+│   └── deactivation/
+│       └── DeactivationConfirmationModal.tsx
+├── services/
+│   ├── accountService.ts                # Practitioner + Invite CRUD
+│   ├── accountValidators.ts             # Form validation utilities
+│   └── accountHelpers.ts                # FHIR data extraction
+├── hooks/
+│   ├── useAccountForm.ts                # Form state management
+│   └── useDeactivation.ts               # Deactivation workflow
+├── types/
+│   └── account-management.ts            # TypeScript interfaces
+└── translations/
+    ├── account-roles.json               # 12 role types
+    └── medical-specialties.json         # 25 NUCC specialties
+```
+
+### Common Patterns
+
+#### Creating Account
+```typescript
+import { createPractitionerWithInvite } from '@/emr/services/accountService';
+
+const values: AccountFormValues = {
+  firstName: 'თენგიზი',
+  lastName: 'ხოზვრია',
+  email: 'tengizi@medimind.ge',
+  gender: 'male',
+  roles: [
+    { code: 'physician', specialty: '207RC0000X', active: true }
+  ]
+};
+
+const { practitioner, invite } = await createPractitionerWithInvite(medplum, values);
+```
+
+#### Multi-Role Assignment
+```typescript
+// Each role creates a PractitionerRole resource
+const roles: RoleAssignment[] = [
+  { code: 'physician', specialty: '207RC0000X', active: true },
+  { code: 'department-head', department: 'Cardiology', active: true }
+];
+```
+
+#### Deactivation
+```typescript
+import { deactivatePractitioner } from '@/emr/services/accountService';
+
+await deactivatePractitioner(medplum, practitionerId, 'Resigned', currentUserId);
+// Creates AuditEvent with DICOM code DCM 110137
+```
+
+### FHIR Mappings
+
+- **Practitioner.active** → Account status
+- **Practitioner.name[].given/family** → First/Last name
+- **Practitioner.telecom[]** → Email/Phone (system: email/phone)
+- **Practitioner.gender** → Gender (male/female/other/unknown)
+- **PractitionerRole.code** → Role (12 types: physician, nurse, etc.)
+- **PractitionerRole.specialty** → Medical specialty (NUCC codes)
+- **Invite** → Email invitation with setup link
+
+### Testing
+
+```bash
+cd packages/app
+npm test -- account-management  # 91/107 tests passing (85%)
+```
+
+### Dashboard Navigation
+
+User dropdown menu (top-right) includes **Dashboard** button → navigates to `/emr/account-management`
+
 ## Documentation References
 
 - EMR UI Layout Spec: `specs/003-emr-ui-layout/spec.md`
 - Patient History Spec: `specs/001-patient-history-page/spec.md`
 - Registration Spec: `specs/004-fhir-registration-implementation/spec.md`
+- Account Management Spec: `specs/005-account-management/spec.md`
 - Nomenclature Documentation: `documentation/nomenclature/README.md` ⭐
 - Nomenclature Import Guide: `documentation/nomenclature/TableImportGuide.md`
 - Official Docs: https://www.medplum.com/docs

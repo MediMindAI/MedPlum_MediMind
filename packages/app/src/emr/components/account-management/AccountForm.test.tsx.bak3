@@ -1,0 +1,241 @@
+/**
+ * Tests for AccountForm Component
+ *
+ * Tests form rendering, validation, and submission
+ */
+
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MantineProvider } from '@mantine/core';
+import { MemoryRouter } from 'react-router-dom';
+import { MedplumProvider } from '@medplum/react-hooks';
+import { MockClient } from '@medplum/mock';
+import { AccountForm } from './AccountForm';
+import type { AccountFormValues } from '../../types/account-management';
+
+describe('AccountForm (T020)', () => {
+  let medplum: MockClient;
+
+  const renderWithProviders = (component: React.ReactElement) => {
+    return render(
+      <MantineProvider>
+        <MemoryRouter>
+          <MedplumProvider medplum={medplum}>{component}</MedplumProvider>
+        </MemoryRouter>
+      </MantineProvider>
+    );
+  };
+
+  beforeEach(() => {
+    medplum = new MockClient();
+    localStorage.clear();
+    localStorage.setItem('emrLanguage', 'ka');
+  });
+
+  it('should render all required form fields', () => {
+    const mockOnSubmit = jest.fn();
+
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+
+    // Required fields
+    expect(screen.getAllByLabelText(/სახელი/i)[0]).toBeInTheDocument(); // First name
+    expect(screen.getByLabelText(/გვარი/i)).toBeInTheDocument(); // Last name
+    expect(screen.getByLabelText(/ელფოსტა/i)).toBeInTheDocument(); // Email
+    expect(screen.getByLabelText(/სქესი/i)).toBeInTheDocument(); // Gender
+
+    // Optional fields
+    expect(screen.getByLabelText(/ტელეფონი/i)).toBeInTheDocument(); // Phone
+
+    // Role management section should be visible
+    expect(screen.getByText(/როლის მინიჭება/i)).toBeInTheDocument(); // Role Assignment
+    expect(screen.getByRole('button', { name: /როლის დამატება/i })).toBeInTheDocument(); // Add Role
+  });
+
+  it('should use responsive Grid layout with mobile-first spans', () => {
+    const mockOnSubmit = jest.fn();
+
+    const { container } = renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+
+    // Check for Grid with responsive spans
+    const gridCols = container.querySelectorAll('[class*="Grid-col"]');
+    expect(gridCols.length).toBeGreaterThan(0);
+  });
+
+  it('should have size="md" inputs for touch-friendly targets', () => {
+    const mockOnSubmit = jest.fn();
+
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+
+    const inputs = screen.getAllByRole('textbox');
+    inputs.forEach((input) => {
+      const styles = window.getComputedStyle(input);
+      const minHeight = parseInt(styles.minHeight || '0');
+      expect(minHeight).toBeGreaterThanOrEqual(44); // 44px minimum touch target
+    });
+  });
+
+  it('should validate required fields', async () => {
+    const mockOnSubmit = jest.fn();
+
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+
+    // Try to submit empty form
+    const submitButton = screen.getByRole('button', { name: /შენახვა/i }); // Save
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/სახელი სავალდებულოა/i)).toBeInTheDocument();
+      expect(screen.getByText(/გვარი სავალდებულოა/i)).toBeInTheDocument();
+      expect(screen.getByText(/ელფოსტა სავალდებულოა/i)).toBeInTheDocument();
+    });
+
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+  });
+
+  it('should validate email format', async () => {
+    const mockOnSubmit = jest.fn();
+
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+
+    const emailInput = screen.getByLabelText(/ელფოსტა/i);
+    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+
+    const submitButton = screen.getByRole('button', { name: /შენახვა/i });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/არასწორი ელფოსტის ფორმატი/i)).toBeInTheDocument();
+    });
+
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+  });
+
+  it('should validate Georgian phone number format', async () => {
+    const mockOnSubmit = jest.fn();
+
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+
+    const phoneInput = screen.getByLabelText(/ტელეფონი/i);
+    fireEvent.change(phoneInput, { target: { value: '500050610' } }); // Missing +995
+
+    const submitButton = screen.getByRole('button', { name: /შენახვა/i });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(/ტელეფონი უნდა იწყებოდეს \+/i)).toBeInTheDocument();
+    });
+
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+  });
+
+  it('should submit valid form data', async () => {
+    const mockOnSubmit = jest.fn();
+
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+
+    // Fill in required fields
+    fireEvent.change(screen.getAllByLabelText(/სახელი/i)[0], {
+      target: { value: 'თენგიზი' },
+    });
+    fireEvent.change(screen.getByLabelText(/გვარი/i), {
+      target: { value: 'ხოზვრია' },
+    });
+    fireEvent.change(screen.getByLabelText(/ელფოსტა/i), {
+      target: { value: 'tengizi@medimind.ge' },
+    });
+
+    // Select gender
+    const genderSelect = screen.getByLabelText(/სქესი/i);
+    fireEvent.change(genderSelect, { target: { value: 'male' } });
+
+    // Fill optional fields
+    fireEvent.change(screen.getByLabelText(/ტელეფონი/i), {
+      target: { value: '+995500050610' },
+    });
+
+    const submitButton = screen.getByRole('button', { name: /შენახვა/i });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          firstName: 'თენგიზი',
+          lastName: 'ხოზვრია',
+          email: 'tengizi@medimind.ge',
+          gender: 'male',
+          phoneNumber: '+995500050610',
+        })
+      );
+    });
+  });
+
+  it('should populate form with initial values for editing', () => {
+    const mockOnSubmit = jest.fn();
+    const initialValues: AccountFormValues = {
+      firstName: 'ნინო',
+      lastName: 'გელაშვილი',
+      email: 'nino@medimind.ge',
+      gender: 'female',
+      phoneNumber: '+995555123456',
+      role: 'nurse',
+      active: true,
+    };
+
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} initialValues={initialValues} />);
+
+    expect(screen.getAllByLabelText(/სახელი/i)[0]).toHaveValue('ნინო');
+    expect(screen.getByLabelText(/გვარი/i)).toHaveValue('გელაშვილი');
+    expect(screen.getByLabelText(/ელფოსტა/i)).toHaveValue('nino@medimind.ge');
+    expect(screen.getByLabelText(/ტელეფონი/i)).toHaveValue('+995555123456');
+  });
+
+  it('should show loading state during submission', async () => {
+    const mockOnSubmit = jest.fn(
+      () => new Promise((resolve) => setTimeout(resolve, 1000))
+    );
+
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+
+    // Fill required fields
+    fireEvent.change(screen.getAllByLabelText(/სახელი/i)[0], { target: { value: 'Test' } });
+    fireEvent.change(screen.getByLabelText(/გვარი/i), { target: { value: 'User' } });
+    fireEvent.change(screen.getByLabelText(/ელფოსტა/i), {
+      target: { value: 'test@medimind.ge' },
+    });
+
+    const submitButton = screen.getByRole('button', { name: /შენახვა/i });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(submitButton).toBeDisabled();
+    });
+  });
+
+  it('should display role selector dropdown', () => {
+    const mockOnSubmit = jest.fn();
+
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+
+    const roleSelect = screen.getByLabelText(/როლი/i);
+    expect(roleSelect).toBeInTheDocument();
+
+    // Should have options (loaded from account-roles.json)
+    fireEvent.click(roleSelect);
+    expect(screen.getByText(/ექიმი/i)).toBeInTheDocument(); // Physician
+    expect(screen.getByText(/ექთანი/i)).toBeInTheDocument(); // Nurse
+  });
+
+  it('should support multilingual display', () => {
+    const mockOnSubmit = jest.fn();
+
+    // Test Georgian
+    localStorage.setItem('emrLanguage', 'ka');
+    const { unmount } = renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+    expect(screen.getAllByLabelText(/სახელი/i)[0]).toBeInTheDocument();
+    unmount();
+
+    // Test English
+    localStorage.setItem('emrLanguage', 'en');
+    renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />);
+    expect(screen.getAllByLabelText(/First Name/i)[0]).toBeInTheDocument();
+  });
+});

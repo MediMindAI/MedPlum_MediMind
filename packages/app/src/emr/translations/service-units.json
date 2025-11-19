@@ -1,0 +1,19 @@
+[
+  { "value": "", "label": "" },
+  { "value": "1", "label": "ცალი" },
+  { "value": "4", "label": "დღე" },
+  { "value": "22", "label": "გრ" },
+  { "value": "27", "label": "კომპლექტი" },
+  { "value": "28", "label": "ფლაკონი" },
+  { "value": "29", "label": "კოლოფი" },
+  { "value": "30", "label": "წყვილი" },
+  { "value": "32", "label": "მლ" },
+  { "value": "33", "label": "მ" },
+  { "value": "42", "label": "ლიტრი" },
+  { "value": "43", "label": "მეტრი" },
+  { "value": "44", "label": "პაკეტი" },
+  { "value": "57", "label": "დოზა" },
+  { "value": "63", "label": "ამპულა" },
+  { "value": "64", "label": "აბი" },
+  { "value": "69", "label": "ტესტი" }
+]

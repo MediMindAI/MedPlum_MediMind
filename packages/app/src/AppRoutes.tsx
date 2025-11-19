@@ -69,10 +69,12 @@ import { EMRPermission } from './emr/hooks/useEMRPermissions';
 import { PatientHistorySection } from './emr/sections/PatientHistorySection';
 import { RegistrationSection } from './emr/sections/RegistrationSection';
 import { NomenclatureSection } from './emr/sections/NomenclatureSection';
+import { AccountManagementSection } from './emr/sections/AccountManagementSection';
 import { PatientEditView } from './emr/views/registration/PatientEditView';
 import { UnifiedRegistrationView } from './emr/views/registration/UnifiedRegistrationView';
 import { PatientHistoryView } from './emr/views/patient-history/PatientHistoryView';
 import { NomenclatureMedical1View } from './emr/views/nomenclature/NomenclatureMedical1View';
+import { LaboratoryNomenclatureView } from './emr/views/nomenclature/LaboratoryNomenclatureView';
 import { ErrorBoundary } from '@medplum/react';
 
 export function AppRoutes(): JSX.Element {
@@ -294,7 +296,7 @@ export function AppRoutes(): JSX.Element {
             <Route path="medical-1" element={<NomenclatureMedical1View />} />
             <Route path="medical-2" element={<PlaceholderView titleKey="submenu.nomenclature.medical2" messageKey="ui.underDevelopment" />} />
             <Route path="goods" element={<PlaceholderView titleKey="submenu.nomenclature.goods" messageKey="ui.underDevelopment" />} />
-            <Route path="laboratory" element={<PlaceholderView titleKey="submenu.nomenclature.laboratory" messageKey="ui.underDevelopment" />} />
+            <Route path="laboratory" element={<LaboratoryNomenclatureView />} />
             <Route path="prices" element={<PlaceholderView titleKey="submenu.nomenclature.prices" messageKey="ui.underDevelopment" />} />
             <Route path="price-list" element={<PlaceholderView titleKey="submenu.nomenclature.priceList" messageKey="ui.underDevelopment" />} />
             <Route path="icd10-ncsp-icpc2" element={<PlaceholderView titleKey="submenu.nomenclature.icd10" messageKey="ui.underDevelopment" />} />
@@ -305,6 +307,17 @@ export function AppRoutes(): JSX.Element {
             <Route path="settings" element={<PlaceholderView titleKey="submenu.nomenclature.settings" messageKey="ui.underDevelopment" />} />
             <Route path="tests" element={<PlaceholderView titleKey="submenu.nomenclature.tests" messageKey="ui.underDevelopment" />} />
           </Route>
+
+          {/* Account Management Section (Admin Only) */}
+          <Route
+            path="account-management/*"
+            element={
+              <ProtectedRoute requireAdmin={true}>
+                <AccountManagementSection />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="administration"
             element={

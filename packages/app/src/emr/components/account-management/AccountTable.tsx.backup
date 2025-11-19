@@ -1,0 +1,178 @@
+/**
+ * AccountTable Component
+ *
+ * Displays practitioner accounts in a 10-column table with edit/delete actions
+ * Uses horizontal scroll for mobile, turquoise gradient header
+ */
+
+import React from 'react';
+import { Table, Box, ActionIcon, Text, Skeleton, Button, Group } from '@mantine/core';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { useTranslation } from '../../hooks/useTranslation';
+import { AccountStatusBadge } from './AccountStatusBadge';
+import type { AccountRow } from '../../types/account-management';
+
+interface AccountTableProps {
+  accounts: AccountRow[];
+  onEdit: (account: AccountRow) => void;
+  onDelete: (account: AccountRow) => void;
+  onDeactivate?: (account: AccountRow) => void;
+  onReactivate?: (account: AccountRow) => void;
+  loading?: boolean;
+}
+
+/**
+ * Table component for displaying account list
+ *
+ * Features:
+ * - 10 columns: Staff ID, Name, Email, Phone, Roles, Departments, Status, Last Modified, Actions
+ * - Horizontal scroll wrapper for mobile
+ * - Turquoise gradient header (var(--emr-gradient-submenu))
+ * - Clickable rows with pointer cursor
+ * - Edit and delete action buttons
+ * - React.memo() optimization
+ * - Loading skeleton state
+ *
+ * @param accounts - Array of account rows
+ * @param onEdit - Edit button callback
+ * @param onDelete - Delete button callback
+ * @param loading - Show loading skeleton
+ */
+export const AccountTable = React.memo(function AccountTable({
+  accounts,
+  onEdit,
+  onDelete,
+  onDeactivate,
+  onReactivate,
+  loading,
+}: AccountTableProps): JSX.Element {
+  const { t } = useTranslation();
+
+  if (loading) {
+    return (
+      <Box>
+        <Skeleton height={50} mb="sm" />
+        <Skeleton height={40} mb="xs" />
+        <Skeleton height={40} mb="xs" />
+        <Skeleton height={40} mb="xs" />
+        <Text ta="center" c="dimmed">
+          {t('accountManagement.table.loading')}
+        </Text>
+      </Box>
+    );
+  }
+
+  if (accounts.length === 0) {
+    return (
+      <Box ta="center" py="xl">
+        <Text size="lg" c="dimmed">
+          {t('accountManagement.table.noAccounts')}
+        </Text>
+      </Box>
+    );
+  }
+
+  return (
+    <Box style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+      <Table highlightOnHover style={{ minWidth: '1200px' }}>
+        <Table.Thead>
+          <Table.Tr style={{ background: 'var(--emr-gradient-submenu)' }}>
+            <Table.Th style={{ color: 'white' }}>{t('accountManagement.table.staffId')}</Table.Th>
+            <Table.Th style={{ color: 'white' }}>{t('accountManagement.table.name')}</Table.Th>
+            <Table.Th style={{ color: 'white' }}>{t('accountManagement.table.email')}</Table.Th>
+            <Table.Th style={{ color: 'white' }}>{t('accountManagement.table.phone')}</Table.Th>
+            <Table.Th style={{ color: 'white' }}>{t('accountManagement.table.role')}</Table.Th>
+            <Table.Th style={{ color: 'white' }}>
+              {t('accountManagement.table.department')}
+            </Table.Th>
+            <Table.Th style={{ color: 'white' }}>{t('accountManagement.table.status')}</Table.Th>
+            <Table.Th style={{ color: 'white' }}>
+              {t('accountManagement.table.lastModified')}
+            </Table.Th>
+            <Table.Th style={{ color: 'white' }}>{t('accountManagement.table.actions')}</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+
+        <Table.Tbody>
+          {accounts.map((account) => (
+            <Table.Tr key={account.id} style={{ cursor: 'pointer' }}>
+              <Table.Td>{account.staffId || '-'}</Table.Td>
+              <Table.Td>{account.name}</Table.Td>
+              <Table.Td>{account.email}</Table.Td>
+              <Table.Td>{account.phone || '-'}</Table.Td>
+              <Table.Td>{account.roles.join(', ') || '-'}</Table.Td>
+              <Table.Td>{account.departments?.join(', ') || '-'}</Table.Td>
+              <Table.Td>
+                <AccountStatusBadge active={account.active} />
+              </Table.Td>
+              <Table.Td>
+                {account.lastModified
+                  ? new Date(account.lastModified).toLocaleDateString()
+                  : '-'}
+              </Table.Td>
+              <Table.Td>
+                <Group gap="xs" wrap="nowrap">
+                  <ActionIcon
+                    variant="subtle"
+                    color="blue"
+                    size="lg"
+                    onClick={() => onEdit(account)}
+                    aria-label={t('accountManagement.table.edit')}
+                  >
+                    <IconEdit size={18} />
+                  </ActionIcon>
+                  <ActionIcon
+                    variant="subtle"
+                    color="red"
+                    size="lg"
+                    onClick={() => onDelete(account)}
+                    aria-label={t('accountManagement.table.delete')}
+                  >
+                    <IconTrash size={18} />
+                  </ActionIcon>
+                  {/* Conditional deactivate/reactivate button */}
+                  {account.active && onDeactivate && (
+                    <Button
+                      size="xs"
+                      variant="outline"
+                      color="orange"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeactivate(account);
+                      }}
+                      style={{
+                        minHeight: '28px',
+                        padding: '4px 12px',
+                        fontSize: '12px',
+                      }}
+                    >
+                      {t('accountManagement.table.deactivate')}
+                    </Button>
+                  )}
+                  {!account.active && onReactivate && (
+                    <Button
+                      size="xs"
+                      variant="filled"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onReactivate(account);
+                      }}
+                      style={{
+                        background: 'var(--emr-gradient-submenu)',
+                        minHeight: '28px',
+                        padding: '4px 12px',
+                        fontSize: '12px',
+                      }}
+                    >
+                      {t('accountManagement.table.reactivate')}
+                    </Button>
+                  )}
+                </Group>
+              </Table.Td>
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
+    </Box>
+  );
+});

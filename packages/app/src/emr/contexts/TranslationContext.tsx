@@ -50,12 +50,32 @@ export function TranslationProvider({ children }: TranslationProviderProps) {
 
   const t = useCallback(
     (key: string, params?: Record<string, any>): string => {
+      // Support both flat keys ('menu.registration') and nested keys ('registeredServices.financial.title')
+      const getValue = (obj: any, path: string): string | undefined => {
+        // First try flat key (backward compatibility)
+        if (obj && typeof obj === 'object' && path in obj && typeof obj[path] === 'string') {
+          return obj[path];
+        }
+
+        // Then try nested key navigation
+        const keys = path.split('.');
+        let current = obj;
+        for (const k of keys) {
+          if (current && typeof current === 'object' && k in current) {
+            current = current[k];
+          } else {
+            return undefined;
+          }
+        }
+        return typeof current === 'string' ? current : undefined;
+      };
+
       // Try current language first
-      let value = translations[lang]?.[key];
+      let value = getValue(translations[lang], key);
 
       // Fallback to English if not found
       if (!value) {
-        value = translations.en?.[key];
+        value = getValue(translations.en, key);
       }
 
       // Return key itself if still not found

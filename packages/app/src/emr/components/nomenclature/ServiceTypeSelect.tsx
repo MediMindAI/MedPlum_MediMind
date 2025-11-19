@@ -70,11 +70,14 @@ export default function ServiceTypeSelect({
       onChange={onChange}
       data={options}
       required={required}
+      withAsterisk={required}
       disabled={disabled}
       searchable
       clearable
       error={error}
       nothingFoundMessage={t('nomenclature.serviceType.noResults') || 'ვერ მოიძებნა'}
+      size="md"
+      styles={{ input: { minHeight: '44px' } }}
     />
   );
 }

@@ -6,7 +6,7 @@ import type { ProfileResource } from '@medplum/core';
 import { getReferenceString, locationUtils } from '@medplum/core';
 import type { HumanName } from '@medplum/fhirtypes';
 import { useMedplumContext } from '@medplum/react-hooks';
-import { IconLogout, IconSettings, IconSwitchHorizontal } from '@tabler/icons-react';
+import { IconLogout, IconSettings, IconSwitchHorizontal, IconDashboard } from '@tabler/icons-react';
 import type { JSX } from 'react';
 import { HumanNameDisplay } from '../HumanNameDisplay/HumanNameDisplay';
 import { ResourceAvatar } from '../ResourceAvatar/ResourceAvatar';
@@ -72,6 +72,9 @@ export function HeaderDropdown(props: HeaderDropdownProps): JSX.Element {
         />
       </Group>
       <Menu.Divider />
+      <Menu.Item leftSection={<IconDashboard size={14} stroke={1.5} />} onClick={() => navigate('/emr/account-management')}>
+        Dashboard
+      </Menu.Item>
       <Menu.Item leftSection={<IconSwitchHorizontal size={14} stroke={1.5} />} onClick={() => navigate('/signin')}>
         Add another account
       </Menu.Item>

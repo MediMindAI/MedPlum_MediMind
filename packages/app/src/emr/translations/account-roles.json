@@ -1,0 +1,160 @@
+{
+  "roles": [
+    {
+      "code": "physician",
+      "name": {
+        "ka": "ექიმი",
+        "en": "Physician",
+        "ru": "Врач"
+      },
+      "description": {
+        "ka": "სამედიცინო პერსონალი, რომელიც უფლებამოსილია პაციენტების დიაგნოსტიკისა და მკურნალობისთვის",
+        "en": "Medical professional authorized to diagnose and treat patients",
+        "ru": "Медицинский специалист, уполномоченный диагностировать и лечить пациентов"
+      }
+    },
+    {
+      "code": "nurse",
+      "name": {
+        "ka": "ექთანი",
+        "en": "Nurse",
+        "ru": "Медсестра"
+      },
+      "description": {
+        "ka": "საექთნო მოვლის სპეციალისტი",
+        "en": "Healthcare professional providing patient care",
+        "ru": "Специалист по уходу за пациентами"
+      }
+    },
+    {
+      "code": "technician",
+      "name": {
+        "ka": "ტექნიკოსი",
+        "en": "Technician",
+        "ru": "Техник"
+      },
+      "description": {
+        "ka": "სამედიცინო ტექნიკური პერსონალი",
+        "en": "Medical technical staff",
+        "ru": "Медицинский технический персонал"
+      }
+    },
+    {
+      "code": "administrator",
+      "name": {
+        "ka": "ადმინისტრატორი",
+        "en": "Administrator",
+        "ru": "Администратор"
+      },
+      "description": {
+        "ka": "სისტემის ადმინისტრატორი სრული წვდომით",
+        "en": "System administrator with full access",
+        "ru": "Системный администратор с полным доступом"
+      }
+    },
+    {
+      "code": "department-head",
+      "name": {
+        "ka": "განყოფილების ხელმძღვანელი",
+        "en": "Department Head",
+        "ru": "Заведующий отделением"
+      },
+      "description": {
+        "ka": "განყოფილების ხელმძღვანელი დამატებითი ადმინისტრაციული უფლებებით",
+        "en": "Department head with additional administrative privileges",
+        "ru": "Заведующий отделением с дополнительными административными правами"
+      }
+    },
+    {
+      "code": "pharmacist",
+      "name": {
+        "ka": "ფარმაცევტი",
+        "en": "Pharmacist",
+        "ru": "Фармацевт"
+      },
+      "description": {
+        "ka": "მედიკამენტების დისპენსირების სპეციალისტი",
+        "en": "Medication dispensing specialist",
+        "ru": "Специалист по выдаче лекарств"
+      }
+    },
+    {
+      "code": "lab-technician",
+      "name": {
+        "ka": "ლაბორანტი",
+        "en": "Laboratory Technician",
+        "ru": "Лаборант"
+      },
+      "description": {
+        "ka": "ლაბორატორიული კვლევების სპეციალისტი",
+        "en": "Laboratory testing specialist",
+        "ru": "Специалист по лабораторным исследованиям"
+      }
+    },
+    {
+      "code": "radiologist",
+      "name": {
+        "ka": "რენტგენოლოგი",
+        "en": "Radiologist",
+        "ru": "Рентгенолог"
+      },
+      "description": {
+        "ka": "რადიოლოგიური გამოსახულებების ინტერპრეტატორი",
+        "en": "Medical imaging interpretation specialist",
+        "ru": "Специалист по интерпретации медицинских изображений"
+      }
+    },
+    {
+      "code": "receptionist",
+      "name": {
+        "ka": "რეგისტრატორი",
+        "en": "Receptionist",
+        "ru": "Регистратор"
+      },
+      "description": {
+        "ka": "პაციენტების რეგისტრაციისა და მიღების სპეციალისტი",
+        "en": "Patient registration and reception specialist",
+        "ru": "Специалист по регистрации и приему пациентов"
+      }
+    },
+    {
+      "code": "billing-specialist",
+      "name": {
+        "ka": "ბილინგის სპეციალისტი",
+        "en": "Billing Specialist",
+        "ru": "Специалист по выставлению счетов"
+      },
+      "description": {
+        "ka": "ფინანსური ოპერაციებისა და ინვოისების სპეციალისტი",
+        "en": "Financial operations and invoicing specialist",
+        "ru": "Специалист по финансовым операциям и выставлению счетов"
+      }
+    },
+    {
+      "code": "therapist",
+      "name": {
+        "ka": "თერაპევტი",
+        "en": "Therapist",
+        "ru": "Терапевт"
+      },
+      "description": {
+        "ka": "ფიზიკური და რეაბილიტაციური თერაპიის სპეციალისტი",
+        "en": "Physical and rehabilitation therapy specialist",
+        "ru": "Специалист по физической и реабилитационной терапии"
+      }
+    },
+    {
+      "code": "anesthesiologist",
+      "name": {
+        "ka": "ანესთეზიოლოგი",
+        "en": "Anesthesiologist",
+        "ru": "Анестезиолог"
+      },
+      "description": {
+        "ka": "ანესთეზიისა და პერიოპერაციული მოვლის სპეციალისტი",
+        "en": "Anesthesia and perioperative care specialist",
+        "ru": "Специалист по анестезии и периоперационному уходу"
+      }
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+import { Select, SelectProps } from '@mantine/core';
+import { useMemo } from 'react';
+import { useTranslation } from '../../hooks/useTranslation';
+import specialtiesData from '../../translations/medical-specialties.json';
+
+/**
+ * Props for SpecialtySelect component
+ */
+export interface SpecialtySelectProps extends Omit<SelectProps, 'data'> {
+  value: string | null;
+  onChange: (value: string | null) => void;
+}
+
+/**
+ * SpecialtySelect - Searchable select component for medical specialties
+ *
+ * Displays 25 medical specialties from medical-specialties.json with multilingual
+ * support (ka/en/ru). Uses NUCC Healthcare Provider Taxonomy codes.
+ *
+ * @example
+ * ```tsx
+ * <SpecialtySelect
+ *   value="207RC0000X"
+ *   onChange={(code) => setSpecialty(code)}
+ *   label="სამედიცინო სპეციალობა"
+ *   clearable
+ * />
+ * ```
+ */
+export function SpecialtySelect({ value, onChange, label, ...props }: SpecialtySelectProps): JSX.Element {
+  const { t, lang } = useTranslation();
+
+  /**
+   * Transform specialty data into Mantine Select format
+   */
+  const specialtyOptions = useMemo(() => {
+    return specialtiesData.specialties.map((specialty) => ({
+      value: specialty.code,
+      label: specialty.name[lang as 'ka' | 'en' | 'ru'],
+    }));
+  }, [lang]);
+
+  /**
+   * Get translated placeholder
+   */
+  const placeholder = useMemo(() => {
+    const translations = {
+      ka: 'აირჩიეთ სპეციალობა',
+      en: 'Select specialty',
+      ru: 'Выберите специальность',
+    };
+    return translations[lang as 'ka' | 'en' | 'ru'] || translations.ka;
+  }, [lang]);
+
+  /**
+   * Get translated label if not provided
+   */
+  const displayLabel = useMemo(() => {
+    if (label) return label;
+
+    const translations = {
+      ka: 'სამედიცინო სპეციალობა',
+      en: 'Medical Specialty',
+      ru: 'Медицинская специальность',
+    };
+    return translations[lang as 'ka' | 'en' | 'ru'] || translations.ka;
+  }, [label, lang]);
+
+  return (
+    <Select
+      label={displayLabel}
+      placeholder={placeholder}
+      data={specialtyOptions}
+      value={value}
+      onChange={onChange}
+      searchable
+      size="md"
+      styles={{
+        input: {
+          minHeight: '44px', // Touch-friendly tap target
+        },
+      }}
+      {...props}
+    />
+  );
+}

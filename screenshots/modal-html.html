@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" class="bd_new_year"><head>
+
+
+ <title>SoftMedic - ჰელსიკორი</title>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+ <link rel="shortcut icon" href="favicon.ico">
+ 
+ 
+    <meta property="og:site_name" content="Softvivarium">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="SoftMedic - ჰელსიკორი">
+	<meta property="og:description" content="ჰელსიკორი">
+	<meta property="og:image" content="https://softvivarium.com/images/og-image.png">
+
+ 
+ 
+ 
+ <script type="text/javascript" src="jquery-1.9.1.min.js"></script>
+ <!--<link rel="stylesheet" href="css/clinic.css" type="text/css" media="screen" /> -->
+ 
+
+  <style>
+		 *{margin:0;padding:0}
+		 input, select,textarea{outline:none}
+		 .msg{
+		  background-color:#FFF1A8;
+		  position:absolute;
+		  top:10px;
+		  left:10px;
+		  padding: 5px 20px;
+		  border:1px solid #D1B0B0;
+		}
+		 input[type="text"] ,  input[type="password"], select{
+		  box-sizing:border-box;-ms-box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;
+		  width:230px;height:26px;
+		  background-color:white;
+		  border: 1px solid #7f9db9;
+		 }
+
+		body{ 
+		background-color:white; 
+		background-image:-webkit-radial-gradient(circle, white, #638fd0);
+		background-image:-moz-radial-gradient(circle, white, #638fd0);
+		background-image:-ms-radial-gradient(circle, white, #638fd0);
+		background-image:-o-radial-gradient(circle, white, #638fd0);
+		background-image:radial-gradient(circle, white, #638fd0);
+		}
+		 
+
+		 
+		#enter{
+		text-transform: capitalize;
+		padding:5px 20px;
+		background-color:#80d2f1; 
+		margin-top:8px; 
+		height:30px;
+		border:1px solid #D6A3A3; 
+		box-shadow:1px 1px 1px #806B6B ; 
+		filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=1, OffY=1, Color="#FFD6A3A3");
+		} 
+		#enter:hover {  box-shadow:1px 1px 1px #1EB685 }
+		
+		#loginwrp{
+			/*
+		text-transform: capitalize;
+		background-color:#f0eee1; 
+		-webkit-box-shadow: 0px 0px 10px 0.8px #ABA5A5;
+		-moz-box-shadow: 0px 0px 10px 0.8px #ABA5A5;
+		box-shadow: 0px 0px 10px 0.8px #ABA5A5;
+		-webkit-border-radius: 13px;
+		-moz-border-radius: 13px;
+		border-radius:13px;
+		border:1px solid #e5e1c7; 
+		padding:15px 25px;padding-top:5px; width:260px; margin-top:100px; margin-left:auto;margin-right:auto;
+		*/
+		
+		       text-transform: capitalize;
+				background-color: #f0eee1;
+				-webkit-box-shadow: 0px 0px 10px 0.8px #aba5a5;
+				-moz-box-shadow: 0px 0px 10px 0.8px #ABA5A5;
+				box-shadow: 0px 0px 10px 0.8px #aba5a5;
+				border: 1px solid #e5e1c7;
+				width: 310px;
+				margin-top: 100px;
+				margin-left: auto;
+				margin-right: auto;
+		}
+
+		.bd_new_year{
+		 height:100%
+		}
+		@media only screen and (min-width : 320px) {}
+		
+		
+		
+		   .tab-list {
+			  margin: 0;
+			  padding: 0;
+			  list-style: none;
+			  display: flex;
+			  position: relative;
+			}
+
+			.tab-list::before {
+			  content: "";
+			  display: block;
+			  height: 3px;
+			  width: 50%;
+			  position: absolute;
+			  bottom: 0;
+			  background-color: #6a94d2;
+			  transition: .3s;
+			}
+
+			.tab-item {
+			  flex: 1;
+			  text-align: center;
+			  transition: .3s;
+			  opacity: 0.5;
+			}
+
+			.tab-toggle {
+			  display: none;
+			}
+			
+			.box {
+				/*
+			    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+			    background-color: #fff;
+			    border-radius: 3px;
+			    overflow: hidden;
+			    padding: 15px 25px;
+				padding-top: 5px;
+				width: 260px;
+				margin-left: auto;
+				margin-right: auto;
+				*/
+				
+ 
+				background-color: #f0eee1;
+				overflow: hidden;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			.tab-trigger {
+			  display: block;
+			  padding: 10px 0;
+			  cursor:pointer;
+			}
+			
+			.tab-trigger:hover {
+				background: #dbdad6;
+			}
+			.uu{
+				    padding: 0 10px;
+					border: 1px solid transparent;
+					border-radius: 2px;
+					-webkit-border-radius: 2px;
+					-webkit-box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+					box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+					z-index: 990;
+					border-color: #f0c36d;
+					background-color: #f9edbe;
+					color: #222;
+					font-size: 80%;
+					font-weight: bold;
+					text-align: center;
+					display: table;
+					margin-left: auto;
+					margin-right: auto;
+					height: 18px;
+					overflow: visible;
+			}
+		</style> 
+
+
+</head>
+
+<body>
+
+  
+            
+		
+    		
+	<div id="loginwrp">
+	
+	    		
+	 <div style="padding:15px">
+	 
+		<div><table style="width:100%; border-collapse:collapse;table-layout:fixed;border-right-style: none;" border="0"><tbody><tr><td style="vertical-align:middle;color:#ED143D;font-size:15px;">
+		  ავტორიზაცია 
+		  </td><td style="width:45px" width="45"><div style="background-image:url(personal/log.png);background-repeat:no-repeat;background-size:contain;width:46px;height:45px;"></div></td></tr></tbody></table>
+		</div>
+		
+				
+				
+				<form action="/index.php" method="post" id="lgo" style="display:">
+					
+			<div style="margin-top:6px"><label for="username" style="display:table;font-size:10pt;color:#4E4E96;">მომხმარებელი</label>
+			<input type="text" id="username" name="username" style="width: 100%; padding-left: 4px; border: 1px solid rgb(195, 195, 204);"></div>
+			<div style="margin-top:6px"><label for="password" style="display:table;font-size:10pt;color:#4E4E96;">პაროლი</label>
+			<input type="password" id="password" name="password" style="width: 100%; padding-left: 4px; border: 1px solid rgb(195, 195, 204);" autocomplete="off"></div>
+			<div style="margin-top:6px"><input type="submit" id="enter" name="enter" onclick="$(this).prop('disabled',true); var input = $('&lt;input&gt;').attr('type', 'hidden').attr('name', 'enter').val('შესვლა'); $('#lgo').append(input);$('#lgo').submit();" value="შესვლა" style=""></div>
+			
+	
+			<input type="hidden" id="next" name="next" value="" style="">
+			
+			<input type="hidden" id="gholg" name="gholg" value="14403" style="">
+			<input type="hidden" id="rtdv" name="rtdv" value="" style="">
+			<input type="hidden" id="htvbj" name="htvbj" value="93783" style="">
+			<input type="hidden" id="ztvbl" name="ztvbl" value="92673" style="">
+			<input type="hidden" id="sdvb" name="sdvb" value="" style="">
+			<input type="hidden" id="sk1" name="sk1" value="6552" style="">
+			<input type="hidden" id="sk2" name="sk2" value="7851" style="">
+		</form>
+			
+	</div>
+	
+	</div>
+	
+	
+	
+	<div style="position:absolute;bottom:10px;left:0;right:0;height:30px;text-align:left">
+	   <select id="lang" style="margin-left:30px;width:170px" onchange="$.post(&quot;/witchlang.php&quot;, { lang: $(&quot;#lang&quot;).val() } , function(data,status,xhr){window.location.href=&quot;/index.php&quot;}  );"><option value="ka_GE">ქართული</option><option value="en_US">English (United States)</option></select>	   <span>
+	     <span style="color:#fff">::<a style="color:#fff" href="https://178.134.21.82">https</a></span>	   </span>
+	</div>
+
+
+  <script>document.getElementById("username").focus();</script>
+  
+
+
+</body></html>

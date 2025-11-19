@@ -42,7 +42,7 @@ export function useNomenclature(initialSearchParams: Partial<ServiceSearchParams
   const [searchParams, setSearchParams] = useState<ServiceSearchParams>({
     status: 'active', // Default to active services only
     page: 1,
-    count: 5000, // Load all services (we have 2,217 total)
+    count: 100, // 100 services per page
     sortField: 'title',
     sortOrder: 'asc',
     ...initialSearchParams,
@@ -120,7 +120,7 @@ export function useNomenclature(initialSearchParams: Partial<ServiceSearchParams
     setSearchParams({
       status: 'active',
       page: 1,
-      count: 5000, // Load all services
+      count: 100, // 100 services per page
       sortField: 'code',
       sortOrder: 'asc',
     });

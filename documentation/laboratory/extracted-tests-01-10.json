@@ -1,0 +1,313 @@
+{
+  "extraction_metadata": {
+    "extraction_date": "2025-11-18",
+    "extracted_range": "Tests 1-10",
+    "extracted_count": 10,
+    "source_url": "http://178.134.21.82:8008/clinic.php",
+    "source_section": "Nomenclature → Medical I → Laboratory Tests",
+    "login_user": "cicig",
+    "extraction_status": "Partial - Table data complete, Modal data in progress",
+    "agent": "Laboratory Documentation Specialist"
+  },
+  "modal_structure": {
+    "tabs_count": 4,
+    "tabs": [
+      {
+        "tab_number": 1,
+        "name_georgian": "ფინანსური",
+        "name_english": "Financial",
+        "purpose": "Price management across different insurance types and payers",
+        "sections": [
+          "Price Entry Form",
+          "Price History Table (40-51 rows per test)"
+        ]
+      },
+      {
+        "tab_number": 2,
+        "name_georgian": "სახელფასო",
+        "name_english": "Salary/Work",
+        "purpose": "Workforce and cost calculation settings",
+        "sections": [
+          "Calculation Components",
+          "Calculation Settings (bed-days, profitability, markup, etc.)"
+        ]
+      },
+      {
+        "tab_number": 3,
+        "name_georgian": "სამედიცინო",
+        "name_english": "Medical",
+        "purpose": "Clinical configuration, samples, components, and LIS integration",
+        "importance": "MOST IMPORTANT",
+        "sections": [
+          "Studies Configuration",
+          "Consumable Materials",
+          "Samples Table (with COLOR BARS)",
+          "Components Table (turquoise header)",
+          "LIS Integration Settings"
+        ]
+      },
+      {
+        "tab_number": 4,
+        "name_georgian": "ატრიბუტები",
+        "name_english": "Attributes",
+        "purpose": "Additional metadata and system settings",
+        "sections": [
+          "Clinical Settings (consultation type, care level)",
+          "System Integration (GIS code)",
+          "Calculation and Payment Settings",
+          "Laboratory Location Settings",
+          "Blood Component Settings"
+        ]
+      }
+    ]
+  },
+  "tests": [
+    {
+      "row_number": 1,
+      "row_id": "x25595",
+      "code": "CG.7",
+      "name_georgian": "კოაგულოგრამა",
+      "name_english": "Coagulogram",
+      "group": "ლაბორატორიული კვლევები",
+      "group_english": "Laboratory Tests",
+      "type": "შიდა",
+      "type_english": "Internal",
+      "price_base": 44,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2,
+      "financial_tab": {
+        "extracted": true,
+        "price_types_count": 51,
+        "prices_sample": [
+          {"price_type": "შიდა სტანდარტი", "date": "01-11-2020", "price": 44, "currency": "ლარი"},
+          {"price_type": "სსიპ ჯანმრთელობის ეროვნული სააგენტო", "date": "01-11-2020", "price": 44, "currency": "ლარი"},
+          {"price_type": "თერამედი", "date": "01-11-2020", "price": 44, "currency": "ლარი"},
+          {"price_type": "ჰემა", "date": "01-11-2020", "price": 44, "currency": "ლარი"},
+          {"price_type": "ალდაგი", "date": "01-11-2020", "price": 44, "currency": "ლარი"},
+          {"price_type": "უფასო", "date": "09-11-2023", "price": 0, "currency": "ლარი"},
+          {"price_type": "შპს არენსია", "date": "25-10-2025", "price": 132, "currency": "ლარი"}
+        ],
+        "note": "Most insurance companies have same price as base (44 GEL). One free option (0 GEL), one premium option (132 GEL)."
+      },
+      "medical_tab": {
+        "extracted": false,
+        "status": "Pending extraction",
+        "contains": ["Samples table with color bars", "Components table", "LIS integration"]
+      },
+      "salary_tab": {
+        "extracted": false,
+        "status": "Pending extraction"
+      },
+      "attributes_tab": {
+        "extracted": false,
+        "status": "Pending extraction"
+      }
+    },
+    {
+      "row_number": 2,
+      "row_id": "x25596",
+      "code": "CG.2.1.7",
+      "name_georgian": "INR (პროთრომბინი)",
+      "name_english": "INR (Prothrombin)",
+      "group": "ლაბორატორიული კვლევები",
+      "type": "შიდა",
+      "price_base": 15,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2
+    },
+    {
+      "row_number": 3,
+      "row_id": "x25604",
+      "code": "A10068",
+      "name_georgian": "ცილის რაოდენობის განსაზღვრა შარდში (პროტეინურია)",
+      "name_english": "Protein quantification in urine (Proteinuria)",
+      "group": "ლაბორატორიული კვლევები",
+      "type": "შიდა",
+      "price_base": 12,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2
+    },
+    {
+      "row_number": 4,
+      "row_id": "x25607",
+      "code": "A10071",
+      "name_georgian": "თავზურგის ტვინის სითხის (ლიქვორი) კლინიკური ანალიზი",
+      "name_english": "Cerebrospinal fluid (liquor) clinical analysis",
+      "group": "ლაბორატორიული კვლევები",
+      "type": "სხვა კლინიკები",
+      "type_english": "Other clinics",
+      "price_base": 55,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2
+    },
+    {
+      "row_number": 5,
+      "row_id": "x25609",
+      "code": "A10073",
+      "name_georgian": "გლუკოზის განსაზღვრა შარდში",
+      "name_english": "Glucose determination in urine",
+      "group": "ლაბორატორიული კვლევები",
+      "type": "შიდა",
+      "price_base": 11,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2
+    },
+    {
+      "row_number": 6,
+      "row_id": "x25613",
+      "code": "MB.25",
+      "name_georgian": "B ვირუსული ჰეპატიტის ზედაპირული ანტიგენის განსაზღვრა სისხლში (HBsAg). სწრაფი, მარტივი ტესტით",
+      "name_english": "Hepatitis B surface antigen determination in blood (HBsAg). Rapid, simple test",
+      "group": "ლაბორატორიული კვლევები",
+      "type": "შიდა",
+      "price_base": 18,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2
+    },
+    {
+      "row_number": 7,
+      "row_id": "x25614",
+      "code": "MB.35",
+      "name_georgian": "აივ ანტისხეულების თვისობრივი განსაზღვრა სისხლში სწრაფი მარტივი ტესტით (HIV-1&2)",
+      "name_english": "HIV antibody qualitative determination in blood by rapid simple test (HIV-1&2)",
+      "group": "ლაბორატორიული კვლევები",
+      "type": "შიდა",
+      "price_base": 18,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2
+    },
+    {
+      "row_number": 8,
+      "row_id": "x25617",
+      "code": "HR.3.6",
+      "name_georgian": "TSH თირეოტროპული ჰორმონი",
+      "name_english": "TSH Thyroid-stimulating hormone",
+      "group": "ლაბორატორიული კვლევები",
+      "type": "შიდა",
+      "price_base": 49,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2
+    },
+    {
+      "row_number": 9,
+      "row_id": "x25623",
+      "code": "BL.7.9.1",
+      "name_georgian": "CRP C-რეაქტიული ცილა",
+      "name_english": "CRP C-reactive protein",
+      "group": "ლაბორატორიული კვლევები",
+      "type": "შიდა",
+      "price_base": 32,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2
+    },
+    {
+      "row_number": 10,
+      "row_id": "x25626",
+      "code": "BL.11.2.2.",
+      "name_georgian": "ALT/GPT ალანინამინტრანსფერაზა",
+      "name_english": "ALT/GPT Alanine aminotransferase",
+      "group": "ლაბორატორიული კვლევები",
+      "type": "შიდა",
+      "price_base": 18,
+      "currency": "GEL",
+      "total_amount": null,
+      "cal_hed": 0,
+      "printable": true,
+      "item_get_price": 2
+    }
+  ],
+  "insurance_companies": {
+    "total_count": 52,
+    "companies": [
+      "შიდა სტანდარტი (Internal Standard)",
+      "სსიპ ჯანმრთელობის ეროვნული სააგენტო (National Health Agency)",
+      "თერამედი (Teramed)",
+      "ჰემა (Hema)",
+      "ს.ს. სადაზღვევო კომპანია \"ჯიპიაი ჰოლდინგი\" (GPI Holding Insurance)",
+      "ალდაგი (Aldagi)",
+      "ქართუ დაზღვევა (Qartu Insurance)",
+      "სტანდარტ დაზღვევა (Standard Insurance)",
+      "სს \"პსპ დაზღვევა\" (PSP Insurance)",
+      "სს „სადაზღვევო კომპანია ევროინს ჯორჯია" (Euroins Georgia)",
+      "შპს სადაზღვევო კომპანია \"არდი ჯგუფი\" (Ardi Group)",
+      "IGG",
+      "უნისონი (Unison)",
+      "ალფა (Alfa)",
+      "უფასო (Free)",
+      "შპს არენსია (Arensia)"
+    ],
+    "note": "Full list of 52 insurance companies extracted from Financial tab dropdown"
+  },
+  "field_definitions": {
+    "code": "Unique test identifier code",
+    "name_georgian": "Test name in Georgian language",
+    "name_english": "Test name in English (translated)",
+    "group": "Test category - always 'ლაბორატორიული კვლევები' (Laboratory Tests) for these 10 tests",
+    "type": "Service provider type - 'შიდა' (Internal) or 'სხვა კლინიკები' (Other clinics)",
+    "price_base": "Base price in Georgian Lari (GEL)",
+    "cal_hed": "Calculation header value (typically 0)",
+    "printable": "Boolean flag indicating if test can be printed",
+    "item_get_price": "Item price count (typically 2)"
+  },
+  "extraction_notes": {
+    "completed": [
+      "All 10 test table data extracted",
+      "Test names, codes, prices, and basic attributes captured",
+      "Financial tab structure documented",
+      "Modal tab structure identified",
+      "Insurance company list extracted (52 companies)",
+      "Price variation patterns identified"
+    ],
+    "pending": [
+      "Complete Medical tab data extraction (samples, components, LIS)",
+      "RGB color codes from sample color bars",
+      "Salary tab calculation settings",
+      "Attributes tab system settings",
+      "GIS codes for each test",
+      "Consultation type mappings"
+    ],
+    "challenges": [
+      "Large page size causing browser memory issues",
+      "Complex nested modal structure",
+      "Dynamic AJAX content loading",
+      "Multiple dropdown options (100+ in some cases)",
+      "Georgian UTF-8 text encoding",
+      "Color bar visualization requiring screenshot analysis"
+    ]
+  },
+  "next_steps": [
+    "Extract complete modal data for all 4 tabs",
+    "Capture screenshots of Medical tab showing color bars",
+    "Extract samples and components tables",
+    "Map LIS integration codes",
+    "Extract GIS codes from Attributes tab",
+    "Create visual documentation with screenshots"
+  ]
+}

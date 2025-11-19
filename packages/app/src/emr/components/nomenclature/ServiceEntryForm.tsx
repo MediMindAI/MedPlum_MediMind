@@ -1,17 +1,18 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Grid, TextInput, Button, Box } from '@mantine/core';
+import { Grid, TextInput, Button, Group, Badge } from '@mantine/core';
 import { useMedplum } from '@medplum/react-hooks';
 import { ActivityDefinition } from '@medplum/fhirtypes';
 import { notifications } from '@mantine/notifications';
-import { IconCheck, IconPlus } from '@tabler/icons-react';
+import { IconCheck, IconPlus, IconFileSpreadsheet, IconList } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useServiceForm } from '../../hooks/useServiceForm';
 import ServiceGroupSelect from './ServiceGroupSelect';
 import { ServiceSubgroupSelect } from './ServiceSubgroupSelect';
 import ServiceTypeSelect from './ServiceTypeSelect';
 import ServiceCategorySelect from './ServiceCategorySelect';
+import { SectionCard } from '../common/SectionCard';
 import { NOMENCLATURE_EXTENSION_URLS, NOMENCLATURE_IDENTIFIER_SYSTEMS } from '../../types/nomenclature';
 
 interface ServiceEntryFormProps {
@@ -23,6 +24,12 @@ interface ServiceEntryFormProps {
 
   /** Edit mode flag */
   isEditMode?: boolean;
+
+  /** Excel export handler */
+  onExcelExport?: () => void;
+
+  /** Total count of services */
+  totalCount?: number;
 }
 
 /**
@@ -39,7 +46,7 @@ interface ServiceEntryFormProps {
  *
  * Uses mobile-first responsive design with Grid/Grid.Col layout.
  */
-export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false }: ServiceEntryFormProps) {
+export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false, onExcelExport, totalCount = 0 }: ServiceEntryFormProps) {
   const { t } = useTranslation();
   const medplum = useMedplum();
   const { form, clearForm } = useServiceForm();
@@ -162,15 +169,49 @@ export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false 
   };
 
   return (
-    <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Box
-        style={{
-          padding: '12px 16px',
-          backgroundColor: 'var(--emr-background-light, #f8f9fa)',
-          borderRadius: '8px',
-          border: '1px solid var(--emr-border-color, #e0e0e0)',
-        }}
-      >
+    <SectionCard
+      number={1}
+      title={t('nomenclature.medical1.form.addNewService') || 'ახალი სერვისის დამატება'}
+      badgeText={isEditMode ? 'Editing' : 'Quick Add'}
+      badgeIcon={<IconPlus size={14} />}
+      showNumber={false}
+      rightContent={
+        <Group gap="sm" align="center">
+          <Badge
+            variant="light"
+            color="blue"
+            size="lg"
+            leftSection={<IconList size={14} />}
+          >
+            ხაზზე ({totalCount})
+          </Badge>
+          {onExcelExport && (
+            <Button
+              size="md"
+              leftSection={<IconFileSpreadsheet size={18} />}
+              onClick={onExcelExport}
+              style={{
+                background: 'var(--emr-gradient-primary, linear-gradient(135deg, #1a365d, #2b6cb0, #3182ce))',
+                border: 'none',
+                boxShadow: 'var(--emr-shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1))',
+                minHeight: '44px',
+              }}
+              styles={{
+                root: {
+                  '&:hover': {
+                    transform: 'translateY(-1px)',
+                    boxShadow: 'var(--emr-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1))',
+                  },
+                },
+              }}
+            >
+              {t('common.exportExcel')}
+            </Button>
+          )}
+        </Group>
+      }
+    >
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Grid align="flex-end" gutter="md">
           {/* Code - 15% width on desktop, full width on mobile */}
           <Grid.Col span={{ base: 12, sm: 6, md: 2 }}>
@@ -180,6 +221,7 @@ export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false 
               required
               size="md"
               styles={{ input: { minHeight: '44px' } }}
+              withAsterisk
               {...form.getInputProps('code')}
             />
           </Grid.Col>
@@ -192,6 +234,7 @@ export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false 
               required
               size="md"
               styles={{ input: { minHeight: '44px' } }}
+              withAsterisk
               {...form.getInputProps('name')}
             />
           </Grid.Col>
@@ -244,14 +287,16 @@ export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false 
               leftSection={isEditMode ? <IconCheck size={18} /> : <IconPlus size={18} />}
               style={{
                 minHeight: '44px',
-                background: 'var(--emr-gradient-primary)',
+                background: 'var(--emr-gradient-primary, linear-gradient(135deg, #1a365d, #2b6cb0, #3182ce))',
                 border: 'none',
+                boxShadow: 'var(--emr-shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1))',
+                transition: 'all 0.2s ease',
               }}
               styles={{
                 root: {
                   '&:hover': {
-                    background: 'var(--emr-gradient-primary)',
-                    opacity: 0.9,
+                    transform: 'translateY(-1px)',
+                    boxShadow: 'var(--emr-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1))',
                   },
                 },
               }}
@@ -262,7 +307,7 @@ export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false 
             </Button>
           </Grid.Col>
         </Grid>
-      </Box>
-    </form>
+      </form>
+    </SectionCard>
   );
 }

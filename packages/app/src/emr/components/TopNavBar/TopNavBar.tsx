@@ -1,10 +1,12 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Menu, Text, UnstyledButton } from '@mantine/core';
-import { IconUser, IconChevronDown } from '@tabler/icons-react';
+import { Box, Menu, Text, UnstyledButton, Button } from '@mantine/core';
+import { IconUser, IconChevronDown, IconDashboard } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useEMRPermissions } from '../../hooks/useEMRPermissions';
 import { LanguageSelector } from '../LanguageSelector/LanguageSelector';
 
 /**
@@ -17,7 +19,9 @@ import { LanguageSelector } from '../LanguageSelector/LanguageSelector';
  */
 export function TopNavBar() {
   const medplum = useMedplum();
+  const navigate = useNavigate();
   const { t } = useTranslation();
+  const { isAdmin } = useEMRPermissions();
   const profile = medplum.getProfile();
   const userName = profile?.name?.[0]?.text || 'User';
 
@@ -33,8 +37,21 @@ export function TopNavBar() {
         borderBottom: '1px solid #dee2e6',
       }}
     >
-      {/* Left side - Language selector */}
-      <Box style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+      {/* Left side - Dashboard button and Language selector */}
+      <Box style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <Button
+          leftSection={<IconDashboard size={18} />}
+          size="xs"
+          variant="light"
+          onClick={() => navigate('/')}
+          style={{
+            background: 'var(--emr-gradient-primary)',
+            color: 'white',
+            height: '32px',
+          }}
+        >
+          {t('topnav.dashboard')}
+        </Button>
         <LanguageSelector />
       </Box>
 
@@ -64,6 +81,17 @@ export function TopNavBar() {
             </Text>
           </Menu.Item>
           <Menu.Divider />
+
+          {/* Admin-only menu items */}
+          {isAdmin() && (
+            <>
+              <Menu.Item onClick={() => navigate('/emr/account-management')}>
+                {t('topnav.accountManagement')}
+              </Menu.Item>
+              <Menu.Divider />
+            </>
+          )}
+
           <Menu.Item onClick={() => medplum.signOut()}>
             {t('topnav.logout')}
           </Menu.Item>

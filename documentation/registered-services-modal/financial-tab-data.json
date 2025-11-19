@@ -1,0 +1,20 @@
+{
+  "tabs": [],
+  "formFields": {},
+  "tableColumns": [
+    "ავტორიზაცია"
+  ],
+  "tableData": [
+    {
+      "ავტორიზაცია": "ავტორიზაცია",
+      "Column 1": ""
+    }
+  ],
+  "buttons": [
+    {
+      "text": "შესვლა",
+      "type": "submit",
+      "action": "$(this).prop('disabled',true); var input = $('<input>').attr('type', 'hidden').attr('name', 'enter').val('შესვლა'); $('#lgo').append(input);$('#lgo').submit();"
+    }
+  ]
+}

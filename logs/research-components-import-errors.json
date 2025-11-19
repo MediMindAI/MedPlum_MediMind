@@ -1,0 +1,341 @@
+{
+  "timestamp": "2025-11-18T15:16:06.532Z",
+  "summary": {
+    "total": 239,
+    "success": 173,
+    "failed": 0,
+    "skipped": 66
+  },
+  "errors": [
+    {
+      "row": 26,
+      "code": "INR",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 30,
+      "code": "MB.25.",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 31,
+      "code": "MB.30.",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 32,
+      "code": "MB.35.",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 33,
+      "code": "MB.4.386.",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 34,
+      "code": "BL7.8",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 35,
+      "code": "IM.10.1.1",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 36,
+      "code": "IM.10.1.2",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 37,
+      "code": " ",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 38,
+      "code": " ",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 71,
+      "code": "AI",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 91,
+      "code": "Epi",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 92,
+      "code": "Frm",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 93,
+      "code": " ",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 94,
+      "code": " ",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 95,
+      "code": " ",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 96,
+      "code": " ",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 97,
+      "code": " ",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 98,
+      "code": "N/A",
+      "error": "Missing name (დასახელება)"
+    },
+    {
+      "row": 104,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 105,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 106,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 107,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 108,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 109,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 110,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 113,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 117,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 119,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 120,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 124,
+      "code": "IM.10.1.1",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 125,
+      "code": "IM.10.1.2",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 134,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 135,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 136,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 137,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 143,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 144,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 145,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 148,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 151,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 156,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 158,
+      "code": "MB.9",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 159,
+      "code": "MB.9",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 160,
+      "code": "MB.9",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 165,
+      "code": "CO.56",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 166,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 167,
+      "code": "N/A",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 199,
+      "code": "N/A",
+      "error": "Missing name (დასახელება)"
+    },
+    {
+      "row": 207,
+      "code": "BL.13.7.2a",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 211,
+      "code": "MB.4",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 212,
+      "code": "MB.4",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 213,
+      "code": "PR.2.5",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 214,
+      "code": "PR.2.5",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 217,
+      "code": "MB.9",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 218,
+      "code": "MB.9",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 227,
+      "code": "UR.8",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 228,
+      "code": "-",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 229,
+      "code": "-",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 230,
+      "code": "-",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 231,
+      "code": "-",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 232,
+      "code": "-",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 233,
+      "code": "-",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 234,
+      "code": "-",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 235,
+      "code": "-",
+      "error": "Missing unit (ზომა)"
+    },
+    {
+      "row": 236,
+      "code": "-",
+      "error": "Missing unit (ზომა)"
+    }
+  ]
+}

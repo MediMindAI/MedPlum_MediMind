@@ -205,6 +205,7 @@ export const NOMENCLATURE_EXTENSION_URLS = {
   PRINTABLE: 'http://medimind.ge/extensions/printable',
   ITEM_GET_PRICE: 'http://medimind.ge/extensions/item-get-price',
   ASSIGNED_DEPARTMENTS: 'http://medimind.ge/extensions/assigned-departments',
+  SERVICE_PRICES: 'http://medimind.ge/extensions/service-prices',
 } as const;
 
 /**

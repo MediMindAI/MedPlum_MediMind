@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Paper, Text, Group, Stack, Box, Button } from '@mantine/core';
-import { IconFileSpreadsheet } from '@tabler/icons-react';
+import { Paper, Text, Group, Stack, Box, Button, Badge, Pagination, Center } from '@mantine/core';
+import { IconFileSpreadsheet, IconStethoscope, IconList } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import type { JSX } from 'react';
 import { useState } from 'react';
@@ -12,6 +12,7 @@ import { ServiceEntryForm } from '../../components/nomenclature/ServiceEntryForm
 import { ServiceTable } from '../../components/nomenclature/ServiceTable';
 import { ServiceEditModal } from '../../components/nomenclature/ServiceEditModal';
 import { ServiceDeletionModal } from '../../components/nomenclature/ServiceDeletionModal';
+import { RegisteredServicesModal } from '../../components/nomenclature/RegisteredServicesModal';
 import { ServiceFilters } from '../../components/nomenclature/ServiceFilters';
 import { exportServicesToExcel } from '../../services/excelExportService';
 import type { ServiceTableRow } from '../../types/nomenclature';
@@ -37,12 +38,14 @@ export function NomenclatureMedical1View(): JSX.Element {
     error,
     searchParams,
     totalCount,
+    page,
     sortField,
     sortOrder,
     searchServices,
     refreshServices,
     handleSort,
     clearFilters,
+    setPage,
   } = useNomenclature();
 
   // Edit mode state
@@ -51,8 +54,10 @@ export function NomenclatureMedical1View(): JSX.Element {
   // Modal states
   const [editModalOpened, setEditModalOpened] = useState(false);
   const [deleteModalOpened, setDeleteModalOpened] = useState(false);
+  const [registeredServicesModalOpened, setRegisteredServicesModalOpened] = useState(false);
   const [serviceToEdit, setServiceToEdit] = useState<ServiceTableRow | null>(null);
   const [serviceToDelete, setServiceToDelete] = useState<ServiceTableRow | null>(null);
+  const [serviceForRegisteredServices, setServiceForRegisteredServices] = useState<ServiceTableRow | null>(null);
 
   /**
    * Handle service created or updated successfully
@@ -80,6 +85,14 @@ export function NomenclatureMedical1View(): JSX.Element {
   };
 
   /**
+   * Handle registered services button click from table
+   */
+  const handleOpenRegisteredServices = (service: ServiceTableRow) => {
+    setServiceForRegisteredServices(service);
+    setRegisteredServicesModalOpened(true);
+  };
+
+  /**
    * Handle modal close
    */
   const handleEditModalClose = () => {
@@ -90,6 +103,11 @@ export function NomenclatureMedical1View(): JSX.Element {
   const handleDeleteModalClose = () => {
     setDeleteModalOpened(false);
     setServiceToDelete(null);
+  };
+
+  const handleRegisteredServicesModalClose = () => {
+    setRegisteredServicesModalOpened(false);
+    setServiceForRegisteredServices(null);
   };
 
   /**
@@ -132,27 +150,8 @@ export function NomenclatureMedical1View(): JSX.Element {
   };
 
   return (
-    <Box style={{ height: '100%', overflow: 'auto' }}>
-      <Stack gap="md" p="md">
-        {/* Page Title and Actions */}
-        <Group justify="space-between" align="center">
-          <Text size="xl" fw={700}>
-            {t('menu.nomenclature.nomenclature')}
-          </Text>
-          <Group gap="sm">
-            <Button
-              variant="light"
-              leftSection={<IconFileSpreadsheet size={16} />}
-              onClick={handleExcelExport}
-            >
-              {t('common.exportExcel')}
-            </Button>
-            <Text c="dimmed" size="sm">
-              {t('common.recordCount', { count: totalCount })}
-            </Text>
-          </Group>
-        </Group>
-
+    <Box>
+      <Stack gap="xl" p="md">
         {/* Error Alert */}
         {error && (
           <Paper bg="red.1" p="md" withBorder>
@@ -171,16 +170,13 @@ export function NomenclatureMedical1View(): JSX.Element {
             serviceToEdit={editingService?.resource}
             isEditMode={!!editingService}
             onSuccess={handleServiceSuccess}
+            onExcelExport={handleExcelExport}
+            totalCount={totalCount}
           />
         </Paper>
 
         {/* Section 2: Service Filters (Search/Filter Section) */}
-        <ServiceFilters
-          onSearch={searchServices}
-          onClear={clearFilters}
-          onExport={handleExcelExport}
-          loading={loading}
-        />
+        <ServiceFilters onSearch={searchServices} onClear={clearFilters} loading={loading} />
 
         {/* Section 3: Service Table */}
         <Paper withBorder>
@@ -189,18 +185,56 @@ export function NomenclatureMedical1View(): JSX.Element {
             loading={loading}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onOpenRegisteredServices={handleOpenRegisteredServices}
             onSort={handleSort}
             sortField={sortField}
             sortOrder={sortOrder}
           />
         </Paper>
 
-        {/* Section 4: Record Count (Bottom Right) */}
-        <Group justify="flex-end">
-          <Text c="dimmed" size="sm" fw={500}>
-            ხაზზე ({totalCount})
-          </Text>
-        </Group>
+        {/* Section 4: Pagination */}
+        {!loading && services.length > 0 && (
+          <Paper
+            p="lg"
+            withBorder
+            style={{
+              background: 'white',
+              border: '1px solid var(--emr-border-color, #e5e7eb)',
+            }}
+          >
+            <Group justify="space-between" align="center" wrap="wrap">
+              <Text size="sm" c="dimmed">
+                {t('nomenclature.medical1.pagination.showing')}{' '}
+                <Text span fw={600} c="var(--emr-text-primary)">
+                  {(page - 1) * 100 + 1}
+                </Text>
+                {' - '}
+                <Text span fw={600} c="var(--emr-text-primary)">
+                  {Math.min(page * 100, totalCount)}
+                </Text>
+                {' '}
+                {t('nomenclature.medical1.pagination.of')}{' '}
+                <Text span fw={600} c="var(--emr-text-primary)">
+                  {totalCount}
+                </Text>
+              </Text>
+
+              <Center>
+                <Pagination
+                  total={Math.ceil(totalCount / 100)}
+                  value={page}
+                  onChange={setPage}
+                  size="md"
+                  withEdges
+                  style={{
+                    ['--mantine-color-primary']: 'var(--emr-primary)',
+                  } as React.CSSProperties}
+                />
+              </Center>
+            </Group>
+          </Paper>
+        )}
+
       </Stack>
 
       {/* Modals */}
@@ -215,6 +249,13 @@ export function NomenclatureMedical1View(): JSX.Element {
         opened={deleteModalOpened}
         onClose={handleDeleteModalClose}
         service={serviceToDelete}
+        onSuccess={handleModalSuccess}
+      />
+
+      <RegisteredServicesModal
+        opened={registeredServicesModalOpened}
+        onClose={handleRegisteredServicesModalClose}
+        serviceId={serviceForRegisteredServices?.id || null}
         onSuccess={handleModalSuccess}
       />
     </Box>
