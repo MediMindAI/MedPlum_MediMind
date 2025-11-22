@@ -19,6 +19,11 @@ interface PatientDeletionConfirmationModalProps {
 /**
  * Confirmation modal for deleting patients
  * Displays patient information and confirms deletion
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.patient
+ * @param root0.onSuccess
  */
 export function PatientDeletionConfirmationModal({
   opened,
@@ -31,7 +36,7 @@ export function PatientDeletionConfirmationModal({
   const [loading, setLoading] = useState(false);
 
   const handleDelete = async () => {
-    if (!patient?.id) return;
+    if (!patient?.id) {return;}
 
     setLoading(true);
 
@@ -60,7 +65,7 @@ export function PatientDeletionConfirmationModal({
   };
 
   const getPatientName = () => {
-    if (!patient?.name?.[0]) return '-';
+    if (!patient?.name?.[0]) {return '-';}
     const given = patient.name[0].given?.join(' ') || '';
     const family = patient.name[0].family || '';
     return `${given} ${family}`.trim() || '-';

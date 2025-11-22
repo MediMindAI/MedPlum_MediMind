@@ -501,6 +501,11 @@ const REGION_DISTRICT_MAPPING: Record<string, { regionName: string; districts: {
 /**
  * Registration Visit Modal - Opens when clicking patient in Registration page
  * Wide modal with 4 sections matching actual EMR layout (mo_ field IDs)
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.patientId
+ * @param root0.onSuccess
  */
 export function RegistrationVisitModal({
   opened,
@@ -816,13 +821,13 @@ export function RegistrationVisitModal({
                 encSbool = true;
                 if (ext.extension) {
                   for (const subExt of ext.extension) {
-                    if (subExt.url === 'company') encComp = subExt.valueString || '0';
-                    else if (subExt.url === 'type') encInstp = subExt.valueString || '0';
-                    else if (subExt.url === 'policy-number') encPolnmb = subExt.valueString || '';
-                    else if (subExt.url === 'referral-number') encVano = subExt.valueString || '';
-                    else if (subExt.url === 'copay-percent') encInsprsnt = subExt.valueString || '';
-                    else if (subExt.url === 'issue-date' && subExt.valueDateTime) encDeldat = new Date(subExt.valueDateTime);
-                    else if (subExt.url === 'expiration-date' && subExt.valueDateTime) encValdat = new Date(subExt.valueDateTime);
+                    if (subExt.url === 'company') {encComp = subExt.valueString || '0';}
+                    else if (subExt.url === 'type') {encInstp = subExt.valueString || '0';}
+                    else if (subExt.url === 'policy-number') {encPolnmb = subExt.valueString || '';}
+                    else if (subExt.url === 'referral-number') {encVano = subExt.valueString || '';}
+                    else if (subExt.url === 'copay-percent') {encInsprsnt = subExt.valueString || '';}
+                    else if (subExt.url === 'issue-date' && subExt.valueDateTime) {encDeldat = new Date(subExt.valueDateTime);}
+                    else if (subExt.url === 'expiration-date' && subExt.valueDateTime) {encValdat = new Date(subExt.valueDateTime);}
                   }
                 }
               } else if (ext.url === 'http://medimind.ge/fhir/StructureDefinition/insurance-2') {
@@ -830,13 +835,13 @@ export function RegistrationVisitModal({
                 encInsurerCount = Math.max(encInsurerCount, 2);
                 if (ext.extension) {
                   for (const subExt of ext.extension) {
-                    if (subExt.url === 'company') encComp1 = subExt.valueString || '0';
-                    else if (subExt.url === 'type') encInstp1 = subExt.valueString || '0';
-                    else if (subExt.url === 'policy-number') encPolnmb1 = subExt.valueString || '';
-                    else if (subExt.url === 'referral-number') encVano1 = subExt.valueString || '';
-                    else if (subExt.url === 'copay-percent') encInsprsnt1 = subExt.valueString || '';
-                    else if (subExt.url === 'issue-date' && subExt.valueDateTime) encDeldat1 = new Date(subExt.valueDateTime);
-                    else if (subExt.url === 'expiration-date' && subExt.valueDateTime) encValdat1 = new Date(subExt.valueDateTime);
+                    if (subExt.url === 'company') {encComp1 = subExt.valueString || '0';}
+                    else if (subExt.url === 'type') {encInstp1 = subExt.valueString || '0';}
+                    else if (subExt.url === 'policy-number') {encPolnmb1 = subExt.valueString || '';}
+                    else if (subExt.url === 'referral-number') {encVano1 = subExt.valueString || '';}
+                    else if (subExt.url === 'copay-percent') {encInsprsnt1 = subExt.valueString || '';}
+                    else if (subExt.url === 'issue-date' && subExt.valueDateTime) {encDeldat1 = new Date(subExt.valueDateTime);}
+                    else if (subExt.url === 'expiration-date' && subExt.valueDateTime) {encValdat1 = new Date(subExt.valueDateTime);}
                   }
                 }
               } else if (ext.url === 'http://medimind.ge/fhir/StructureDefinition/insurance-3') {
@@ -844,13 +849,13 @@ export function RegistrationVisitModal({
                 encInsurerCount = 3;
                 if (ext.extension) {
                   for (const subExt of ext.extension) {
-                    if (subExt.url === 'company') encComp2 = subExt.valueString || '0';
-                    else if (subExt.url === 'type') encInstp2 = subExt.valueString || '0';
-                    else if (subExt.url === 'policy-number') encPolnmb2 = subExt.valueString || '';
-                    else if (subExt.url === 'referral-number') encVano2 = subExt.valueString || '';
-                    else if (subExt.url === 'copay-percent') encInsprsnt2 = subExt.valueString || '';
-                    else if (subExt.url === 'issue-date' && subExt.valueDateTime) encDeldat2 = new Date(subExt.valueDateTime);
-                    else if (subExt.url === 'expiration-date' && subExt.valueDateTime) encValdat2 = new Date(subExt.valueDateTime);
+                    if (subExt.url === 'company') {encComp2 = subExt.valueString || '0';}
+                    else if (subExt.url === 'type') {encInstp2 = subExt.valueString || '0';}
+                    else if (subExt.url === 'policy-number') {encPolnmb2 = subExt.valueString || '';}
+                    else if (subExt.url === 'referral-number') {encVano2 = subExt.valueString || '';}
+                    else if (subExt.url === 'copay-percent') {encInsprsnt2 = subExt.valueString || '';}
+                    else if (subExt.url === 'issue-date' && subExt.valueDateTime) {encDeldat2 = new Date(subExt.valueDateTime);}
+                    else if (subExt.url === 'expiration-date' && subExt.valueDateTime) {encValdat2 = new Date(subExt.valueDateTime);}
                   }
                 }
               }
@@ -1011,7 +1016,7 @@ export function RegistrationVisitModal({
   };
 
   const handleSave = async (values: RegistrationVisitFormValues) => {
-    if (!patientId || !patient) return;
+    if (!patientId || !patient) {return;}
 
     setLoading(true);
     try {
@@ -1139,12 +1144,12 @@ export function RegistrationVisitModal({
         if (values.mo_comp && values.mo_comp !== '0') {
           const insuranceExt1 = [];
           insuranceExt1.push({ url: 'company', valueString: values.mo_comp });
-          if (values.mo_instp) insuranceExt1.push({ url: 'type', valueString: values.mo_instp });
-          if (values.mo_polnmb) insuranceExt1.push({ url: 'policy-number', valueString: values.mo_polnmb });
-          if (values.mo_vano) insuranceExt1.push({ url: 'referral-number', valueString: values.mo_vano });
-          if (values.mo_insprsnt) insuranceExt1.push({ url: 'copay-percent', valueString: values.mo_insprsnt });
-          if (values.mo_deldat) insuranceExt1.push({ url: 'issue-date', valueDateTime: values.mo_deldat.toISOString() });
-          if (values.mo_valdat) insuranceExt1.push({ url: 'expiration-date', valueDateTime: values.mo_valdat.toISOString() });
+          if (values.mo_instp) {insuranceExt1.push({ url: 'type', valueString: values.mo_instp });}
+          if (values.mo_polnmb) {insuranceExt1.push({ url: 'policy-number', valueString: values.mo_polnmb });}
+          if (values.mo_vano) {insuranceExt1.push({ url: 'referral-number', valueString: values.mo_vano });}
+          if (values.mo_insprsnt) {insuranceExt1.push({ url: 'copay-percent', valueString: values.mo_insprsnt });}
+          if (values.mo_deldat) {insuranceExt1.push({ url: 'issue-date', valueDateTime: values.mo_deldat.toISOString() });}
+          if (values.mo_valdat) {insuranceExt1.push({ url: 'expiration-date', valueDateTime: values.mo_valdat.toISOString() });}
 
           newEncounter.extension?.push({
             url: 'http://medimind.ge/fhir/StructureDefinition/insurance-1',
@@ -1156,12 +1161,12 @@ export function RegistrationVisitModal({
         if (values.insurerCount >= 2 && values.mo_comp1 && values.mo_comp1 !== '0') {
           const insuranceExt2 = [];
           insuranceExt2.push({ url: 'company', valueString: values.mo_comp1 });
-          if (values.mo_instp1) insuranceExt2.push({ url: 'type', valueString: values.mo_instp1 });
-          if (values.mo_polnmb1) insuranceExt2.push({ url: 'policy-number', valueString: values.mo_polnmb1 });
-          if (values.mo_vano1) insuranceExt2.push({ url: 'referral-number', valueString: values.mo_vano1 });
-          if (values.mo_insprsnt1) insuranceExt2.push({ url: 'copay-percent', valueString: values.mo_insprsnt1 });
-          if (values.mo_deldat1) insuranceExt2.push({ url: 'issue-date', valueDateTime: values.mo_deldat1.toISOString() });
-          if (values.mo_valdat1) insuranceExt2.push({ url: 'expiration-date', valueDateTime: values.mo_valdat1.toISOString() });
+          if (values.mo_instp1) {insuranceExt2.push({ url: 'type', valueString: values.mo_instp1 });}
+          if (values.mo_polnmb1) {insuranceExt2.push({ url: 'policy-number', valueString: values.mo_polnmb1 });}
+          if (values.mo_vano1) {insuranceExt2.push({ url: 'referral-number', valueString: values.mo_vano1 });}
+          if (values.mo_insprsnt1) {insuranceExt2.push({ url: 'copay-percent', valueString: values.mo_insprsnt1 });}
+          if (values.mo_deldat1) {insuranceExt2.push({ url: 'issue-date', valueDateTime: values.mo_deldat1.toISOString() });}
+          if (values.mo_valdat1) {insuranceExt2.push({ url: 'expiration-date', valueDateTime: values.mo_valdat1.toISOString() });}
 
           newEncounter.extension?.push({
             url: 'http://medimind.ge/fhir/StructureDefinition/insurance-2',
@@ -1173,12 +1178,12 @@ export function RegistrationVisitModal({
         if (values.insurerCount >= 3 && values.mo_comp2 && values.mo_comp2 !== '0') {
           const insuranceExt3 = [];
           insuranceExt3.push({ url: 'company', valueString: values.mo_comp2 });
-          if (values.mo_instp2) insuranceExt3.push({ url: 'type', valueString: values.mo_instp2 });
-          if (values.mo_polnmb2) insuranceExt3.push({ url: 'policy-number', valueString: values.mo_polnmb2 });
-          if (values.mo_vano2) insuranceExt3.push({ url: 'referral-number', valueString: values.mo_vano2 });
-          if (values.mo_insprsnt2) insuranceExt3.push({ url: 'copay-percent', valueString: values.mo_insprsnt2 });
-          if (values.mo_deldat2) insuranceExt3.push({ url: 'issue-date', valueDateTime: values.mo_deldat2.toISOString() });
-          if (values.mo_valdat2) insuranceExt3.push({ url: 'expiration-date', valueDateTime: values.mo_valdat2.toISOString() });
+          if (values.mo_instp2) {insuranceExt3.push({ url: 'type', valueString: values.mo_instp2 });}
+          if (values.mo_polnmb2) {insuranceExt3.push({ url: 'policy-number', valueString: values.mo_polnmb2 });}
+          if (values.mo_vano2) {insuranceExt3.push({ url: 'referral-number', valueString: values.mo_vano2 });}
+          if (values.mo_insprsnt2) {insuranceExt3.push({ url: 'copay-percent', valueString: values.mo_insprsnt2 });}
+          if (values.mo_deldat2) {insuranceExt3.push({ url: 'issue-date', valueDateTime: values.mo_deldat2.toISOString() });}
+          if (values.mo_valdat2) {insuranceExt3.push({ url: 'expiration-date', valueDateTime: values.mo_valdat2.toISOString() });}
 
           newEncounter.extension?.push({
             url: 'http://medimind.ge/fhir/StructureDefinition/insurance-3',

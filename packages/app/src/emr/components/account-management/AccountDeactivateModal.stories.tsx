@@ -1,13 +1,12 @@
-/**
- * Storybook Stories for AccountDeactivateModal Component (T076)
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import type { Meta, StoryObj } from '@storybook/react';
 import { MantineProvider } from '@mantine/core';
 import { MemoryRouter } from 'react-router-dom';
 import { MedplumProvider } from '@medplum/react-hooks';
 import { MockClient } from '@medplum/mock';
-import { Practitioner } from '@medplum/fhirtypes';
+import type { Practitioner } from '@medplum/fhirtypes';
 import { AccountDeactivateModal } from './AccountDeactivateModal';
 
 const medplum = new MockClient();

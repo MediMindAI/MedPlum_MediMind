@@ -4,7 +4,8 @@
 import { useState, useEffect } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
 import type { Practitioner } from '@medplum/fhirtypes';
-import { searchPractitioners, practitionersToOptions, type PractitionerOption } from '../services/practitionerService';
+import { searchPractitioners, practitionersToOptions  } from '../services/practitionerService';
+import type {PractitionerOption} from '../services/practitionerService';
 
 interface UsePractitionersResult {
   practitioners: Practitioner[];

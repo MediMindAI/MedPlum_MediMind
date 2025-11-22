@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 import { screen, fireEvent } from '@testing-library/react';
 import { renderWithProviders } from '../../test-utils';
 import { RoleSelector } from './RoleSelector';

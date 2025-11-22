@@ -1,9 +1,5 @@
-/**
- * AccountManagementSection
- *
- * Route wrapper for account management pages
- * Provides consistent layout and navigation structure
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AccountManagementView } from '../views/account-management/AccountManagementView';

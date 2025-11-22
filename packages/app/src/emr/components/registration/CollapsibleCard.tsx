@@ -3,7 +3,8 @@
 
 import { Badge, Box, Card, Collapse, Group, Text, UnstyledButton } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
-import { ReactNode, useState } from 'react';
+import type { ReactNode} from 'react';
+import { useState } from 'react';
 
 interface CollapsibleCardProps {
   title: string;
@@ -20,6 +21,16 @@ interface CollapsibleCardProps {
 /**
  * Collapsible Card component for wrapping entire sections
  * Maintains Mantine Card styling while adding collapse functionality
+ * @param root0
+ * @param root0.title
+ * @param root0.children
+ * @param root0.defaultOpen
+ * @param root0.icon
+ * @param root0.badge
+ * @param root0.shadow
+ * @param root0.padding
+ * @param root0.radius
+ * @param root0.withBorder
  */
 export function CollapsibleCard({
   title,

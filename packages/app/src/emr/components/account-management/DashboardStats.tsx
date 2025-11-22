@@ -1,11 +1,8 @@
-/**
- * DashboardStats Component
- *
- * Displays 4 KPI cards showing account statistics at a glance
- * Mobile-responsive with 2×2 grid on small screens, 1×4 on desktop
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { Grid, Paper, Text, ThemeIcon, Stack, Group } from '@mantine/core';
+import React from 'react';
+import { Grid, Paper, Text, Stack, Group } from '@mantine/core';
 import { IconUsers, IconUserCheck, IconClock, IconBan } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
 
@@ -30,51 +27,91 @@ interface StatCardProps {
 }
 
 /**
- * Individual stat card component
+ * Individual stat card component with gradient background
+ * @param root0
+ * @param root0.title
+ * @param root0.value
+ * @param root0.icon
+ * @param root0.color
+ * @param root0.gradient
  */
 function StatCard({ title, value, icon, color, gradient }: StatCardProps): JSX.Element {
   return (
     <Paper
-      p="md"
-      withBorder
+      p="xl"
       style={{
-        background: '#ffffff',
-        borderRadius: '8px',
-        boxShadow: 'var(--emr-shadow-card)',
-        transition: 'all 0.2s ease',
+        background: gradient,
+        border: 'none',
+        borderRadius: 'var(--emr-border-radius-lg)',
+        boxShadow: 'var(--emr-shadow-lg)',
+        transition: 'all var(--emr-transition-base)',
         cursor: 'default',
+        position: 'relative',
+        overflow: 'hidden',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--emr-shadow-card-hover)';
-        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = 'var(--emr-shadow-xl)';
+        e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--emr-shadow-card)';
-        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = 'var(--emr-shadow-lg)';
+        e.currentTarget.style.transform = 'translateY(0) scale(1)';
       }}
     >
-      <Group justify="space-between" wrap="nowrap">
-        <Stack gap={8}>
-          <Text size="sm" c="dimmed" fw={500} style={{ letterSpacing: '0.5px' }}>
-            {title}
-          </Text>
-          <Text size="32px" fw={700} c={color}>
-            {value.toLocaleString()}
-          </Text>
-        </Stack>
+      <Stack gap="sm">
+        {/* Icon at top */}
+        <Group justify="space-between" align="flex-start">
+          {typeof icon === 'object' && React.isValidElement(icon)
+            ? React.cloneElement(icon as React.ReactElement, {
+                size: 32,
+                color: 'white',
+                style: { opacity: 0.9, flexShrink: 0 },
+              })
+            : icon}
+        </Group>
 
-        <ThemeIcon
-          size={56}
-          radius={56}
-          variant="gradient"
-          gradient={{ from: color, to: color, deg: 135 }}
+        {/* Large value */}
+        <Text
+          size="48px"
+          fw={700}
+          c="white"
           style={{
-            background: gradient,
+            lineHeight: 1,
+            letterSpacing: '-1px',
           }}
         >
-          {icon}
-        </ThemeIcon>
-      </Group>
+          {value.toLocaleString()}
+        </Text>
+
+        {/* Title */}
+        <Text
+          size="sm"
+          c="white"
+          fw={500}
+          style={{
+            opacity: 0.95,
+            letterSpacing: '0.3px',
+            textTransform: 'uppercase',
+            fontSize: '11px',
+          }}
+        >
+          {title}
+        </Text>
+      </Stack>
+
+      {/* Decorative gradient overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          top: -20,
+          right: -20,
+          width: 100,
+          height: 100,
+          background: 'rgba(255, 255, 255, 0.1)',
+          borderRadius: '50%',
+          pointerEvents: 'none',
+        }}
+      />
     </Paper>
   );
 }
@@ -90,7 +127,9 @@ function StatCard({ title, value, icon, color, gradient }: StatCardProps): JSX.E
  * - Supports loading state
  *
  * @param stats - Statistics data to display
+ * @param stats.stats
  * @param loading - Show loading skeleton
+ * @param stats.loading
  */
 export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Element {
   const { t } = useTranslation();
@@ -102,8 +141,8 @@ export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Ele
           title={t('accountManagement.dashboard.total')}
           value={stats.total}
           icon={<IconUsers size={28} stroke={2} />}
-          color="var(--emr-stat-info)"
-          gradient="linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)"
+          color="var(--emr-secondary)"
+          gradient="var(--emr-stat-gradient-total)"
         />
       </Grid.Col>
 
@@ -112,8 +151,8 @@ export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Ele
           title={t('accountManagement.dashboard.active')}
           value={stats.active}
           icon={<IconUserCheck size={28} stroke={2} />}
-          color="var(--emr-stat-success)"
-          gradient="linear-gradient(135deg, #10b981 0%, #34d399 100%)"
+          color="var(--emr-primary)"
+          gradient="var(--emr-stat-gradient-active)"
         />
       </Grid.Col>
 
@@ -122,8 +161,8 @@ export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Ele
           title={t('accountManagement.dashboard.pending')}
           value={stats.pending}
           icon={<IconClock size={28} stroke={2} />}
-          color="var(--emr-stat-warning)"
-          gradient="linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)"
+          color="var(--emr-accent)"
+          gradient="var(--emr-stat-gradient-pending)"
         />
       </Grid.Col>
 
@@ -132,8 +171,8 @@ export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Ele
           title={t('accountManagement.dashboard.inactive')}
           value={stats.inactive}
           icon={<IconBan size={28} stroke={2} />}
-          color="var(--emr-stat-neutral)"
-          gradient="linear-gradient(135deg, #6b7280 0%, #9ca3af 100%)"
+          color="var(--emr-gray-500)"
+          gradient="var(--emr-stat-gradient-inactive)"
         />
       </Grid.Col>
     </Grid>

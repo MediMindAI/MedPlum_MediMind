@@ -37,6 +37,13 @@ export interface SubmitDropdownButtonProps {
  * - Multilingual support (Georgian/English/Russian)
  * - Loading and disabled states
  * - Split button design with dropdown menu
+ * @param root0
+ * @param root0.onSave
+ * @param root0.onSaveAndContinue
+ * @param root0.onSaveAndNew
+ * @param root0.onSaveAndView
+ * @param root0.loading
+ * @param root0.disabled
  */
 export function SubmitDropdownButton({
   onSave,

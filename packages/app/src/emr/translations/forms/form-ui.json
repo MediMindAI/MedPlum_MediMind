@@ -1,0 +1,402 @@
+{
+  "formUI": {
+    "builder": {
+      "title": {
+        "ka": "ფორმის კონსტრუქტორი",
+        "en": "Form Builder",
+        "ru": "Конструктор форм"
+      },
+      "description": {
+        "ka": "ავაშენოთ პროფესიონალური ფორმები დაკეკვიქი და ჩამოშვება ინტერფეისით",
+        "en": "Create professional forms with drag and drop interface",
+        "ru": "Создавайте профессиональные формы с интерфейсом перетаскивания"
+      },
+      "palette": {
+        "ka": "ველების პალიტრა",
+        "en": "Field Palette",
+        "ru": "Палитра полей"
+      },
+      "canvas": {
+        "ka": "ფორმის ოთახი",
+        "en": "Form Canvas",
+        "ru": "Область формы"
+      },
+      "properties": {
+        "ka": "თვისებები",
+        "en": "Properties",
+        "ru": "Свойства"
+      },
+      "preview": {
+        "ka": "წინამხედელი",
+        "en": "Preview",
+        "ru": "Предпросмотр"
+      }
+    },
+    "buttons": {
+      "save": {
+        "ka": "შენახვა",
+        "en": "Save",
+        "ru": "Сохранить"
+      },
+      "cancel": {
+        "ka": "გამორთვა",
+        "en": "Cancel",
+        "ru": "Отмена"
+      },
+      "delete": {
+        "ka": "წაშლა",
+        "en": "Delete",
+        "ru": "Удалить"
+      },
+      "submit": {
+        "ka": "გაგზავნა",
+        "en": "Submit",
+        "ru": "Отправить"
+      },
+      "reset": {
+        "ka": "გადატვირთვა",
+        "en": "Reset",
+        "ru": "Сбросить"
+      },
+      "export": {
+        "ka": "მუშაობის გატანა",
+        "en": "Export",
+        "ru": "Экспорт"
+      },
+      "import": {
+        "ka": "იმპორტი",
+        "en": "Import",
+        "ru": "Импорт"
+      },
+      "clone": {
+        "ka": "კლონი",
+        "en": "Clone",
+        "ru": "Клонировать"
+      },
+      "addField": {
+        "ka": "დაამატე ველი",
+        "en": "Add Field",
+        "ru": "Добавить поле"
+      },
+      "removeField": {
+        "ka": "ველის ამოღება",
+        "en": "Remove Field",
+        "ru": "Удалить поле"
+      }
+    },
+    "messages": {
+      "success": {
+        "ka": "ოპერაცია წარმატებით შესრულდა",
+        "en": "Operation completed successfully",
+        "ru": "Операция выполнена успешно"
+      },
+      "error": {
+        "ka": "რაიმე შეცდომა მოხდა",
+        "en": "An error occurred",
+        "ru": "Произошла ошибка"
+      },
+      "unsavedChanges": {
+        "ka": "თქვენ გაქვთ შენახული ცვლილებები. დნეთ გინდათ გამოსვლა?",
+        "en": "You have unsaved changes. Do you want to leave?",
+        "ru": "У вас есть несохраненные изменения. Вы хотите выйти?"
+      },
+      "confirmDelete": {
+        "ka": "დარწმუნებული ხართ წაშლას გნებობთ?",
+        "en": "Are you sure you want to delete?",
+        "ru": "Вы уверены, что хотите удалить?"
+      },
+      "formSaved": {
+        "ka": "ფორმა შეტყობინების ბრუნდება",
+        "en": "Form saved successfully",
+        "ru": "Форма успешно сохранена"
+      },
+      "formNotFound": {
+        "ka": "ფორმა ნაპოვნი არ არის",
+        "en": "Form not found",
+        "ru": "Форма не найдена"
+      },
+      "noResults": {
+        "ka": "არ მოიძებნა შედეგი",
+        "en": "No results found",
+        "ru": "Результаты не найдены"
+      }
+    },
+    "validation": {
+      "requiredField": {
+        "ka": "აუცილებელი ველი",
+        "en": "Required Field",
+        "ru": "Обязательное поле"
+      },
+      "optionalField": {
+        "ka": "მაქვს ველი",
+        "en": "Optional Field",
+        "ru": "Дополнительное поле"
+      }
+    },
+    "search": {
+      "title": {
+        "ka": "ფორმის ძებნა",
+        "en": "Search Forms",
+        "ru": "Поиск форм"
+      },
+      "placeholder": {
+        "ka": "მოძებნეთ ფორმა...",
+        "en": "Search forms...",
+        "ru": "Поиск форм..."
+      },
+      "filterByType": {
+        "ka": "ფილტრი ტიპის მიხედვით",
+        "en": "Filter by Type",
+        "ru": "Фильтр по типу"
+      },
+      "filterByDate": {
+        "ka": "ფილტრი თარიღის მიხედვით",
+        "en": "Filter by Date",
+        "ru": "Фильтр по дате"
+      },
+      "patientSearch": {
+        "ka": "პაციენტი (სახელი ან ID)",
+        "en": "Patient (Name or ID)",
+        "ru": "Пациент (имя или ID)"
+      },
+      "patientSearchPlaceholder": {
+        "ka": "მოძებნეთ სახელით ან ID-ით...",
+        "en": "Search by name or ID...",
+        "ru": "Поиск по имени или ID..."
+      },
+      "contentSearch": {
+        "ka": "შინაარსით ძებნა",
+        "en": "Content Search",
+        "ru": "Поиск по содержимому"
+      },
+      "contentSearchPlaceholder": {
+        "ka": "მოძებნეთ ფორმის შინაარსში...",
+        "en": "Search in form content...",
+        "ru": "Поиск в содержимом формы..."
+      },
+      "dateFrom": {
+        "ka": "თარიღიდან",
+        "en": "From Date",
+        "ru": "С даты"
+      },
+      "dateTo": {
+        "ka": "თარიღამდე",
+        "en": "To Date",
+        "ru": "До даты"
+      },
+      "selectDate": {
+        "ka": "აირჩიეთ თარიღი",
+        "en": "Select date",
+        "ru": "Выберите дату"
+      },
+      "status": {
+        "ka": "სტატუსი",
+        "en": "Status",
+        "ru": "Статус"
+      },
+      "selectStatus": {
+        "ka": "აირჩიეთ სტატუსი",
+        "en": "Select status",
+        "ru": "Выберите статус"
+      },
+      "allStatuses": {
+        "ka": "ყველა სტატუსი",
+        "en": "All Statuses",
+        "ru": "Все статусы"
+      },
+      "formType": {
+        "ka": "ფორმის ტიპი",
+        "en": "Form Type",
+        "ru": "Тип формы"
+      },
+      "selectFormType": {
+        "ka": "აირჩიეთ ფორმის ტიპი",
+        "en": "Select form type",
+        "ru": "Выберите тип формы"
+      },
+      "allFormTypes": {
+        "ka": "ყველა ფორმის ტიპი",
+        "en": "All Form Types",
+        "ru": "Все типы форм"
+      },
+      "clearFilters": {
+        "ka": "ფილტრების გასუფთავება",
+        "en": "Clear",
+        "ru": "Очистить"
+      },
+      "searchButton": {
+        "ka": "ძებნა",
+        "en": "Search",
+        "ru": "Поиск"
+      },
+      "noResults": {
+        "ka": "ფორმის პასუხები ვერ მოიძებნა",
+        "en": "No form responses found",
+        "ru": "Ответы формы не найдены"
+      },
+      "noResultsHint": {
+        "ka": "სცადეთ ფილტრების შეცვლა",
+        "en": "Try adjusting your search filters",
+        "ru": "Попробуйте изменить фильтры поиска"
+      },
+      "resultsCount": {
+        "ka": "ნაჩვენებია {count} შედეგი",
+        "en": "Showing {count} results",
+        "ru": "Показано {count} результатов"
+      },
+      "limitedTo": {
+        "ka": "შეზღუდულია {max}-მდე",
+        "en": "Limited to {max}",
+        "ru": "Ограничено до {max}"
+      },
+      "unknownPatient": {
+        "ka": "უცნობი პაციენტი",
+        "en": "Unknown Patient",
+        "ru": "Неизвестный пациент"
+      },
+      "unknownFormType": {
+        "ka": "უცნობი ფორმა",
+        "en": "Unknown Form",
+        "ru": "Неизвестная форма"
+      },
+      "viewForm": {
+        "ka": "ფორმის ნახვა",
+        "en": "View Form",
+        "ru": "Просмотр формы"
+      },
+      "searchError": {
+        "ka": "ძებნის შეცდომა. გთხოვთ სცადოთ თავიდან.",
+        "en": "Search failed. Please try again.",
+        "ru": "Ошибка поиска. Пожалуйста, попробуйте снова."
+      },
+      "columns": {
+        "patientName": {
+          "ka": "პაციენტის სახელი",
+          "en": "Patient Name",
+          "ru": "Имя пациента"
+        },
+        "formType": {
+          "ka": "ფორმის ტიპი",
+          "en": "Form Type",
+          "ru": "Тип формы"
+        },
+        "date": {
+          "ka": "თარიღი",
+          "en": "Date",
+          "ru": "Дата"
+        },
+        "status": {
+          "ka": "სტატუსი",
+          "en": "Status",
+          "ru": "Статус"
+        },
+        "actions": {
+          "ka": "მოქმედებები",
+          "en": "Actions",
+          "ru": "Действия"
+        }
+      },
+      "statusOptions": {
+        "completed": {
+          "ka": "დასრულებული",
+          "en": "Completed",
+          "ru": "Завершено"
+        },
+        "in-progress": {
+          "ka": "მიმდინარე",
+          "en": "In Progress",
+          "ru": "В процессе"
+        },
+        "amended": {
+          "ka": "შესწორებული",
+          "en": "Amended",
+          "ru": "Исправлено"
+        },
+        "entered-in-error": {
+          "ka": "შეცდომით შეყვანილი",
+          "en": "Entered in Error",
+          "ru": "Введено по ошибке"
+        },
+        "stopped": {
+          "ka": "შეჩერებული",
+          "en": "Stopped",
+          "ru": "Остановлено"
+        }
+      }
+    },
+    "viewer": {
+      "title": {
+        "ka": "ფორმის ნახვა",
+        "en": "View Form",
+        "ru": "Просмотр формы"
+      },
+      "print": {
+        "ka": "ბეჭდვა",
+        "en": "Print",
+        "ru": "Печать"
+      },
+      "exportPdf": {
+        "ka": "PDF გადმოწერა",
+        "en": "Export PDF",
+        "ru": "Экспорт PDF"
+      },
+      "pdfExportNotImplemented": {
+        "ka": "PDF ექსპორტი ჯერ არ არის გაკეთებული.",
+        "en": "PDF export is not yet implemented.",
+        "ru": "Экспорт PDF пока не реализован."
+      },
+      "submittedDate": {
+        "ka": "გაგზავნის თარიღი",
+        "en": "Submitted",
+        "ru": "Отправлено"
+      },
+      "responseId": {
+        "ka": "პასუხის ID",
+        "en": "Response ID",
+        "ru": "ID ответа"
+      },
+      "noResponses": {
+        "ka": "პასუხები არ არის ჩაწერილი",
+        "en": "No responses recorded",
+        "ru": "Ответы не записаны"
+      },
+      "formResponse": {
+        "ka": "ფორმის პასუხი",
+        "en": "Form Response",
+        "ru": "Ответ формы"
+      },
+      "loadError": {
+        "ka": "ფორმის პასუხის ჩატვირთვა ვერ მოხერხდა.",
+        "en": "Failed to load form response.",
+        "ru": "Не удалось загрузить ответ формы."
+      },
+      "unknownPatient": {
+        "ka": "უცნობი პაციენტი",
+        "en": "Unknown Patient",
+        "ru": "Неизвестный пациент"
+      }
+    },
+    "submenu": {
+      "builder": {
+        "ka": "კონსტრუქტორი",
+        "en": "Builder",
+        "ru": "Конструктор"
+      },
+      "fill": {
+        "ka": "ვცემი",
+        "en": "Fill",
+        "ru": "Заполнить"
+      },
+      "view": {
+        "ka": "ხედი",
+        "en": "View",
+        "ru": "Просмотр"
+      },
+      "search": {
+        "ka": "ძებნა",
+        "en": "Search",
+        "ru": "Поиск"
+      }
+    }
+  }
+}

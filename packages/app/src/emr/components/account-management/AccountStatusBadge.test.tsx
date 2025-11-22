@@ -1,8 +1,5 @@
-/**
- * Tests for AccountStatusBadge Component
- *
- * Tests status badge rendering with color coding
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { screen } from '@testing-library/react';
 import { renderWithProviders } from '../../test-utils';

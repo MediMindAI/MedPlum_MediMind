@@ -1,7 +1,17 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
+
+/**
+ * @file Application Routes Configuration
+ * @description Defines all routes for the MediMind EMR application.
+ *
+ * Form Builder routes use code splitting (lazy loading) to improve initial
+ * bundle size and loading performance. See T165 for details.
+ */
 import type { JSX } from 'react';
+import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
+import { Center, Loader } from '@mantine/core';
 import { BotsPage } from './admin/BotsPage';
 import { ClientsPage } from './admin/ClientsPage';
 import { CreateBotPage } from './admin/CreateBotPage';
@@ -70,12 +80,39 @@ import { PatientHistorySection } from './emr/sections/PatientHistorySection';
 import { RegistrationSection } from './emr/sections/RegistrationSection';
 import { NomenclatureSection } from './emr/sections/NomenclatureSection';
 import { AccountManagementSection } from './emr/sections/AccountManagementSection';
+import { FormsSection } from './emr/sections/FormsSection';
 import { PatientEditView } from './emr/views/registration/PatientEditView';
 import { UnifiedRegistrationView } from './emr/views/registration/UnifiedRegistrationView';
 import { PatientHistoryView } from './emr/views/patient-history/PatientHistoryView';
 import { NomenclatureMedical1View } from './emr/views/nomenclature/NomenclatureMedical1View';
 import { LaboratoryNomenclatureView } from './emr/views/nomenclature/LaboratoryNomenclatureView';
 import { ErrorBoundary } from '@medplum/react';
+
+// ============================================================================
+// Code Splitting: Lazy-loaded Form Builder Components (T165)
+// ============================================================================
+// Form builder views are lazy-loaded to reduce initial bundle size.
+// This improves first contentful paint (FCP) for users who don't need forms.
+
+/**
+ * Loading skeleton for lazy-loaded components
+ */
+function LazyLoadingFallback(): JSX.Element {
+  return (
+    <Center h={400}>
+      <Loader size="lg" color="blue" />
+    </Center>
+  );
+}
+
+// Lazy-loaded form builder views
+const FormBuilderView = lazy(() => import('./emr/views/form-builder/FormBuilderView').then(m => ({ default: m.FormBuilderView })));
+const FormFillerView = lazy(() => import('./emr/views/form-filler/FormFillerView').then(m => ({ default: m.FormFillerView })));
+const FormViewerView = lazy(() => import('./emr/views/form-filler/FormViewerView').then(m => ({ default: m.FormViewerView })));
+const FormSearchView = lazy(() => import('./emr/views/form-management/FormSearchView').then(m => ({ default: m.FormSearchView })));
+const FormEditView = lazy(() => import('./emr/views/form-builder/FormEditView').then(m => ({ default: m.FormEditView })));
+const FormManagementView = lazy(() => import('./emr/views/form-management/FormManagementView').then(m => ({ default: m.FormManagementView })));
+// const FormAnalyticsView = lazy(() => import('./emr/views/form-analytics/FormAnalyticsView'));
 
 export function AppRoutes(): JSX.Element {
   return (
@@ -317,6 +354,79 @@ export function AppRoutes(): JSX.Element {
               </ProtectedRoute>
             }
           />
+
+          {/* Forms Section */}
+          <Route path="forms" element={<FormsSection />}>
+            {/* Default route - show form templates management */}
+            <Route
+              index
+              element={
+                <Suspense fallback={<LazyLoadingFallback />}>
+                  <FormManagementView />
+                </Suspense>
+              }
+            />
+
+            {/* Form Builder - Create new forms */}
+            <Route
+              path="builder"
+              element={
+                <ProtectedRoute requiredPermission={EMRPermission.ADMIN}>
+                  <Suspense fallback={<LazyLoadingFallback />}>
+                    <FormBuilderView />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Form Edit - Edit existing form templates */}
+            <Route
+              path="edit/:id"
+              element={
+                <ProtectedRoute requiredPermission={EMRPermission.ADMIN}>
+                  <Suspense fallback={<LazyLoadingFallback />}>
+                    <FormEditView />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Form Filler - Fill out a form for a patient */}
+            <Route
+              path="fill/:id"
+              element={
+                <ProtectedRoute requiredPermission={EMRPermission.VIEW_PATIENTS}>
+                  <Suspense fallback={<LazyLoadingFallback />}>
+                    <FormFillerView />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Form Viewer - View completed form in read-only mode */}
+            <Route
+              path="view/:id"
+              element={
+                <ProtectedRoute requiredPermission={EMRPermission.VIEW_PATIENTS}>
+                  <Suspense fallback={<LazyLoadingFallback />}>
+                    <FormViewerView />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Form Search - Search for completed forms */}
+            <Route
+              path="search"
+              element={
+                <ProtectedRoute requiredPermission={EMRPermission.VIEW_PATIENTS}>
+                  <Suspense fallback={<LazyLoadingFallback />}>
+                    <FormSearchView />
+                  </Suspense>
+                </ProtectedRoute>
+              }
+            />
+          </Route>
 
           <Route
             path="administration"

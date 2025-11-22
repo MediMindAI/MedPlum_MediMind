@@ -1,6 +1,5 @@
-/**
- * Laboratory Components Barrel Export
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 // Research Components
 export { ResearchComponentTable } from './research-components/ResearchComponentTable';

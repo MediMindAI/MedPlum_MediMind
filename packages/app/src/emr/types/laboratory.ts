@@ -1,14 +1,7 @@
-/**
- * Laboratory Nomenclature TypeScript Interfaces
- *
- * Defines types for all 4 laboratory nomenclature sub-systems:
- * 1. Research Components (კვლევის კომპონენტები)
- * 2. Samples (ნიმუშები)
- * 3. Manipulations (მანიპულაციები)
- * 4. Syringes (სინჯარები)
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { ObservationDefinition, SpecimenDefinition, ActivityDefinition, DeviceDefinition } from '@medplum/fhirtypes';
+import type { ObservationDefinition, SpecimenDefinition, ActivityDefinition, DeviceDefinition } from '@medplum/fhirtypes';
 
 // ============================================================================
 // RESEARCH COMPONENTS (კვლევის კომპონენტები)

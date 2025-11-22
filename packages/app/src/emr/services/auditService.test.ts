@@ -1,5 +1,7 @@
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 import { MockClient } from '@medplum/mock';
-import { AuditEvent, Practitioner } from '@medplum/fhirtypes';
+import type { AuditEvent, Practitioner } from '@medplum/fhirtypes';
 import { createAuditEvent, getAccountAuditTrail } from './auditService';
 
 describe('auditService', () => {

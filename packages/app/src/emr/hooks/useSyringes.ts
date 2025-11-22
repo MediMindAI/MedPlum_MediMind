@@ -1,12 +1,9 @@
-/**
- * useSyringes Hook
- *
- * Manages syringe/container data fetching, caching, and state management.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
-import { DeviceDefinition } from '@medplum/fhirtypes';
+import type { DeviceDefinition } from '@medplum/fhirtypes';
 import { searchSyringes } from '../services/syringeService';
 
 interface UseSyringesOptions {
@@ -33,6 +30,7 @@ interface UseSyringesResult {
 
 /**
  * Hook for fetching and managing syringe/container types
+ * @param options
  */
 export function useSyringes(options: UseSyringesOptions = {}): UseSyringesResult {
   const medplum = useMedplum();

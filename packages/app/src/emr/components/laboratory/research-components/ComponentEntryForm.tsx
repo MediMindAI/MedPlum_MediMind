@@ -1,15 +1,11 @@
-/**
- * Component Entry Form
- *
- * 7-field inline form for adding new research components matching original EMR.
- * Fields: Code, GIS Code, Name, Type (dropdown), Unit (dropdown), Department, Submit button
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { TextInput, Select, Button, Box, Grid } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useTranslation } from '../../../hooks/useTranslation';
-import { ResearchComponentFormValues } from '../../../types/laboratory';
+import type { ResearchComponentFormValues } from '../../../types/laboratory';
 import { SERVICE_TYPES } from '../../../translations/service-types.js';
 import { MEASUREMENT_UNITS } from '../../../translations/measurement-units.js';
 
@@ -22,6 +18,9 @@ interface ComponentEntryFormProps {
 
 /**
  * Inline form for adding new research components
+ * @param root0
+ * @param root0.onSubmit
+ * @param root0.loading
  */
 export function ComponentEntryForm({ onSubmit, loading = false }: ComponentEntryFormProps): JSX.Element {
   const { t, lang } = useTranslation();

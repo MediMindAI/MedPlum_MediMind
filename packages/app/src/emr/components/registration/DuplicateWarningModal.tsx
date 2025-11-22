@@ -25,10 +25,15 @@ interface DuplicateWarningModalProps {
  * 3. Cancel
  *
  * @param opened - Whether the modal is open
+ * @param opened.opened
  * @param onClose - Callback when modal is closed
+ * @param opened.onClose
  * @param existingPatient - The existing FHIR Patient resource
+ * @param opened.existingPatient
  * @param onOpenExisting - Callback to open the existing patient
+ * @param opened.onOpenExisting
  * @param onRegisterAnyway - Callback to register a new patient anyway
+ * @param opened.onRegisterAnyway
  */
 export function DuplicateWarningModal({
   opened,

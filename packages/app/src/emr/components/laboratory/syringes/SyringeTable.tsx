@@ -1,14 +1,10 @@
-/**
- * Syringe Table Component
- *
- * Displays syringes/containers in a table with color visualization.
- * Shows name, color bar, volume, and actions.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import { Table, ActionIcon, Box, Text } from '@mantine/core';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
-import { DeviceDefinition } from '@medplum/fhirtypes';
+import type { DeviceDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { ColorBarDisplay } from './ColorBarDisplay';
 import { extractSyringeFormValues } from '../../../services/syringeService';
@@ -26,6 +22,11 @@ interface SyringeTableProps {
 
 /**
  * SyringeTable Component
+ * @param root0
+ * @param root0.syringes
+ * @param root0.onEdit
+ * @param root0.onDelete
+ * @param root0.loading
  */
 export function SyringeTable({ syringes, onEdit, onDelete, loading }: SyringeTableProps): JSX.Element {
   const { t } = useTranslation();

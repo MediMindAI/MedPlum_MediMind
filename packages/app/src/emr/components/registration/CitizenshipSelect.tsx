@@ -295,6 +295,12 @@ const countries: Country[] = [
  *   required
  * />
  * ```
+ * @param root0
+ * @param root0.value
+ * @param root0.onChange
+ * @param root0.label
+ * @param root0.error
+ * @param root0.required
  */
 export function CitizenshipSelect({ value, onChange, label, error, required }: CitizenshipSelectProps) {
   const { t, lang } = useTranslation();

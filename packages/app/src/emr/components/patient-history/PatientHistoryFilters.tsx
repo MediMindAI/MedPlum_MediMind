@@ -32,6 +32,10 @@ interface PatientHistoryFiltersProps {
 /**
  * Beautiful production-ready filter component for patient history
  * Features: Section cards, gradient header, search button, theme colors
+ * @param root0
+ * @param root0.searchParams
+ * @param root0.onSearchParamsChange
+ * @param root0.onSearch
  */
 export function PatientHistoryFilters({
   searchParams,

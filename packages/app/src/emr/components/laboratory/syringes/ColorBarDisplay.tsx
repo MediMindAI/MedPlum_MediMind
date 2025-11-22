@@ -1,9 +1,5 @@
-/**
- * Color Bar Display Component
- *
- * Displays a colored bar/stripe for visual representation of tube/container colors.
- * Matches the original EMR design with filled color rectangles.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import { Box } from '@mantine/core';
@@ -19,6 +15,10 @@ interface ColorBarDisplayProps {
 
 /**
  * ColorBarDisplay Component
+ * @param root0
+ * @param root0.color
+ * @param root0.width
+ * @param root0.height
  */
 export function ColorBarDisplay({ color, width = '100%', height = 24 }: ColorBarDisplayProps): JSX.Element {
   return (

@@ -13,6 +13,10 @@ interface PlaceholderViewProps {
 
 /**
  * Placeholder view for pages under development
+ * @param root0
+ * @param root0.titleKey
+ * @param root0.messageKey
+ * @param root0.testId
  */
 export function PlaceholderView({ titleKey, messageKey, testId }: PlaceholderViewProps): JSX.Element {
   const { t } = useTranslation();

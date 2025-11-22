@@ -1,12 +1,8 @@
-/**
- * Audit Service (T068, T069)
- *
- * Provides audit logging functionality for account management operations
- * using FHIR AuditEvent resources with DICOM Security Alert codes
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { MedplumClient } from '@medplum/core';
-import { AuditEvent, Practitioner } from '@medplum/fhirtypes';
+import type { MedplumClient } from '@medplum/core';
+import type { AuditEvent, Practitioner } from '@medplum/fhirtypes';
 import { getPractitionerName } from './accountHelpers';
 
 /**
@@ -87,7 +83,7 @@ export async function createAuditEvent(
     ]
   };
 
-  return await medplum.createResource(auditEvent);
+  return medplum.createResource(auditEvent);
 }
 
 /**

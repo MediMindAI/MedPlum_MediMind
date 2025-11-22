@@ -1,14 +1,12 @@
-/**
- * Account Service
- *
- * CRUD operations for practitioner accounts using Medplum Invite API
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { MedplumClient } from '@medplum/core';
-import { Practitioner, ProjectMembership, Bundle } from '@medplum/fhirtypes';
+import type { MedplumClient } from '@medplum/core';
+import type { Practitioner, ProjectMembership } from '@medplum/fhirtypes';
 import type { AccountFormValues, AccountSearchFilters, InviteRequest } from '../types/account-management';
 import { formValuesToPractitioner } from './accountHelpers';
 import { createAuditEvent } from './auditService';
+import { assignRoleToUser, removeRoleFromUser, getUserRoles } from './roleService';
 
 /**
  * Create a new practitioner account using Medplum Invite API
@@ -35,7 +33,7 @@ export async function createPractitioner(
   }
 
   const project = medplum.getProject();
-  if (!project || !project.id) {
+  if (!project?.id) {
     throw new Error('No active project found');
   }
 
@@ -59,12 +57,79 @@ export async function createPractitioner(
     };
   }
 
-  const membership = await medplum.post<ProjectMembership>(
+  const membership = await medplum.post(
     `admin/projects/${project.id}/invite`,
     inviteRequest
-  );
+  ) as ProjectMembership;
+
+  // Assign RBAC roles if provided
+  const practitionerId = membership.profile?.reference?.split('/')[1];
+  if (practitionerId && values.rbacRoles && values.rbacRoles.length > 0) {
+    for (const role of values.rbacRoles) {
+      try {
+        await assignRoleToUser(medplum, practitionerId, role.roleCode);
+      } catch (error) {
+        console.error(`Error assigning role ${role.roleCode}:`, error);
+      }
+    }
+  }
 
   return membership;
+}
+
+/**
+ * Create a new practitioner account and return activation URL
+ *
+ * This is a workaround for development environments without email configured.
+ * Creates the account normally but also generates a password reset URL that
+ * serves as the activation link.
+ *
+ * @param medplum - Medplum client
+ * @param values - Account form values
+ * @returns Object containing ProjectMembership and activation URL
+ *
+ * @throws Error if email is missing or API call fails
+ */
+export async function createPractitionerWithActivationUrl(
+  medplum: MedplumClient,
+  values: AccountFormValues
+): Promise<{ membership: ProjectMembership; activationUrl?: string }> {
+  // Create the practitioner account first
+  const membership = await createPractitioner(medplum, values);
+
+  // Try to generate activation URL via password reset endpoint
+  try {
+    // Request password reset to get activation link
+    const response = await medplum.post('auth/resetpassword', {
+      email: values.email,
+    });
+
+    // The response should be an OperationOutcome, but if email is not configured,
+    // we need to construct the URL manually using the User resource
+    if (response.resourceType === 'OperationOutcome') {
+      // Email failed, try to get User resource and construct URL manually
+      const user = await medplum.searchOne('User', {
+        email: values.email,
+      });
+
+      if (user && user.id) {
+        // Generate a setpassword URL (user will need to use "forgot password" flow)
+        const baseUrl = window.location.origin;
+        return {
+          membership,
+          activationUrl: `${baseUrl}/setpassword/${user.id}`,
+        };
+      }
+    }
+
+    // If we got here, email might have been sent successfully
+    return { membership };
+  } catch (error) {
+    // If password reset fails, just return the membership
+    // The UI can display a message that email configuration is needed
+    console.warn('Could not generate activation URL:', error);
+    return { membership };
+  }
 }
 
 /**
@@ -180,7 +245,7 @@ export async function deactivatePractitioner(
 
   // Prevent self-deactivation
   const currentUser = medplum.getProfile();
-  if (currentUser && currentUser.id === practitionerId) {
+  if (currentUser?.id === practitionerId) {
     throw new Error('Cannot deactivate your own account');
   }
 
@@ -253,3 +318,46 @@ export async function reactivatePractitioner(
 
   return updated;
 }
+
+/**
+ * Update practitioner role assignments
+ * @param medplum - MedplumClient instance
+ * @param practitionerId - Practitioner resource ID
+ * @param newRoles - New role assignments
+ */
+export async function updatePractitionerRoles(
+  medplum: MedplumClient,
+  practitionerId: string,
+  newRoles: { roleId: string; roleName: string; roleCode: string }[]
+): Promise<void> {
+  // Get existing roles (PractitionerRole resources with role-assignment tag)
+  const existingPractitionerRoles = await getUserRoles(medplum, practitionerId);
+  const existingRoleCodes = existingPractitionerRoles
+    .map((pr) => pr.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-assignment')?.code)
+    .filter((code): code is string => !!code);
+  const newRoleCodes = newRoles.map((r) => r.roleCode);
+
+  // Remove roles that are no longer assigned
+  for (const practitionerRole of existingPractitionerRoles) {
+    const roleCode = practitionerRole.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-assignment')?.code;
+    if (roleCode && !newRoleCodes.includes(roleCode) && practitionerRole.id) {
+      try {
+        await removeRoleFromUser(medplum, practitionerRole.id);
+      } catch (error) {
+        console.error(`Error removing role ${roleCode}:`, error);
+      }
+    }
+  }
+
+  // Add new roles
+  for (const role of newRoles) {
+    if (!existingRoleCodes.includes(role.roleCode)) {
+      try {
+        await assignRoleToUser(medplum, practitionerId, role.roleCode);
+      } catch (error) {
+        console.error(`Error assigning role ${role.roleCode}:`, error);
+      }
+    }
+  }
+}
+

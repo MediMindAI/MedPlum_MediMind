@@ -12,7 +12,7 @@ import type { Language } from '../../hooks/useTranslation';
 export function LanguageSelector(): JSX.Element {
   const { lang, setLang } = useTranslation();
 
-  const languages: Array<{ code: Language; label: string }> = [
+  const languages: { code: Language; label: string }[] = [
     { code: 'ka', label: 'ქარ' },
     { code: 'en', label: 'ENG' },
     { code: 'ru', label: 'РУС' },

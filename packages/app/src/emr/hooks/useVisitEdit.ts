@@ -21,6 +21,9 @@ import { getIdentifierValue, getExtensionValue } from '../services/fhirHelpers';
  *   onCancel
  * );
  * ```
+ * @param visitId
+ * @param onSuccess
+ * @param onCancel
  */
 export function useVisitEdit(
   visitId: string | null,
@@ -91,9 +94,9 @@ export function useVisitEdit(
 
     validate: {
       visitDate: (value) => {
-        if (!value) return 'Visit date is required';
+        if (!value) {return 'Visit date is required';}
         const date = new Date(value);
-        if (date > new Date()) return 'Visit date cannot be in future';
+        if (date > new Date()) {return 'Visit date cannot be in future';}
         return null;
       },
       registrationType: (value) => !value ? 'Registration type is required' : null,
@@ -227,9 +230,10 @@ export function useVisitEdit(
 
   /**
    * Handle form submission
+   * @param values
    */
   const handleSave = async (values: VisitFormValues) => {
-    if (!visitId) return;
+    if (!visitId) {return;}
 
     setLoading(true);
     setError(null);
@@ -249,7 +253,7 @@ export function useVisitEdit(
 
       // Update identifiers
       if (values.stationaryNumber) {
-        if (!encounter.identifier) encounter.identifier = [];
+        if (!encounter.identifier) {encounter.identifier = [];}
         const stationaryIdx = encounter.identifier.findIndex(
           id => id.system === 'http://medimind.ge/identifiers/visit-registration'
         );
@@ -264,7 +268,7 @@ export function useVisitEdit(
       }
 
       if (values.ambulatoryNumber) {
-        if (!encounter.identifier) encounter.identifier = [];
+        if (!encounter.identifier) {encounter.identifier = [];}
         const ambulatoryIdx = encounter.identifier.findIndex(
           id => id.system === 'http://medimind.ge/identifiers/ambulatory-registration'
         );
@@ -279,7 +283,7 @@ export function useVisitEdit(
       }
 
       // Update extensions
-      if (!encounter.extension) encounter.extension = [];
+      if (!encounter.extension) {encounter.extension = [];}
 
       const extensionMap: Record<string, string | undefined> = {
         'http://medimind.ge/fhir/StructureDefinition/status-type': values.statusType,

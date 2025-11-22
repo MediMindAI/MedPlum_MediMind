@@ -1,15 +1,11 @@
-/**
- * Samples Tab Component
- *
- * Main tab component for managing biological sample types.
- * Combines inline form, table, and deletion modal.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { Box, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
-import { SpecimenDefinition } from '@medplum/fhirtypes';
+import type { SpecimenDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useSamples } from '../../../hooks/useSamples';
 import { createSample, updateSample, deleteSample } from '../../../services/sampleService';

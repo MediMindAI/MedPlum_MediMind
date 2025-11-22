@@ -1,9 +1,5 @@
-/**
- * AccountForm Component
- *
- * Responsive form for creating/editing practitioner accounts
- * Uses mobile-first Grid layout with Mantine form validation
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { Grid, TextInput, Select, Button, Stack, Box, Group, Text, ActionIcon, Badge, Alert } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
@@ -11,8 +7,8 @@ import { IconPlus, IconTrash, IconAlertTriangle } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAccountForm } from '../../hooks/useAccountForm';
 import type { AccountFormValues, RoleAssignment } from '../../types/account-management';
-import { RoleSelector } from './RoleSelector';
 import { SpecialtySelect } from './SpecialtySelect';
+import { RoleAssignmentPanel } from '../role-management/RoleAssignmentPanel';
 import accountRolesData from '../../translations/account-roles.json';
 
 interface AccountFormProps {
@@ -28,20 +24,22 @@ interface AccountFormProps {
  * - Mobile-first responsive Grid (base: 12, md: 6)
  * - size="md" inputs (44px touch targets)
  * - Mantine form validation
- * - Multi-role support with RoleSelector and SpecialtySelect
+ * - Multi-role support with SpecialtySelect
  * - Backward compatible with single role
  * - Multilingual support (ka/en/ru)
  *
- * @param onSubmit - Callback for form submission
- * @param initialValues - Optional initial values for editing
- * @param loading - Show loading state during submission
+ * @param props - Component props
+ * @param props.onSubmit - Callback for form submission
+ * @param props.initialValues - Optional initial values for editing
+ * @param props.loading - Show loading state during submission
+ * @returns Account form component
  */
 export function AccountForm({ onSubmit, initialValues, loading }: AccountFormProps): JSX.Element {
   const { t, lang } = useTranslation();
   const { form } = useAccountForm(initialValues);
 
   // Handler for adding a new role
-  const handleAddRole = () => {
+  const handleAddRole = (): void => {
     const currentRoles = form.values.roles || [];
     form.setFieldValue('roles', [
       ...currentRoles,
@@ -56,7 +54,7 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
   };
 
   // Handler for removing a role
-  const handleRemoveRole = (index: number) => {
+  const handleRemoveRole = (index: number): void => {
     const currentRoles = form.values.roles || [];
     form.setFieldValue(
       'roles',
@@ -65,7 +63,7 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
   };
 
   // Handler for updating a specific role field
-  const handleRoleChange = (index: number, field: keyof RoleAssignment, value: any) => {
+  const handleRoleChange = (index: number, field: keyof RoleAssignment, value: any): void => {
     const currentRoles = form.values.roles || [];
     const updatedRoles = [...currentRoles];
     updatedRoles[index] = { ...updatedRoles[index], [field]: value };
@@ -87,7 +85,7 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
   ];
 
   // Check if editing an inactive account
-  const isInactive = initialValues && initialValues.active === false;
+  const isInactive = initialValues?.active === false;
 
   return (
     <form onSubmit={form.onSubmit(onSubmit)}>
@@ -217,9 +215,9 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
         {/* Multi-Role Assignment Section */}
         <Box
           style={{
-            background: '#f8f9fa',
+            background: 'var(--emr-section-header-bg)',
             padding: '16px',
-            borderRadius: '8px',
+            borderRadius: 'var(--emr-border-radius-lg)',
             marginTop: '8px',
           }}
         >
@@ -248,10 +246,10 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
                 <Box
                   key={index}
                   style={{
-                    background: 'white',
+                    background: 'var(--emr-text-inverse)',
                     padding: '16px',
-                    borderRadius: '8px',
-                    border: '1px solid #dee2e6',
+                    borderRadius: 'var(--emr-border-radius-lg)',
+                    border: '1px solid var(--emr-gray-200)',
                   }}
                 >
                   <Group justify="space-between" mb="sm">
@@ -299,6 +297,25 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
               {t('accountManagement.form.noRoles')}
             </Text>
           )}
+        </Box>
+
+        {/* RBAC Role Assignment (AccessPolicy-based) */}
+        <Box
+          style={{
+            background: 'var(--emr-section-header-bg)',
+            padding: '16px',
+            borderRadius: 'var(--emr-border-radius-lg)',
+            marginTop: '8px',
+          }}
+        >
+          <RoleAssignmentPanel
+            practitionerId={initialValues?.id}
+            value={
+              form.values.rbacRoles ||
+              ([] as { roleId: string; roleName: string; roleCode: string }[])
+            }
+            onChange={(roles) => form.setFieldValue('rbacRoles', roles)}
+          />
         </Box>
 
         {/* Submit Button */}

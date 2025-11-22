@@ -3,7 +3,7 @@
 
 import { Modal, Box, Title, Group, ActionIcon } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export interface EMRModalProps {
   /** Whether the modal is opened */
@@ -42,6 +42,19 @@ export interface EMRModalProps {
  * - Consistent styling across the app
  * - Customizable size and behavior
  *
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.title
+ * @param root0.children
+ * @param root0.size
+ * @param root0.withCloseButton
+ * @param root0.closeOnClickOutside
+ * @param root0.closeOnEscape
+ * @param root0.padding
+ * @param root0.maxHeight
+ * @param root0.zIndex
+ * @param root0.styles
  * @example
  * ```tsx
  * <EMRModal

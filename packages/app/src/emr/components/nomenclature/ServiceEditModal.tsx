@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Modal, Text, Stack, Loader } from '@mantine/core';
-import { ActivityDefinition } from '@medplum/fhirtypes';
+import type { ActivityDefinition } from '@medplum/fhirtypes';
 import { useMedplum } from '@medplum/react-hooks';
 import { useEffect, useState } from 'react';
 import { notifications } from '@mantine/notifications';
@@ -35,6 +35,11 @@ interface ServiceEditModalProps {
  * - Shows error notification if fetch fails
  *
  * Based on PatientEditModal pattern for consistency.
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.service
+ * @param root0.onSuccess
  */
 export function ServiceEditModal({ opened, onClose, service, onSuccess }: ServiceEditModalProps) {
   const medplum = useMedplum();
@@ -50,7 +55,7 @@ export function ServiceEditModal({ opened, onClose, service, onSuccess }: Servic
   }, [opened, service?.id]);
 
   const loadService = async () => {
-    if (!service?.id) return;
+    if (!service?.id) {return;}
 
     try {
       setLoading(true);
@@ -73,6 +78,7 @@ export function ServiceEditModal({ opened, onClose, service, onSuccess }: Servic
    * Handle successful service update
    * - Close modal
    * - Call success callback to refresh table
+   * @param savedService
    */
   const handleSuccess = (savedService: ActivityDefinition) => {
     onClose();

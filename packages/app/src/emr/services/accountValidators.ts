@@ -1,9 +1,5 @@
-/**
- * Account Management Validators
- *
- * Validation utilities for account management forms and data.
- * Includes email validation (RFC 5322), phone validation (E.164), and date validation.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import type { ValidationResult } from '../types/account-management';
 
@@ -141,6 +137,7 @@ export function validatePhone(phoneNumber: string, countryCode?: string): Valida
 /**
  * Get country name from country code
  * Used for better error messages
+ * @param countryCode
  */
 function getCountryName(countryCode: string): string {
   const countries: Record<string, string> = {
@@ -356,6 +353,13 @@ export function validateStaffId(staffId: string): ValidationResult {
  * Comprehensive validation for entire account form
  *
  * @param values - AccountFormValues to validate
+ * @param values.firstName
+ * @param values.lastName
+ * @param values.email
+ * @param values.phoneNumber
+ * @param values.birthDate
+ * @param values.hireDate
+ * @param values.staffId
  * @returns Map of field names to validation errors
  */
 export function validateAccountForm(values: {

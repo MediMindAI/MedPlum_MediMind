@@ -14,6 +14,11 @@ interface RelationshipSelectProps {
 /**
  * Relationship type selector for representatives/guardians
  * Based on FHIR v3-RoleCode system
+ * @param root0
+ * @param root0.value
+ * @param root0.onChange
+ * @param root0.error
+ * @param root0.required
  */
 export function RelationshipSelect({ value, onChange, error, required }: RelationshipSelectProps) {
   const { t } = useTranslation();

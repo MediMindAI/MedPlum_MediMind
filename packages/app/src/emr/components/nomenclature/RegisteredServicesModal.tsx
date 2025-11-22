@@ -30,6 +30,11 @@ interface RegisteredServicesModalProps {
  * 4. Attributes (ატრიბუტები) - Color coding, online booking, equipment
  *
  * Following pattern from VisitEditModal for consistency
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.serviceId
+ * @param root0.onSuccess
  */
 export function RegisteredServicesModal({
   opened,
@@ -74,6 +79,7 @@ export function RegisteredServicesModal({
 
   /**
    * Handle save - called by individual tabs
+   * @param updatedService
    */
   const handleSave = async (updatedService: ActivityDefinition) => {
     try {

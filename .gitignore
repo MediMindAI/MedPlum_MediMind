@@ -99,3 +99,4 @@ playwright/.cache/
 
 # Cursor
 .cursor/
+.playwright-mcp/

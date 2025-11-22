@@ -1,13 +1,16 @@
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 import { useState, useEffect, useCallback } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
-import { PractitionerRole } from '@medplum/fhirtypes';
+import type { PractitionerRole } from '@medplum/fhirtypes';
+import type {
+  CreatePractitionerRoleParams,
+  UpdatePractitionerRoleParams} from '../services/roleService';
 import {
   createPractitionerRole,
   getPractitionerRoles,
   updatePractitionerRole,
-  deletePractitionerRole,
-  CreatePractitionerRoleParams,
-  UpdatePractitionerRoleParams,
+  deletePractitionerRole
 } from '../services/roleService';
 
 /**

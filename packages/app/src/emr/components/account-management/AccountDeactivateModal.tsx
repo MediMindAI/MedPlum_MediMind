@@ -1,15 +1,11 @@
-/**
- * Account Deactivate Modal Component (T072)
- *
- * Confirmation dialog for deactivating/reactivating practitioner accounts
- * with loading states and error handling
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { Modal, Button, Text, Stack, Alert, Group } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
-import { Practitioner } from '@medplum/fhirtypes';
+import type { Practitioner } from '@medplum/fhirtypes';
 import { useTranslation } from '../../hooks/useTranslation';
 import { deactivatePractitioner, reactivatePractitioner } from '../../services/accountService';
 import { getPractitionerName } from '../../services/accountHelpers';
@@ -34,6 +30,12 @@ export interface AccountDeactivateModalProps {
  * Displays practitioner name, shows appropriate action button based on current status,
  * and provides feedback for loading states and errors.
  *
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.practitioner
+ * @param root0.onSuccess
+ * @param root0.reason
  * @example
  * ```tsx
  * <AccountDeactivateModal

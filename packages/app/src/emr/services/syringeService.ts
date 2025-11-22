@@ -1,16 +1,14 @@
-/**
- * Syringe/Container Service
- *
- * FHIR CRUD operations for laboratory containers and tubes (DeviceDefinition resources).
- * Maps SyringeFormValues to/from FHIR DeviceDefinition.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { MedplumClient } from '@medplum/core';
-import { DeviceDefinition } from '@medplum/fhirtypes';
-import { SyringeFormValues } from '../types/laboratory';
+import type { MedplumClient } from '@medplum/core';
+import type { DeviceDefinition } from '@medplum/fhirtypes';
+import type { SyringeFormValues } from '../types/laboratory';
 
 /**
  * Create a new syringe/container
+ * @param medplum
+ * @param values
  */
 export async function createSyringe(
   medplum: MedplumClient,
@@ -65,6 +63,9 @@ export async function createSyringe(
 
 /**
  * Update an existing syringe/container
+ * @param medplum
+ * @param id
+ * @param values
  */
 export async function updateSyringe(
   medplum: MedplumClient,
@@ -120,6 +121,12 @@ export async function updateSyringe(
 
 /**
  * Search for syringes/containers
+ * @param medplum
+ * @param options
+ * @param options.name
+ * @param options.status
+ * @param options.count
+ * @param options.offset
  */
 export async function searchSyringes(
   medplum: MedplumClient,
@@ -160,6 +167,8 @@ export async function searchSyringes(
 
 /**
  * Soft delete a syringe (set status to 'retired')
+ * @param medplum
+ * @param id
  */
 export async function deleteSyringe(
   medplum: MedplumClient,
@@ -174,6 +183,8 @@ export async function deleteSyringe(
 
 /**
  * Hard delete a syringe (permanently remove)
+ * @param medplum
+ * @param id
  */
 export async function hardDeleteSyringe(
   medplum: MedplumClient,
@@ -184,6 +195,7 @@ export async function hardDeleteSyringe(
 
 /**
  * Extract form values from a DeviceDefinition resource
+ * @param resource
  */
 export function extractSyringeFormValues(resource: DeviceDefinition): SyringeFormValues {
   const colorProp = resource.property?.find((p) => p.type?.text === 'color');

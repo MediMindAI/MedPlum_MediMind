@@ -6,7 +6,7 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { MedplumProvider } from '@medplum/react-hooks';
 import { MantineProvider } from '@mantine/core';
 import { MockClient } from '@medplum/mock';
-import { Patient, Encounter, Identifier, HumanName, Bundle } from '@medplum/fhirtypes';
+import type { Patient, Encounter, Identifier, HumanName, Bundle } from '@medplum/fhirtypes';
 import { PatientHistoryView } from './PatientHistoryView';
 
 describe('PatientHistoryView', () => {

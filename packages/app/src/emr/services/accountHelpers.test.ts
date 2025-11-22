@@ -1,8 +1,7 @@
-/**
- * @jest-environment jsdom
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { Practitioner, PractitionerRole } from '@medplum/fhirtypes';
+import type { Practitioner, PractitionerRole } from '@medplum/fhirtypes';
 import {
   getPractitionerName,
   getTelecomValue,

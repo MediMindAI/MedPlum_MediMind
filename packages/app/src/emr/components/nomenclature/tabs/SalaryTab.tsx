@@ -50,6 +50,9 @@ interface PerformerEntry {
  * - Secondary/assistant personnel dropdowns
  * - Other salary components
  * - Service salary description
+ * @param root0
+ * @param root0.service
+ * @param root0.onSave
  */
 export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
   const { t } = useTranslation();
@@ -67,7 +70,7 @@ export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
   const [selectedExpectedPersonnel, setSelectedExpectedPersonnel] = useState<string | null>(null);
 
   // State for personnel list (პერსონალი section)
-  const [personnelList, setPersonnelList] = useState<Array<{ name: string; isChecked: boolean }>>([]);
+  const [personnelList, setPersonnelList] = useState<{ name: string; isChecked: boolean }[]>([]);
 
   // State for other salaries (სხვა ხელფასები)
   const [otherSalaries, setOtherSalaries] = useState<string[]>([]);

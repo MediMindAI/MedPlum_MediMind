@@ -1,14 +1,11 @@
-/**
- * Tests for useAccountList Hook
- *
- * Tests account list fetching, pagination, and search functionality
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { MantineProvider } from '@mantine/core';
 import { MedplumProvider } from '@medplum/react-hooks';
 import { MockClient } from '@medplum/mock';
-import { Practitioner } from '@medplum/fhirtypes';
+import type { Practitioner } from '@medplum/fhirtypes';
 import { useAccountList } from './useAccountList';
 
 describe('useAccountList (T024)', () => {

@@ -4,7 +4,7 @@
 import { Grid, Select, TextInput, Stack, Switch, Alert, LoadingOverlay, Box } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMedplum } from '@medplum/react-hooks';
-import { Patient } from '@medplum/fhirtypes';
+import type { Patient } from '@medplum/fhirtypes';
 import { useState } from 'react';
 import { IconUser, IconPhone, IconFileText, IconUsers, IconAlertTriangle } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -15,7 +15,8 @@ import { CollapsibleSection } from './CollapsibleSection';
 import { validateGeorgianPersonalId, validateEmail } from '../../services/validators';
 import { notifications } from '@mantine/notifications';
 import { EMRDatePicker } from '../common/EMRDatePicker';
-import { createEncounterForPatient, VisitType } from '../../services/encounterService';
+import type { VisitType } from '../../services/encounterService';
+import { createEncounterForPatient } from '../../services/encounterService';
 import { generateUnknownPatientName, generateUnknownPatientIdentifier } from '../../services/unknownPatientService';
 
 interface PatientFormProps {
@@ -28,6 +29,10 @@ interface PatientFormProps {
 /**
  * Patient registration form with modern dropdowns
  * Includes all essential patient information fields
+ * @param root0
+ * @param root0.onSuccess
+ * @param root0.onSaveAndContinue
+ * @param root0.onSaveAndView
  */
 export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: PatientFormProps) {
   const { t } = useTranslation();
@@ -75,27 +80,27 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
     },
     validate: {
       personalId: (value) => {
-        if (!value) return null;
+        if (!value) {return null;}
         const result = validateGeorgianPersonalId(value);
         return result.isValid ? null : result.error;
       },
       firstName: (value, values) => {
         // Skip validation for unknown patients
-        if (values.isUnknownPatient) return null;
+        if (values.isUnknownPatient) {return null;}
         return !value ? t('registration.validation.required') || 'Required' : null;
       },
       lastName: (value, values) => {
         // Skip validation for unknown patients
-        if (values.isUnknownPatient) return null;
+        if (values.isUnknownPatient) {return null;}
         return !value ? t('registration.validation.required') || 'Required' : null;
       },
       gender: (value, values) => {
         // Skip validation for unknown patients
-        if (values.isUnknownPatient) return null;
+        if (values.isUnknownPatient) {return null;}
         return !value ? t('registration.validation.required') || 'Required' : null;
       },
       email: (value) => {
-        if (!value) return null;
+        if (!value) {return null;}
         const result = validateEmail(value);
         return result.isValid ? null : result.error;
       },
@@ -152,7 +157,7 @@ export function PatientForm({ onSuccess, onSaveAndContinue, onSaveAndView }: Pat
       setIsSubmitting(true);
 
       // Build identifiers array
-      const identifiers: Array<{ system: string; value: string }> = [];
+      const identifiers: { system: string; value: string }[] = [];
 
       // Add temporary identifier for unknown patients
       if (values.isUnknownPatient && values.unknownPatientIdentifier) {

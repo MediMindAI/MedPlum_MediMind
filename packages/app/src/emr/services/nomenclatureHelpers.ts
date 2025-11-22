@@ -7,6 +7,8 @@ import { NOMENCLATURE_EXTENSION_URLS, NOMENCLATURE_IDENTIFIER_SYSTEMS } from '..
 
 /**
  * Extract identifier value by system URL
+ * @param resource
+ * @param system
  */
 export function getIdentifierValue(
   resource: { identifier?: Identifier[] } | undefined,
@@ -17,6 +19,8 @@ export function getIdentifierValue(
 
 /**
  * Extract string extension value by URL
+ * @param resource
+ * @param url
  */
 export function getExtensionStringValue(
   resource: { extension?: Extension[] } | undefined,
@@ -27,20 +31,24 @@ export function getExtensionStringValue(
 
 /**
  * Extract number extension value by URL
+ * @param resource
+ * @param url
  */
 export function getExtensionNumberValue(
   resource: { extension?: Extension[] } | undefined,
   url: string
 ): number | undefined {
   const ext = resource?.extension?.find((e) => e.url === url);
-  if (ext?.valueInteger !== undefined) return ext.valueInteger;
-  if (ext?.valueDecimal !== undefined) return ext.valueDecimal;
-  if (ext?.valueMoney?.value !== undefined) return ext.valueMoney.value;
+  if (ext?.valueInteger !== undefined) {return ext.valueInteger;}
+  if (ext?.valueDecimal !== undefined) {return ext.valueDecimal;}
+  if (ext?.valueMoney?.value !== undefined) {return ext.valueMoney.value;}
   return undefined;
 }
 
 /**
  * Extract boolean extension value by URL
+ * @param resource
+ * @param url
  */
 export function getExtensionBooleanValue(
   resource: { extension?: Extension[] } | undefined,
@@ -51,13 +59,15 @@ export function getExtensionBooleanValue(
 
 /**
  * Extract string array extension value by URL
+ * @param resource
+ * @param url
  */
 export function getExtensionStringArrayValue(
   resource: { extension?: Extension[] } | undefined,
   url: string
 ): string[] {
   const ext = resource?.extension?.find((e) => e.url === url);
-  if (!ext) return [];
+  if (!ext) {return [];}
 
   // Handle array of valueString
   if (Array.isArray(ext.extension)) {
@@ -74,6 +84,8 @@ export function getExtensionStringArrayValue(
 
 /**
  * Extract CodeableConcept code value by URL
+ * @param resource
+ * @param url
  */
 export function getExtensionCodeableConceptValue(
   resource: { extension?: Extension[] } | undefined,
@@ -85,6 +97,7 @@ export function getExtensionCodeableConceptValue(
 
 /**
  * Extract service code from ActivityDefinition identifier
+ * @param activity
  */
 export function getServiceCode(activity: ActivityDefinition): string {
   return getIdentifierValue(activity, NOMENCLATURE_IDENTIFIER_SYSTEMS.SERVICE_CODE);
@@ -92,6 +105,7 @@ export function getServiceCode(activity: ActivityDefinition): string {
 
 /**
  * Extract service name from ActivityDefinition title
+ * @param activity
  */
 export function getServiceName(activity: ActivityDefinition): string {
   return activity.title || '';
@@ -99,11 +113,12 @@ export function getServiceName(activity: ActivityDefinition): string {
 
 /**
  * Extract service group from ActivityDefinition topic
+ * @param activity
  */
 export function getServiceGroup(activity: ActivityDefinition): string {
   // Try CodeableConcept code first (preferred format)
   const code = activity.topic?.[0]?.coding?.[0]?.code;
-  if (code) return code;
+  if (code) {return code;}
 
   // Fallback to plain text (imported data format)
   return activity.topic?.[0]?.text || '';
@@ -111,6 +126,7 @@ export function getServiceGroup(activity: ActivityDefinition): string {
 
 /**
  * Extract service subgroup from ActivityDefinition extension
+ * @param activity
  */
 export function getServiceSubgroup(activity: ActivityDefinition): string {
   return getExtensionCodeableConceptValue(activity, NOMENCLATURE_EXTENSION_URLS.SUBGROUP);
@@ -118,11 +134,12 @@ export function getServiceSubgroup(activity: ActivityDefinition): string {
 
 /**
  * Extract service type from ActivityDefinition extension
+ * @param activity
  */
 export function getServiceType(activity: ActivityDefinition): string {
   // Try CodeableConcept first (preferred format)
   const code = getExtensionCodeableConceptValue(activity, NOMENCLATURE_EXTENSION_URLS.SERVICE_TYPE);
-  if (code) return code;
+  if (code) {return code;}
 
   // Fallback to valueString (imported data format)
   return getExtensionStringValue(activity, NOMENCLATURE_EXTENSION_URLS.SERVICE_TYPE);
@@ -130,6 +147,7 @@ export function getServiceType(activity: ActivityDefinition): string {
 
 /**
  * Extract service category from ActivityDefinition extension
+ * @param activity
  */
 export function getServiceCategory(activity: ActivityDefinition): string {
   return getExtensionCodeableConceptValue(activity, NOMENCLATURE_EXTENSION_URLS.SERVICE_CATEGORY);
@@ -137,6 +155,7 @@ export function getServiceCategory(activity: ActivityDefinition): string {
 
 /**
  * Extract service base price from ActivityDefinition extension
+ * @param activity
  */
 export function getServicePrice(activity: ActivityDefinition): number | undefined {
   return getExtensionNumberValue(activity, NOMENCLATURE_EXTENSION_URLS.BASE_PRICE);
@@ -144,6 +163,7 @@ export function getServicePrice(activity: ActivityDefinition): number | undefine
 
 /**
  * Extract total amount from ActivityDefinition extension
+ * @param activity
  */
 export function getTotalAmount(activity: ActivityDefinition): number | undefined {
   return getExtensionNumberValue(activity, NOMENCLATURE_EXTENSION_URLS.TOTAL_AMOUNT);
@@ -151,6 +171,7 @@ export function getTotalAmount(activity: ActivityDefinition): number | undefined
 
 /**
  * Extract calculator header/count from ActivityDefinition extension
+ * @param activity
  */
 export function getCalHed(activity: ActivityDefinition): number | undefined {
   return getExtensionNumberValue(activity, NOMENCLATURE_EXTENSION_URLS.CAL_HED);
@@ -158,6 +179,7 @@ export function getCalHed(activity: ActivityDefinition): number | undefined {
 
 /**
  * Extract printable flag from ActivityDefinition extension
+ * @param activity
  */
 export function getPrintable(activity: ActivityDefinition): boolean {
   return getExtensionBooleanValue(activity, NOMENCLATURE_EXTENSION_URLS.PRINTABLE);
@@ -165,6 +187,7 @@ export function getPrintable(activity: ActivityDefinition): boolean {
 
 /**
  * Extract item get price from ActivityDefinition extension
+ * @param activity
  */
 export function getItemGetPrice(activity: ActivityDefinition): number | undefined {
   return getExtensionNumberValue(activity, NOMENCLATURE_EXTENSION_URLS.ITEM_GET_PRICE);
@@ -172,6 +195,7 @@ export function getItemGetPrice(activity: ActivityDefinition): number | undefine
 
 /**
  * Extract assigned departments from ActivityDefinition extension
+ * @param activity
  */
 export function getDepartments(activity: ActivityDefinition): string[] {
   return getExtensionStringArrayValue(activity, NOMENCLATURE_EXTENSION_URLS.ASSIGNED_DEPARTMENTS);
@@ -179,6 +203,8 @@ export function getDepartments(activity: ActivityDefinition): string[] {
 
 /**
  * Get display text for service group code
+ * @param groupCode
+ * @param lang
  */
 export function getServiceGroupDisplayText(groupCode: string, lang: string): string {
   // TODO: Load from translations/service-groups.json
@@ -188,6 +214,8 @@ export function getServiceGroupDisplayText(groupCode: string, lang: string): str
 
 /**
  * Get display text for service type code
+ * @param typeCode
+ * @param lang
  */
 export function getServiceTypeDisplayText(typeCode: string, lang: string): string {
   // TODO: Load from translations/service-types.json
@@ -197,6 +225,8 @@ export function getServiceTypeDisplayText(typeCode: string, lang: string): strin
 
 /**
  * Map ActivityDefinition to ServiceTableRow for display
+ * @param activity
+ * @param lang
  */
 export function mapActivityDefinitionToTableRow(
   activity: ActivityDefinition,
@@ -223,6 +253,8 @@ export function mapActivityDefinitionToTableRow(
 
 /**
  * Create CodeableConcept from code and system
+ * @param code
+ * @param system
  */
 function createCodeableConcept(code: string, system: string): CodeableConcept {
   return {
@@ -237,6 +269,9 @@ function createCodeableConcept(code: string, system: string): CodeableConcept {
 
 /**
  * Create Extension with valueCodeableConcept
+ * @param url
+ * @param code
+ * @param system
  */
 function createCodeableConceptExtension(url: string, code: string, system: string): Extension {
   return {
@@ -247,6 +282,8 @@ function createCodeableConceptExtension(url: string, code: string, system: strin
 
 /**
  * Create Extension with valueInteger
+ * @param url
+ * @param value
  */
 function createIntegerExtension(url: string, value: number): Extension {
   return {
@@ -257,6 +294,8 @@ function createIntegerExtension(url: string, value: number): Extension {
 
 /**
  * Create Extension with valueBoolean
+ * @param url
+ * @param value
  */
 function createBooleanExtension(url: string, value: boolean): Extension {
   return {
@@ -268,6 +307,8 @@ function createBooleanExtension(url: string, value: boolean): Extension {
 /**
  * Create Extension with valueMoney
  * Using valueDecimal instead for price values since GEL is not a standard ISO 4217 currency code
+ * @param url
+ * @param value
  */
 function createMoneyExtension(url: string, value: number): Extension {
   return {
@@ -278,6 +319,8 @@ function createMoneyExtension(url: string, value: number): Extension {
 
 /**
  * Create Extension with array of valueString
+ * @param url
+ * @param values
  */
 function createStringArrayExtension(url: string, values: string[]): Extension {
   if (values.length === 0) {
@@ -298,6 +341,7 @@ function createStringArrayExtension(url: string, values: string[]): Extension {
 
 /**
  * Create new ActivityDefinition from ServiceFormValues
+ * @param values
  */
 export function createActivityDefinition(values: ServiceFormValues): ActivityDefinition {
   const extensions: Extension[] = [];
@@ -380,6 +424,8 @@ export function createActivityDefinition(values: ServiceFormValues): ActivityDef
 
 /**
  * Update existing ActivityDefinition with ServiceFormValues
+ * @param activity
+ * @param values
  */
 export function updateActivityDefinition(
   activity: ActivityDefinition,
@@ -465,6 +511,7 @@ export function updateActivityDefinition(
 
 /**
  * Extract ServiceFormValues from ActivityDefinition for editing
+ * @param activity
  */
 export function extractServiceFormValues(activity: ActivityDefinition): ServiceFormValues {
   return {

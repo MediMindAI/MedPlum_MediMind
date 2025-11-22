@@ -1,0 +1,74 @@
+{
+  "patientBindings": {
+    "name": {
+      "ka": "მთლიანი სახელი",
+      "en": "Full Name",
+      "ru": "Полное имя"
+    },
+    "firstName": {
+      "ka": "სახელი",
+      "en": "First Name",
+      "ru": "Имя"
+    },
+    "lastName": {
+      "ka": "გვარი",
+      "en": "Last Name",
+      "ru": "Фамилия"
+    },
+    "fatherName": {
+      "ka": "მამის სახელი",
+      "en": "Father's Name",
+      "ru": "Отчество"
+    },
+    "dob": {
+      "ka": "დაბადების თარიღი",
+      "en": "Date of Birth",
+      "ru": "Дата рождения"
+    },
+    "age": {
+      "ka": "ასაკი",
+      "en": "Age",
+      "ru": "Возраст"
+    },
+    "gender": {
+      "ka": "სქესი",
+      "en": "Gender",
+      "ru": "Пол"
+    },
+    "personalId": {
+      "ka": "პირადი ID",
+      "en": "Personal ID",
+      "ru": "Личный номер"
+    },
+    "phone": {
+      "ka": "ტელეფონი",
+      "en": "Phone",
+      "ru": "Телефон"
+    },
+    "email": {
+      "ka": "ელფოსტა",
+      "en": "Email",
+      "ru": "Электронная почта"
+    },
+    "address": {
+      "ka": "მისამართი",
+      "en": "Address",
+      "ru": "Адрес"
+    },
+    "citizenship": {
+      "ka": "მოქალაქეობა",
+      "en": "Citizenship",
+      "ru": "Гражданство"
+    },
+    "workplace": {
+      "ka": "სამუშაო ადგილი",
+      "en": "Workplace",
+      "ru": "Рабочее место"
+    },
+    "registrationNumber": {
+      "ka": "რეგისტრაციის ნომერი",
+      "en": "Registration Number",
+      "ru": "Номер регистрации"
+    }
+  }
+}

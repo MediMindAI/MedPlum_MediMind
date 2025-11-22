@@ -1,16 +1,14 @@
-/**
- * Sample Service
- *
- * FHIR CRUD operations for biological sample types (SpecimenDefinition resources).
- * Maps SampleFormValues to/from FHIR SpecimenDefinition.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { MedplumClient } from '@medplum/core';
-import { SpecimenDefinition } from '@medplum/fhirtypes';
-import { SampleFormValues } from '../types/laboratory';
+import type { MedplumClient } from '@medplum/core';
+import type { SpecimenDefinition } from '@medplum/fhirtypes';
+import type { SampleFormValues } from '../types/laboratory';
 
 /**
  * Create a new sample type
+ * @param medplum
+ * @param values
  */
 export async function createSample(
   medplum: MedplumClient,
@@ -37,6 +35,9 @@ export async function createSample(
 
 /**
  * Update an existing sample type
+ * @param medplum
+ * @param id
+ * @param values
  */
 export async function updateSample(
   medplum: MedplumClient,
@@ -66,6 +67,12 @@ export async function updateSample(
 
 /**
  * Search for sample types
+ * @param medplum
+ * @param options
+ * @param options.name
+ * @param options.status
+ * @param options.count
+ * @param options.offset
  */
 export async function searchSamples(
   medplum: MedplumClient,
@@ -103,6 +110,8 @@ export async function searchSamples(
 
 /**
  * Soft delete a sample type (set status to 'retired')
+ * @param medplum
+ * @param id
  */
 export async function deleteSample(
   medplum: MedplumClient,
@@ -117,6 +126,8 @@ export async function deleteSample(
 
 /**
  * Hard delete a sample type (permanently remove)
+ * @param medplum
+ * @param id
  */
 export async function hardDeleteSample(
   medplum: MedplumClient,
@@ -127,6 +138,7 @@ export async function hardDeleteSample(
 
 /**
  * Extract form values from a SpecimenDefinition resource
+ * @param resource
  */
 export function extractSampleFormValues(
   resource: SpecimenDefinition

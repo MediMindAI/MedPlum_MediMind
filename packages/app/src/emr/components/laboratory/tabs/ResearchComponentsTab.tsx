@@ -1,21 +1,15 @@
-/**
- * Research Components Tab Component
- *
- * Full implementation matching original EMR design with:
- * - 7-field add form (code, GIS code, name, type, unit, department, submit)
- * - 6-field search filters (code, GIS code, parameter search, status, type, unit)
- * - 7-column table with edit/delete actions
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { Box, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
-import { ObservationDefinition } from '@medplum/fhirtypes';
+import type { ObservationDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useResearchComponents } from '../../../hooks/useResearchComponents';
 import { createResearchComponent, updateResearchComponent, deleteResearchComponent } from '../../../services/researchComponentService';
-import { ComponentSearchFilters, ResearchComponentFormValues } from '../../../types/laboratory';
+import type { ComponentSearchFilters, ResearchComponentFormValues } from '../../../types/laboratory';
 import { ComponentEntryForm } from '../research-components/ComponentEntryForm';
 import { ComponentSearchForm } from '../research-components/ComponentSearchForm';
 import { ResearchComponentTable } from '../research-components/ResearchComponentTable';

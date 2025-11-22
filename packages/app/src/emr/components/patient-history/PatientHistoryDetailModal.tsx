@@ -5,7 +5,7 @@ import { Modal, Text, Box, Grid, TextInput, Select, Textarea, Group, Button, Num
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useTranslation } from '../../hooks/useTranslation';
-import { Encounter, Patient } from '@medplum/fhirtypes';
+import type { Encounter, Patient } from '@medplum/fhirtypes';
 import { useMedplum } from '@medplum/react-hooks';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { getIdentifierValue } from '../../services/fhirHelpers';
@@ -149,9 +149,9 @@ export function PatientHistoryDetailModal({
 
   // Helper to extract nested extension values
   const getNestedExtension = (extensions: any[] | undefined, url: string) => {
-    if (!extensions) return undefined;
+    if (!extensions) {return undefined;}
     const ext = extensions.find((e: any) => e.url === url);
-    if (!ext?.extension) return undefined;
+    if (!ext?.extension) {return undefined;}
 
     const result: Record<string, any> = {};
     for (const subExt of ext.extension) {
@@ -162,7 +162,7 @@ export function PatientHistoryDetailModal({
 
   // Fetch encounter and patient data when modal opens
   const fetchData = useCallback(async () => {
-    if (!encounterId || !opened) return;
+    if (!encounterId || !opened) {return;}
 
     setLoading(true);
     try {
@@ -281,7 +281,7 @@ export function PatientHistoryDetailModal({
 
   // Get patient name
   const patientName = useMemo(() => {
-    if (!patient?.name?.[0]) return '';
+    if (!patient?.name?.[0]) {return '';}
     const name = patient.name[0];
     return `${name.given?.join(' ') || ''} ${name.family || ''}`.trim();
   }, [patient]);
@@ -302,8 +302,8 @@ export function PatientHistoryDetailModal({
 
   // Helper function to get display text based on language
   const getDisplayText = (item: { displayKa: string; displayEn: string; displayRu: string }) => {
-    if (lang === 'ka') return item.displayKa;
-    if (lang === 'ru') return item.displayRu;
+    if (lang === 'ka') {return item.displayKa;}
+    if (lang === 'ru') {return item.displayRu;}
     return item.displayEn;
   };
 

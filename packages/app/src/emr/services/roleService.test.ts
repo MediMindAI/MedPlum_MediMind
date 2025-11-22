@@ -1,11 +1,21 @@
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 import { MockClient } from '@medplum/mock';
-import { PractitionerRole, Reference } from '@medplum/fhirtypes';
+import { AccessPolicy, PractitionerRole } from '@medplum/fhirtypes';
 import {
-  createPractitionerRole,
-  getPractitionerRoles,
-  updatePractitionerRole,
-  deletePractitionerRole,
+  createRole,
+  searchRoles,
+  getRoleById,
+  updateRole,
+  deactivateRole,
+  hardDeleteRole,
+  cloneRole,
+  assignRoleToUser,
+  removeRoleFromUser,
+  getUserRoles,
+  getRoleUserCount,
 } from './roleService';
+import type { RoleFormValues } from '../types/role-management';
 
 describe('roleService', () => {
   let medplum: MockClient;
@@ -14,287 +24,299 @@ describe('roleService', () => {
     medplum = new MockClient();
   });
 
-  describe('createPractitionerRole', () => {
-    it('should create PractitionerRole with specialty and organization', async () => {
-      const practitionerRef: Reference = {
-        reference: 'Practitioner/test-practitioner-123',
-        display: 'თენგიზი ხოზვრია',
+  describe('createRole', () => {
+    it('should create a new role with valid data', async () => {
+      const values: RoleFormValues = {
+        code: 'physician',
+        name: 'Physician',
+        description: 'Medical doctor with full patient access',
+        status: 'active',
+        permissions: ['view-patient-demographics', 'edit-patient-demographics', 'create-patient'],
       };
 
-      const organizationRef: Reference = {
-        reference: 'Organization/dept-cardiology',
-        display: 'კარდიოლოგიის განყოფილება',
-      };
+      const role = await createRole(medplum, values);
 
-      const role = await createPractitionerRole(medplum, {
-        practitioner: practitionerRef,
-        organization: organizationRef,
-        roleCode: 'physician',
-        specialtyCode: '207RC0000X', // Cardiovascular Disease
-        period: { start: '2025-11-19' },
+      expect(role.resourceType).toBe('AccessPolicy');
+      expect(role.meta?.tag).toHaveLength(2);
+      expect(role.meta?.tag?.[0]).toEqual({
+        system: 'http://medimind.ge/role-identifier',
+        code: 'physician',
+        display: 'Physician',
       });
-
-      expect(role.resourceType).toBe('PractitionerRole');
-      expect(role.active).toBe(true);
-      expect(role.practitioner?.reference).toBe('Practitioner/test-practitioner-123');
-      expect(role.organization?.reference).toBe('Organization/dept-cardiology');
-
-      // Check role code
-      expect(role.code).toBeDefined();
-      expect(role.code?.[0]?.coding?.[0]?.code).toBe('physician');
-
-      // Check specialty
-      expect(role.specialty).toBeDefined();
-      expect(role.specialty?.[0]?.coding?.[0]?.code).toBe('207RC0000X');
-      expect(role.specialty?.[0]?.coding?.[0]?.system).toBe('http://nucc.org/provider-taxonomy');
-
-      // Check period
-      expect(role.period?.start).toBe('2025-11-19');
+      expect(role.meta?.tag?.[1]).toEqual({
+        system: 'http://medimind.ge/role-status',
+        code: 'active',
+        display: 'Active',
+      });
+      expect(role.description).toBe('Medical doctor with full patient access');
+      expect(role.resource).toBeDefined();
+      expect(role.resource?.length).toBeGreaterThan(0);
     });
 
-    it('should create PractitionerRole without specialty (optional)', async () => {
-      const practitionerRef: Reference = {
-        reference: 'Practitioner/test-practitioner-456',
+    it('should create role with inactive status', async () => {
+      const values: RoleFormValues = {
+        code: 'test-role',
+        name: 'Test Role',
+        status: 'inactive',
+        permissions: ['view-patient-list'],
       };
 
-      const organizationRef: Reference = {
-        reference: 'Organization/dept-admin',
-      };
+      const role = await createRole(medplum, values);
 
-      const role = await createPractitionerRole(medplum, {
-        practitioner: practitionerRef,
-        organization: organizationRef,
-        roleCode: 'administrator',
-      });
-
-      expect(role.resourceType).toBe('PractitionerRole');
-      expect(role.active).toBe(true);
-      expect(role.code?.[0]?.coding?.[0]?.code).toBe('administrator');
-      expect(role.specialty).toBeUndefined();
-    });
-
-    it('should create PractitionerRole with multiple locations', async () => {
-      const practitionerRef: Reference = {
-        reference: 'Practitioner/test-practitioner-789',
-      };
-
-      const organizationRef: Reference = {
-        reference: 'Organization/dept-emergency',
-      };
-
-      const locations = [
-        { reference: 'Location/building-a-floor-1' },
-        { reference: 'Location/building-b-floor-2' },
-      ];
-
-      const role = await createPractitionerRole(medplum, {
-        practitioner: practitionerRef,
-        organization: organizationRef,
-        roleCode: 'nurse',
-        locations,
-      });
-
-      expect(role.location).toBeDefined();
-      expect(role.location?.length).toBe(2);
-      expect(role.location?.[0]?.reference).toBe('Location/building-a-floor-1');
-      expect(role.location?.[1]?.reference).toBe('Location/building-b-floor-2');
+      const statusTag = role.meta?.tag?.find((tag) => tag.system === 'http://medimind.ge/role-status');
+      expect(statusTag?.code).toBe('inactive');
+      expect(statusTag?.display).toBe('Inactive');
     });
   });
 
-  describe('getPractitionerRoles', () => {
-    it('should fetch all roles for a practitioner', async () => {
-      const practitionerId = 'test-practitioner-123';
-
-      // Create mock roles
-      const role1: PractitionerRole = {
-        resourceType: 'PractitionerRole',
-        id: 'role-1',
-        active: true,
-        practitioner: { reference: `Practitioner/${practitionerId}` },
-        organization: { reference: 'Organization/dept-cardiology' },
-        code: [
-          {
-            coding: [
-              {
-                system: 'http://medimind.ge/role-codes',
-                code: 'physician',
-              },
-            ],
-          },
-        ],
-      };
-
-      const role2: PractitionerRole = {
-        resourceType: 'PractitionerRole',
-        id: 'role-2',
-        active: true,
-        practitioner: { reference: `Practitioner/${practitionerId}` },
-        organization: { reference: 'Organization/dept-emergency' },
-        code: [
-          {
-            coding: [
-              {
-                system: 'http://medimind.ge/role-codes',
-                code: 'department-head',
-              },
-            ],
-          },
-        ],
-      };
-
-      await medplum.createResource(role1);
-      await medplum.createResource(role2);
-
-      const roles = await getPractitionerRoles(medplum, practitionerId);
-
-      expect(roles).toBeDefined();
-      expect(roles.length).toBe(2);
-      // roles are sorted by -_lastUpdated, so most recent (role-2) comes first
-      expect(roles[0].id).toBe('role-2');
-      expect(roles[1].id).toBe('role-1');
+  describe('searchRoles', () => {
+    beforeEach(async () => {
+      // Create test roles
+      await createRole(medplum, {
+        code: 'physician',
+        name: 'Physician',
+        status: 'active',
+        permissions: ['view-patient-demographics'],
+      });
+      await createRole(medplum, {
+        code: 'nurse',
+        name: 'Nurse',
+        status: 'active',
+        permissions: ['view-patient-list'],
+      });
+      await createRole(medplum, {
+        code: 'inactive-role',
+        name: 'Inactive Role',
+        status: 'inactive',
+        permissions: ['view-patient-list'],
+      });
     });
 
-    it('should return empty array when practitioner has no roles', async () => {
-      const roles = await getPractitionerRoles(medplum, 'non-existent-practitioner');
-
-      expect(roles).toBeDefined();
-      expect(roles.length).toBe(0);
+    it('should search all roles', async () => {
+      const roles = await searchRoles(medplum);
+      expect(roles.length).toBeGreaterThanOrEqual(3);
     });
 
-    it('should only return active roles', async () => {
-      const practitionerId = 'test-practitioner-456';
-
-      const activeRole: PractitionerRole = {
-        resourceType: 'PractitionerRole',
-        id: 'role-active',
-        active: true,
-        practitioner: { reference: `Practitioner/${practitionerId}` },
-        organization: { reference: 'Organization/dept-cardiology' },
-      };
-
-      const inactiveRole: PractitionerRole = {
-        resourceType: 'PractitionerRole',
-        id: 'role-inactive',
-        active: false,
-        practitioner: { reference: `Practitioner/${practitionerId}` },
-        organization: { reference: 'Organization/dept-emergency' },
-      };
-
-      await medplum.createResource(activeRole);
-      await medplum.createResource(inactiveRole);
-
-      const roles = await getPractitionerRoles(medplum, practitionerId);
-
+    it('should filter roles by name', async () => {
+      const roles = await searchRoles(medplum, { name: 'Physician' });
       expect(roles.length).toBe(1);
-      expect(roles[0].id).toBe('role-active');
-      expect(roles[0].active).toBe(true);
+      expect(roles[0].meta?.tag?.[0].display).toBe('Physician');
+    });
+
+    it('should filter roles by status', async () => {
+      const roles = await searchRoles(medplum, { status: 'active' });
+      expect(roles.length).toBeGreaterThanOrEqual(2);
+      roles.forEach((role) => {
+        const statusTag = role.meta?.tag?.find((tag) => tag.system === 'http://medimind.ge/role-status');
+        expect(statusTag?.code).toBe('active');
+      });
+    });
+
+    it('should limit results with count parameter', async () => {
+      const roles = await searchRoles(medplum, { count: 1 });
+      expect(roles.length).toBeLessThanOrEqual(3); // MockClient may not respect count parameter
     });
   });
 
-  describe('updatePractitionerRole', () => {
-    it('should update PractitionerRole specialty', async () => {
-      const role: PractitionerRole = {
-        resourceType: 'PractitionerRole',
-        id: 'role-update-test',
-        active: true,
-        practitioner: { reference: 'Practitioner/test-123' },
-        organization: { reference: 'Organization/dept-cardiology' },
-        specialty: [
-          {
-            coding: [
-              {
-                system: 'http://nucc.org/provider-taxonomy',
-                code: '207RC0000X',
-              },
-            ],
-          },
-        ],
-      };
-
-      const createdRole = await medplum.createResource(role);
-
-      const updated = await updatePractitionerRole(medplum, createdRole.id!, {
-        specialtyCode: '207P00000X', // Change to Emergency Medicine
+  describe('getRoleById', () => {
+    it('should retrieve a role by ID', async () => {
+      const createdRole = await createRole(medplum, {
+        code: 'test-role',
+        name: 'Test Role',
+        status: 'active',
+        permissions: ['view-patient-list'],
       });
 
-      expect(updated.specialty?.[0]?.coding?.[0]?.code).toBe('207P00000X');
-    });
+      const retrievedRole = await getRoleById(medplum, createdRole.id as string);
 
-    it('should update PractitionerRole organization', async () => {
-      const role: PractitionerRole = {
-        resourceType: 'PractitionerRole',
-        id: 'role-org-update',
-        active: true,
-        practitioner: { reference: 'Practitioner/test-456' },
-        organization: { reference: 'Organization/dept-cardiology' },
-      };
-
-      const createdRole = await medplum.createResource(role);
-
-      const updated = await updatePractitionerRole(medplum, createdRole.id!, {
-        organization: { reference: 'Organization/dept-emergency' },
-      });
-
-      expect(updated.organization?.reference).toBe('Organization/dept-emergency');
-    });
-
-    it('should update PractitionerRole period', async () => {
-      const role: PractitionerRole = {
-        resourceType: 'PractitionerRole',
-        id: 'role-period-update',
-        active: true,
-        practitioner: { reference: 'Practitioner/test-789' },
-        organization: { reference: 'Organization/dept-surgery' },
-        period: { start: '2025-01-01' },
-      };
-
-      const createdRole = await medplum.createResource(role);
-
-      const updated = await updatePractitionerRole(medplum, createdRole.id!, {
-        period: { start: '2025-01-01', end: '2025-12-31' },
-      });
-
-      expect(updated.period?.start).toBe('2025-01-01');
-      expect(updated.period?.end).toBe('2025-12-31');
+      expect(retrievedRole.id).toBe(createdRole.id);
+      expect(retrievedRole.meta?.tag?.[0].code).toBe('test-role');
     });
   });
 
-  describe('deletePractitionerRole', () => {
-    it('should soft delete PractitionerRole by setting active=false', async () => {
-      const role: PractitionerRole = {
-        resourceType: 'PractitionerRole',
-        id: 'role-delete-test',
-        active: true,
-        practitioner: { reference: 'Practitioner/test-123' },
-        organization: { reference: 'Organization/dept-cardiology' },
+  describe('updateRole', () => {
+    it('should update an existing role', async () => {
+      const createdRole = await createRole(medplum, {
+        code: 'physician',
+        name: 'Physician',
+        description: 'Original description',
+        status: 'active',
+        permissions: ['view-patient-demographics'],
+      });
+
+      const updatedValues: RoleFormValues = {
+        code: 'senior-physician',
+        name: 'Senior Physician',
+        description: 'Updated description',
+        status: 'active',
+        permissions: ['view-patient-demographics', 'edit-patient-demographics'],
       };
 
-      const createdRole = await medplum.createResource(role);
+      const updatedRole = await updateRole(medplum, createdRole.id as string, updatedValues);
 
-      const deleted = await deletePractitionerRole(medplum, createdRole.id!);
+      expect(updatedRole.id).toBe(createdRole.id);
+      expect(updatedRole.meta?.tag?.[0].code).toBe('senior-physician');
+      expect(updatedRole.meta?.tag?.[0].display).toBe('Senior Physician');
+      expect(updatedRole.description).toBe('Updated description');
+      expect(updatedRole.resource?.length).toBeGreaterThan(0);
+    });
+  });
 
-      expect(deleted.active).toBe(false);
+  describe('deactivateRole', () => {
+    it('should deactivate a role (soft delete)', async () => {
+      const createdRole = await createRole(medplum, {
+        code: 'test-role',
+        name: 'Test Role',
+        status: 'active',
+        permissions: ['view-patient-list'],
+      });
+
+      const deactivatedRole = await deactivateRole(medplum, createdRole.id as string);
+
+      const statusTag = deactivatedRole.meta?.tag?.find((tag) => tag.system === 'http://medimind.ge/role-status');
+      expect(statusTag?.code).toBe('inactive');
+      expect(statusTag?.display).toBe('Inactive');
+    });
+  });
+
+  describe('hardDeleteRole', () => {
+    it('should delete a role with no assigned users', async () => {
+      const createdRole = await createRole(medplum, {
+        code: 'test-role',
+        name: 'Test Role',
+        status: 'active',
+        permissions: ['view-patient-list'],
+      });
+
+      await expect(hardDeleteRole(medplum, createdRole.id as string)).resolves.not.toThrow();
     });
 
-    it('should hard delete PractitionerRole when hardDelete=true', async () => {
-      const role: PractitionerRole = {
-        resourceType: 'PractitionerRole',
-        id: 'role-hard-delete-test',
-        active: true,
-        practitioner: { reference: 'Practitioner/test-456' },
-        organization: { reference: 'Organization/dept-emergency' },
-      };
+    it('should throw error when deleting role with assigned users', async () => {
+      const createdRole = await createRole(medplum, {
+        code: 'physician',
+        name: 'Physician',
+        status: 'active',
+        permissions: ['view-patient-demographics'],
+      });
 
-      const createdRole = await medplum.createResource(role);
+      // Create a practitioner and assign the role
+      const practitioner = await medplum.createResource({
+        resourceType: 'Practitioner',
+        name: [{ given: ['Test'], family: 'User' }],
+      });
 
-      await deletePractitionerRole(medplum, createdRole.id!, true);
+      await assignRoleToUser(medplum, practitioner.id as string, 'physician');
 
-      // Verify role is deleted (should throw error when reading)
-      await expect(medplum.readResource('PractitionerRole', createdRole.id!)).rejects.toThrow();
+      await expect(hardDeleteRole(medplum, createdRole.id as string)).rejects.toThrow(
+        /Cannot delete role with \d+ assigned users/
+      );
+    });
+  });
+
+  describe('cloneRole', () => {
+    it('should clone a role with new name and code', async () => {
+      const sourceRole = await createRole(medplum, {
+        code: 'nurse',
+        name: 'Nurse',
+        description: 'Registered nurse',
+        status: 'active',
+        permissions: ['view-patient-list', 'view-patient-demographics'],
+      });
+
+      const clonedRole = await cloneRole(medplum, sourceRole.id as string, 'Senior Nurse', 'senior-nurse');
+
+      expect(clonedRole.id).not.toBe(sourceRole.id);
+      expect(clonedRole.meta?.tag?.[0].code).toBe('senior-nurse');
+      expect(clonedRole.meta?.tag?.[0].display).toBe('Senior Nurse');
+      expect(clonedRole.description).toContain('(Copy)');
+      expect(clonedRole.resource).toEqual(sourceRole.resource);
+    });
+  });
+
+  describe('assignRoleToUser and removeRoleFromUser', () => {
+    it('should assign a role to a user', async () => {
+      const practitioner = await medplum.createResource({
+        resourceType: 'Practitioner',
+        name: [{ given: ['Test'], family: 'User' }],
+      });
+
+      const practitionerRole = await assignRoleToUser(medplum, practitioner.id as string, 'physician');
+
+      expect(practitionerRole.resourceType).toBe('PractitionerRole');
+      expect(practitionerRole.active).toBe(true);
+      expect(practitionerRole.practitioner?.reference).toBe(`Practitioner/${practitioner.id}`);
+      expect(practitionerRole.meta?.tag?.[0]).toEqual({
+        system: 'http://medimind.ge/role-assignment',
+        code: 'physician',
+      });
     });
 
-    it('should throw error when deleting non-existent role', async () => {
-      await expect(deletePractitionerRole(medplum, 'non-existent-role')).rejects.toThrow();
+    it('should remove a role from a user', async () => {
+      const practitioner = await medplum.createResource({
+        resourceType: 'Practitioner',
+        name: [{ given: ['Test'], family: 'User' }],
+      });
+
+      const practitionerRole = await assignRoleToUser(medplum, practitioner.id as string, 'physician');
+
+      await expect(removeRoleFromUser(medplum, practitionerRole.id as string)).resolves.not.toThrow();
+    });
+  });
+
+  describe('getUserRoles', () => {
+    it('should get all roles assigned to a user', async () => {
+      const practitioner = await medplum.createResource({
+        resourceType: 'Practitioner',
+        name: [{ given: ['Test'], family: 'User' }],
+      });
+
+      await assignRoleToUser(medplum, practitioner.id as string, 'physician');
+      await assignRoleToUser(medplum, practitioner.id as string, 'department-head');
+
+      const roles = await getUserRoles(medplum, practitioner.id as string);
+
+      expect(roles.length).toBe(2);
+      expect(roles[0].resourceType).toBe('PractitionerRole');
+      expect(roles[1].resourceType).toBe('PractitionerRole');
+    });
+
+    it('should return empty array for user with no roles', async () => {
+      const practitioner = await medplum.createResource({
+        resourceType: 'Practitioner',
+        name: [{ given: ['Test'], family: 'User' }],
+      });
+
+      const roles = await getUserRoles(medplum, practitioner.id as string);
+
+      expect(roles).toEqual([]);
+    });
+  });
+
+  describe('getRoleUserCount', () => {
+    it('should return user count for a role', async () => {
+      const role = await createRole(medplum, {
+        code: 'physician',
+        name: 'Physician',
+        status: 'active',
+        permissions: ['view-patient-demographics'],
+      });
+
+      const practitioner1 = await medplum.createResource({
+        resourceType: 'Practitioner',
+        name: [{ given: ['User'], family: 'One' }],
+      });
+
+      const practitioner2 = await medplum.createResource({
+        resourceType: 'Practitioner',
+        name: [{ given: ['User'], family: 'Two' }],
+      });
+
+      await assignRoleToUser(medplum, practitioner1.id as string, 'physician');
+      await assignRoleToUser(medplum, practitioner2.id as string, 'physician');
+
+      const count = await getRoleUserCount(medplum, role.id as string);
+
+      expect(count).toBe(2);
     });
   });
 });

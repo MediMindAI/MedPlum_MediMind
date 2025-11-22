@@ -1,9 +1,5 @@
-/**
- * DeactivationConfirmationModal Component
- *
- * Confirmation dialog for deactivating practitioner accounts
- * Shows account details and reason input field
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { Modal, Text, Button, Stack, Textarea, Group, Box } from '@mantine/core';
 import { useState } from 'react';
@@ -30,11 +26,17 @@ interface DeactivationConfirmationModalProps {
  * - Mobile-friendly layout
  *
  * @param account - Account to deactivate/reactivate
+ * @param account.account
  * @param opened - Modal open state
+ * @param account.opened
  * @param onClose - Close handler
+ * @param account.onClose
  * @param onConfirm - Confirm handler with optional reason
+ * @param account.onConfirm
  * @param loading - Show loading state
+ * @param account.loading
  * @param isReactivation - Show reactivation messaging instead of deactivation
+ * @param account.isReactivation
  */
 export function DeactivationConfirmationModal({
   account,
@@ -57,7 +59,7 @@ export function DeactivationConfirmationModal({
     onClose();
   };
 
-  if (!account) return <></>;
+  if (!account) {return <></>;}
 
   const title = isReactivation
     ? t('accountManagement.reactivate.title')

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Grid } from '@mantine/core';
-import { YearCell } from './calendar.types';
+import type { YearCell } from './calendar.types';
 
 interface YearGridProps {
   years: YearCell[];
@@ -11,6 +11,9 @@ interface YearGridProps {
 
 /**
  * Grid of years with card-style tiles
+ * @param root0
+ * @param root0.years
+ * @param root0.onYearClick
  */
 export function YearGrid({ years, onYearClick }: YearGridProps) {
   const getYearStyles = (cell: YearCell): React.CSSProperties => {
@@ -64,7 +67,7 @@ export function YearGrid({ years, onYearClick }: YearGridProps) {
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>, cell: YearCell) => {
-    if (cell.isDisabled) return;
+    if (cell.isDisabled) {return;}
     const target = e.currentTarget;
     if (!cell.isSelected) {
       target.style.background =
@@ -75,7 +78,7 @@ export function YearGrid({ years, onYearClick }: YearGridProps) {
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>, cell: YearCell) => {
-    if (cell.isDisabled) return;
+    if (cell.isDisabled) {return;}
     const target = e.currentTarget;
     if (!cell.isSelected) {
       if (cell.isCurrent) {

@@ -13,6 +13,7 @@ export interface PractitionerOption {
 
 /**
  * Search for all active practitioners in the system
+ * @param medplum
  */
 export async function searchPractitioners(medplum: MedplumClient): Promise<Practitioner[]> {
   try {
@@ -31,6 +32,7 @@ export async function searchPractitioners(medplum: MedplumClient): Promise<Pract
 
 /**
  * Get display name for a practitioner (Given Family format)
+ * @param practitioner
  */
 export function getPractitionerDisplay(practitioner: Practitioner): string {
   if (!practitioner.name || practitioner.name.length === 0) {
@@ -46,6 +48,7 @@ export function getPractitionerDisplay(practitioner: Practitioner): string {
 
 /**
  * Convert practitioners to select options for Mantine Select
+ * @param practitioners
  */
 export function practitionersToOptions(practitioners: Practitioner[]): PractitionerOption[] {
   return practitioners.map((practitioner) => {
@@ -61,6 +64,8 @@ export function practitionersToOptions(practitioners: Practitioner[]): Practitio
 
 /**
  * Get a single practitioner by ID
+ * @param medplum
+ * @param practitionerId
  */
 export async function getPractitioner(
   medplum: MedplumClient,

@@ -1,13 +1,10 @@
-/**
- * Tests for AccountManagementView Component
- *
- * Tests main dashboard view with table and form integration
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '../../test-utils';
 import { MockClient } from '@medplum/mock';
-import { Practitioner, ProjectMembership } from '@medplum/fhirtypes';
+import type { Practitioner, ProjectMembership } from '@medplum/fhirtypes';
 import { AccountManagementView } from './AccountManagementView';
 
 describe('AccountManagementView (T025)', () => {

@@ -40,6 +40,14 @@ interface ServiceTypeSelectProps {
  *   required
  * />
  * ```
+ * @param root0
+ * @param root0.value
+ * @param root0.onChange
+ * @param root0.label
+ * @param root0.placeholder
+ * @param root0.required
+ * @param root0.disabled
+ * @param root0.error
  */
 export default function ServiceTypeSelect({
   value,

@@ -1,4 +1,7 @@
-import { MultiSelect, MultiSelectProps } from '@mantine/core';
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
+import type { MultiSelectProps } from '@mantine/core';
+import { MultiSelect } from '@mantine/core';
 import { useMemo } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import rolesData from '../../translations/account-roles.json';
@@ -17,6 +20,10 @@ export interface RoleSelectorProps extends Omit<MultiSelectProps, 'data'> {
  * Displays roles from account-roles.json with multilingual support (ka/en/ru).
  * Allows selection of multiple roles for practitioners with complex responsibilities.
  *
+ * @param root0
+ * @param root0.value
+ * @param root0.onChange
+ * @param root0.label
  * @example
  * ```tsx
  * <RoleSelector
@@ -55,7 +62,7 @@ export function RoleSelector({ value, onChange, label, ...props }: RoleSelectorP
    * Get translated label if not provided
    */
   const displayLabel = useMemo(() => {
-    if (label) return label;
+    if (label) {return label;}
 
     const translations = {
       ka: 'როლები',

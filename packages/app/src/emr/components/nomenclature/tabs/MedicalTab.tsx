@@ -21,6 +21,9 @@ interface MedicalTabProps {
  * - Define research components (lab test parameters)
  * - LIS (Laboratory Information System) integration
  * - Display and visibility settings
+ * @param root0
+ * @param root0.service
+ * @param root0.onSave
  */
 export function MedicalTab({ service, onSave }: MedicalTabProps): JSX.Element {
   const { t } = useTranslation();

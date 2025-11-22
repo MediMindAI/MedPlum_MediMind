@@ -1,8 +1,5 @@
-/**
- * useAccountForm Hook
- *
- * Mantine form state management for account creation/editing with validation
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { useForm } from '@mantine/form';
 import type { AccountFormValues } from '../types/account-management';
@@ -20,7 +17,7 @@ import { validateAccountForm } from '../services/accountValidators';
  *   <TextInput {...form.getInputProps('firstName')} />
  * </form>
  */
-export function useAccountForm(initialValues?: AccountFormValues) {
+export function useAccountForm(initialValues?: AccountFormValues): { form: ReturnType<typeof useForm<AccountFormValues>> } {
   const form = useForm<AccountFormValues>({
     initialValues: initialValues || {
       firstName: '',
@@ -36,6 +33,7 @@ export function useAccountForm(initialValues?: AccountFormValues) {
       role: '',
       specialty: '',
       roles: [], // Initialize with empty roles array
+      rbacRoles: [], // Initialize with empty RBAC roles array
       active: true,
       notes: '',
     },

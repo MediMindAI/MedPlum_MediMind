@@ -1,0 +1,84 @@
+{
+  "validationMessages": {
+    "required": {
+      "ka": "ეს ველი აუცილებელია",
+      "en": "This field is required",
+      "ru": "Это поле обязательно"
+    },
+    "format": {
+      "ka": "ფორმატი არ არის სწორი",
+      "en": "Format is invalid",
+      "ru": "Неверный формат"
+    },
+    "email": {
+      "ka": "მოთხოვნილია სწორი ელფოსტის მისამართი",
+      "en": "Please enter a valid email address",
+      "ru": "Пожалуйста, введите действительный адрес электронной почты"
+    },
+    "minLength": {
+      "ka": "მინიმალური სიგრძე: {min} სიმბოლო",
+      "en": "Minimum length: {min} characters",
+      "ru": "Минимальная длина: {min} символов"
+    },
+    "maxLength": {
+      "ka": "მაქსიმალური სიგრძე: {max} სიმბოლო",
+      "en": "Maximum length: {max} characters",
+      "ru": "Максимальная длина: {max} символов"
+    },
+    "minValue": {
+      "ka": "მინიმალური მნიშვნელობა: {min}",
+      "en": "Minimum value: {min}",
+      "ru": "Минимальное значение: {min}"
+    },
+    "maxValue": {
+      "ka": "მაქსიმალური მნიშვნელობა: {max}",
+      "en": "Maximum value: {max}",
+      "ru": "Максимальное значение: {max}"
+    },
+    "pattern": {
+      "ka": "მნიშვნელობა არ შეესაბამება მოთხოვნილ ნიმუშს",
+      "en": "Value does not match the required pattern",
+      "ru": "Значение не соответствует требуемому шаблону"
+    },
+    "dateFormat": {
+      "ka": "თარიღის ფორმატი უნდა იყოს YYYY-MM-DD",
+      "en": "Date format must be YYYY-MM-DD",
+      "ru": "Формат даты должен быть YYYY-MM-DD"
+    },
+    "futureDate": {
+      "ka": "თარიღი არ შეიძლება იყოს მომავალში",
+      "en": "Date cannot be in the future",
+      "ru": "Дата не может быть в будущем"
+    },
+    "pastDate": {
+      "ka": "თარიღი არ შეიძლება იყოს წარსულში",
+      "en": "Date cannot be in the past",
+      "ru": "Дата не может быть в прошлом"
+    },
+    "personalIdInvalid": {
+      "ka": "პირადი ID უნდა იყოს ზუსტად 11 ციფრი",
+      "en": "Personal ID must be exactly 11 digits",
+      "ru": "Личный номер должен состоять ровно из 11 цифр"
+    },
+    "personalIdChecksum": {
+      "ka": "პირადი ID შემოწმების ჯამი არ არის სწორი",
+      "en": "Personal ID checksum is invalid",
+      "ru": "Контрольная сумма личного номера неверна"
+    },
+    "phone": {
+      "ka": "ტელეფონის ფორმატი არ არის სწორი",
+      "en": "Phone format is invalid",
+      "ru": "Неверный формат телефона"
+    },
+    "match": {
+      "ka": "ველები არ ემთხვევა",
+      "en": "Fields do not match",
+      "ru": "Поля не совпадают"
+    },
+    "unique": {
+      "ka": "ეს მნიშვნელობა უკვე გამოიყენება",
+      "en": "This value is already in use",
+      "ru": "Это значение уже используется"
+    }
+  }
+}

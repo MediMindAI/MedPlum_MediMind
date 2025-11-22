@@ -1,9 +1,5 @@
-/**
- * AccountFilters Component
- *
- * Search bar and filter controls for account management table
- * Responsive layout with debounced search input
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { Paper, TextInput, Select, Group, SegmentedControl, ActionIcon, Text } from '@mantine/core';
 import { IconSearch, IconX, IconFilter } from '@tabler/icons-react';
@@ -20,7 +16,7 @@ export interface AccountFiltersState {
 interface AccountFiltersProps {
   filters: AccountFiltersState;
   onFiltersChange: (filters: AccountFiltersState) => void;
-  roleOptions: Array<{ value: string; label: string }>;
+  roleOptions: { value: string; label: string }[];
   resultCount: number;
   totalCount: number;
 }
@@ -37,10 +33,15 @@ interface AccountFiltersProps {
  * - Mobile-responsive layout
  *
  * @param filters - Current filter state
+ * @param filters.filters
  * @param onFiltersChange - Callback when filters change
+ * @param filters.onFiltersChange
  * @param roleOptions - Available role options for filtering
+ * @param filters.roleOptions
  * @param resultCount - Number of filtered results
+ * @param filters.resultCount
  * @param totalCount - Total number of accounts
+ * @param filters.totalCount
  */
 export function AccountFilters({
   filters,
@@ -75,22 +76,30 @@ export function AccountFilters({
 
   return (
     <Paper
-      p={24}
+      p="xl"
       withBorder
       style={{
-        background: '#ffffff',
-        borderRadius: '8px',
+        background: 'var(--emr-text-inverse)',
+        borderRadius: 'var(--emr-border-radius-lg)',
         boxShadow: 'var(--emr-shadow-card)',
+        borderLeft: '4px solid var(--emr-primary)',
+        transition: 'var(--emr-transition-base)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = 'var(--emr-shadow-card-hover)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = 'var(--emr-shadow-card)';
       }}
     >
-      <Group justify="space-between" wrap="nowrap" mb="md">
+      <Group justify="space-between" wrap="nowrap" mb="lg">
         {/* Search Input */}
         <TextInput
           placeholder={t('accountManagement.filters.searchPlaceholder')}
-          leftSection={<IconSearch size={16} />}
+          leftSection={<IconSearch size={18} color="var(--emr-primary)" />}
           rightSection={
             localSearchQuery && (
-              <ActionIcon onClick={handleClearSearch} variant="subtle" size="sm">
+              <ActionIcon onClick={handleClearSearch} variant="subtle" size="sm" color="gray">
                 <IconX size={16} />
               </ActionIcon>
             )
@@ -103,11 +112,30 @@ export function AccountFilters({
             minWidth: '200px',
             maxWidth: '400px',
           }}
-          styles={{ input: { minHeight: '44px' } }}
+          styles={{
+            input: {
+              minHeight: '44px',
+              borderColor: 'var(--emr-gray-300)',
+              '&:focus': {
+                borderColor: 'var(--emr-primary)',
+                boxShadow: '0 0 0 2px rgba(26, 54, 93, 0.1)',
+              },
+            },
+          }}
         />
 
         {/* Result Count */}
-        <Text size="sm" c="dimmed" style={{ whiteSpace: 'nowrap' }}>
+        <Text
+          size="sm"
+          c="dimmed"
+          fw={500}
+          style={{
+            whiteSpace: 'nowrap',
+            background: 'var(--emr-section-header-bg)',
+            padding: '6px 12px',
+            borderRadius: 'var(--emr-border-radius)',
+          }}
+        >
           {t('accountManagement.filters.showing', { count: resultCount, total: totalCount })}
         </Text>
       </Group>
@@ -122,22 +150,40 @@ export function AccountFilters({
           ]}
           value={filters.statusFilter}
           onChange={handleStatusChange}
-          size="sm"
-          color="blue"
+          size="md"
+          styles={{
+            root: {
+              background: 'var(--emr-gray-100)',
+            },
+            indicator: {
+              background: 'var(--emr-gradient-primary)',
+            },
+            label: {
+              '&[data-active]': {
+                color: 'white',
+              },
+            },
+          }}
         />
 
         {/* Role Filter */}
         <Select
           placeholder={t('accountManagement.filters.rolePlaceholder')}
-          leftSection={<IconFilter size={16} />}
+          leftSection={<IconFilter size={16} color="var(--emr-primary)" />}
           data={[{ value: '', label: t('accountManagement.filters.allRoles') }, ...roleOptions]}
           value={filters.roleFilter}
           onChange={handleRoleChange}
           clearable
           searchable
-          size="sm"
+          size="md"
           style={{
             minWidth: '200px',
+          }}
+          styles={{
+            input: {
+              borderColor: 'var(--emr-gray-300)',
+              minHeight: '44px',
+            },
           }}
         />
       </Group>

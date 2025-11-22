@@ -26,6 +26,7 @@ import type { Encounter } from '@medplum/fhirtypes';
  *   refresh,
  * } = usePatientHistory();
  * ```
+ * @param initialSearchParams
  */
 export function usePatientHistory(initialSearchParams: Partial<PatientHistorySearchParams> = {}) {
   const medplum = useMedplum();

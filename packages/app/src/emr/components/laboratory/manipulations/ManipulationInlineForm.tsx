@@ -1,9 +1,5 @@
-/**
- * Manipulation Inline Form Component
- *
- * Inline form for adding new manipulation/procedure types.
- * Simple single-field form matching the original EMR design.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { Box, TextInput, Button, Group } from '@mantine/core';
@@ -19,6 +15,9 @@ interface ManipulationInlineFormProps {
 
 /**
  * ManipulationInlineForm Component
+ * @param root0
+ * @param root0.onSubmit
+ * @param root0.loading
  */
 export function ManipulationInlineForm({ onSubmit, loading }: ManipulationInlineFormProps): JSX.Element {
   const { t } = useTranslation();
@@ -27,7 +26,7 @@ export function ManipulationInlineForm({ onSubmit, loading }: ManipulationInline
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim()) {return;}
 
     setSubmitting(true);
     try {

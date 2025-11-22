@@ -21,6 +21,11 @@ interface VisitEditModalProps {
  * 2. Demographics (8 READ-ONLY fields)
  * 3. Insurance I, II, III (3 tabs × 7 fields each = 21 fields)
  * Total: 14 + 8 + 21 + 21 + 21 + 49 financial fields = 134 fields
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.visitId
+ * @param root0.onSuccess
  */
 export function VisitEditModal({
   opened,

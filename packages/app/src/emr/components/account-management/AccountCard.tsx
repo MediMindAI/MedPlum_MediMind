@@ -1,9 +1,5 @@
-/**
- * AccountCard Component
- *
- * Card layout for displaying account information on mobile devices
- * Alternative to table view for better mobile UX
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { Card, Text, Group, Stack, Badge, Button, ActionIcon, Menu } from '@mantine/core';
 import { IconMail, IconPhone, IconBriefcase, IconDots, IconEdit, IconUserMinus, IconUserCheck, IconTrash } from '@tabler/icons-react';
@@ -31,10 +27,15 @@ interface AccountCardProps {
  * - Touch-friendly 44px minimum targets
  *
  * @param account - Account data to display
+ * @param account.account
  * @param onEdit - Edit callback
+ * @param account.onEdit
  * @param onDelete - Delete callback
+ * @param account.onDelete
  * @param onDeactivate - Deactivate callback (optional)
+ * @param account.onDeactivate
  * @param onReactivate - Reactivate callback (optional)
+ * @param account.onReactivate
  */
 export function AccountCard({
   account,

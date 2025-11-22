@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Group, Select, TextInput } from '@mantine/core';
-import { ReactNode, useState } from 'react';
+import type { ReactNode} from 'react';
+import { useState } from 'react';
 
 interface InternationalPhoneInputProps {
   value: string;
@@ -24,6 +25,12 @@ const countries = [
 /**
  * International phone input with country code selector
  * Defaults to Georgia (+995)
+ * @param root0
+ * @param root0.value
+ * @param root0.onChange
+ * @param root0.label
+ * @param root0.error
+ * @param root0.required
  */
 export function InternationalPhoneInput({
   value,
@@ -34,7 +41,7 @@ export function InternationalPhoneInput({
 }: InternationalPhoneInputProps) {
   // Parse existing value or default to +995
   const getInitialCountryCode = () => {
-    if (!value) return '+995';
+    if (!value) {return '+995';}
     const match = countries.find((c) => value.startsWith(c.value));
     return match?.value || '+995';
   };

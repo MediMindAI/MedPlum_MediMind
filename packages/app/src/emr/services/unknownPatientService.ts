@@ -11,6 +11,7 @@ import type { MedplumClient } from '@medplum/core';
 /**
  * Get the next sequence number for unknown patients
  * Counts existing unknown patients and returns the next number
+ * @param medplum
  */
 export async function getNextUnknownSequence(medplum: MedplumClient): Promise<number> {
   try {
@@ -52,6 +53,7 @@ export async function getNextUnknownSequence(medplum: MedplumClient): Promise<nu
 /**
  * Generate a unique name for an unknown patient
  * Format: "უცნობი #1", "უცნობი #2", etc.
+ * @param medplum
  */
 export async function generateUnknownPatientName(medplum: MedplumClient): Promise<string> {
   const sequence = await getNextUnknownSequence(medplum);
@@ -61,6 +63,7 @@ export async function generateUnknownPatientName(medplum: MedplumClient): Promis
 /**
  * Generate a temporary identifier for unknown patient
  * Format: "UNK-2025-001", "UNK-2025-002", etc.
+ * @param medplum
  */
 export async function generateUnknownPatientIdentifier(medplum: MedplumClient): Promise<string> {
   const year = new Date().getFullYear();

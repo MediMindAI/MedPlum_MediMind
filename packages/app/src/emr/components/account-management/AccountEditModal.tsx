@@ -1,15 +1,11 @@
-/**
- * AccountEditModal Component
- *
- * Modal dialog for editing existing accounts
- * Auto-refreshes table after save
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { Modal, Button, LoadingOverlay } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useState, useEffect } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
-import { Practitioner, PractitionerRole } from '@medplum/fhirtypes';
+import type { Practitioner, PractitionerRole } from '@medplum/fhirtypes';
 import { AccountForm } from './AccountForm';
 import { useTranslation } from '../../hooks/useTranslation';
 import { updatePractitioner, getPractitionerById } from '../../services/accountService';
@@ -33,9 +29,13 @@ interface AccountEditModalProps {
  * - Auto-refreshes table on success
  *
  * @param account - Account row to edit (or null)
+ * @param account.account
  * @param opened - Modal open state
+ * @param account.opened
  * @param onClose - Close callback
+ * @param account.onClose
  * @param onSuccess - Success callback (triggers table refresh)
+ * @param account.onSuccess
  */
 export function AccountEditModal({
   account,
@@ -83,7 +83,7 @@ export function AccountEditModal({
   }, [opened, account, medplum, t, onClose]);
 
   const handleSubmit = async (values: AccountFormValues) => {
-    if (!practitioner) return;
+    if (!practitioner) {return;}
 
     setLoading(true);
     try {

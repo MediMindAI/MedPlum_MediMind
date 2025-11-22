@@ -1,12 +1,9 @@
-/**
- * useSamples Hook
- *
- * Manages sample type data fetching, caching, and state management.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
-import { SpecimenDefinition } from '@medplum/fhirtypes';
+import type { SpecimenDefinition } from '@medplum/fhirtypes';
 import { searchSamples } from '../services/sampleService';
 
 interface UseSamplesOptions {
@@ -33,6 +30,7 @@ interface UseSamplesResult {
 
 /**
  * Hook for fetching and managing sample types
+ * @param options
  */
 export function useSamples(options: UseSamplesOptions = {}): UseSamplesResult {
   const medplum = useMedplum();

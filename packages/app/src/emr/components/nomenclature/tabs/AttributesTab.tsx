@@ -33,6 +33,9 @@ interface AttributesTabProps {
  * - Color picker with HEX code input for service color coding
  * - Online blocking hours (time ranges when service cannot be booked online)
  * - Equipment/consumables management
+ * @param root0
+ * @param root0.service
+ * @param root0.onSave
  */
 export function AttributesTab({ service, onSave }: AttributesTabProps): JSX.Element {
   const { t } = useTranslation();

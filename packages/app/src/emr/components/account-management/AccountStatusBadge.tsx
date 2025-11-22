@@ -1,8 +1,5 @@
-/**
- * AccountStatusBadge Component
- *
- * Displays account active/inactive status with color coding
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { Badge } from '@mantine/core';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -15,6 +12,7 @@ interface AccountStatusBadgeProps {
  * Badge component showing account status with appropriate color
  *
  * @param active - Whether the account is active
+ * @param active.active
  * @returns Badge component with status text and color
  *
  * @example

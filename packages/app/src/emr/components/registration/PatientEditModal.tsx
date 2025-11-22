@@ -4,7 +4,7 @@
 import { Loader, Text, Stack, Button, Grid, Select, TextInput, Box, Modal } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
-import { Patient } from '@medplum/fhirtypes';
+import type { Patient } from '@medplum/fhirtypes';
 import { useMedplum } from '@medplum/react-hooks';
 import { useEffect, useState } from 'react';
 import { IconUser, IconPhone, IconFileText, IconUsers } from '@tabler/icons-react';
@@ -61,6 +61,11 @@ interface PatientFormValues {
 /**
  * Production-ready modal for editing existing patient information
  * Features: 4 collapsible sections, all FHIR fields, responsive design
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.patientId
+ * @param root0.onSuccess
  */
 export function PatientEditModal({ opened, onClose, patientId, onSuccess }: PatientEditModalProps) {
   const medplum = useMedplum();
@@ -103,7 +108,7 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
     },
     validate: {
       personalId: (value) => {
-        if (!value) return null;
+        if (!value) {return null;}
         const result = validateGeorgianPersonalId(value);
         return result.isValid ? null : result.error;
       },
@@ -111,7 +116,7 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
       lastName: (value) => (!value ? t('registration.validation.required') || 'Required' : null),
       gender: (value) => (!value ? t('registration.validation.required') || 'Required' : null),
       email: (value) => {
-        if (!value) return null;
+        if (!value) {return null;}
         const result = validateEmail(value);
         return result.isValid ? null : result.error;
       },
@@ -148,17 +153,20 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
 
   /**
    * Extract extension value by URL
+   * @param patient
+   * @param url
    */
   const getExtensionValue = (patient: Patient, url: string): string => {
     const ext = patient.extension?.find((e) => e.url === url);
-    if (!ext) return '';
-    if (ext.valueString) return ext.valueString;
-    if (ext.valueCodeableConcept?.coding?.[0]?.code) return ext.valueCodeableConcept.coding[0].code;
+    if (!ext) {return '';}
+    if (ext.valueString) {return ext.valueString;}
+    if (ext.valueCodeableConcept?.coding?.[0]?.code) {return ext.valueCodeableConcept.coding[0].code;}
     return '';
   };
 
   /**
    * Convert FHIR Patient resource to form values
+   * @param patient
    */
   const convertPatientToFormValues = (patient: Patient): PatientFormValues => {
     // Extract personal ID
@@ -240,10 +248,11 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
 
   /**
    * Convert form values back to FHIR Patient resource
+   * @param values
    */
   const convertFormValuesToPatient = (values: PatientFormValues): Patient => {
     // Build extensions array
-    const extensions: Array<{ url: string; valueString?: string; valueCodeableConcept?: any }> = [];
+    const extensions: { url: string; valueString?: string; valueCodeableConcept?: any }[] = [];
 
     // Add value extensions
     if (values.citizenship) {
@@ -258,19 +267,19 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
         valueCodeableConcept: { coding: [{ code: values.maritalStatus }] },
       });
     }
-    if (values.workplace) extensions.push({ url: 'workplace', valueString: values.workplace });
-    if (values.workplaceAddress) extensions.push({ url: 'workplace-address', valueString: values.workplaceAddress });
-    if (values.city) extensions.push({ url: 'city', valueString: values.city });
-    if (values.district) extensions.push({ url: 'district', valueString: values.district });
-    if (values.building) extensions.push({ url: 'building', valueString: values.building });
-    if (values.region) extensions.push({ url: 'region', valueString: values.region });
+    if (values.workplace) {extensions.push({ url: 'workplace', valueString: values.workplace });}
+    if (values.workplaceAddress) {extensions.push({ url: 'workplace-address', valueString: values.workplaceAddress });}
+    if (values.city) {extensions.push({ url: 'city', valueString: values.city });}
+    if (values.district) {extensions.push({ url: 'district', valueString: values.district });}
+    if (values.building) {extensions.push({ url: 'building', valueString: values.building });}
+    if (values.region) {extensions.push({ url: 'region', valueString: values.region });}
     if (values.educationLevel) {
       extensions.push({
         url: 'education-level',
         valueCodeableConcept: { coding: [{ code: values.educationLevel }] },
       });
     }
-    if (values.familyRelationship) extensions.push({ url: 'family-relationship', valueString: values.familyRelationship });
+    if (values.familyRelationship) {extensions.push({ url: 'family-relationship', valueString: values.familyRelationship });}
 
     // Add guardian extensions
     if (values.guardianRelationship) {
@@ -279,21 +288,21 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
         valueCodeableConcept: { coding: [{ code: values.guardianRelationship }] },
       });
     }
-    if (values.guardianPersonalId) extensions.push({ url: 'guardian-personal-id', valueString: values.guardianPersonalId });
-    if (values.guardianFirstName) extensions.push({ url: 'guardian-first-name', valueString: values.guardianFirstName });
-    if (values.guardianLastName) extensions.push({ url: 'guardian-last-name', valueString: values.guardianLastName });
-    if (values.guardianGender) extensions.push({ url: 'guardian-gender', valueString: values.guardianGender });
+    if (values.guardianPersonalId) {extensions.push({ url: 'guardian-personal-id', valueString: values.guardianPersonalId });}
+    if (values.guardianFirstName) {extensions.push({ url: 'guardian-first-name', valueString: values.guardianFirstName });}
+    if (values.guardianLastName) {extensions.push({ url: 'guardian-last-name', valueString: values.guardianLastName });}
+    if (values.guardianGender) {extensions.push({ url: 'guardian-gender', valueString: values.guardianGender });}
     if (values.guardianBirthDate) {
       extensions.push({ url: 'guardian-birth-date', valueString: values.guardianBirthDate.toISOString().split('T')[0] });
     }
-    if (values.guardianPhone) extensions.push({ url: 'guardian-phone', valueString: values.guardianPhone });
+    if (values.guardianPhone) {extensions.push({ url: 'guardian-phone', valueString: values.guardianPhone });}
     if (values.guardianMaritalStatus) {
       extensions.push({
         url: 'guardian-marital-status',
         valueCodeableConcept: { coding: [{ code: values.guardianMaritalStatus }] },
       });
     }
-    if (values.guardianAddress) extensions.push({ url: 'guardian-address', valueString: values.guardianAddress });
+    if (values.guardianAddress) {extensions.push({ url: 'guardian-address', valueString: values.guardianAddress });}
 
     return {
       ...patient,

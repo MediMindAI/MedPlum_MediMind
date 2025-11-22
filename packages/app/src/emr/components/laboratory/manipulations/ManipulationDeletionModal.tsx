@@ -1,12 +1,9 @@
-/**
- * Manipulation Deletion Modal Component
- *
- * Confirmation dialog for deleting manipulation/procedure types.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import { Modal, Text, Group, Button } from '@mantine/core';
-import { ActivityDefinition } from '@medplum/fhirtypes';
+import type { ActivityDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 interface ManipulationDeletionModalProps {
@@ -24,6 +21,12 @@ interface ManipulationDeletionModalProps {
 
 /**
  * ManipulationDeletionModal Component
+ * @param root0
+ * @param root0.manipulation
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.onConfirm
+ * @param root0.loading
  */
 export function ManipulationDeletionModal({
   manipulation,
@@ -35,7 +38,7 @@ export function ManipulationDeletionModal({
   const { t } = useTranslation();
 
   const handleConfirm = async (): Promise<void> => {
-    if (!manipulation?.id) return;
+    if (!manipulation?.id) {return;}
     await onConfirm(manipulation.id);
     onClose();
   };

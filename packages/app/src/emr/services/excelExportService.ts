@@ -97,6 +97,7 @@ const COLUMN_HEADERS_RU: Record<string, string> = {
 
 /**
  * Get column headers based on language
+ * @param lang
  */
 function getColumnHeaders(lang: string = 'ka'): Record<string, string> {
   switch (lang) {
@@ -127,9 +128,11 @@ const DEFAULT_COLUMNS: (keyof ServiceTableRow)[] = [
 
 /**
  * Format boolean value to Yes/No in Georgian
+ * @param value
+ * @param lang
  */
 function formatBoolean(value: boolean | undefined, lang: string = 'ka'): string {
-  if (value === undefined) return '-';
+  if (value === undefined) {return '-';}
 
   switch (lang) {
     case 'en':
@@ -143,33 +146,38 @@ function formatBoolean(value: boolean | undefined, lang: string = 'ka'): string 
 
 /**
  * Format currency value (GEL)
+ * @param value
  */
 function formatCurrency(value: number | undefined): string {
-  if (value === undefined || value === null) return '-';
+  if (value === undefined || value === null) {return '-';}
   return value.toFixed(2);
 }
 
 /**
  * Format number or return dash if undefined
+ * @param value
  */
 function formatNumber(value: number | undefined): string | number {
-  if (value === undefined || value === null) return '-';
+  if (value === undefined || value === null) {return '-';}
   return value;
 }
 
 /**
  * Format array to comma-separated string
+ * @param value
  */
 function formatArray(value: string[] | undefined): string {
-  if (!value || value.length === 0) return '-';
+  if (!value || value.length === 0) {return '-';}
   return value.join(', ');
 }
 
 /**
  * Format status for display
+ * @param status
+ * @param lang
  */
 function formatStatus(status: string | undefined, lang: string = 'ka'): string {
-  if (!status) return '-';
+  if (!status) {return '-';}
 
   switch (lang) {
     case 'en':
@@ -183,6 +191,10 @@ function formatStatus(status: string | undefined, lang: string = 'ka'): string {
 
 /**
  * Convert ServiceTableRow to Excel-friendly row object
+ * @param service
+ * @param columns
+ * @param headers
+ * @param lang
  */
 function convertToExcelRow(
   service: ServiceTableRow,
@@ -235,6 +247,9 @@ function convertToExcelRow(
 
 /**
  * Generate Excel worksheet from services data
+ * @param services
+ * @param columns
+ * @param lang
  */
 function generateWorksheet(
   services: ServiceTableRow[],
@@ -285,6 +300,8 @@ function generateWorksheet(
 
 /**
  * Trigger browser download of Excel file
+ * @param workbook
+ * @param fileName
  */
 function downloadFile(workbook: XLSX.WorkBook, fileName: string): void {
   // Generate Excel file buffer with UTF-8 BOM for Georgian text support

@@ -1,15 +1,11 @@
-/**
- * Manipulations Tab Component
- *
- * Main tab component for managing sample collection procedures.
- * Combines inline form, table, and deletion modal.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { Box, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
-import { ActivityDefinition } from '@medplum/fhirtypes';
+import type { ActivityDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useManipulations } from '../../../hooks/useManipulations';
 import { createManipulation, updateManipulation, deleteManipulation } from '../../../services/manipulationService';

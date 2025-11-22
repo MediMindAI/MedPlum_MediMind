@@ -1,4 +1,7 @@
-import { Select, SelectProps } from '@mantine/core';
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
+import type { SelectProps } from '@mantine/core';
+import { Select } from '@mantine/core';
 import { useMemo } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import specialtiesData from '../../translations/medical-specialties.json';
@@ -17,6 +20,10 @@ export interface SpecialtySelectProps extends Omit<SelectProps, 'data'> {
  * Displays 25 medical specialties from medical-specialties.json with multilingual
  * support (ka/en/ru). Uses NUCC Healthcare Provider Taxonomy codes.
  *
+ * @param root0
+ * @param root0.value
+ * @param root0.onChange
+ * @param root0.label
  * @example
  * ```tsx
  * <SpecialtySelect
@@ -56,7 +63,7 @@ export function SpecialtySelect({ value, onChange, label, ...props }: SpecialtyS
    * Get translated label if not provided
    */
   const displayLabel = useMemo(() => {
-    if (label) return label;
+    if (label) {return label;}
 
     const translations = {
       ka: 'სამედიცინო სპეციალობა',

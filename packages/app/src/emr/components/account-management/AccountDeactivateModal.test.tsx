@@ -1,13 +1,10 @@
-/**
- * Tests for AccountDeactivateModal Component (T067)
- *
- * Tests deactivation/reactivation confirmation dialog functionality
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '../../test-utils';
 import { MockClient } from '@medplum/mock';
-import { Practitioner } from '@medplum/fhirtypes';
+import type { Practitioner } from '@medplum/fhirtypes';
 import { AccountDeactivateModal } from './AccountDeactivateModal';
 
 describe('AccountDeactivateModal', () => {

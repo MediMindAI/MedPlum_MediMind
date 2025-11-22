@@ -1,8 +1,5 @@
-/**
- * useAccountList Hook
- *
- * Fetches and manages practitioner account list with pagination and search
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useMedplum } from '@medplum/react-hooks';

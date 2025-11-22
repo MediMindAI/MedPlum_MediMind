@@ -4,7 +4,7 @@
 import { Table, ActionIcon, Text, Paper } from '@mantine/core';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
-import { Patient } from '@medplum/fhirtypes';
+import type { Patient } from '@medplum/fhirtypes';
 import { useEffect, useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -25,6 +25,9 @@ interface PatientTableProps {
 
 /**
  * Patient table displaying registered patients with edit/delete actions
+ * @param root0
+ * @param root0.searchFilters
+ * @param root0.onPatientClick
  */
 export function PatientTable({ searchFilters, onPatientClick }: PatientTableProps) {
   const { t } = useTranslation();

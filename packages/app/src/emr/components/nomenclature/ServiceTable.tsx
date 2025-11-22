@@ -29,6 +29,15 @@ interface ServiceTableProps {
 /**
  * Service table component for displaying medical services
  * Features: sortable columns, edit/delete actions, loading states, empty states
+ * @param root0
+ * @param root0.services
+ * @param root0.loading
+ * @param root0.onEdit
+ * @param root0.onDelete
+ * @param root0.onOpenRegisteredServices
+ * @param root0.onSort
+ * @param root0.sortField
+ * @param root0.sortOrder
  */
 export function ServiceTable({
   services,
@@ -44,6 +53,7 @@ export function ServiceTable({
 
   /**
    * Format currency value to 2 decimal places with GEL suffix
+   * @param value
    */
   const formatCurrency = (value: number | undefined): string => {
     if (value === undefined || value === null) {
@@ -54,6 +64,7 @@ export function ServiceTable({
 
   /**
    * Format number or display dash if undefined
+   * @param value
    */
   const formatNumber = (value: number | undefined): string => {
     if (value === undefined || value === null) {
@@ -64,6 +75,7 @@ export function ServiceTable({
 
   /**
    * Render sort indicator for sortable columns
+   * @param field
    */
   const renderSortIndicator = (field: string): string => {
     if (sortField !== field) {
@@ -74,6 +86,7 @@ export function ServiceTable({
 
   /**
    * Handle column header click for sorting
+   * @param field
    */
   const handleSort = (field: string) => {
     if (onSort) {

@@ -1,16 +1,14 @@
-/**
- * Research Component Service
- *
- * FHIR CRUD operations for laboratory test parameters (ObservationDefinition resources).
- * Maps ResearchComponentFormValues to/from FHIR ObservationDefinition.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { MedplumClient } from '@medplum/core';
-import { ObservationDefinition } from '@medplum/fhirtypes';
-import { ResearchComponentFormValues } from '../types/laboratory';
+import type { MedplumClient } from '@medplum/core';
+import type { ObservationDefinition } from '@medplum/fhirtypes';
+import type { ResearchComponentFormValues } from '../types/laboratory';
 
 /**
  * Create a new research component
+ * @param medplum
+ * @param values
  */
 export async function createResearchComponent(
   medplum: MedplumClient,
@@ -74,6 +72,9 @@ export async function createResearchComponent(
 
 /**
  * Update an existing research component
+ * @param medplum
+ * @param id
+ * @param values
  */
 export async function updateResearchComponent(
   medplum: MedplumClient,
@@ -140,6 +141,16 @@ export async function updateResearchComponent(
 
 /**
  * Search for research components
+ * @param medplum
+ * @param options
+ * @param options.code
+ * @param options.gisCode
+ * @param options.name
+ * @param options.type
+ * @param options.unit
+ * @param options.status
+ * @param options.count
+ * @param options.offset
  */
 export async function searchResearchComponents(
   medplum: MedplumClient,
@@ -219,6 +230,8 @@ export async function searchResearchComponents(
 
 /**
  * Soft delete a research component (set status to 'retired')
+ * @param medplum
+ * @param id
  */
 export async function deleteResearchComponent(
   medplum: MedplumClient,
@@ -233,6 +246,8 @@ export async function deleteResearchComponent(
 
 /**
  * Hard delete a research component (permanently remove)
+ * @param medplum
+ * @param id
  */
 export async function hardDeleteResearchComponent(
   medplum: MedplumClient,
@@ -243,6 +258,7 @@ export async function hardDeleteResearchComponent(
 
 /**
  * Extract form values from an ObservationDefinition resource
+ * @param resource
  */
 export function extractResearchComponentFormValues(
   resource: ObservationDefinition

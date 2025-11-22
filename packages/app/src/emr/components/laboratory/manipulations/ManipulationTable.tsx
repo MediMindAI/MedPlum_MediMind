@@ -1,14 +1,10 @@
-/**
- * Manipulation Table Component
- *
- * Displays sample collection procedures in a table with inline editing capability.
- * Supports add/edit/delete operations.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { Table, ActionIcon, TextInput, Box, Text } from '@mantine/core';
 import { IconPencil, IconTrash, IconCheck, IconX } from '@tabler/icons-react';
-import { ActivityDefinition } from '@medplum/fhirtypes';
+import type { ActivityDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 interface ManipulationTableProps {
@@ -24,6 +20,11 @@ interface ManipulationTableProps {
 
 /**
  * ManipulationTable Component
+ * @param root0
+ * @param root0.manipulations
+ * @param root0.onEdit
+ * @param root0.onDelete
+ * @param root0.loading
  */
 export function ManipulationTable({ manipulations, onEdit, onDelete, loading }: ManipulationTableProps): JSX.Element {
   const { t } = useTranslation();
@@ -31,13 +32,13 @@ export function ManipulationTable({ manipulations, onEdit, onDelete, loading }: 
   const [editValue, setEditValue] = useState('');
 
   const handleEditStart = (manipulation: ActivityDefinition): void => {
-    if (!manipulation.id) return;
+    if (!manipulation.id) {return;}
     setEditingId(manipulation.id);
     setEditValue(manipulation.title || manipulation.code?.text || '');
   };
 
   const handleEditSave = async (id: string): Promise<void> => {
-    if (!editValue.trim()) return;
+    if (!editValue.trim()) {return;}
     await onEdit(id, editValue);
     setEditingId(null);
     setEditValue('');

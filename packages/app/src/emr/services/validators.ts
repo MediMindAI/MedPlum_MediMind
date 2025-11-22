@@ -25,6 +25,7 @@ export interface ValidationResult {
  * - 01011076709
  * - 26001014632
  * - 01001011116
+ * @param id
  */
 export function validateGeorgianPersonalId(id: string): ValidationResult {
   // Check length
@@ -50,6 +51,7 @@ export function validateGeorgianPersonalId(id: string): ValidationResult {
  * Validate email address (RFC 5322 simplified)
  *
  * Checks for basic email format: localpart@domain.tld
+ * @param email
  */
 export function validateEmail(email: string): ValidationResult {
   const emailRegex =
@@ -71,6 +73,7 @@ export function validateEmail(email: string): ValidationResult {
  * Checks:
  * - Not in the future
  * - Not more than 120 years ago
+ * @param birthdate
  */
 export function validateBirthdate(birthdate: Date | string): ValidationResult {
   const date = typeof birthdate === 'string' ? new Date(birthdate) : birthdate;

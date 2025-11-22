@@ -59,6 +59,8 @@ interface HorizontalSubMenuProps {
  * - White 3px bottom border for active tab
  * - Conditional rendering based on section
  * - Multilingual support
+ * @param root0
+ * @param root0.section
  */
 export function HorizontalSubMenu({ section }: HorizontalSubMenuProps) {
   const { t } = useTranslation();

@@ -74,6 +74,9 @@ export interface PatientHistoryDetailData {
 
 /**
  * Hook for managing patient history detail modal state and operations
+ * @param encounterId
+ * @param onSuccess
+ * @param onCancel
  */
 export function usePatientHistoryDetail(
   encounterId: string | null,
@@ -149,8 +152,8 @@ export function usePatientHistoryDetail(
 
     validate: {
       visitDate: (value) => {
-        if (!value) return 'Visit date is required';
-        if (value > new Date()) return 'Visit date cannot be in future';
+        if (!value) {return 'Visit date is required';}
+        if (value > new Date()) {return 'Visit date cannot be in future';}
         return null;
       },
       admissionType: (value) => (!value ? 'Admission type is required' : null),
@@ -261,8 +264,8 @@ export function usePatientHistoryDetail(
 
         // Determine insurer count
         let insurerCount = 1;
-        if (coverages[2]) insurerCount = 3;
-        else if (coverages[1]) insurerCount = 2;
+        if (coverages[2]) {insurerCount = 3;}
+        else if (coverages[1]) {insurerCount = 2;}
 
         // Set form values
         form.setValues({
@@ -341,7 +344,7 @@ export function usePatientHistoryDetail(
    * Copy demographics from patient record (refresh)
    */
   const copyDemographicsFromPatient = async () => {
-    if (!patientData.patient) return;
+    if (!patientData.patient) {return;}
 
     const patient = patientData.patient;
     const region = patient.address?.[0]?.state || '';
@@ -375,9 +378,10 @@ export function usePatientHistoryDetail(
 
   /**
    * Handle form submission
+   * @param values
    */
   const handleSave = async (values: PatientHistoryDetailFormValues) => {
-    if (!encounterId || !patientData.encounter) return;
+    if (!encounterId || !patientData.encounter) {return;}
 
     setLoading(true);
     setError(null);
@@ -395,7 +399,7 @@ export function usePatientHistoryDetail(
       encounter.status = (values.status as Encounter['status']) || encounter.status;
 
       // Update extensions
-      if (!encounter.extension) encounter.extension = [];
+      if (!encounter.extension) {encounter.extension = [];}
 
       const extensionMap: Record<string, string | undefined> = {
         'http://medimind.ge/fhir/StructureDefinition/admission-type': values.admissionType,

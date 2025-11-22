@@ -19,6 +19,11 @@ interface DeletionConfirmationModalProps {
 /**
  * Confirmation modal for deleting patient visits
  * Supports both soft delete (status='entered-in-error') and hard delete (permanent removal)
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.visitId
+ * @param root0.onSuccess
  */
 export function DeletionConfirmationModal({
   opened,
@@ -32,7 +37,7 @@ export function DeletionConfirmationModal({
   const [deleteType, setDeleteType] = useState<'soft' | 'hard'>('soft');
 
   const handleDelete = async () => {
-    if (!visitId) return;
+    if (!visitId) {return;}
 
     setLoading(true);
 

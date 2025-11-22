@@ -1,15 +1,11 @@
-/**
- * Syringes Tab Component
- *
- * Main tab component for managing laboratory containers and tubes.
- * Combines entry form, table with color visualization, and modals.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { Box, Text } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
-import { DeviceDefinition } from '@medplum/fhirtypes';
+import type { DeviceDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useSyringes } from '../../../hooks/useSyringes';
 import { createSyringe, updateSyringe, deleteSyringe } from '../../../services/syringeService';
@@ -17,7 +13,7 @@ import { SyringeEntryForm } from '../syringes/SyringeEntryForm';
 import { SyringeTable } from '../syringes/SyringeTable';
 import { SyringeEditModal } from '../syringes/SyringeEditModal';
 import { SyringeDeletionModal } from '../syringes/SyringeDeletionModal';
-import { SyringeFormValues } from '../../../types/laboratory';
+import type { SyringeFormValues } from '../../../types/laboratory';
 
 /**
  * SyringesTab Component

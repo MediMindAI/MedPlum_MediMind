@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Grid } from '@mantine/core';
-import { MonthCell } from './calendar.types';
+import type { MonthCell } from './calendar.types';
 
 interface MonthGridProps {
   months: MonthCell[];
@@ -11,6 +11,9 @@ interface MonthGridProps {
 
 /**
  * Grid of months with card-style tiles
+ * @param root0
+ * @param root0.months
+ * @param root0.onMonthClick
  */
 export function MonthGrid({ months, onMonthClick }: MonthGridProps) {
   const getMonthStyles = (cell: MonthCell): React.CSSProperties => {
@@ -64,7 +67,7 @@ export function MonthGrid({ months, onMonthClick }: MonthGridProps) {
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>, cell: MonthCell) => {
-    if (cell.isDisabled) return;
+    if (cell.isDisabled) {return;}
     const target = e.currentTarget;
     if (!cell.isSelected) {
       target.style.background =
@@ -75,7 +78,7 @@ export function MonthGrid({ months, onMonthClick }: MonthGridProps) {
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>, cell: MonthCell) => {
-    if (cell.isDisabled) return;
+    if (cell.isDisabled) {return;}
     const target = e.currentTarget;
     if (!cell.isSelected) {
       if (cell.isCurrent) {

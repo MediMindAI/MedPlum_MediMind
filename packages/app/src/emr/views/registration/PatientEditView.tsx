@@ -5,7 +5,7 @@ import { Paper, Text, Stack, Button, Grid, Select, TextInput, Loader } from '@ma
 import { useForm } from '@mantine/form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMedplum } from '@medplum/react-hooks';
-import { Patient } from '@medplum/fhirtypes';
+import type { Patient } from '@medplum/fhirtypes';
 import { useEffect, useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { notifications } from '@mantine/notifications';
@@ -55,7 +55,7 @@ export function PatientEditView(): JSX.Element {
     },
     validate: {
       personalId: (value) => {
-        if (!value) return null;
+        if (!value) {return null;}
         const result = validateGeorgianPersonalId(value);
         return result.isValid ? null : result.error;
       },
@@ -63,7 +63,7 @@ export function PatientEditView(): JSX.Element {
       lastName: (value) => (!value ? t('registration.validation.required') || 'Required' : null),
       gender: (value) => (!value ? t('registration.validation.required') || 'Required' : null),
       email: (value) => {
-        if (!value) return null;
+        if (!value) {return null;}
         const result = validateEmail(value);
         return result.isValid ? null : result.error;
       },
@@ -100,6 +100,7 @@ export function PatientEditView(): JSX.Element {
 
   /**
    * Convert FHIR Patient resource to form values
+   * @param patient
    */
   const convertPatientToFormValues = (patient: Patient): PatientFormValues => {
     // Extract personal ID from identifier array
@@ -143,6 +144,7 @@ export function PatientEditView(): JSX.Element {
 
   /**
    * Convert form values back to FHIR Patient resource
+   * @param values
    */
   const convertFormValuesToPatient = (values: PatientFormValues): Patient => {
     return {

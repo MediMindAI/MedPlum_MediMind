@@ -1,14 +1,11 @@
-/**
- * useResearchComponents Hook
- *
- * Manages research component data fetching, caching, and state management.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
-import { ObservationDefinition } from '@medplum/fhirtypes';
+import type { ObservationDefinition } from '@medplum/fhirtypes';
 import { searchResearchComponents } from '../services/researchComponentService';
-import { ComponentSearchFilters } from '../types/laboratory';
+import type { ComponentSearchFilters } from '../types/laboratory';
 
 interface UseResearchComponentsOptions extends Partial<ComponentSearchFilters> {
   /** Enable auto-fetch on mount */
@@ -30,6 +27,7 @@ interface UseResearchComponentsResult {
 
 /**
  * Hook for fetching and managing research component types
+ * @param options
  */
 export function useResearchComponents(options: UseResearchComponentsOptions = {}): UseResearchComponentsResult {
   const medplum = useMedplum();

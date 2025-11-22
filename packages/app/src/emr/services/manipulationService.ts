@@ -1,16 +1,14 @@
-/**
- * Manipulation Service
- *
- * FHIR CRUD operations for sample collection procedures (ActivityDefinition resources).
- * Maps ManipulationFormValues to/from FHIR ActivityDefinition.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { MedplumClient } from '@medplum/core';
-import { ActivityDefinition } from '@medplum/fhirtypes';
-import { ManipulationFormValues } from '../types/laboratory';
+import type { MedplumClient } from '@medplum/core';
+import type { ActivityDefinition } from '@medplum/fhirtypes';
+import type { ManipulationFormValues } from '../types/laboratory';
 
 /**
  * Create a new manipulation/procedure
+ * @param medplum
+ * @param values
  */
 export async function createManipulation(
   medplum: MedplumClient,
@@ -40,6 +38,9 @@ export async function createManipulation(
 
 /**
  * Update an existing manipulation
+ * @param medplum
+ * @param id
+ * @param values
  */
 export async function updateManipulation(
   medplum: MedplumClient,
@@ -71,6 +72,12 @@ export async function updateManipulation(
 
 /**
  * Search for manipulations
+ * @param medplum
+ * @param options
+ * @param options.name
+ * @param options.status
+ * @param options.count
+ * @param options.offset
  */
 export async function searchManipulations(
   medplum: MedplumClient,
@@ -110,6 +117,8 @@ export async function searchManipulations(
 
 /**
  * Soft delete a manipulation (set status to 'retired')
+ * @param medplum
+ * @param id
  */
 export async function deleteManipulation(
   medplum: MedplumClient,
@@ -124,6 +133,8 @@ export async function deleteManipulation(
 
 /**
  * Hard delete a manipulation (permanently remove)
+ * @param medplum
+ * @param id
  */
 export async function hardDeleteManipulation(
   medplum: MedplumClient,
@@ -134,6 +145,7 @@ export async function hardDeleteManipulation(
 
 /**
  * Extract form values from an ActivityDefinition resource
+ * @param resource
  */
 export function extractManipulationFormValues(
   resource: ActivityDefinition

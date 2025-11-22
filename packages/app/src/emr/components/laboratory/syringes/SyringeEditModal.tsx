@@ -1,16 +1,12 @@
-/**
- * Syringe Edit Modal Component
- *
- * Modal for editing existing syringe/container types.
- * Includes name, color picker, and volume fields.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useEffect, useState } from 'react';
 import { Modal, TextInput, Button, Group, NumberInput, ColorInput, Stack } from '@mantine/core';
-import { DeviceDefinition } from '@medplum/fhirtypes';
+import type { DeviceDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { extractSyringeFormValues } from '../../../services/syringeService';
-import { SyringeFormValues } from '../../../types/laboratory';
+import type { SyringeFormValues } from '../../../types/laboratory';
 
 interface SyringeEditModalProps {
   /** Syringe to edit */
@@ -27,6 +23,12 @@ interface SyringeEditModalProps {
 
 /**
  * SyringeEditModal Component
+ * @param root0
+ * @param root0.syringe
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.onSave
+ * @param root0.loading
  */
 export function SyringeEditModal({
   syringe,
@@ -50,7 +52,7 @@ export function SyringeEditModal({
   }, [syringe]);
 
   const handleSave = async (): Promise<void> => {
-    if (!syringe?.id || !name.trim() || !color) return;
+    if (!syringe?.id || !name.trim() || !color) {return;}
 
     await onSave(syringe.id, {
       name,

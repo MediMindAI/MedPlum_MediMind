@@ -3,7 +3,7 @@
 
 import { Box, Group, ActionIcon, Text } from '@mantine/core';
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
-import { CalendarView } from './calendar.types';
+import type { CalendarView } from './calendar.types';
 import { getMonthName, getDecadeRange } from './calendar.utils';
 
 interface CalendarHeaderProps {
@@ -16,6 +16,12 @@ interface CalendarHeaderProps {
 
 /**
  * Calendar header with navigation and clickable title
+ * @param root0
+ * @param root0.view
+ * @param root0.displayDate
+ * @param root0.onPrevious
+ * @param root0.onNext
+ * @param root0.onHeaderClick
  */
 export function CalendarHeader({
   view,

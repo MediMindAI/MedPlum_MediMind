@@ -1,12 +1,9 @@
-/**
- * Sample Deletion Modal Component
- *
- * Confirmation dialog for deleting sample types.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import { Modal, Text, Group, Button } from '@mantine/core';
-import { SpecimenDefinition } from '@medplum/fhirtypes';
+import type { SpecimenDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 interface SampleDeletionModalProps {
@@ -24,6 +21,12 @@ interface SampleDeletionModalProps {
 
 /**
  * SampleDeletionModal Component
+ * @param root0
+ * @param root0.sample
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.onConfirm
+ * @param root0.loading
  */
 export function SampleDeletionModal({
   sample,
@@ -35,7 +38,7 @@ export function SampleDeletionModal({
   const { t } = useTranslation();
 
   const handleConfirm = async (): Promise<void> => {
-    if (!sample?.id) return;
+    if (!sample?.id) {return;}
     await onConfirm(sample.id);
     onClose();
   };

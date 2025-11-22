@@ -20,6 +20,11 @@ interface ServiceDeletionModalProps {
 /**
  * Confirmation modal for deleting medical services
  * Supports both soft delete (status='retired') and hard delete (permanent removal)
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.service
+ * @param root0.onSuccess
  */
 export function ServiceDeletionModal({
   opened,
@@ -33,7 +38,7 @@ export function ServiceDeletionModal({
   const [deleteType, setDeleteType] = useState<'soft' | 'hard'>('soft');
 
   const handleDelete = async () => {
-    if (!service) return;
+    if (!service) {return;}
 
     setLoading(true);
 

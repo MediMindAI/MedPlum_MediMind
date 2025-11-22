@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { DateCell, MonthCell, YearCell } from './calendar.types';
+import type { DateCell, MonthCell, YearCell } from './calendar.types';
 
 /**
  * Get the first day of the month
+ * @param date
  */
 export function getFirstDayOfMonth(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), 1);
@@ -12,6 +13,7 @@ export function getFirstDayOfMonth(date: Date): Date {
 
 /**
  * Get the last day of the month
+ * @param date
  */
 export function getLastDayOfMonth(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -20,6 +22,12 @@ export function getLastDayOfMonth(date: Date): Date {
 /**
  * Get days in month including padding from previous/next month
  * Returns 42 days (6 weeks) for consistent grid
+ * @param displayDate
+ * @param selectedDate
+ * @param rangeStart
+ * @param rangeEnd
+ * @param minDate
+ * @param maxDate
  */
 export function getCalendarDays(
   displayDate: Date,
@@ -103,6 +111,10 @@ const MONTH_NAMES_SHORT = [
 
 /**
  * Get months for year picker
+ * @param displayYear
+ * @param selectedDate
+ * @param minDate
+ * @param maxDate
  */
 export function getMonthsGrid(
   displayYear: number,
@@ -151,6 +163,10 @@ export function getMonthsGrid(
 
 /**
  * Get years for decade picker
+ * @param displayYear
+ * @param selectedDate
+ * @param minDate
+ * @param maxDate
  */
 export function getYearsGrid(
   displayYear: number,
@@ -189,6 +205,7 @@ export function getYearsGrid(
 
 /**
  * Format date as DD.MM.YYYY
+ * @param date
  */
 export function formatDate(date: Date): string {
   const day = String(date.getDate()).padStart(2, '0');
@@ -199,6 +216,8 @@ export function formatDate(date: Date): string {
 
 /**
  * Get month name
+ * @param month
+ * @param short
  */
 export function getMonthName(month: number, short = false): string {
   return short ? MONTH_NAMES_SHORT[month] : MONTH_NAMES[month];
@@ -206,6 +225,7 @@ export function getMonthName(month: number, short = false): string {
 
 /**
  * Get weekday names
+ * @param short
  */
 export function getWeekdayNames(short = true): string[] {
   return short
@@ -215,6 +235,8 @@ export function getWeekdayNames(short = true): string[] {
 
 /**
  * Check if two dates are the same day
+ * @param date1
+ * @param date2
  */
 export function isSameDay(date1: Date, date2: Date): boolean {
   return (
@@ -226,6 +248,7 @@ export function isSameDay(date1: Date, date2: Date): boolean {
 
 /**
  * Get decade range string (e.g., "1990-1999")
+ * @param year
  */
 export function getDecadeRange(year: number): string {
   const decadeStart = Math.floor(year / 10) * 10;

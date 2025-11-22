@@ -428,6 +428,16 @@ interface InsuranceSelectProps {
 /**
  * Insurance company dropdown with multilingual support
  * Displays 58 insurance companies from Georgian healthcare system
+ * @param root0
+ * @param root0.value
+ * @param root0.onChange
+ * @param root0.label
+ * @param root0.placeholder
+ * @param root0.required
+ * @param root0.disabled
+ * @param root0.clearable
+ * @param root0.searchable
+ * @param root0.error
  */
 export function InsuranceSelect({
   value,

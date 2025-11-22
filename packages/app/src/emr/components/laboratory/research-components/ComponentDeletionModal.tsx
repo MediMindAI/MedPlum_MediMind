@@ -1,13 +1,9 @@
-/**
- * Component Deletion Modal
- *
- * Confirmation dialog for deleting research components.
- * Matches original EMR deletion workflow.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import { Modal, Text, Button, Box, Stack } from '@mantine/core';
-import { ObservationDefinition } from '@medplum/fhirtypes';
+import type { ObservationDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { extractResearchComponentFormValues } from '../../../services/researchComponentService';
 
@@ -24,6 +20,11 @@ interface ComponentDeletionModalProps {
 
 /**
  * Modal for confirming component deletion
+ * @param root0
+ * @param root0.component
+ * @param root0.onClose
+ * @param root0.onConfirm
+ * @param root0.loading
  */
 export function ComponentDeletionModal({
   component,

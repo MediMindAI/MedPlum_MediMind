@@ -1,9 +1,5 @@
-/**
- * useDeactivation Hook
- *
- * Manages practitioner account deactivation/reactivation workflow
- * Handles modal state, API calls, and notifications
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { useState } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
@@ -46,6 +42,7 @@ export function useDeactivation(onSuccess?: () => void): UseDeactivationReturn {
 
   /**
    * Open deactivation confirmation modal
+   * @param account
    */
   const openDeactivationModal = (account: AccountRow) => {
     setTargetAccount(account);
@@ -62,9 +59,10 @@ export function useDeactivation(onSuccess?: () => void): UseDeactivationReturn {
 
   /**
    * Deactivate account
+   * @param reason
    */
   const handleDeactivate = async (reason?: string) => {
-    if (!targetAccount) return;
+    if (!targetAccount) {return;}
 
     setIsDeactivating(true);
     try {
@@ -91,6 +89,7 @@ export function useDeactivation(onSuccess?: () => void): UseDeactivationReturn {
 
   /**
    * Reactivate account
+   * @param account
    */
   const handleReactivate = async (account: AccountRow) => {
     setIsDeactivating(true);

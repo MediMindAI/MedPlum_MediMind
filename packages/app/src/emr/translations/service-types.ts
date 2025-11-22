@@ -1,9 +1,5 @@
-/**
- * Service Types for Laboratory Nomenclature
- *
- * 7 service type options matching original EMR design.
- * Used for categorizing medical services (internal, external labs, consultants, etc.)
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 export interface ServiceType {
   code: string;

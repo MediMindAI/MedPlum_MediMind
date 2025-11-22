@@ -60,6 +60,11 @@ interface ServiceFiltersProps {
  *   loading={isLoading}
  * />
  * ```
+ * @param root0
+ * @param root0.onSearch
+ * @param root0.onClear
+ * @param root0.onExport
+ * @param root0.loading
  */
 export function ServiceFilters({
   onSearch,

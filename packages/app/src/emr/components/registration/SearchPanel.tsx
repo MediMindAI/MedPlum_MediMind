@@ -21,6 +21,10 @@ interface SearchPanelProps {
 
 /**
  * Professional slide-out search panel
+ * @param root0
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.onSearch
  */
 export function SearchPanel({ opened, onClose, onSearch }: SearchPanelProps) {
   const { t } = useTranslation();
@@ -36,10 +40,10 @@ export function SearchPanel({ opened, onClose, onSearch }: SearchPanelProps) {
 
   const handleSearch = (values: typeof form.values) => {
     const filters: SearchFilters = {};
-    if (values.personalId.trim()) filters.personalId = values.personalId.trim();
-    if (values.firstName.trim()) filters.firstName = values.firstName.trim();
-    if (values.lastName.trim()) filters.lastName = values.lastName.trim();
-    if (values.registrationNumber.trim()) filters.registrationNumber = values.registrationNumber.trim();
+    if (values.personalId.trim()) {filters.personalId = values.personalId.trim();}
+    if (values.firstName.trim()) {filters.firstName = values.firstName.trim();}
+    if (values.lastName.trim()) {filters.lastName = values.lastName.trim();}
+    if (values.registrationNumber.trim()) {filters.registrationNumber = values.registrationNumber.trim();}
 
     onSearch(filters);
   };

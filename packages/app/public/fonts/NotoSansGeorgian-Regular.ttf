@@ -1,0 +1,11 @@
+PLACEHOLDER: Noto Sans Georgian Regular Font
+Download from: https://fonts.google.com/download?family=Noto%20Sans%20Georgian
+Steps to complete:
+1. Download Noto Sans Georgian Regular from Google Fonts
+2. Save the TTF file to this location: packages/app/public/fonts/NotoSansGeorgian-Regular.ttf
+3. Remove this placeholder file
+This font is required for:
+- PDF rendering with Georgian text support
+- @react-pdf/renderer Font.register() integration
+- Form export functionality with proper Georgian character rendering
+Note: The font file size is approximately 60-70 KB

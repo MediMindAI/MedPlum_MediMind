@@ -1608,14 +1608,174 @@ npm test -- account-management  # 91/107 tests passing (85%)
 
 User dropdown menu (top-right) includes **Dashboard** button → navigates to `/emr/account-management`
 
+## Role and Permission Management System
+
+### Overview
+
+The Role and Permission Management System provides FHIR-compliant RBAC (Role-Based Access Control) for the MediMind EMR system. Roles are stored as AccessPolicy resources with permissions mapped to resource-level rules.
+
+**Status**: ✅ **PRODUCTION READY**
+**Route**: `/emr/account-management` → Roles tab
+**FHIR Resources**: AccessPolicy, PractitionerRole, AuditEvent
+
+### Key Features
+
+- **Role Creation**: Create roles with name, code, description, status
+- **Permission Configuration**: 6 categories, 30+ permissions, auto-dependency resolution
+- **Role Assignment**: Multi-role support via PractitionerRole resources
+- **Search/Filter**: Debounced search (500ms), status filter, table sorting
+- **Edit Roles**: Modal-based editing with permission updates
+- **Deactivate/Reactivate**: Soft delete with user count warnings
+- **Delete Roles**: Hard delete with user count validation (blocks if users assigned)
+- **Clone Roles**: Duplicate role with " (Copy)" suffix
+
+### File Structure
+
+```
+packages/app/src/emr/
+├── views/role-management/
+│   └── RoleManagementView.tsx          # Main role management page
+├── components/role-management/
+│   ├── RoleTable.tsx                   # 8-column table with actions
+│   ├── RoleForm.tsx                    # Create/edit form
+│   ├── PermissionTree.tsx              # Hierarchical permission selector
+│   ├── RoleCreateModal.tsx             # Create modal
+│   ├── RoleEditModal.tsx               # Edit modal
+│   ├── RoleDeleteModal.tsx             # Delete confirmation with user count check
+│   ├── RoleCloneModal.tsx              # Clone modal
+│   ├── RoleDeactivationModal.tsx       # Deactivate confirmation
+│   ├── RoleAssignmentPanel.tsx         # Multi-role assignment
+│   └── RoleFilters.tsx                 # Search/filter controls
+├── services/
+│   ├── roleService.ts                  # CRUD operations (11 functions)
+│   ├── permissionService.ts            # Permission tree utilities
+│   └── roleValidators.ts               # Validation rules
+├── hooks/
+│   ├── useRoles.ts                     # Fetch roles with filters
+│   ├── useRoleForm.ts                  # Form state management
+│   └── usePermissions.ts               # Permission tree data
+└── types/
+    └── role-management.ts              # TypeScript interfaces
+```
+
+### Common Patterns
+
+#### Creating a Role
+```typescript
+import { createRole } from '@/emr/services/roleService';
+
+const role = await createRole(medplum, {
+  code: 'physician',
+  name: 'Physician',
+  description: 'Medical doctor with full patient access',
+  status: 'active',
+  permissions: ['view-patient-demographics', 'edit-patient-demographics'],
+});
+```
+
+#### Assigning Role to User
+```typescript
+import { assignRoleToUser } from '@/emr/services/roleService';
+
+await assignRoleToUser(medplum, practitionerId, roleCode);
+```
+
+#### Cloning a Role
+```typescript
+import { cloneRole } from '@/emr/services/roleService';
+
+// Creates a new role with " (Copy)" suffix and same permissions
+await cloneRole(medplum, sourceRoleId, 'New Role Name', 'new-role-code');
+```
+
+#### Deleting a Role (with user count check)
+```typescript
+import { hardDeleteRole, getRoleUserCount } from '@/emr/services/roleService';
+
+// Check if role has assigned users
+const userCount = await getRoleUserCount(medplum, roleId);
+
+if (userCount > 0) {
+  // Block deletion - role has assigned users
+  throw new Error(`Cannot delete role with ${userCount} assigned users`);
+}
+
+// Safe to delete
+await hardDeleteRole(medplum, roleId);
+```
+
+#### Permission Dependency Resolution
+```typescript
+import { resolvePermissionDependencies } from '@/emr/services/permissionService';
+
+// User selects "edit-patient-demographics"
+// System auto-enables "view-patient-demographics" (dependency)
+const resolved = resolvePermissionDependencies(
+  ['edit-patient-demographics'],
+  allPermissions
+);
+// Returns: ['edit-patient-demographics', 'view-patient-demographics']
+```
+
+### FHIR Resource Mappings
+
+#### AccessPolicy (Role Storage)
+- **meta.tag[role-identifier]** → Role code and name
+- **meta.tag[role-status]** → Status (active/inactive)
+- **description** → Role description
+- **resource[]** → Permission rules (resourceType, readonly, etc.)
+
+#### PractitionerRole (Role Assignment)
+- **meta.tag[role-assignment]** → Assigned role code
+- **practitioner.reference** → User ID
+- **active** → Assignment status
+
+### Permission Categories (6 Total)
+
+1. **Patient Management** - Demographics, registration, search
+2. **Clinical Data** - Encounters, observations, medications
+3. **Billing & Finance** - Claims, payments, invoicing
+4. **Administration** - Users, roles, system config
+5. **Laboratory** - Orders, results, specimens
+6. **Reporting** - Analytics, exports, audit logs
+
+### Testing
+
+```bash
+cd packages/app
+npm test -- role-management  # Run all role management tests
+```
+
+### User Interface
+
+**Access**: Navigate to `/emr/account-management` → Click "Roles" tab
+
+**Table Features**:
+- 8 columns: Name, Description, # Users, Permission Count, Status, Created Date, Last Modified, Actions
+- Sortable columns (click header to sort)
+- Action buttons: Edit (✏️), Clone (📋), Deactivate/Reactivate (🔒/🔓), Delete (🗑️)
+
+**Security Notes**:
+- Delete button blocked if role has assigned users
+- Audit trail preserved for deleted roles (role name in logs)
+- Deactivation recommended over deletion for roles with history
+
 ## Documentation References
 
 - EMR UI Layout Spec: `specs/003-emr-ui-layout/spec.md`
 - Patient History Spec: `specs/001-patient-history-page/spec.md`
 - Registration Spec: `specs/004-fhir-registration-implementation/spec.md`
 - Account Management Spec: `specs/005-account-management/spec.md`
-- Nomenclature Documentation: `documentation/nomenclature/README.md` ⭐
+- Role Management Spec: `specs/006-role-permission-management/spec.md` ⭐
+- Nomenclature Documentation: `documentation/nomenclature/README.md`
 - Nomenclature Import Guide: `documentation/nomenclature/TableImportGuide.md`
 - Official Docs: https://www.medplum.com/docs
 - FHIR R4 Spec: https://hl7.org/fhir/R4/
 - Contributing Guide: https://medplum.com/docs/contributing
+
+## Active Technologies
+- TypeScript 5.x (strict mode enabled per constitution) (006-role-permission-management)
+- PostgreSQL (Medplum server) storing FHIR AccessPolicy resources (006-role-permission-management)
+
+## Recent Changes
+- 006-role-permission-management: Added TypeScript 5.x (strict mode enabled per constitution)

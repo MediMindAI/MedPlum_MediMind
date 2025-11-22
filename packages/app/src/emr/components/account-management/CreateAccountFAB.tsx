@@ -1,9 +1,5 @@
-/**
- * CreateAccountFAB Component
- *
- * Floating Action Button for quick account creation
- * Positioned bottom-right, hidden on mobile (use header button instead)
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
@@ -26,6 +22,7 @@ interface CreateAccountFABProps {
  * - 60×60px touch-friendly size
  *
  * @param onClick - Callback when FAB is clicked
+ * @param onClick.onClick
  */
 export function CreateAccountFAB({ onClick }: CreateAccountFABProps): JSX.Element | null {
   const { t } = useTranslation();

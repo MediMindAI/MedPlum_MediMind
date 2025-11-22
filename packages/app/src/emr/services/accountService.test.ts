@@ -1,11 +1,9 @@
-/**
- * Tests for Account Service
- *
- * Tests CRUD operations for practitioner accounts using Medplum Invite API
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { MockClient } from '@medplum/mock';
-import { Practitioner, PractitionerRole, ProjectMembership } from '@medplum/fhirtypes';
+import type { Practitioner, ProjectMembership } from '@medplum/fhirtypes';
+import { PractitionerRole } from '@medplum/fhirtypes';
 import {
   createPractitioner,
   searchPractitioners,

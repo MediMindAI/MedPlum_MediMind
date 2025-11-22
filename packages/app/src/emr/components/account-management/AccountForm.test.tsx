@@ -1,8 +1,5 @@
-/**
- * Tests for AccountForm Component
- *
- * Tests form rendering, validation, and submission
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '../../test-utils';

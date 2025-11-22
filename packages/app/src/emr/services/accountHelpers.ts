@@ -1,11 +1,7 @@
-/**
- * Account Management Helper Utilities
- *
- * FHIR data extraction and transformation utilities for the account management feature.
- * Follows the same patterns as patientService.ts and fhirHelpers.ts.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import {
+import type {
   Practitioner,
   PractitionerRole,
   HumanName,
@@ -330,7 +326,7 @@ export function createSpecialtyCodeableConcept(
  */
 export function practitionersToAccountRows(
   practitioners: Practitioner[],
-  rolesMap: Map<string, PractitionerRole[]> = new Map()
+  rolesMap = new Map<string, PractitionerRole[]>()
 ): AccountRow[] {
   return practitioners.map((practitioner) => {
     const roles = rolesMap.get(practitioner.id!) || [];

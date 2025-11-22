@@ -10,6 +10,9 @@ export type VisitType = 'ambulatory' | 'stationary' | 'emergency';
 /**
  * Generate unique registration number for encounter
  * Format: "a-1234-2025" (ambulatory), "1234-2025" (stationary/emergency), or "UNK-1-2025" (unknown patient)
+ * @param medplum
+ * @param visitType
+ * @param isUnknownPatient
  */
 export async function generateRegistrationNumber(
   medplum: MedplumClient,
@@ -44,6 +47,10 @@ export async function generateRegistrationNumber(
 /**
  * Create FHIR Encounter resource when patient is registered
  * This represents the patient's visit/admission to the hospital
+ * @param medplum
+ * @param patient
+ * @param visitType
+ * @param isUnknownPatient
  */
 export async function createEncounterForPatient(
   medplum: MedplumClient,

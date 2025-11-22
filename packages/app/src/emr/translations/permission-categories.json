@@ -1,0 +1,32 @@
+{
+  "patient-management": {
+    "ka": "პაციენტის მართვა",
+    "en": "Patient Management",
+    "ru": "Управление пациентами"
+  },
+  "clinical-documentation": {
+    "ka": "კლინიკური დოკუმენტაცია",
+    "en": "Clinical Documentation",
+    "ru": "Клиническая документация"
+  },
+  "laboratory": {
+    "ka": "ლაბორატორია",
+    "en": "Laboratory",
+    "ru": "Лаборатория"
+  },
+  "billing-financial": {
+    "ka": "ბილინგი და ფინანსები",
+    "en": "Billing & Financial",
+    "ru": "Выставление счетов и финансы"
+  },
+  "administration": {
+    "ka": "ადმინისტრაცია",
+    "en": "Administration",
+    "ru": "Администрирование"
+  },
+  "reports": {
+    "ka": "ანგარიშები",
+    "en": "Reports",
+    "ru": "Отчеты"
+  }
+}

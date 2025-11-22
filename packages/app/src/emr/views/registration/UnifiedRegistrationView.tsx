@@ -46,6 +46,7 @@ export function UnifiedRegistrationView() {
 
   /**
    * Handle patient row click - opens registration visit modal
+   * @param patientId
    */
   const handlePatientClick = (patientId: string) => {
     setSelectedPatientId(patientId);

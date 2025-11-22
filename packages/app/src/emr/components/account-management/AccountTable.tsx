@@ -1,10 +1,5 @@
-/**
- * AccountTable Component
- *
- * Displays practitioner accounts in a responsive table/card view
- * Desktop: Table with sticky header and action menu
- * Mobile: Card layout for better UX
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import { Table, Box, ActionIcon, Text, Skeleton, Badge, Group, Tooltip, Button, Menu, Stack, ThemeIcon } from '@mantine/core';
@@ -27,6 +22,8 @@ interface AccountTableProps {
 /**
  * Render roles with badge list and overflow handling
  * Shows first 2 roles, then "+N more" for additional roles
+ * @param root0
+ * @param root0.roles
  */
 function RolesCell({ roles }: { roles: string[] }): JSX.Element {
   const { t } = useTranslation();
@@ -269,7 +266,23 @@ export const AccountTable = React.memo(function AccountTable({
 
         <Table.Tbody>
           {accounts.map((account) => (
-            <Table.Tr key={account.id}>
+            <Table.Tr
+              key={account.id}
+              style={{
+                transition: 'all var(--emr-transition-fast)',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(26, 54, 93, 0.04)';
+                e.currentTarget.style.transform = 'scale(1.005)';
+                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
               <Table.Td>{account.staffId || '-'}</Table.Td>
               <Table.Td>{account.name}</Table.Td>
               <Table.Td>{account.email}</Table.Td>
@@ -289,7 +302,22 @@ export const AccountTable = React.memo(function AccountTable({
                   {/* Action Menu Dropdown */}
                   <Menu position="bottom-end">
                     <Menu.Target>
-                      <ActionIcon variant="subtle" color="gray" size="lg">
+                      <ActionIcon
+                        variant="subtle"
+                        color="gray"
+                        size="lg"
+                        style={{
+                          transition: 'var(--emr-transition-fast)',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'var(--emr-gradient-primary)';
+                          e.currentTarget.style.color = 'white';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent';
+                          e.currentTarget.style.color = 'inherit';
+                        }}
+                      >
                         <IconDots size={18} />
                       </ActionIcon>
                     </Menu.Target>
@@ -297,6 +325,12 @@ export const AccountTable = React.memo(function AccountTable({
                       <Menu.Item
                         leftSection={<IconEdit size={14} />}
                         onClick={() => onEdit(account)}
+                        style={{
+                          transition: 'var(--emr-transition-fast)',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'linear-gradient(90deg, rgba(26,54,93,0.1) 0%, transparent 100%)';
+                        }}
                       >
                         {t('accountManagement.table.edit')}
                       </Menu.Item>

@@ -1,11 +1,7 @@
-/**
- * TypeScript interfaces for Hospital Account Management Dashboard
- *
- * This file defines all type interfaces for the account management feature,
- * including form values, FHIR resource data structures, and UI state management.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { Practitioner, PractitionerRole, AccessPolicy, Organization, Reference } from '@medplum/fhirtypes';
+import type { Practitioner, PractitionerRole, Reference } from '@medplum/fhirtypes';
 
 /**
  * Form values for creating/editing practitioner accounts
@@ -34,6 +30,13 @@ export interface AccountFormValues {
 
   // Multi-Role Assignment (US2)
   roles?: RoleAssignment[]; // Array of roles with specialties and departments
+
+  // RBAC Role Assignment (AccessPolicy-based roles from role management system)
+  rbacRoles?: {
+    roleId: string; // AccessPolicy resource ID
+    roleName: string; // Role display name
+    roleCode: string; // Role code
+  }[];
 
   // Department/Location Assignment (US3)
   departments?: string[]; // Organization resource IDs

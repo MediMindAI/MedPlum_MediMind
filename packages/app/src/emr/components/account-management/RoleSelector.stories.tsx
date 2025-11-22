@@ -1,4 +1,6 @@
-import { Meta, StoryObj } from '@storybook/react';
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
+import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { MantineProvider } from '@mantine/core';
 import { RoleSelector } from './RoleSelector';

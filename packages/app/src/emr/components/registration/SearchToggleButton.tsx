@@ -12,6 +12,9 @@ interface SearchToggleButtonProps {
 /**
  * Professional vertical linear search button positioned on left border
  * Production-ready with smooth animations and modern design
+ * @param root0
+ * @param root0.onClick
+ * @param root0.label
  */
 export function SearchToggleButton({ onClick, label }: SearchToggleButtonProps) {
   return (

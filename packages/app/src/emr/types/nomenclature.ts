@@ -1,9 +1,5 @@
-/**
- * Nomenclature Types
- *
- * TypeScript interfaces for the Nomenclature Medical 1 page
- * managing medical services (operations, consultations, studies).
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import type { ActivityDefinition } from '@medplum/fhirtypes';
 

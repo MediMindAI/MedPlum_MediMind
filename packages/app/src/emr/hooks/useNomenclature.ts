@@ -30,6 +30,7 @@ import type { ActivityDefinition } from '@medplum/fhirtypes';
  *   setPage,
  * } = useNomenclature();
  * ```
+ * @param initialSearchParams
  */
 export function useNomenclature(initialSearchParams: Partial<ServiceSearchParams> = {}) {
   const medplum = useMedplum();

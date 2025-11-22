@@ -1,15 +1,11 @@
-/**
- * Component Edit Modal
- *
- * Modal dialog for editing research components with 7 fields.
- * Matches original EMR editing functionality.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState, useEffect } from 'react';
 import { Modal, TextInput, Select, Button, Box, Stack } from '@mantine/core';
-import { ObservationDefinition } from '@medplum/fhirtypes';
+import type { ObservationDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
-import { ResearchComponentFormValues } from '../../../types/laboratory';
+import type { ResearchComponentFormValues } from '../../../types/laboratory';
 import { extractResearchComponentFormValues } from '../../../services/researchComponentService';
 import { SERVICE_TYPES } from '../../../translations/service-types.js';
 import { MEASUREMENT_UNITS } from '../../../translations/measurement-units.js';
@@ -27,6 +23,11 @@ interface ComponentEditModalProps {
 
 /**
  * Modal for editing research component details
+ * @param root0
+ * @param root0.component
+ * @param root0.onClose
+ * @param root0.onSave
+ * @param root0.loading
  */
 export function ComponentEditModal({
   component,

@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 import { IconCheck, IconLock, IconShieldCheck } from '@tabler/icons-react';
 import type { JSX, ReactNode } from 'react';
 import styles from './AuthLayout.module.css';

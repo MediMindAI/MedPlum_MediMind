@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useMedplum } from '@medplum/react-hooks';
-import { useEMRPermissions, EMRPermission } from '../../hooks/useEMRPermissions';
+import type { EMRPermission } from '../../hooks/useEMRPermissions';
+import { useEMRPermissions } from '../../hooks/useEMRPermissions';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -15,6 +16,10 @@ interface ProtectedRouteProps {
 /**
  * Protected route component that redirects to sign-in if not authenticated
  * Optionally requires admin permissions or specific EMR permissions
+ * @param root0
+ * @param root0.children
+ * @param root0.requireAdmin
+ * @param root0.requiredPermission
  */
 export function ProtectedRoute({
   children,

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Paper, Box, Group, ThemeIcon, Text, Badge } from '@mantine/core';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { SECTION_COLORS, SHADOWS, BORDER_RADIUS } from './theme.constants';
 
 export interface SectionCardProps {
@@ -34,6 +34,15 @@ export interface SectionCardProps {
  * - Optional feature badge
  * - Right-aligned content support
  *
+ * @param root0
+ * @param root0.number
+ * @param root0.title
+ * @param root0.badgeText
+ * @param root0.badgeIcon
+ * @param root0.rightContent
+ * @param root0.children
+ * @param root0.showNumber
+ * @param root0.padding
  * @example
  * ```tsx
  * <SectionCard number={1} title="რეგისტრაცია" badgeText="Basic Info">

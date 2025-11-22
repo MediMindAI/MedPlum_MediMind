@@ -1,12 +1,9 @@
-/**
- * Syringe Deletion Modal Component
- *
- * Confirmation dialog for deleting syringe/container types.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import { Modal, Text, Group, Button } from '@mantine/core';
-import { DeviceDefinition } from '@medplum/fhirtypes';
+import type { DeviceDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 interface SyringeDeletionModalProps {
@@ -24,6 +21,12 @@ interface SyringeDeletionModalProps {
 
 /**
  * SyringeDeletionModal Component
+ * @param root0
+ * @param root0.syringe
+ * @param root0.opened
+ * @param root0.onClose
+ * @param root0.onConfirm
+ * @param root0.loading
  */
 export function SyringeDeletionModal({
   syringe,
@@ -35,7 +38,7 @@ export function SyringeDeletionModal({
   const { t } = useTranslation();
 
   const handleConfirm = async (): Promise<void> => {
-    if (!syringe?.id) return;
+    if (!syringe?.id) {return;}
     await onConfirm(syringe.id);
     onClose();
   };

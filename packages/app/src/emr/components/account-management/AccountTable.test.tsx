@@ -1,8 +1,5 @@
-/**
- * Tests for AccountTable Component
- *
- * Tests table rendering, sorting, pagination, and row actions
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { screen, fireEvent } from '@testing-library/react';
 import { renderWithProviders } from '../../test-utils';

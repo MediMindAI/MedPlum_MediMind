@@ -3,7 +3,8 @@
 
 import { Box, Collapse, Group, Text, UnstyledButton } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
-import { ReactNode, useState } from 'react';
+import type { ReactNode} from 'react';
+import { useState } from 'react';
 
 interface CollapsibleSectionProps {
   title: string;
@@ -17,6 +18,11 @@ interface CollapsibleSectionProps {
  * - Outline icons in theme colors
  * - Subtle backgrounds
  * - No colorful accents
+ * @param root0
+ * @param root0.title
+ * @param root0.children
+ * @param root0.defaultOpen
+ * @param root0.icon
  */
 export function CollapsibleSection({
   title,

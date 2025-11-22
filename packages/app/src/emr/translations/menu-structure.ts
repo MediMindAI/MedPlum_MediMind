@@ -85,6 +85,17 @@ export const mainMenuItems: MenuItem[] = [
     path: '/emr/forward',
   },
   {
+    key: 'forms',
+    translationKey: 'menu.forms',
+    path: '/emr/forms',
+    subMenu: [
+      { key: 'builder', translationKey: 'submenu.forms.builder', path: '/emr/forms/builder' },
+      { key: 'fill', translationKey: 'submenu.forms.fill', path: '/emr/forms/fill' },
+      { key: 'search', translationKey: 'submenu.forms.search', path: '/emr/forms/search' },
+      { key: 'manage', translationKey: 'submenu.forms.manage', path: '/emr/forms' },
+    ],
+  },
+  {
     key: 'reports',
     translationKey: 'menu.reports',
     path: '/emr/reports',
@@ -104,12 +115,14 @@ export const topNavItems: MenuItem[] = [
 
 /**
  * Get sub-menu items for a specific section
+ * @param section
  */
-export function getSubMenuItems(section: 'registration' | 'patient-history' | 'nomenclature'): MenuItem[] {
+export function getSubMenuItems(section: 'registration' | 'patient-history' | 'nomenclature' | 'forms'): MenuItem[] {
   const mainItem = mainMenuItems.find((item) => {
-    if (section === 'registration') return item.key === 'registration';
-    if (section === 'patient-history') return item.key === 'patientHistory';
-    if (section === 'nomenclature') return item.key === 'nomenclature';
+    if (section === 'registration') {return item.key === 'registration';}
+    if (section === 'patient-history') {return item.key === 'patientHistory';}
+    if (section === 'nomenclature') {return item.key === 'nomenclature';}
+    if (section === 'forms') {return item.key === 'forms';}
     return false;
   });
 

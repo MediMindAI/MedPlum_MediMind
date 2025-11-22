@@ -1,8 +1,5 @@
-/**
- * Tests for useAccountForm Hook
- *
- * Tests form state management and validation
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { MantineProvider } from '@mantine/core';

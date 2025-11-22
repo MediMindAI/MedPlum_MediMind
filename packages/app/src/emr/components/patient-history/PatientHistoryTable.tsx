@@ -25,6 +25,16 @@ interface PatientHistoryTableProps {
 /**
  * Patient visit history table with 10 columns
  * Features: clickable rows, financial highlighting, sortable date column, edit/delete actions
+ * @param root0
+ * @param root0.visits
+ * @param root0.loading
+ * @param root0.onEdit
+ * @param root0.onDelete
+ * @param root0.onSort
+ * @param root0.sortField
+ * @param root0.sortDirection
+ * @param root0.onRowClick
+ * @param root0.selectedPatientId
  */
 export function PatientHistoryTable({
   visits,
@@ -42,6 +52,7 @@ export function PatientHistoryTable({
 
   /**
    * Format currency value to 2 decimal places
+   * @param value
    */
   const formatCurrency = (value: number): string => {
     return value.toFixed(2);
@@ -49,6 +60,7 @@ export function PatientHistoryTable({
 
   /**
    * Format date/time for display
+   * @param dateStr
    */
   const formatDateTime = (dateStr: string): string => {
     const date = new Date(dateStr);
@@ -63,6 +75,7 @@ export function PatientHistoryTable({
 
   /**
    * Format registration number (preserve "a-" prefix for ambulatory)
+   * @param regNum
    */
   const formatRegistrationNumber = (regNum: string): string => {
     return regNum; // Already formatted in FHIR mapper
@@ -70,6 +83,7 @@ export function PatientHistoryTable({
 
   /**
    * Handle row click for navigation or custom handler
+   * @param visitId
    */
   const handleRowClick = (visitId: string) => {
     if (onRowClick) {

@@ -3,7 +3,7 @@
 
 import { Box } from '@mantine/core';
 import { useState, useEffect } from 'react';
-import { CalendarProps, CalendarView } from './calendar.types';
+import type { CalendarProps, CalendarView } from './calendar.types';
 import { CalendarHeader } from './CalendarHeader';
 import { DayGrid } from './DayGrid';
 import { MonthGrid } from './MonthGrid';
@@ -19,6 +19,16 @@ import { getCalendarDays, getMonthsGrid, getYearsGrid } from './calendar.utils';
  * - Date range selection
  * - Smooth animations
  * - Full year range (1900-2035+)
+ * @param root0
+ * @param root0.value
+ * @param root0.onChange
+ * @param root0.minDate
+ * @param root0.maxDate
+ * @param root0.rangeMode
+ * @param root0.rangeStart
+ * @param root0.rangeEnd
+ * @param root0.onRangeChange
+ * @param root0.defaultView
  */
 export function EMRCalendar({
   value,

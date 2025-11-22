@@ -1,8 +1,10 @@
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { MedplumProvider } from '@medplum/react-hooks';
 import { MockClient } from '@medplum/mock';
 import { MantineProvider } from '@mantine/core';
-import { PractitionerRole } from '@medplum/fhirtypes';
+import type { PractitionerRole } from '@medplum/fhirtypes';
 import { useRoleManagement } from './useRoleManagement';
 
 describe('useRoleManagement', () => {
@@ -14,7 +16,7 @@ describe('useRoleManagement', () => {
     localStorage.setItem('emrLanguage', 'ka');
   });
 
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
+  const wrapper = ({ children }: { children: React.ReactNode }): JSX.Element => (
     <MantineProvider>
       <MedplumProvider medplum={medplum}>{children}</MedplumProvider>
     </MantineProvider>

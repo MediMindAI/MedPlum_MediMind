@@ -54,6 +54,7 @@ export function PatientHistoryView(): JSX.Element {
 
   /**
    * Handle row click to select patient and open detail modal
+   * @param visitId
    */
   const handleRowClick = (visitId: string) => {
     // Find the selected visit/patient
@@ -67,6 +68,7 @@ export function PatientHistoryView(): JSX.Element {
 
   /**
    * Handle edit button click
+   * @param visitId
    */
   const handleEdit = (visitId: string) => {
     setSelectedVisitId(visitId);
@@ -75,6 +77,7 @@ export function PatientHistoryView(): JSX.Element {
 
   /**
    * Handle delete button click
+   * @param visitId
    */
   const handleDelete = (visitId: string) => {
     setSelectedVisitId(visitId);

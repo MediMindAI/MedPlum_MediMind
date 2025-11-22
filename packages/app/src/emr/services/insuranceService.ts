@@ -14,6 +14,8 @@ import type { InsuranceCoverageValues } from '../types/patient-history';
  *
  * Since we can't search by extension directly, we fetch all Coverages and filter client-side.
  * This is a workaround until custom search parameters are configured on the server.
+ * @param medplum
+ * @param encounterId
  */
 export async function fetchCoveragesForEncounter(
   medplum: MedplumClient,
@@ -37,6 +39,10 @@ export async function fetchCoveragesForEncounter(
 /**
  * Upsert Coverage resource (create or update)
  * order: 1=primary, 2=secondary, 3=tertiary
+ * @param medplum
+ * @param encounter
+ * @param values
+ * @param order
  */
 export async function upsertCoverage(
   medplum: MedplumClient,
@@ -92,6 +98,8 @@ export async function upsertCoverage(
 
 /**
  * Delete Coverage resource
+ * @param medplum
+ * @param coverageId
  */
 export async function deleteCoverage(medplum: MedplumClient, coverageId: string): Promise<void> {
   await medplum.deleteResource('Coverage', coverageId);

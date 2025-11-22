@@ -1,16 +1,12 @@
-/**
- * AccountEditView - Full-Page Edit
- *
- * Route-based editing at /emr/account-management/edit/:id
- * Alternative to modal editing (for direct URL access)
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { Container, Title, Paper, Button, Stack } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMedplum } from '@medplum/react-hooks';
-import { Practitioner } from '@medplum/fhirtypes';
+import type { Practitioner } from '@medplum/fhirtypes';
 import { AccountForm } from '../../components/account-management/AccountForm';
 import { useTranslation } from '../../hooks/useTranslation';
 import { updatePractitioner, getPractitionerById } from '../../services/accountService';
@@ -61,7 +57,7 @@ export function AccountEditView(): JSX.Element {
   }, [id, medplum, navigate, t]);
 
   const handleSubmit = async (values: AccountFormValues) => {
-    if (!practitioner) return;
+    if (!practitioner) {return;}
 
     setSubmitting(true);
     try {

@@ -1,0 +1,152 @@
+{
+  "view-patient-list": {
+    "ka": "პაციენტთა სიის ნახვა",
+    "en": "View Patient List",
+    "ru": "Просмотр списка пациентов"
+  },
+  "view-patient-demographics": {
+    "ka": "პაციენტის დემოგრაფიის ნახვა",
+    "en": "View Patient Demographics",
+    "ru": "Просмотр демографии пациента"
+  },
+  "edit-patient-demographics": {
+    "ka": "პაციენტის დემოგრაფიის რედაქტირება",
+    "en": "Edit Patient Demographics",
+    "ru": "Редактирование демографии пациента"
+  },
+  "create-patient": {
+    "ka": "პაციენტის შექმნა",
+    "en": "Create Patient",
+    "ru": "Создать пациента"
+  },
+  "delete-patient": {
+    "ka": "პაციენტის წაშლა",
+    "en": "Delete Patient",
+    "ru": "Удалить пациента"
+  },
+  "view-patient-history": {
+    "ka": "პაციენტის ისტორიის ნახვა",
+    "en": "View Patient History",
+    "ru": "Просмотр истории пациента"
+  },
+  "view-encounters": {
+    "ka": "ვიზიტების ნახვა",
+    "en": "View Encounters",
+    "ru": "Просмотр визитов"
+  },
+  "create-encounter": {
+    "ka": "ვიზიტის შექმნა",
+    "en": "Create Encounter",
+    "ru": "Создать визит"
+  },
+  "edit-encounter": {
+    "ka": "ვიზიტის რედაქტირება",
+    "en": "Edit Encounter",
+    "ru": "Редактировать визит"
+  },
+  "view-clinical-notes": {
+    "ka": "კლინიკური ჩანაწერების ნახვა",
+    "en": "View Clinical Notes",
+    "ru": "Просмотр клинических заметок"
+  },
+  "create-clinical-notes": {
+    "ka": "კლინიკური ჩანაწერების შექმნა",
+    "en": "Create Clinical Notes",
+    "ru": "Создать клинические заметки"
+  },
+  "sign-clinical-documents": {
+    "ka": "კლინიკური დოკუმენტების ხელმოწერა",
+    "en": "Sign Clinical Documents",
+    "ru": "Подписать клинические документы"
+  },
+  "view-lab-results": {
+    "ka": "ლაბორატორიული შედეგების ნახვა",
+    "en": "View Lab Results",
+    "ru": "Просмотр результатов лабораторных исследований"
+  },
+  "order-lab-tests": {
+    "ka": "ლაბორატორიული ტესტების შეკვეთა",
+    "en": "Order Lab Tests",
+    "ru": "Заказать лабораторные тесты"
+  },
+  "edit-lab-results": {
+    "ka": "ლაბორატორიული შედეგების რედაქტირება",
+    "en": "Edit Lab Results",
+    "ru": "Редактировать результаты лабораторных исследований"
+  },
+  "approve-lab-results": {
+    "ka": "ლაბორატორიული შედეგების დამტკიცება",
+    "en": "Approve Lab Results",
+    "ru": "Утвердить результаты лабораторных исследований"
+  },
+  "view-invoices": {
+    "ka": "ინვოისების ნახვა",
+    "en": "View Invoices",
+    "ru": "Просмотр счетов"
+  },
+  "create-invoices": {
+    "ka": "ინვოისების შექმნა",
+    "en": "Create Invoices",
+    "ru": "Создать счета"
+  },
+  "process-payments": {
+    "ka": "გადახდების დამუშავება",
+    "en": "Process Payments",
+    "ru": "Обработать платежи"
+  },
+  "view-financial-reports": {
+    "ka": "ფინანსური ანგარიშების ნახვა",
+    "en": "View Financial Reports",
+    "ru": "Просмотр финансовых отчетов"
+  },
+  "manage-insurance-claims": {
+    "ka": "დაზღვევის პრეტენზიების მართვა",
+    "en": "Manage Insurance Claims",
+    "ru": "Управление страховыми претензиями"
+  },
+  "view-users": {
+    "ka": "მომხმარებლების ნახვა",
+    "en": "View Users",
+    "ru": "Просмотр пользователей"
+  },
+  "create-user": {
+    "ka": "მომხმარებლის შექმნა",
+    "en": "Create User",
+    "ru": "Создать пользователя"
+  },
+  "edit-user": {
+    "ka": "მომხმარებლის რედაქტირება",
+    "en": "Edit User",
+    "ru": "Редактировать пользователя"
+  },
+  "view-roles": {
+    "ka": "როლების ნახვა",
+    "en": "View Roles",
+    "ru": "Просмотр ролей"
+  },
+  "create-role": {
+    "ka": "როლის შექმნა",
+    "en": "Create Role",
+    "ru": "Создать роль"
+  },
+  "edit-role": {
+    "ka": "როლის რედაქტირება",
+    "en": "Edit Role",
+    "ru": "Редактировать роль"
+  },
+  "delete-role": {
+    "ka": "როლის წაშლა",
+    "en": "Delete Role",
+    "ru": "Удалить роль"
+  },
+  "assign-roles": {
+    "ka": "როლების მინიჭება",
+    "en": "Assign Roles",
+    "ru": "Назначить роли"
+  },
+  "view-audit-logs": {
+    "ka": "აუდიტის ჟურნალის ნახვა",
+    "en": "View Audit Logs",
+    "ru": "Просмотр журнала аудита"
+  }
+}

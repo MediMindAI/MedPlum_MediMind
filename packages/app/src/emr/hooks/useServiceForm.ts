@@ -134,40 +134,46 @@ export function useServiceForm() {
    *
    * Extracts FHIR ActivityDefinition fields and maps them to form values.
    * Helper function to safely get extension values.
+   * @param activity
+   * @param url
    */
   const getExtensionValue = (
     activity: ActivityDefinition | undefined,
     url: string
   ): string | number | boolean | undefined => {
-    if (!activity?.extension) return undefined;
+    if (!activity?.extension) {return undefined;}
     const ext = activity.extension.find((e) => e.url === url);
-    if (!ext) return undefined;
+    if (!ext) {return undefined;}
 
     // Handle different value types
-    if (ext.valueString !== undefined) return ext.valueString;
-    if (ext.valueInteger !== undefined) return ext.valueInteger;
-    if (ext.valueDecimal !== undefined) return ext.valueDecimal;
-    if (ext.valueBoolean !== undefined) return ext.valueBoolean;
+    if (ext.valueString !== undefined) {return ext.valueString;}
+    if (ext.valueInteger !== undefined) {return ext.valueInteger;}
+    if (ext.valueDecimal !== undefined) {return ext.valueDecimal;}
+    if (ext.valueBoolean !== undefined) {return ext.valueBoolean;}
 
     return undefined;
   };
 
   /**
    * Helper function to get identifier value
+   * @param activity
+   * @param system
    */
   const getIdentifierValue = (activity: ActivityDefinition | undefined, system: string): string | undefined => {
-    if (!activity?.identifier) return undefined;
+    if (!activity?.identifier) {return undefined;}
     const identifier = activity.identifier.find((id) => id.system === system);
     return identifier?.value;
   };
 
   /**
    * Helper function to get array extension values (departments)
+   * @param activity
+   * @param url
    */
   const getArrayExtensionValue = (activity: ActivityDefinition | undefined, url: string): string[] => {
-    if (!activity?.extension) return [];
+    if (!activity?.extension) {return [];}
     const ext = activity.extension.find((e) => e.url === url);
-    if (!ext?.valueString) return [];
+    if (!ext?.valueString) {return [];}
 
     try {
       const parsed = JSON.parse(ext.valueString);

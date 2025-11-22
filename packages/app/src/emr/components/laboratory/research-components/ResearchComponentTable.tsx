@@ -1,8 +1,5 @@
-/**
- * Research Component Table
- *
- * Displays 7-column table of laboratory test parameters.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import { Table, ActionIcon, Text, Skeleton, Box, Stack, Tooltip } from '@mantine/core';
@@ -24,6 +21,11 @@ interface ResearchComponentTableProps {
 
 /**
  * Table displaying research components with 7 columns
+ * @param root0
+ * @param root0.components
+ * @param root0.onEdit
+ * @param root0.onDelete
+ * @param root0.loading
  */
 export function ResearchComponentTable({
   components,

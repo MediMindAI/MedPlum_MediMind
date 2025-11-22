@@ -1,12 +1,9 @@
-/**
- * useManipulations Hook
- *
- * Manages manipulation/procedure data fetching, caching, and state management.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import { useEffect, useState } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
-import { ActivityDefinition } from '@medplum/fhirtypes';
+import type { ActivityDefinition } from '@medplum/fhirtypes';
 import { searchManipulations } from '../services/manipulationService';
 
 interface UseManipulationsOptions {
@@ -33,6 +30,7 @@ interface UseManipulationsResult {
 
 /**
  * Hook for fetching and managing manipulation types
+ * @param options
  */
 export function useManipulations(options: UseManipulationsOptions = {}): UseManipulationsResult {
   const medplum = useMedplum();

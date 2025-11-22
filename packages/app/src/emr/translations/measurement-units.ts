@@ -1,9 +1,5 @@
-/**
- * Measurement Units for Laboratory Tests
- *
- * 25+ common measurement units used in laboratory nomenclature
- * with Georgian, English, Russian translations and UCUM codes.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 export interface MeasurementUnit {
   value: string;

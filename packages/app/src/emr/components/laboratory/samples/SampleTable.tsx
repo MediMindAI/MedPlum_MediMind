@@ -1,14 +1,10 @@
-/**
- * Sample Table Component
- *
- * Displays sample types in a table with inline editing capability.
- * Supports add/edit/delete operations.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { Table, ActionIcon, TextInput, Button, Box, Text } from '@mantine/core';
 import { IconPencil, IconTrash, IconCheck, IconX } from '@tabler/icons-react';
-import { SpecimenDefinition } from '@medplum/fhirtypes';
+import type { SpecimenDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 
 interface SampleTableProps {
@@ -24,6 +20,11 @@ interface SampleTableProps {
 
 /**
  * SampleTable Component
+ * @param root0
+ * @param root0.samples
+ * @param root0.onEdit
+ * @param root0.onDelete
+ * @param root0.loading
  */
 export function SampleTable({ samples, onEdit, onDelete, loading }: SampleTableProps): JSX.Element {
   const { t } = useTranslation();
@@ -31,13 +32,13 @@ export function SampleTable({ samples, onEdit, onDelete, loading }: SampleTableP
   const [editValue, setEditValue] = useState('');
 
   const handleEditStart = (sample: SpecimenDefinition): void => {
-    if (!sample.id) return;
+    if (!sample.id) {return;}
     setEditingId(sample.id);
     setEditValue(sample.typeCollected?.text || '');
   };
 
   const handleEditSave = async (id: string): Promise<void> => {
-    if (!editValue.trim()) return;
+    if (!editValue.trim()) {return;}
     await onEdit(id, editValue);
     setEditingId(null);
     setEditValue('');

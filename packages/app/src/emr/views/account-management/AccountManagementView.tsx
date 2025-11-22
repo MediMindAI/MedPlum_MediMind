@@ -1,23 +1,17 @@
-/**
- * AccountManagementView - Main Dashboard
- *
- * Modern account management interface with dashboard stats, filters, and responsive table
- * Features:
- * - Dashboard KPI cards (Total, Active, Pending, Inactive)
- * - Search and filter controls
- * - Responsive table/card view
- * - Floating action button for quick account creation
- * - Modal forms for create/edit operations
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import { Container, Title, Stack, Paper, Group, Button, Modal } from '@mantine/core';
+import { Container, Title, Stack, Paper, Group, Button, Modal, Box, Tabs } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useState, useMemo } from 'react';
-import { IconPlus } from '@tabler/icons-react';
+import { IconPlus, IconChartBar, IconFilter, IconUsers, IconShieldLock } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
 import { useMediaQuery } from '@mantine/hooks';
-import { DashboardStats, type DashboardStatsData } from '../../components/account-management/DashboardStats';
-import { AccountFilters, type AccountFiltersState } from '../../components/account-management/AccountFilters';
+import { SectionHeader } from '../../components/common/SectionHeader';
+import { DashboardStats  } from '../../components/account-management/DashboardStats';
+import type {DashboardStatsData} from '../../components/account-management/DashboardStats';
+import { AccountFilters  } from '../../components/account-management/AccountFilters';
+import type {AccountFiltersState} from '../../components/account-management/AccountFilters';
 import { AccountTable } from '../../components/account-management/AccountTable';
 import { AccountForm } from '../../components/account-management/AccountForm';
 import { AccountEditModal } from '../../components/account-management/AccountEditModal';
@@ -26,9 +20,10 @@ import { DeactivationConfirmationModal } from '../../components/account-manageme
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAccountList } from '../../hooks/useAccountList';
 import { useDeactivation } from '../../hooks/useDeactivation';
-import { createPractitioner } from '../../services/accountService';
+import { createPractitionerWithActivationUrl } from '../../services/accountService';
 import accountRolesData from '../../translations/account-roles.json';
 import type { AccountFormValues, AccountRow } from '../../types/account-management';
+import { RoleManagementView } from '../role-management/RoleManagementView';
 
 /**
  * Main account management dashboard view
@@ -43,6 +38,7 @@ import type { AccountFormValues, AccountRow } from '../../types/account-manageme
  * - Deactivate/reactivate accounts
  * - Mobile-first responsive layout
  * - Auto-refresh after CRUD operations
+ * @returns Account management view component
  */
 export function AccountManagementView(): JSX.Element {
   const medplum = useMedplum();
@@ -93,7 +89,7 @@ export function AccountManagementView(): JSX.Element {
         (account) =>
           account.name.toLowerCase().includes(query) ||
           account.email.toLowerCase().includes(query) ||
-          (account.staffId && account.staffId.toLowerCase().includes(query))
+          (account.staffId?.toLowerCase().includes(query))
       );
     }
 
@@ -124,17 +120,70 @@ export function AccountManagementView(): JSX.Element {
 
   /**
    * Handle new account creation
+   * @param values - Account form values
+   * @returns Promise that resolves when account is created
    */
-  const handleCreate = async (values: AccountFormValues) => {
+  const handleCreate = async (values: AccountFormValues): Promise<void> => {
     setCreating(true);
     try {
-      await createPractitioner(medplum, values);
+      const { activationUrl } = await createPractitionerWithActivationUrl(medplum, values);
 
+      // Show success notification
       notifications.show({
         title: t('accountManagement.create.success'),
         message: t('accountManagement.create.successMessage'),
         color: 'green',
       });
+
+      // If activation URL is available (email not configured), show it
+      if (activationUrl) {
+        notifications.show({
+          title: t('accountManagement.activationUrlTitle'),
+          message: t('accountManagement.activationUrlMessage'),
+          color: 'yellow',
+          autoClose: false, // Don't auto-close - user needs to copy the URL
+          styles: {
+            root: {
+              background: 'linear-gradient(135deg, #f59f00 0%, #fd7e14 100%)',
+              color: 'white',
+            },
+            description: {
+              color: 'white',
+              fontSize: '14px',
+              marginBottom: '8px',
+            },
+          },
+          // Show the URL in a copyable format
+          message: (
+            <div>
+              <div style={{ marginBottom: '8px' }}>{t('accountManagement.activationUrlMessage')}</div>
+              <div
+                style={{
+                  background: 'rgba(255, 255, 255, 0.2)',
+                  padding: '8px',
+                  borderRadius: '4px',
+                  fontFamily: 'monospace',
+                  fontSize: '12px',
+                  wordBreak: 'break-all',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  navigator.clipboard.writeText(activationUrl);
+                  notifications.show({
+                    message: t('accountManagement.urlCopied'),
+                    color: 'green',
+                  });
+                }}
+              >
+                {activationUrl}
+              </div>
+              <div style={{ marginTop: '8px', fontSize: '12px', opacity: 0.9 }}>
+                {t('accountManagement.clickToCopy')}
+              </div>
+            </div>
+          ),
+        });
+      }
 
       // Close modal and refresh list
       setCreateModalOpened(false);
@@ -152,6 +201,7 @@ export function AccountManagementView(): JSX.Element {
 
   /**
    * Handle edit button click
+   * @param account
    */
   const handleEdit = (account: AccountRow) => {
     setEditingAccount(account);
@@ -160,6 +210,7 @@ export function AccountManagementView(): JSX.Element {
 
   /**
    * Handle delete button click
+   * @param account
    */
   const handleDelete = async (account: AccountRow) => {
     // TODO: Implement delete confirmation modal
@@ -180,60 +231,109 @@ export function AccountManagementView(): JSX.Element {
   };
 
   return (
-    <Container size="xl" px={32} py={24}>
-      <Stack gap={24}>
-        {/* Page Header */}
-        <Group justify="space-between" align="center" wrap="wrap">
-          <Title order={1} style={{ fontSize: '32px', fontWeight: 700, color: 'var(--emr-primary)' }}>
-            {t('accountManagement.title')}
-          </Title>
+    <Box
+      style={{
+        background: 'var(--emr-section-header-bg)',
+        minHeight: '100vh',
+      }}
+    >
+      {/* Gradient Accent Bar */}
+      <Box
+        style={{
+          height: 4,
+          background: 'var(--emr-gradient-primary)',
+          width: '100%',
+        }}
+      />
 
-          {/* Create Button (Mobile only - FAB shown on desktop) */}
-          {isMobile && (
-            <Button
-              leftSection={<IconPlus size={16} />}
-              onClick={() => setCreateModalOpened(true)}
+      <Container size="100%" px={{ base: 20, sm: 32, md: 48, lg: 64 }} py={32} style={{ maxWidth: '1800px' }}>
+        <Stack gap={32}>
+          {/* Page Header */}
+          <Group justify="space-between" align="center" wrap="wrap">
+            <Title order={1} style={{ fontSize: '32px', fontWeight: 700, color: 'var(--emr-primary)' }}>
+              {t('accountManagement.title')}
+            </Title>
+
+            {/* Create Button (Mobile only - FAB shown on desktop) */}
+            {isMobile && (
+              <Button
+                leftSection={<IconPlus size={16} />}
+                onClick={() => setCreateModalOpened(true)}
+                style={{
+                  background: 'var(--emr-gradient-primary)',
+                }}
+              >
+                {t('accountManagement.create.title')}
+              </Button>
+            )}
+          </Group>
+
+          {/* Tabs for Accounts and Roles */}
+          <Tabs defaultValue="accounts" variant="pills">
+            <Tabs.List>
+              <Tabs.Tab value="accounts" leftSection={<IconUsers size={16} />}>
+                Accounts
+              </Tabs.Tab>
+              <Tabs.Tab value="roles" leftSection={<IconShieldLock size={16} />}>
+                Roles
+              </Tabs.Tab>
+            </Tabs.List>
+
+            <Tabs.Panel value="accounts" pt="md">
+              <Stack gap={32}>
+
+          {/* Dashboard Stats Section */}
+          <Box>
+            <SectionHeader icon={IconChartBar} title="მეტრიკა" />
+            <DashboardStats stats={stats} loading={loading} />
+          </Box>
+
+          {/* Filters Section */}
+          <Box>
+            <SectionHeader icon={IconFilter} title="ძიება და ფილტრები" />
+            <AccountFilters
+              filters={filters}
+              onFiltersChange={setFilters}
+              roleOptions={roleOptions}
+              resultCount={filteredAccounts.length}
+              totalCount={accounts.length}
+            />
+          </Box>
+
+          {/* Account Table Section */}
+          <Box>
+            <SectionHeader icon={IconUsers} title="მომხმარებლების სია" />
+            <Paper
+              p={24}
+              withBorder
               style={{
-                background: 'var(--emr-gradient-primary)',
+                background: 'var(--emr-text-inverse)',
+                borderRadius: 'var(--emr-border-radius-lg)',
+                boxShadow: 'var(--emr-shadow-card)',
+                borderTop: '4px solid transparent',
+                borderImage: 'var(--emr-gradient-primary) 1',
+                transition: 'var(--emr-transition-base)',
               }}
             >
-              {t('accountManagement.create.title')}
-            </Button>
-          )}
-        </Group>
+              <AccountTable
+                accounts={filteredAccounts}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onDeactivate={openDeactivationModal}
+                onReactivate={handleReactivate}
+                loading={loading}
+              />
+            </Paper>
+          </Box>
+        </Stack>
+            </Tabs.Panel>
 
-        {/* Dashboard Stats Cards */}
-        <DashboardStats stats={stats} loading={loading} />
-
-        {/* Filters */}
-        <AccountFilters
-          filters={filters}
-          onFiltersChange={setFilters}
-          roleOptions={roleOptions}
-          resultCount={filteredAccounts.length}
-          totalCount={accounts.length}
-        />
-
-        {/* Account Table */}
-        <Paper
-          p={24}
-          withBorder
-          style={{
-            background: '#ffffff',
-            borderRadius: '8px',
-            boxShadow: 'var(--emr-shadow-card)',
-          }}
-        >
-          <AccountTable
-            accounts={filteredAccounts}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onDeactivate={openDeactivationModal}
-            onReactivate={handleReactivate}
-            loading={loading}
-          />
-        </Paper>
-      </Stack>
+            <Tabs.Panel value="roles" pt="md">
+              <RoleManagementView />
+            </Tabs.Panel>
+          </Tabs>
+        </Stack>
+      </Container>
 
       {/* Floating Action Button (Desktop only) */}
       <CreateAccountFAB onClick={() => setCreateModalOpened(true)} />
@@ -265,6 +365,6 @@ export function AccountManagementView(): JSX.Element {
         onConfirm={handleDeactivate}
         loading={isDeactivating}
       />
-    </Container>
+    </Box>
   );
 }

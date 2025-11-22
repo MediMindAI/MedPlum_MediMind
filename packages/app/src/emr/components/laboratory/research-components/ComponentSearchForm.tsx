@@ -1,20 +1,11 @@
-/**
- * Component Search Form
- *
- * Advanced search form matching original EMR design with 6 filter fields:
- * - Code filter
- * - GIS Code filter
- * - Parameter name search
- * - Status dropdown (active/retired)
- * - Type dropdown (7 service types)
- * - Unit dropdown (56 measurement units)
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
 import { TextInput, Select, Box, ActionIcon, Grid } from '@mantine/core';
 import { IconSearch, IconRefresh } from '@tabler/icons-react';
 import { useTranslation } from '../../../hooks/useTranslation';
-import { ComponentSearchFilters } from '../../../types/laboratory';
+import type { ComponentSearchFilters } from '../../../types/laboratory';
 import { SERVICE_TYPES } from '../../../translations/service-types.js';
 import { MEASUREMENT_UNITS } from '../../../translations/measurement-units.js';
 
@@ -31,6 +22,11 @@ interface ComponentSearchFormProps {
 
 /**
  * Search form with 6 filter fields matching original EMR
+ * @param root0
+ * @param root0.filters
+ * @param root0.onFiltersChange
+ * @param root0.onSearch
+ * @param root0.onRefresh
  */
 export function ComponentSearchForm({
   filters,

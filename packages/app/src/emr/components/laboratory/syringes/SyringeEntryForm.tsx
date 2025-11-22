@@ -1,15 +1,11 @@
-/**
- * Syringe Entry Form Component
- *
- * Inline form for adding new syringe/container types.
- * Includes name, color picker, and volume fields.
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
 import { Box, TextInput, Button, Group, NumberInput, ColorInput } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useTranslation } from '../../../hooks/useTranslation';
-import { SyringeFormValues } from '../../../types/laboratory';
+import type { SyringeFormValues } from '../../../types/laboratory';
 
 interface SyringeEntryFormProps {
   /** Callback when form is submitted */
@@ -20,6 +16,9 @@ interface SyringeEntryFormProps {
 
 /**
  * SyringeEntryForm Component
+ * @param root0
+ * @param root0.onSubmit
+ * @param root0.loading
  */
 export function SyringeEntryForm({ onSubmit, loading }: SyringeEntryFormProps): JSX.Element {
   const { t } = useTranslation();
@@ -30,7 +29,7 @@ export function SyringeEntryForm({ onSubmit, loading }: SyringeEntryFormProps): 
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
-    if (!name.trim() || !color) return;
+    if (!name.trim() || !color) {return;}
 
     setSubmitting(true);
     try {

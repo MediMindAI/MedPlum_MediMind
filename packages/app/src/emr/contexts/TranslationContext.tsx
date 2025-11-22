@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 import kaTranslations from '../translations/ka.json';
 import enTranslations from '../translations/en.json';
 import ruTranslations from '../translations/ru.json';
@@ -33,6 +34,8 @@ interface TranslationProviderProps {
 /**
  * Provider component that manages language state globally
  * Wrap your app with this to enable language switching across all components
+ * @param root0
+ * @param root0.children
  */
 export function TranslationProvider({ children }: TranslationProviderProps) {
   const [lang, setLangState] = useState<Language>(() => {

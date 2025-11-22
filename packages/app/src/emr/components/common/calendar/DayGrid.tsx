@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Grid, Text } from '@mantine/core';
-import { DateCell } from './calendar.types';
+import type { DateCell } from './calendar.types';
 import { getWeekdayNames } from './calendar.utils';
 
 interface DayGridProps {
@@ -12,6 +12,9 @@ interface DayGridProps {
 
 /**
  * Grid of days with beautiful styling and animations
+ * @param root0
+ * @param root0.days
+ * @param root0.onDayClick
  */
 export function DayGrid({ days, onDayClick }: DayGridProps) {
   const weekdayNames = getWeekdayNames(true);
@@ -86,7 +89,7 @@ export function DayGrid({ days, onDayClick }: DayGridProps) {
   };
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>, cell: DateCell) => {
-    if (cell.isDisabled) return;
+    if (cell.isDisabled) {return;}
     const target = e.currentTarget;
     if (!cell.isSelected && !cell.isRangeStart && !cell.isRangeEnd) {
       target.style.background = 'rgba(43, 108, 176, 0.12)';
@@ -96,7 +99,7 @@ export function DayGrid({ days, onDayClick }: DayGridProps) {
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>, cell: DateCell) => {
-    if (cell.isDisabled) return;
+    if (cell.isDisabled) {return;}
     const target = e.currentTarget;
     if (!cell.isSelected && !cell.isRangeStart && !cell.isRangeEnd) {
       if (cell.isInRange) {

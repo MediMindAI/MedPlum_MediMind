@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Paper, Text, Group, Stack, Box, Button, Badge, Pagination, Center } from '@mantine/core';
-import { IconFileSpreadsheet, IconStethoscope, IconList } from '@tabler/icons-react';
+import { Paper, Text, Stack, Box, Pagination, Center, Group } from '@mantine/core';
+import { IconStethoscope } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import type { JSX } from 'react';
 import { useState } from 'react';
@@ -70,6 +70,7 @@ export function NomenclatureMedical1View(): JSX.Element {
 
   /**
    * Handle edit button click from table
+   * @param service
    */
   const handleEdit = (service: ServiceTableRow) => {
     setServiceToEdit(service);
@@ -78,6 +79,7 @@ export function NomenclatureMedical1View(): JSX.Element {
 
   /**
    * Handle delete button click from table
+   * @param service
    */
   const handleDelete = (service: ServiceTableRow) => {
     setServiceToDelete(service);
@@ -86,6 +88,7 @@ export function NomenclatureMedical1View(): JSX.Element {
 
   /**
    * Handle registered services button click from table
+   * @param service
    */
   const handleOpenRegisteredServices = (service: ServiceTableRow) => {
     setServiceForRegisteredServices(service);
@@ -227,7 +230,7 @@ export function NomenclatureMedical1View(): JSX.Element {
                   size="md"
                   withEdges
                   style={{
-                    ['--mantine-color-primary']: 'var(--emr-primary)',
+                    '--mantine-color-primary': 'var(--emr-primary)',
                   } as React.CSSProperties}
                 />
               </Center>

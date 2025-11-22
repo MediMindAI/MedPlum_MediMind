@@ -1,13 +1,12 @@
-/**
- * Test Utilities for EMR Account Management
- *
- * Provides helper functions and wrapper components for testing
- * that include all necessary providers (Translation, Mantine, Router, Medplum)
- */
+// SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
+// SPDX-License-Identifier: Apache-2.0
 
-import React, { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
-import { MemoryRouter, MemoryRouterProps } from 'react-router-dom';
+import type { ReactElement } from 'react';
+import React from 'react';
+import type { RenderOptions } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import type { MemoryRouterProps } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { MedplumProvider } from '@medplum/react-hooks';
 import { MantineProvider } from '@mantine/core';
 import { MockClient } from '@medplum/mock';
@@ -18,6 +17,9 @@ import { TranslationProvider } from './contexts/TranslationContext';
  *
  * @param ui - Component to render
  * @param options - Render options with additional provider configurations
+ * @param options.medplum
+ * @param options.initialLanguage
+ * @param options.routerProps
  * @returns Render result from @testing-library/react
  */
 export function renderWithProviders(
@@ -57,6 +59,9 @@ export function renderWithProviders(
  * Create a wrapper component with all providers for hook testing
  *
  * @param options - Provider configurations
+ * @param options.medplum
+ * @param options.initialLanguage
+ * @param options.routerProps
  * @returns Wrapper component
  */
 export function createTestWrapper({

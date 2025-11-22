@@ -81,6 +81,12 @@
   --emr-stat-neutral: #6b7280;
   --emr-stat-danger: #ef4444;
 
+  /* Dashboard stat card gradients - using primary blue palette only */
+  --emr-stat-gradient-total: linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%);
+  --emr-stat-gradient-active: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+  --emr-stat-gradient-pending: linear-gradient(135deg, #3182ce 0%, #63b3ed 100%);
+  --emr-stat-gradient-inactive: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+
   /* ==================== CARD SHADOWS ==================== */
   /* Enhanced shadows for dashboard cards with hover states */
   --emr-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
@@ -214,4 +220,428 @@ body {
 
 .emr-scrollbar-hidden::-webkit-scrollbar {
   display: none;
+}
+
+/* ==================== PRINT STYLES ==================== */
+/* Print-specific styles for form viewer and PDF export */
+@media print {
+  /* Hide non-printable elements */
+  .no-print,
+  button,
+  nav,
+  header:not(.print-header),
+  .mantine-AppShell-header,
+  .mantine-AppShell-navbar,
+  .mantine-AppShell-aside,
+  .mantine-AppShell-footer,
+  [data-testid="topnav"],
+  [data-testid="main-menu"],
+  [data-testid="submenu"],
+  .emr-action-buttons,
+  .mantine-Modal-root,
+  .mantine-Notification-root {
+    display: none !important;
+  }
+
+  /* Show only print-specific headers */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Reset page layout */
+  html,
+  body {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+
+  #root {
+    min-height: auto !important;
+  }
+
+  /* Page setup */
+  @page {
+    size: A4 portrait;
+    margin: 20mm 15mm;
+  }
+
+  /* Main content area */
+  .mantine-AppShell-main,
+  [data-testid="form-viewer-view"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Form content styling */
+  [data-testid="form-content"],
+  [data-testid="patient-info-card"],
+  [data-testid="form-metadata"] {
+    box-shadow: none !important;
+    border: 1px solid var(--emr-gray-300) !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Typography adjustments for print */
+  body {
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: #000 !important;
+    page-break-after: avoid;
+  }
+
+  /* Ensure links are visible */
+  a {
+    color: #000 !important;
+    text-decoration: underline !important;
+  }
+
+  /* Preserve form field borders */
+  .mantine-Paper-root,
+  .mantine-Card-root {
+    border: 1px solid var(--emr-gray-300) !important;
+    box-shadow: none !important;
+  }
+
+  /* Patient info card styling */
+  [data-testid="patient-info-card"] {
+    background-color: #f8f8f8 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Status badges */
+  .mantine-Badge-root {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Signature images */
+  img[data-testid*="signature"] {
+    max-width: 200px;
+    border: 1px solid var(--emr-gray-300);
+  }
+
+  /* Footer for printed pages */
+  .print-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 9pt;
+    color: var(--emr-gray-500);
+    border-top: 1px solid var(--emr-gray-300);
+    padding-top: 5mm;
+  }
+
+  /* Page breaks */
+  .print-page-break {
+    page-break-before: always;
+  }
+
+  .print-avoid-break {
+    page-break-inside: avoid;
+  }
+
+  /* Form sections */
+  .form-section {
+    page-break-inside: avoid;
+    margin-bottom: 10mm;
+  }
+
+  /* Tables */
+  table {
+    border-collapse: collapse !important;
+  }
+
+  th, td {
+    border: 1px solid var(--emr-gray-300) !important;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tr {
+    page-break-inside: avoid;
+  }
+}
+
+/* ==================== RESPONSIVE FORM BUILDER STYLES (T159) ==================== */
+/* Mobile-first responsive utilities for form builder components */
+
+/* Hide on specific breakpoints */
+@media (max-width: 768px) {
+  .emr-hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .emr-hide-tablet {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .emr-hide-desktop {
+    display: none !important;
+  }
+}
+
+/* Show only on specific breakpoints */
+.emr-show-only-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .emr-show-only-mobile {
+    display: block;
+  }
+}
+
+/* Stack children vertically on mobile */
+.emr-stack-mobile {
+  display: flex;
+  flex-direction: row;
+  gap: var(--emr-spacing-md);
+}
+
+@media (max-width: 768px) {
+  .emr-stack-mobile {
+    flex-direction: column;
+  }
+}
+
+/* Touch-friendly sizing (44px minimum tap target) */
+.emr-touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 12px 16px;
+}
+
+/* Form builder panel layout */
+.emr-form-builder-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr 300px;
+  gap: var(--emr-spacing-md);
+  height: calc(100vh - var(--emr-topnav-height) - var(--emr-mainmenu-height) - var(--emr-submenu-height));
+}
+
+@media (max-width: 1024px) {
+  .emr-form-builder-layout {
+    grid-template-columns: 200px 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .emr-form-builder-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+}
+
+/* Form builder palette panel */
+.emr-form-palette {
+  background: var(--emr-gray-50);
+  border-radius: var(--emr-border-radius);
+  padding: var(--emr-spacing-md);
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .emr-form-palette {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 85%;
+    max-width: 320px;
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform var(--emr-transition-base);
+    box-shadow: var(--emr-shadow-xl);
+  }
+
+  .emr-form-palette.open {
+    transform: translateX(0);
+  }
+}
+
+/* Form builder canvas */
+.emr-form-canvas {
+  background: var(--emr-gray-50);
+  border-radius: var(--emr-border-radius);
+  padding: var(--emr-spacing-lg);
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .emr-form-canvas {
+    padding: var(--emr-spacing-sm);
+  }
+}
+
+/* Form builder properties panel */
+.emr-form-properties {
+  background: var(--emr-gray-50);
+  border-radius: var(--emr-border-radius);
+  padding: var(--emr-spacing-md);
+  overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .emr-form-properties {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 85%;
+    max-width: 350px;
+    z-index: 1001;
+    transform: translateX(100%);
+    transition: transform var(--emr-transition-base);
+    box-shadow: var(--emr-shadow-xl);
+  }
+
+  .emr-form-properties.open {
+    transform: translateX(0);
+  }
+}
+
+/* Mobile panel overlay */
+.emr-panel-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+@media (max-width: 768px) {
+  .emr-panel-overlay.visible {
+    display: block;
+  }
+}
+
+/* Floating action button for mobile */
+.emr-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--emr-gradient-primary);
+  color: white;
+  box-shadow: var(--emr-shadow-lg);
+  cursor: pointer;
+  z-index: 999;
+  border: none;
+  transition: transform var(--emr-transition-fast);
+}
+
+.emr-fab:hover {
+  transform: scale(1.05);
+}
+
+.emr-fab:active {
+  transform: scale(0.95);
+}
+
+@media (min-width: 1025px) {
+  .emr-fab {
+    display: none;
+  }
+}
+
+/* Form field cards for mobile */
+.emr-field-card {
+  background: white;
+  border-radius: var(--emr-border-radius);
+  padding: var(--emr-spacing-md);
+  margin-bottom: var(--emr-spacing-sm);
+  box-shadow: var(--emr-shadow-sm);
+  cursor: pointer;
+  transition: box-shadow var(--emr-transition-fast);
+}
+
+.emr-field-card:hover {
+  box-shadow: var(--emr-shadow-md);
+}
+
+.emr-field-card.selected {
+  border: 2px solid var(--emr-accent);
+  box-shadow: var(--emr-shadow-md);
+}
+
+@media (max-width: 768px) {
+  .emr-field-card {
+    padding: var(--emr-spacing-lg);
+  }
+}
+
+/* Responsive form input sizing */
+.emr-responsive-input {
+  min-height: 40px;
+}
+
+@media (max-width: 768px) {
+  .emr-responsive-input {
+    min-height: 44px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}
+
+/* Responsive modal sizing */
+@media (max-width: 768px) {
+  .emr-responsive-modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+}
+
+/* Print utility classes */
+.print-only {
+  display: none;
+}
+
+.print-header {
+  display: none;
+}
+
+@media print {
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 15mm;
+  }
+
+  .print-header h1 {
+    font-size: 18pt;
+    margin: 0 0 5mm 0;
+  }
+
+  .print-header .print-date {
+    font-size: 10pt;
+    color: var(--emr-gray-600);
+  }
 }
