@@ -108,11 +108,7 @@ export const EMRSwitch = forwardRef<HTMLInputElement, EMRSwitchProps>(
               backgroundColor: checked
                 ? (color || 'var(--emr-secondary)')
                 : 'var(--emr-gray-300)',
-              '&:focus-within': {
-                boxShadow: hasError
-                  ? 'var(--emr-input-error-glow)'
-                  : 'var(--emr-input-focus-ring)',
-              },
+              // Note: Focus styles are handled via CSS classes in emr-fields.css
             },
             thumb: {
               backgroundColor: 'white',

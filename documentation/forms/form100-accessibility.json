@@ -1,0 +1,1324 @@
+{
+  "role": "WebArea",
+  "name": "SoftMedic | ჰელსიკორი",
+  "children": [
+    {
+      "role": "text",
+      "name": "  Cicig"
+    },
+    {
+      "role": "link",
+      "name": "მთავარი"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "HR"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "რეპორტი"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "დეშბორდი"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "ჩაწერები"
+    },
+    {
+      "role": "link",
+      "name": "რეგისტრაცია"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "პაციენტის ისტორია",
+      "focused": true
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "ნომენკლატურა"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "ადმინისტრირება"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "ფორვარდი"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "ანგარიშები"
+    },
+    {
+      "role": "LineBreak",
+      "name": "\n"
+    },
+    {
+      "role": "link",
+      "name": "ისტორია"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "ჩემი პაციენტები"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "სუროგაცია"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "ინვოისები"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "100 რეპორტი"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "გაწერები"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "შესრულება"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "ლაბორატორია"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "მორიგეობა"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "დანიშნულება"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "სტაციონარი"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "კვება"
+    },
+    {
+      "role": "text",
+      "name": " "
+    },
+    {
+      "role": "link",
+      "name": "MOH"
+    },
+    {
+      "role": "link",
+      "name": "გადახდა"
+    },
+    {
+      "role": "link",
+      "name": "გაწერა"
+    },
+    {
+      "role": "link",
+      "name": "გადაწერა"
+    },
+    {
+      "role": "link",
+      "name": "ინვოისი"
+    },
+    {
+      "role": "link",
+      "name": "კალკულაცია"
+    },
+    {
+      "role": "link",
+      "name": "ანალიზები"
+    },
+    {
+      "role": "link",
+      "name": "ხელფასები"
+    },
+    {
+      "role": "link",
+      "name": ""
+    },
+    {
+      "role": "combobox",
+      "name": "",
+      "haspopup": "menu",
+      "children": [
+        {
+          "role": "option",
+          "name": "შიდა",
+          "selected": true
+        },
+        {
+          "role": "option",
+          "name": "სსიპ ჯანმრთელობის ეროვნული სააგენტო"
+        },
+        {
+          "role": "option",
+          "name": "ს.ს. სადაზღვევო კომპანია \"ჯიპიაი ჰოლდინგი\""
+        },
+        {
+          "role": "option",
+          "name": "ალდაგი"
+        },
+        {
+          "role": "option",
+          "name": "სს \"დაზღვევის კომპანია ქართუ\""
+        },
+        {
+          "role": "option",
+          "name": "სტანდარტ დაზღვევა"
+        },
+        {
+          "role": "option",
+          "name": "სს \"პსპ დაზღვევა\""
+        },
+        {
+          "role": "option",
+          "name": "სს „სადაზღვევო კომპანია ევროინს ჯორჯია“"
+        },
+        {
+          "role": "option",
+          "name": "შპს სადაზღვევო კომპანია \"არდი ჯგუფი\""
+        },
+        {
+          "role": "option",
+          "name": "აჭარის ავტონომიური რესპუბლიკის ჯანმრთელობისა და სოციალური დაცვის სამინისტრო"
+        },
+        {
+          "role": "option",
+          "name": "იმედი L"
+        },
+        {
+          "role": "option",
+          "name": "ქ. თბილისის მუნიციპალიტეტის მერია"
+        },
+        {
+          "role": "option",
+          "name": "სამხრეთ ოსეთის ადმინისტრაცია"
+        },
+        {
+          "role": "option",
+          "name": "ირაო"
+        },
+        {
+          "role": "option",
+          "name": "ვია-ვიტა"
+        },
+        {
+          "role": "option",
+          "name": "რეფერალური დახმარების ცენტრი"
+        },
+        {
+          "role": "option",
+          "name": "\"კახეთი-იონი\""
+        },
+        {
+          "role": "option",
+          "name": "საქართველოს სასჯელაღსრულებისა და პრობაციის სამინისტროს სამედიცინო დეპარტამენტი"
+        },
+        {
+          "role": "option",
+          "name": "ბინადრობის უფლება"
+        },
+        {
+          "role": "option",
+          "name": "დაზღვევის არ მქონე"
+        },
+        {
+          "role": "option",
+          "name": "უნისონი"
+        },
+        {
+          "role": "option",
+          "name": "ალფა"
+        },
+        {
+          "role": "option",
+          "name": "IGG"
+        },
+        {
+          "role": "option",
+          "name": "სს \"ნიუ ვიჟენ დაზღვევა\""
+        },
+        {
+          "role": "option",
+          "name": "სადაზღვევო კომპანია გლობალ ბენეფიტს ჯორჯია"
+        },
+        {
+          "role": "option",
+          "name": "ინგოროყვას კლინიკა"
+        },
+        {
+          "role": "option",
+          "name": "ონის მუნიციპალიტეტის მერია"
+        },
+        {
+          "role": "option",
+          "name": "რეფერალი ონკოლოგია"
+        },
+        {
+          "role": "option",
+          "name": "შპს\" თბილისის ცენტრალური საავადმყოფო\" 203826645"
+        },
+        {
+          "role": "option",
+          "name": "ა(ა)იპ საქართველოს სოლიდარობის ფონდი. რეფერალური მომსახურების დეპარტამენტი"
+        },
+        {
+          "role": "option",
+          "name": "ახალი მზერა"
+        },
+        {
+          "role": "option",
+          "name": "სს კურაციო"
+        },
+        {
+          "role": "option",
+          "name": "გერმანული ჰოსპიტალი"
+        },
+        {
+          "role": "option",
+          "name": "რეგიონალური ჯანდაცვის ცენტრი"
+        },
+        {
+          "role": "option",
+          "name": "სსიპ დევნილთა, ეკომიგრანტთა და საარსებო წყაროებით უზრუნველყოფის სააგენტო"
+        },
+        {
+          "role": "option",
+          "name": "შპს გაგრა"
+        },
+        {
+          "role": "option",
+          "name": "თერამედი"
+        },
+        {
+          "role": "option",
+          "name": "ყელ-ყურ ცხვირის ჯაფარიძე-ქევანიშვილი"
+        },
+        {
+          "role": "option",
+          "name": "ჰემა"
+        },
+        {
+          "role": "option",
+          "name": "პეტრე სარაჯიშვილის სახელობის ნევროლოგიის ინსტიტუტი"
+        },
+        {
+          "role": "option",
+          "name": "რეფერალური დახმარების ცენტრის კლინიკა"
+        },
+        {
+          "role": "option",
+          "name": "არარეზიდენტი"
+        },
+        {
+          "role": "option",
+          "name": "შპს საგზაო პოლიკლინიკა + საოჯახო ნედიცინის ცენტრი დიდუბე"
+        },
+        {
+          "role": "option",
+          "name": "შპს საოჯახო მედიცინის ეროვნული სასწავლო ცენტრი"
+        },
+        {
+          "role": "option",
+          "name": "ხომასურიძის კლინიკა"
+        },
+        {
+          "role": "option",
+          "name": "მრჩეველი"
+        },
+        {
+          "role": "option",
+          "name": "ლიმბახი"
+        },
+        {
+          "role": "option",
+          "name": "არენსია ექსპლორატორი მედისინ"
+        },
+        {
+          "role": "option",
+          "name": "სამედიცინო პარაზიტოლოგიისა და ტროპიკული მედიცინის კვლევის ინსტიტუტი"
+        },
+        {
+          "role": "option",
+          "name": "უფასო"
+        },
+        {
+          "role": "option",
+          "name": "თბილისის გულის ცენტრი"
+        },
+        {
+          "role": "option",
+          "name": "შპს თბილისის გულის ცენტრი"
+        },
+        {
+          "role": "option",
+          "name": "კონსილიუმ მედულა"
+        },
+        {
+          "role": "option",
+          "name": "ქართულ-ამერიკული რეპროდუქციული კლინიკა რეპროარტი"
+        },
+        {
+          "role": "option",
+          "name": "შპს ელიავას საერთაშორისო ფაგო თერაპიული ცენტრი"
+        },
+        {
+          "role": "option",
+          "name": "შპს ჯეო ჰოსპიტალს"
+        },
+        {
+          "role": "option",
+          "name": "სს \"საქართველოს კლინიკები\" - ხაშურის ჰოსპიტალი"
+        },
+        {
+          "role": "option",
+          "name": "შპს არენსია"
+        }
+      ],
+      "value": "შიდა"
+    },
+    {
+      "role": "button",
+      "name": ""
+    },
+    {
+      "role": "checkbox",
+      "name": "",
+      "checked": false
+    },
+    {
+      "role": "textbox",
+      "name": "",
+      "disabled": true
+    },
+    {
+      "role": "button",
+      "name": "..."
+    },
+    {
+      "role": "textbox",
+      "name": "",
+      "disabled": true
+    },
+    {
+      "role": "textbox",
+      "name": "",
+      "disabled": true
+    },
+    {
+      "role": "button",
+      "name": ""
+    },
+    {
+      "role": "text",
+      "name": "თარიღი"
+    },
+    {
+      "role": "text",
+      "name": "დასახელება"
+    },
+    {
+      "role": "text",
+      "name": "რაოდ."
+    },
+    {
+      "role": "text",
+      "name": "პ/ნ"
+    },
+    {
+      "role": "text",
+      "name": "სახელი"
+    },
+    {
+      "role": "text",
+      "name": "გვარი"
+    },
+    {
+      "role": "text",
+      "name": "თარიღი"
+    },
+    {
+      "role": "text",
+      "name": "#"
+    },
+    {
+      "role": "text",
+      "name": "ჯამი"
+    },
+    {
+      "role": "text",
+      "name": "%"
+    },
+    {
+      "role": "text",
+      "name": "ვალი"
+    },
+    {
+      "role": "text",
+      "name": "გადახდ."
+    },
+    {
+      "role": "textbox",
+      "name": ""
+    },
+    {
+      "role": "textbox",
+      "name": ""
+    },
+    {
+      "role": "textbox",
+      "name": ""
+    },
+    {
+      "role": "textbox",
+      "name": ""
+    },
+    {
+      "role": "button",
+      "name": "..."
+    },
+    {
+      "role": "textbox",
+      "name": ""
+    },
+    {
+      "role": "button",
+      "name": "..."
+    },
+    {
+      "role": "textbox",
+      "name": ""
+    },
+    {
+      "role": "textbox",
+      "name": ""
+    },
+    {
+      "role": "button",
+      "name": ""
+    },
+    {
+      "role": "text",
+      "name": "59001100890"
+    },
+    {
+      "role": "text",
+      "name": "ჯიმშერ"
+    },
+    {
+      "role": "text",
+      "name": "პურიჭამიაშვილი"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 13:00"
+    },
+    {
+      "role": "text",
+      "name": "10746-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "70"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "31001046456"
+    },
+    {
+      "role": "text",
+      "name": "ლექსო"
+    },
+    {
+      "role": "text",
+      "name": "უჯარაშვილი"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 12:13"
+    },
+    {
+      "role": "text",
+      "name": "10745-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "70"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "33001022392"
+    },
+    {
+      "role": "text",
+      "name": "გიგლა"
+    },
+    {
+      "role": "text",
+      "name": "ჭანუყვაძე"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 11:20"
+    },
+    {
+      "role": "text",
+      "name": "10744-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "70"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "36001022846"
+    },
+    {
+      "role": "text",
+      "name": "უშანგი"
+    },
+    {
+      "role": "text",
+      "name": "დიღმელაშვილი"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 11:00"
+    },
+    {
+      "role": "text",
+      "name": "a-7138-2025"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "01030046475"
+    },
+    {
+      "role": "text",
+      "name": "ეთერ"
+    },
+    {
+      "role": "text",
+      "name": "კაციტაძე"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 10:53"
+    },
+    {
+      "role": "text",
+      "name": "a"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "37001005106"
+    },
+    {
+      "role": "text",
+      "name": "ავთანდილ"
+    },
+    {
+      "role": "text",
+      "name": "ბერეკაშვილი"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 10:41"
+    },
+    {
+      "role": "text",
+      "name": "a"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "62007000816"
+    },
+    {
+      "role": "text",
+      "name": "მანანა"
+    },
+    {
+      "role": "text",
+      "name": "ემუხვარი"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 10:39"
+    },
+    {
+      "role": "text",
+      "name": "a"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "59002005351"
+    },
+    {
+      "role": "text",
+      "name": "აკაკი"
+    },
+    {
+      "role": "text",
+      "name": "ოზგებიშვილი"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 10:35"
+    },
+    {
+      "role": "text",
+      "name": "a"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "9"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "01030021954"
+    },
+    {
+      "role": "text",
+      "name": "ლეილა"
+    },
+    {
+      "role": "text",
+      "name": "ლომაშვილი"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 09:26"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 11:15"
+    },
+    {
+      "role": "text",
+      "name": "10743-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "100"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "46001009850"
+    },
+    {
+      "role": "text",
+      "name": "ზაზა"
+    },
+    {
+      "role": "text",
+      "name": "კუტალაძე"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 08:17"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 08:22"
+    },
+    {
+      "role": "text",
+      "name": "10742-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "70"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "01031004203"
+    },
+    {
+      "role": "text",
+      "name": "ირაკლი"
+    },
+    {
+      "role": "text",
+      "name": "ფორჩხიძე"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 08:56"
+    },
+    {
+      "role": "text",
+      "name": "10741-2025"
+    },
+    {
+      "role": "text",
+      "name": "600"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "600"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "01024045908"
+    },
+    {
+      "role": "text",
+      "name": "ზაირა"
+    },
+    {
+      "role": "text",
+      "name": "ბოკუჩავა"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 07:30"
+    },
+    {
+      "role": "text",
+      "name": "10740-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "100"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "59001075100"
+    },
+    {
+      "role": "text",
+      "name": "მანანა"
+    },
+    {
+      "role": "text",
+      "name": "ჯანეზაშვილი"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 07:03"
+    },
+    {
+      "role": "text",
+      "name": "10739-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "90"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "01031003925"
+    },
+    {
+      "role": "text",
+      "name": "ლევანი"
+    },
+    {
+      "role": "text",
+      "name": "ხურციძე"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 06:50"
+    },
+    {
+      "role": "text",
+      "name": "10738-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "57001009268"
+    },
+    {
+      "role": "text",
+      "name": "ზურაბ"
+    },
+    {
+      "role": "text",
+      "name": "ჩადუნელი"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 02:35"
+    },
+    {
+      "role": "text",
+      "name": "10737-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "90"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "766906364"
+    },
+    {
+      "role": "text",
+      "name": "ნატალია"
+    },
+    {
+      "role": "text",
+      "name": "გორინა"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 01:40"
+    },
+    {
+      "role": "text",
+      "name": "23-11-2025 07:00"
+    },
+    {
+      "role": "text",
+      "name": "10736-2025"
+    },
+    {
+      "role": "text",
+      "name": "780"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "780"
+    },
+    {
+      "role": "text",
+      "name": "780"
+    },
+    {
+      "role": "text",
+      "name": "42001005093"
+    },
+    {
+      "role": "text",
+      "name": "მარინა"
+    },
+    {
+      "role": "text",
+      "name": "გიგიბერია"
+    },
+    {
+      "role": "text",
+      "name": "22-11-2025 23:26"
+    },
+    {
+      "role": "text",
+      "name": "10735-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "90"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "01651000301"
+    },
+    {
+      "role": "text",
+      "name": "მათე"
+    },
+    {
+      "role": "text",
+      "name": "შათირიშვილი"
+    },
+    {
+      "role": "text",
+      "name": "22-11-2025 19:24"
+    },
+    {
+      "role": "text",
+      "name": "a"
+    },
+    {
+      "role": "text",
+      "name": "60"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "60"
+    },
+    {
+      "role": "text",
+      "name": "60"
+    },
+    {
+      "role": "text",
+      "name": "1102028206"
+    },
+    {
+      "role": "text",
+      "name": "დიმიტრი"
+    },
+    {
+      "role": "text",
+      "name": "დზაგოევ"
+    },
+    {
+      "role": "text",
+      "name": "22-11-2025 18:55"
+    },
+    {
+      "role": "text",
+      "name": "10734-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "00000000000"
+    },
+    {
+      "role": "text",
+      "name": "უცნობი"
+    },
+    {
+      "role": "text",
+      "name": "უცნობი მამაკაცი"
+    },
+    {
+      "role": "text",
+      "name": "22-11-2025 16:07"
+    },
+    {
+      "role": "text",
+      "name": "10733-2025"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "0"
+    },
+    {
+      "role": "text",
+      "name": "ხაზზე (40)"
+    }
+  ]
+}

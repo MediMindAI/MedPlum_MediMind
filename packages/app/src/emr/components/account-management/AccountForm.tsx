@@ -3,11 +3,16 @@
 
 import { Grid, Button, Stack, Box, Group, Text, ActionIcon, Badge, Alert } from '@mantine/core';
 import { IconPlus, IconTrash, IconAlertTriangle } from '@tabler/icons-react';
+import { useMemo } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAccountForm } from '../../hooks/useAccountForm';
+import { usePermissionsMatrix } from '../../hooks/usePermissions';
 import type { AccountFormValues, RoleAssignment } from '../../types/account-management';
 import { SpecialtySelect } from './SpecialtySelect';
 import { RoleAssignmentPanel } from '../role-management/RoleAssignmentPanel';
+import { PermissionPreview } from './PermissionPreview';
+import { RoleConflictAlert } from './RoleConflictAlert';
+import { WelcomeMessageEditor } from './WelcomeMessageEditor';
 import accountRolesData from '../../translations/account-roles.json';
 import { EMRTextInput, EMRSelect, EMRDatePicker } from '../shared/EMRFormFields';
 
@@ -37,6 +42,34 @@ interface AccountFormProps {
 export function AccountForm({ onSubmit, initialValues, loading }: AccountFormProps): JSX.Element {
   const { t, lang } = useTranslation();
   const { form } = useAccountForm(initialValues);
+
+  // Extract role codes for conflict detection
+  const roleCodes = useMemo(() => {
+    const codes: string[] = [];
+    // From legacy roles
+    if (form.values.roles) {
+      codes.push(...form.values.roles.map((r) => r.code).filter(Boolean));
+    }
+    // From RBAC roles
+    if (form.values.rbacRoles) {
+      codes.push(...form.values.rbacRoles.map((r) => r.roleCode).filter(Boolean));
+    }
+    return codes;
+  }, [form.values.roles, form.values.rbacRoles]);
+
+  // Extract role IDs for permission preview
+  const roleIds = useMemo(() => {
+    if (form.values.rbacRoles) {
+      return form.values.rbacRoles.map((r) => r.roleId).filter(Boolean);
+    }
+    return [];
+  }, [form.values.rbacRoles]);
+
+  // Use permissions matrix for conflict detection and preview
+  const { permissions, conflicts, loading: permissionsLoading } = usePermissionsMatrix({
+    roleIds,
+    roleCodes,
+  });
 
   // Handler for adding a new role
   const handleAddRole = (): void => {
@@ -297,6 +330,30 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
             onChange={(roles) => form.setFieldValue('rbacRoles', roles)}
           />
         </Box>
+
+        {/* Role Conflict Alert */}
+        {conflicts.length > 0 && (
+          <RoleConflictAlert conflicts={conflicts} />
+        )}
+
+        {/* Permission Preview Accordion */}
+        {roleIds.length > 0 && (
+          <PermissionPreview
+            permissions={permissions}
+            loading={permissionsLoading}
+            title={t('accountManagement.permissions.title')}
+            defaultExpanded={false}
+          />
+        )}
+
+        {/* Welcome Message Section (Optional, for new accounts) */}
+        {!initialValues?.id && (
+          <WelcomeMessageEditor
+            value={form.values.welcomeMessage || ''}
+            onChange={(value) => form.setFieldValue('welcomeMessage', value)}
+            disabled={loading}
+          />
+        )}
 
         {/* Submit Button */}
         <Button type="submit" size="md" loading={loading} fullWidth>

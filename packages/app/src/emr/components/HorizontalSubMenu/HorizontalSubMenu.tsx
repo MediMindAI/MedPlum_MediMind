@@ -45,6 +45,7 @@ const nomenclatureSubMenu: SubMenuItem[] = [
   { key: 'pharmacy', translationKey: 'submenu.nomenclature.pharmacy', path: '/emr/nomenclature/pharmacy' },
   { key: 'laboratory', translationKey: 'submenu.nomenclature.laboratory', path: '/emr/nomenclature/laboratory' },
   { key: 'materials', translationKey: 'submenu.nomenclature.materials', path: '/emr/nomenclature/materials' },
+  { key: 'forms', translationKey: 'submenu.nomenclature.forms', path: '/emr/nomenclature/forms' },
 ];
 
 interface HorizontalSubMenuProps {

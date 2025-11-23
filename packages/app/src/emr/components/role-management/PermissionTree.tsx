@@ -1,12 +1,55 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 import { useState, useMemo } from 'react';
-import { Stack, Text, Group, Collapse, ActionIcon, Box } from '@mantine/core';
+import { Stack, Text, Group, Collapse, ActionIcon, Box, Badge, ThemeIcon, Paper, SimpleGrid } from '@mantine/core';
 import { EMRCheckbox } from '../shared/EMRFormFields';
-import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconChevronRight,
+  IconUsers,
+  IconStethoscope,
+  IconFlask,
+  IconCoin,
+  IconSettings,
+  IconChartBar,
+} from '@tabler/icons-react';
 import type { PermissionCategory } from '../../types/role-management';
 import { resolvePermissionDependencies } from '../../services/permissionService';
 import { usePermissions } from '../../hooks/usePermissions';
+
+// Category icons and colors mapping
+const categoryStyles: Record<string, { icon: typeof IconUsers; color: string; gradient: string }> = {
+  'patient-management': {
+    icon: IconUsers,
+    color: '#2b6cb0',
+    gradient: 'linear-gradient(135deg, #2b6cb0 0%, #3182ce 100%)',
+  },
+  'clinical-documentation': {
+    icon: IconStethoscope,
+    color: '#10b981',
+    gradient: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+  },
+  laboratory: {
+    icon: IconFlask,
+    color: '#8b5cf6',
+    gradient: 'linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%)',
+  },
+  'billing-financial': {
+    icon: IconCoin,
+    color: '#f59e0b',
+    gradient: 'linear-gradient(135deg, #d97706 0%, #f59e0b 100%)',
+  },
+  administration: {
+    icon: IconSettings,
+    color: '#ef4444',
+    gradient: 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)',
+  },
+  reporting: {
+    icon: IconChartBar,
+    color: '#6366f1',
+    gradient: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+  },
+};
 
 interface PermissionTreeProps {
   selectedPermissions: string[];
@@ -83,68 +126,157 @@ export function PermissionTree({ selectedPermissions, onChange, disabled }: Perm
     return selected.length > 0 && selected.length < category.permissions.length;
   };
 
+  // Count selected permissions
+  const selectedCount = selectedPermissions.length;
+  const totalCount = categories.reduce((sum, c) => sum + c.permissions.length, 0);
+
   if (loading) {
     return <Text c="dimmed">Loading permissions...</Text>;
   }
 
   return (
     <Stack gap="md">
-      {categories.map((category) => {
-        const isExpanded = expandedCategories.has(category.code);
-        const isChecked = isCategoryChecked(category);
-        const isIndeterminate = isCategoryIndeterminate(category);
+      {/* Selected permissions summary */}
+      <Group justify="space-between" align="center">
+        <Text size="sm" fw={500} c="dimmed">
+          {selectedCount} / {totalCount} permissions selected
+        </Text>
+        {selectedCount > 0 && (
+          <Badge
+            size="sm"
+            variant="light"
+            style={{
+              background: 'var(--emr-light-accent)',
+              color: 'var(--emr-secondary)',
+            }}
+          >
+            {Math.round((selectedCount / totalCount) * 100)}% coverage
+          </Badge>
+        )}
+      </Group>
 
-        return (
-          <Box key={category.code} style={{ borderLeft: '3px solid var(--emr-turquoise)', paddingLeft: '12px' }}>
-            <Group gap="xs" mb="xs">
-              <ActionIcon
-                variant="subtle"
-                size="sm"
+      {/* Permission categories in a grid */}
+      <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">
+        {categories.map((category) => {
+          const isExpanded = expandedCategories.has(category.code);
+          const isChecked = isCategoryChecked(category);
+          const isIndeterminate = isCategoryIndeterminate(category);
+          const categorySelectedCount = category.permissions.filter((p) =>
+            selectedPermissions.includes(p.code)
+          ).length;
+
+          // Get category styling (fallback to default)
+          const style = categoryStyles[category.code] || {
+            icon: IconUsers,
+            color: 'var(--emr-secondary)',
+            gradient: 'var(--emr-gradient-primary)',
+          };
+          const CategoryIcon = style.icon;
+
+          return (
+            <Paper
+              key={category.code}
+              p="sm"
+              withBorder
+              style={{
+                borderRadius: 'var(--emr-border-radius-lg)',
+                borderColor: isChecked ? style.color : 'var(--emr-gray-200)',
+                borderWidth: isChecked ? '2px' : '1px',
+                background: isChecked ? `${style.color}08` : 'var(--emr-text-inverse)',
+                transition: 'var(--emr-transition-smooth)',
+              }}
+            >
+              {/* Category Header */}
+              <Group
+                gap="sm"
+                wrap="nowrap"
+                style={{ cursor: 'pointer' }}
                 onClick={() => toggleCategory(category.code)}
-                aria-label={isExpanded ? 'Collapse' : 'Expand'}
               >
-                {isExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
-              </ActionIcon>
+                <ThemeIcon
+                  size={36}
+                  radius="md"
+                  style={{
+                    background: style.gradient,
+                    flexShrink: 0,
+                  }}
+                >
+                  <CategoryIcon size={18} style={{ color: 'white' }} />
+                </ThemeIcon>
 
-              <EMRCheckbox
-                checked={isChecked}
-                indeterminate={isIndeterminate}
-                onChange={(e) => handleCategoryToggle(category, e.currentTarget.checked)}
-                disabled={disabled}
-                label={
-                  <Group gap="xs">
-                    <Text fw={600}>{category.name}</Text>
-                    <Text size="sm" c="dimmed">
-                      ({category.permissions.length} permissions)
+                <Box style={{ flex: 1, minWidth: 0 }}>
+                  <Group gap="xs" justify="space-between" wrap="nowrap">
+                    <Text fw={600} size="sm" lineClamp={1}>
+                      {category.name}
                     </Text>
+                    <Badge
+                      size="sm"
+                      variant="light"
+                      style={{
+                        background: categorySelectedCount > 0 ? `${style.color}20` : 'var(--emr-gray-100)',
+                        color: categorySelectedCount > 0 ? style.color : 'var(--emr-gray-500)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      {categorySelectedCount}/{category.permissions.length}
+                    </Badge>
                   </Group>
-                }
-              />
-            </Group>
+                </Box>
 
-            <Collapse in={isExpanded}>
-              <Stack gap="xs" ml="xl">
-                {category.permissions.map((permission) => (
-                  <EMRCheckbox
-                    key={permission.code}
-                    checked={selectedPermissions.includes(permission.code)}
-                    onChange={(e) => handlePermissionToggle(permission.code, e.currentTarget.checked)}
-                    disabled={disabled}
-                    label={
-                      <Box>
-                        <Text size="sm">{permission.name}</Text>
-                        <Text size="xs" c="dimmed">
-                          {permission.description}
-                        </Text>
+                <Group gap={4}>
+                  <Box onClick={(e) => e.stopPropagation()}>
+                    <EMRCheckbox
+                      checked={isChecked}
+                      indeterminate={isIndeterminate}
+                      onChange={(checked) => handleCategoryToggle(category, checked)}
+                      disabled={disabled}
+                    />
+                  </Box>
+                  <ActionIcon
+                    variant="subtle"
+                    size="sm"
+                    aria-label={isExpanded ? 'Collapse' : 'Expand'}
+                  >
+                    {isExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
+                  </ActionIcon>
+                </Group>
+              </Group>
+
+              {/* Expanded Permissions */}
+              <Collapse in={isExpanded}>
+                <Stack gap={4} mt="sm" pl={44}>
+                  {category.permissions.map((permission) => {
+                    const isSelected = selectedPermissions.includes(permission.code);
+                    return (
+                      <Box
+                        key={permission.code}
+                        p={6}
+                        style={{
+                          borderRadius: 'var(--emr-border-radius-sm)',
+                          background: isSelected ? `${style.color}10` : 'transparent',
+                          transition: 'var(--emr-transition-fast)',
+                        }}
+                      >
+                        <EMRCheckbox
+                          checked={isSelected}
+                          onChange={(checked) => handlePermissionToggle(permission.code, checked)}
+                          disabled={disabled}
+                          label={permission.name}
+                        />
+                        {permission.description && (
+                          <Text size="xs" c="dimmed" ml={26} lineClamp={1}>
+                            {permission.description}
+                          </Text>
+                        )}
                       </Box>
-                    }
-                  />
-                ))}
-              </Stack>
-            </Collapse>
-          </Box>
-        );
-      })}
+                    );
+                  })}
+                </Stack>
+              </Collapse>
+            </Paper>
+          );
+        })}
+      </SimpleGrid>
     </Stack>
   );
 }

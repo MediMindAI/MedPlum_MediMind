@@ -1,0 +1,1145 @@
+{
+  "title": "SoftMedic | ჰელსიკორი",
+  "forms": [],
+  "fields": [
+    {
+      "id": "krpol",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "mr_date",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "datetime hasDatepicker",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "saqNm",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "knop",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "mr_raod",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "mv_resins",
+      "name": "",
+      "type": "button",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "smadbut",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "svo_num",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "filters",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "svo_ufnam",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "filters",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "svo_ulnam",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "filters",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "svo_dat1",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "filters datetime hasDatepicker",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "svo_dat2",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "filters datetime hasDatepicker",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "rg_no",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "filters",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "stac_no",
+      "name": "",
+      "type": "text",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "filters",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "svo_insflt",
+      "name": "",
+      "type": "button",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "",
+      "class": "fltrbut",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "stacg",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "selfg",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "carg",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "canan",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "chcgo",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "nochcgo",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "gegstac",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "gstcgo",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "gtsnogo",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "slambu",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "HelpDes",
+      "name": "",
+      "type": "checkbox",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "on",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "srconusr",
+      "name": "",
+      "type": "text",
+      "label": "ძებნა...",
+      "placeholder": "ძებნა...",
+      "required": false,
+      "value": "",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    },
+    {
+      "id": "",
+      "name": "",
+      "type": "button",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "value": "barcode",
+      "class": "",
+      "maxLength": null,
+      "pattern": null
+    }
+  ],
+  "dropdowns": [
+    {
+      "id": "zi_sendcmp",
+      "name": "",
+      "label": "",
+      "required": false,
+      "class": "nondrg",
+      "options": [
+        {
+          "value": "0",
+          "text": "შიდა",
+          "selected": true
+        },
+        {
+          "value": "628",
+          "text": "სსიპ ჯანმრთელობის ეროვნული სააგენტო",
+          "selected": false
+        },
+        {
+          "value": "6379",
+          "text": "ს.ს. სადაზღვევო კომპანია \"ჯიპიაი ჰოლდინგი\"",
+          "selected": false
+        },
+        {
+          "value": "6380",
+          "text": "ალდაგი",
+          "selected": false
+        },
+        {
+          "value": "6381",
+          "text": "სს \"დაზღვევის კომპანია ქართუ\"",
+          "selected": false
+        },
+        {
+          "value": "6382",
+          "text": "სტანდარტ დაზღვევა",
+          "selected": false
+        },
+        {
+          "value": "6383",
+          "text": "სს \"პსპ დაზღვევა\"",
+          "selected": false
+        },
+        {
+          "value": "6384",
+          "text": "სს „სადაზღვევო კომპანია ევროინს ჯორჯია“",
+          "selected": false
+        },
+        {
+          "value": "6385",
+          "text": "შპს სადაზღვევო კომპანია \"არდი ჯგუფი\"",
+          "selected": false
+        },
+        {
+          "value": "7603",
+          "text": "აჭარის ავტონომიური რესპუბლიკის ჯანმრთელობისა და სოციალური დაცვის სამინისტრო",
+          "selected": false
+        },
+        {
+          "value": "8175",
+          "text": "იმედი L",
+          "selected": false
+        },
+        {
+          "value": "9155",
+          "text": "ქ. თბილისის მუნიციპალიტეტის მერია",
+          "selected": false
+        },
+        {
+          "value": "10483",
+          "text": "სამხრეთ ოსეთის ადმინისტრაცია",
+          "selected": false
+        },
+        {
+          "value": "10520",
+          "text": "ირაო",
+          "selected": false
+        },
+        {
+          "value": "11209",
+          "text": "ვია-ვიტა",
+          "selected": false
+        },
+        {
+          "value": "11213",
+          "text": "რეფერალური დახმარების ცენტრი",
+          "selected": false
+        },
+        {
+          "value": "12078",
+          "text": "\"კახეთი-იონი\"",
+          "selected": false
+        },
+        {
+          "value": "12461",
+          "text": "საქართველოს სასჯელაღსრულებისა და პრობაციის სამინისტროს სამედიცინო დეპარტამენტი",
+          "selected": false
+        },
+        {
+          "value": "14134",
+          "text": "ბინადრობის უფლება",
+          "selected": false
+        },
+        {
+          "value": "14137",
+          "text": "დაზღვევის არ მქონე",
+          "selected": false
+        },
+        {
+          "value": "16476",
+          "text": "უნისონი",
+          "selected": false
+        },
+        {
+          "value": "16803",
+          "text": "ალფა",
+          "selected": false
+        },
+        {
+          "value": "22108",
+          "text": "IGG",
+          "selected": false
+        },
+        {
+          "value": "41288",
+          "text": "სს \"ნიუ ვიჟენ დაზღვევა\"",
+          "selected": false
+        },
+        {
+          "value": "46299",
+          "text": "სადაზღვევო კომპანია გლობალ ბენეფიტს ჯორჯია",
+          "selected": false
+        },
+        {
+          "value": "49974",
+          "text": "ინგოროყვას კლინიკა",
+          "selected": false
+        },
+        {
+          "value": "51870",
+          "text": "ონის მუნიციპალიტეტის მერია",
+          "selected": false
+        },
+        {
+          "value": "52103",
+          "text": "რეფერალი ონკოლოგია",
+          "selected": false
+        },
+        {
+          "value": "54184",
+          "text": "შპს\" თბილისის ცენტრალური საავადმყოფო\" 203826645",
+          "selected": false
+        },
+        {
+          "value": "61677",
+          "text": "ა(ა)იპ საქართველოს სოლიდარობის ფონდი. რეფერალური მომსახურების დეპარტამენტი",
+          "selected": false
+        },
+        {
+          "value": "61768",
+          "text": "ახალი მზერა",
+          "selected": false
+        },
+        {
+          "value": "63054",
+          "text": "სს კურაციო",
+          "selected": false
+        },
+        {
+          "value": "67209",
+          "text": "გერმანული ჰოსპიტალი",
+          "selected": false
+        },
+        {
+          "value": "67469",
+          "text": "რეგიონალური ჯანდაცვის ცენტრი",
+          "selected": false
+        },
+        {
+          "value": "70867",
+          "text": "სსიპ დევნილთა, ეკომიგრანტთა და საარსებო წყაროებით უზრუნველყოფის სააგენტო",
+          "selected": false
+        },
+        {
+          "value": "79541",
+          "text": "შპს გაგრა",
+          "selected": false
+        },
+        {
+          "value": "5136",
+          "text": "თერამედი",
+          "selected": false
+        },
+        {
+          "value": "5419",
+          "text": "ყელ-ყურ ცხვირის ჯაფარიძე-ქევანიშვილი",
+          "selected": false
+        },
+        {
+          "value": "5809",
+          "text": "ჰემა",
+          "selected": false
+        },
+        {
+          "value": "6847",
+          "text": "პეტრე სარაჯიშვილის სახელობის ნევროლოგიის ინსტიტუტი",
+          "selected": false
+        },
+        {
+          "value": "6929",
+          "text": "რეფერალური დახმარების ცენტრის კლინიკა",
+          "selected": false
+        },
+        {
+          "value": "9068",
+          "text": "არარეზიდენტი",
+          "selected": false
+        },
+        {
+          "value": "14019",
+          "text": "შპს საგზაო პოლიკლინიკა + საოჯახო ნედიცინის ცენტრი დიდუბე",
+          "selected": false
+        },
+        {
+          "value": "14647",
+          "text": "შპს საოჯახო მედიცინის ეროვნული სასწავლო ცენტრი",
+          "selected": false
+        },
+        {
+          "value": "15862",
+          "text": "ხომასურიძის კლინიკა",
+          "selected": false
+        },
+        {
+          "value": "15863",
+          "text": "მრჩეველი",
+          "selected": false
+        },
+        {
+          "value": "15864",
+          "text": "ლიმბახი",
+          "selected": false
+        },
+        {
+          "value": "20240",
+          "text": "არენსია ექსპლორატორი მედისინ",
+          "selected": false
+        },
+        {
+          "value": "30321",
+          "text": "სამედიცინო პარაზიტოლოგიისა და ტროპიკული მედიცინის კვლევის ინსტიტუტი",
+          "selected": false
+        },
+        {
+          "value": "71575",
+          "text": "უფასო",
+          "selected": false
+        },
+        {
+          "value": "81051",
+          "text": "თბილისის გულის ცენტრი",
+          "selected": false
+        },
+        {
+          "value": "81614",
+          "text": "შპს თბილისის გულის ცენტრი",
+          "selected": false
+        },
+        {
+          "value": "86705",
+          "text": "კონსილიუმ მედულა",
+          "selected": false
+        },
+        {
+          "value": "88950",
+          "text": "ქართულ-ამერიკული რეპროდუქციული კლინიკა რეპროარტი",
+          "selected": false
+        },
+        {
+          "value": "89213",
+          "text": "შპს ელიავას საერთაშორისო ფაგო თერაპიული ცენტრი",
+          "selected": false
+        },
+        {
+          "value": "89718",
+          "text": "შპს ჯეო ჰოსპიტალს",
+          "selected": false
+        },
+        {
+          "value": "91685",
+          "text": "სს \"საქართველოს კლინიკები\" - ხაშურის ჰოსპიტალი",
+          "selected": false
+        },
+        {
+          "value": "102335",
+          "text": "შპს არენსია",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "id": "Ros_br",
+      "name": "",
+      "label": "",
+      "required": false,
+      "class": "",
+      "options": [
+        {
+          "value": "",
+          "text": "",
+          "selected": true
+        },
+        {
+          "value": "18",
+          "text": "კარდიოქირურგია",
+          "selected": false
+        },
+        {
+          "value": "620",
+          "text": "სისხლძარღვთა ქირურგია",
+          "selected": false
+        },
+        {
+          "value": "735",
+          "text": "კარდიოლოგია",
+          "selected": false
+        },
+        {
+          "value": "736",
+          "text": "ამბულატორია",
+          "selected": false
+        },
+        {
+          "value": "981",
+          "text": "არითმოლოგია",
+          "selected": false
+        },
+        {
+          "value": "3937",
+          "text": "კარდიოქირურგიული განყოფილება",
+          "selected": false
+        },
+        {
+          "value": "17828",
+          "text": "გადაუდებელი განყოფილება (ER)",
+          "selected": false
+        },
+        {
+          "value": "25119",
+          "text": "ზოგადი ქირურგიის დეპარტამენტი",
+          "selected": false
+        },
+        {
+          "value": "25612",
+          "text": "პოსტოპი ორი",
+          "selected": false
+        },
+        {
+          "value": "33965",
+          "text": "კლინიკური ონკოლოგია",
+          "selected": false
+        },
+        {
+          "value": "36614",
+          "text": "შინაგან სნეულებათა დეპარტამენტი",
+          "selected": false
+        },
+        {
+          "value": "38129",
+          "text": "კოვიდ განყოფილება",
+          "selected": false
+        },
+        {
+          "value": "40908",
+          "text": "ზოგადი რეანიმაცია",
+          "selected": false
+        },
+        {
+          "value": "42171",
+          "text": "ტრავმა ორთოპედია",
+          "selected": false
+        },
+        {
+          "value": "44164",
+          "text": "ნეიროქირურგია",
+          "selected": false
+        },
+        {
+          "value": "45179",
+          "text": "საოპერაციო",
+          "selected": false
+        },
+        {
+          "value": "50549",
+          "text": "ონკოლოგია",
+          "selected": false
+        },
+        {
+          "value": "51442",
+          "text": "ამბულატორიული ონკოლოგია",
+          "selected": false
+        },
+        {
+          "value": "55320",
+          "text": "ნევროლოგია",
+          "selected": false
+        },
+        {
+          "value": "59741",
+          "text": "ნევროლოგიური კვლევები",
+          "selected": false
+        },
+        {
+          "value": "77934",
+          "text": "მიკროქირურგია",
+          "selected": false
+        },
+        {
+          "value": "81437",
+          "text": "პლასტიკური ქირურგია",
+          "selected": false
+        },
+        {
+          "value": "90587",
+          "text": "უროლოგია",
+          "selected": false
+        },
+        {
+          "value": "96800",
+          "text": "ჩირქოვანი ქირურგია",
+          "selected": false
+        }
+      ]
+    }
+  ],
+  "checkboxes": [
+    {
+      "id": "krpol",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "stacg",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "selfg",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "carg",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "canan",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "chcgo",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "nochcgo",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "gegstac",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "gstcgo",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "gtsnogo",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "slambu",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    },
+    {
+      "id": "HelpDes",
+      "name": "",
+      "label": "",
+      "checked": false,
+      "value": "on"
+    }
+  ],
+  "textareas": [
+    {
+      "id": "chtinput",
+      "name": "",
+      "label": "",
+      "placeholder": "",
+      "required": false,
+      "rows": 2,
+      "cols": 20,
+      "class": ""
+    }
+  ],
+  "buttons": [
+    {
+      "id": "crctf",
+      "onclick": "event.stopPropagation();event.preventDefault();$(\"#notunrdmsg\").toggle();",
+      "class": "unrd"
+    },
+    {
+      "id": "inbmsgs",
+      "onclick": "_ovrst('onemli',1,900,5);$('#hidden').fadeOut();glAj('email','','','ldispin','','|','|'); ",
+      "class": "notis"
+    },
+    {
+      "id": "notys",
+      "onclick": " event.stopPropagation();event.preventDefault();$(\"#notdescs\").toggle();",
+      "class": "notis"
+    },
+    {
+      "id": "",
+      "name": "",
+      "text": "＄",
+      "type": "",
+      "onclick": "_ovrst('onemli',1,900,5);$('#hidden').fadeOut();glAj('search2v','gtmcsh','','ldispin','','|',{0:{createPickers:[]}},'|',{1:0}); ",
+      "class": "whipap"
+    },
+    {
+      "id": "",
+      "name": "",
+      "text": "Tel",
+      "type": "",
+      "onclick": "_ovrst('onemli',1,900,5);$('#hidden').fadeOut();glAj('search6v','gtelpe','','ldispin','','|',{0:{createPickers:[]}},'|',{1:0}); ",
+      "class": "whipap"
+    },
+    {
+      "id": "",
+      "name": "",
+      "type": "",
+      "onclick": "_ovrst('onemli',1,900,5);$('#hidden').fadeOut();glAj('email','','','ldispin','','|','|'); ",
+      "class": ""
+    },
+    {
+      "id": "ssco",
+      "onclick": "$(\"#leftrighthover\").css({\"width\":\"100%\"});",
+      "class": ""
+    },
+    {
+      "id": "",
+      "name": "",
+      "type": "",
+      "onclick": "$(\".rightSideBar.mobileOpen\").addClass(\"mobileClose\").removeClass(\"mobileOpen\");",
+      "class": "togclsbtn"
+    },
+    {
+      "id": "",
+      "onclick": "if($(\"#hdPtRgID\").val()==\"\"){alert(\"გთხოვთ აირჩიოთ პაციენტი\"); return; } /*$(\"#mr_date\").datetimepicker(\"setDate\", new Date());*/ $(\"#mr_date\").val(\"\"); $(\"#saqNm,#mr_raod\").prop(\"disabled\",false); glAj(\"search\",\"gtbfl\",\"\",\"mzhov\",\"\",\"|\",\"|\",{\"hdPtRgID\":\"10\"},{\"mr_date\":\"11\"} ); ",
+      "class": ""
+    },
+    {
+      "id": "",
+      "name": "",
+      "type": "",
+      "onclick": "if($(\"#hdPtRgID\").val()==\"\"){alert(\"გთხოვთ აირჩიოთ პაციენტი\"); return; }  $(\"#saqNm\").prop(\"disabled\",false); glAj(\"search5v\",\"ggbveb\",\"\",\"mzhov\",\"\",\"|\",\"|\",{\"hdPtRgID\":\"10\"} ); ",
+      "class": "btwh"
+    },
+    {
+      "id": "stackvlev",
+      "name": "",
+      "text": "ᴥ",
+      "type": "",
+      "onclick": "if($(\"#hdPtRgID\").val()==\"\"){alert(\"გთხოვთ აირჩიოთ პაციენტი\");return;} _ovrst(\"btnovr\",1,900,5);glAj(\"sub/2/201/diagnostics\",\"\",\"LoadingImage2\",\"\",\"\",\"|\",{0:{createPickers:[]}},{0:{createDateTimePickers:[]}},\"|\",{\"hdPtRgID\":\"10\"});",
+      "class": ""
+    },
+    {
+      "id": "",
+      "name": "",
+      "text": "",
+      "type": "submit",
+      "onclick": "if($(\"#hdPtRgID\").val()==\"\"){alert(\"გთხოვთ აირჩიოთ პაციენტი\");return;} _ovrst(\"btnovr\",1,900,5); glAj(\"search5v\",\"jjeerp\",\"\",\"LoadingImage2\",\"\",\"|\",{0:{createPickers:[]}},{0:{createDateTimePickers:[]}},\"|\",{\"hdPtRgID\":\"10\"});  ",
+      "class": ""
+    },
+    {
+      "id": "krpol",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "event.stopPropagation();event.preventDefault(); if($(\"#hdPtRgID\").val()==\"\"){alert(\"გთხოვთ აირჩიოთ პაციენტი\");}else{glAj(\"search3v\",\"gbvphis\",\"\",\"mnhov\",\"\",\"|\",\"|\",{\"hdPtRgID\":\"10\"},{\"krpol\":\"12\"});}",
+      "class": ""
+    },
+    {
+      "id": "",
+      "name": "",
+      "text": "",
+      "type": "button",
+      "onclick": null,
+      "class": "ui-datepicker-trigger"
+    },
+    {
+      "id": "mv_resins",
+      "name": "",
+      "text": "",
+      "type": "button",
+      "onclick": " if($(\"#hdPtRgID\").val()==\"\"){alert(\"გთხოვთ აირჩიოთ პაციენტი\");}else{ glAj(\"insert\",this.id,\"\",\"mzhov\",\"mainMsg\",\"|\",\"|\",{\"hdPtRgID\":\"10\"},{\"hdansvl\":\"1\"},{\"mr_date\":\"10\"},{\"zi_sendcmp\":\"8\"},{\"mr_raod\":\"2\"},{\"0\":\"0\"} );  }",
+      "class": "smadbut"
+    },
+    {
+      "id": "",
+      "name": "",
+      "text": "",
+      "type": "button",
+      "onclick": null,
+      "class": "ui-datepicker-trigger"
+    },
+    {
+      "id": "",
+      "name": "",
+      "text": "",
+      "type": "button",
+      "onclick": null,
+      "class": "ui-datepicker-trigger"
+    },
+    {
+      "id": "svo_insflt",
+      "name": "",
+      "text": "",
+      "type": "button",
+      "onclick": "$(\"#fullname\").html(\"\");$(\"#hdPtRgID\").val(\"\");$(\"#analiz tr:not(#TCs)\").remove(); glAj(\"search\",this.id,\"\",\"mihov\",\"mainMsg\",\"|\",\"|\",{\"svo_num\":\"11\"},{\"svo_ufnam\":\"11\"},{\"svo_ulnam\":\"11\"},{\"svo_dat1\":\"11\"},{\"svo_dat2\":\"11\"},{\"stacg\":\"12\"},{\"selfg\":\"12\"},{\"carg\":\"12\"},{\"chcgo\":\"12\"},{\"nochcgo\":\"12\"},{\"gegstac\":\"12\"},{\"gstcgo\":\"12\"},{\"gtsnogo\":\"12\"},{\"slambu\":\"12\"},{\"canan\":\"12\"},{\"rg_no\":\"11\"},{\"stac_no\":\"11\"},{\"Ros_br\":\"9\"},{\"svo_tel\":\"11\"},{\"svo_patrongvari\":\"11\"}); ",
+      "class": "fltrbut"
+    },
+    {
+      "id": "stacg",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "if($(this).prop(\"checked\"))$(\"#selfg,#carg,#chcgo,#nochcgo,#canan\").prop({\"disabled\":false,\"checked\":true}); else $(\"#selfg,#carg,#chcgo,#nochcgo,#canan\").prop({\"disabled\":true,\"checked\":false});  ",
+      "class": ""
+    },
+    {
+      "id": "selfg",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "if($(\"#selfg\").prop(\"checked\")==false && $(\"#carg\").prop(\"checked\")==false && $(\"#canan\").prop(\"checked\")==false){$(\"#carg,#selfg,#chcgo,#nochcgo,#canan\").prop({\"disabled\":true,\"checked\":false}); $(\"#stacg\").prop(\"checked\",false);}  ",
+      "class": ""
+    },
+    {
+      "id": "carg",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "if($(\"#selfg\").prop(\"checked\")==false && $(\"#carg\").prop(\"checked\")==false && $(\"#canan\").prop(\"checked\")==false){$(\"#carg,#selfg,#chcgo,#nochcgo,#canan\").prop({\"disabled\":true,\"checked\":false}); $(\"#stacg\").prop(\"checked\",false);}  ",
+      "class": ""
+    },
+    {
+      "id": "canan",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "if($(\"#selfg\").prop(\"checked\")==false && $(\"#carg\").prop(\"checked\")==false && $(\"#canan\").prop(\"checked\")==false){$(\"#carg,#selfg,#chcgo,#nochcgo,#canan\").prop({\"disabled\":true,\"checked\":false}); $(\"#stacg\").prop(\"checked\",false);}  ",
+      "class": ""
+    },
+    {
+      "id": "chcgo",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "if($(\"#chcgo\").prop(\"checked\")==false && $(\"#nochcgo\").prop(\"checked\")==false){$(\"#carg,#selfg,#chcgo,#nochcgo,#canan\").prop({\"disabled\":true,\"checked\":false}); $(\"#stacg\").prop(\"checked\",false);}",
+      "class": ""
+    },
+    {
+      "id": "nochcgo",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "if($(\"#chcgo\").prop(\"checked\")==false && $(\"#nochcgo\").prop(\"checked\")==false){$(\"#carg,#selfg,#chcgo,#nochcgo,#canan\").prop({\"disabled\":true,\"checked\":false}); $(\"#stacg\").prop(\"checked\",false);}",
+      "class": ""
+    },
+    {
+      "id": "gegstac",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "if($(this).prop(\"checked\"))$(\"#gstcgo,#gtsnogo\").prop({\"disabled\":false,\"checked\":true}); else $(\"#gstcgo,#gtsnogo\").prop({\"disabled\":true,\"checked\":false});",
+      "class": ""
+    },
+    {
+      "id": "gstcgo",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "if($(\"#gstcgo\").prop(\"checked\")==false && $(\"#gtsnogo\").prop(\"checked\")==false){$(\"#gstcgo,#gtsnogo\").prop(\"disabled\",true); $(\"#gegstac\").prop(\"checked\",false);}",
+      "class": ""
+    },
+    {
+      "id": "gtsnogo",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "if($(\"#gstcgo\").prop(\"checked\")==false && $(\"#gtsnogo\").prop(\"checked\")==false){$(\"#gstcgo,#gtsnogo\").prop(\"disabled\",true); $(\"#gegstac\").prop(\"checked\",false);}",
+      "class": ""
+    },
+    {
+      "id": "",
+      "name": "",
+      "text": "×",
+      "type": "",
+      "onclick": "$(\".overlayEdit_mod\").css(\"visibility\",\"hidden\");$(\"#inter5\").empty();",
+      "class": "nondrg zdx"
+    },
+    {
+      "id": "edt_cncl",
+      "name": "",
+      "text": "გაუქმება",
+      "type": "",
+      "onclick": "edt_Cancl_2()",
+      "class": "whipap"
+    },
+    {
+      "id": "ilcls",
+      "text": "უკან",
+      "onclick": "$(\"#leftrighthover\").css({\"width\":\"0%\"});",
+      "class": ""
+    },
+    {
+      "id": "",
+      "text": "×",
+      "onclick": "$('#HelpCe').hide()",
+      "class": ""
+    },
+    {
+      "id": "HelpCl",
+      "text": "-",
+      "onclick": "$('#HelpCont').hide();$('#HelpFoot').hide();$('#HelpCe').css({'position':'fixed','bottom':'0','right':'0','top':'auto','left':'auto'}); $(this).hide();$('#HelpOp').show()",
+      "class": ""
+    },
+    {
+      "id": "HelpOp",
+      "text": "□",
+      "onclick": "$('#HelpCont').show();$('#HelpFoot').show();$('#HelpCe').css({'position':'absolute','bottom':'auto','right':'auto','top':'0','left':'0'}); $(this).hide();$('#HelpCl').show()",
+      "class": ""
+    },
+    {
+      "id": "HelpDes",
+      "name": "",
+      "text": "on",
+      "type": "checkbox",
+      "onclick": "var answer = confirm(' თქვენ ახდენთ დახმარების ცენტრის გამორთვას. მის ხელმეორედ ჩასართავად უნდა შეხვიდეთ თქვენი მომხმარებლის პროფილში. ნამდვილად გსურთ გამორთვა? '); if (answer){glAj('insert','zvlads','','SglHov','mainMsg','|','|',{'HelpDes':'7'});} else{$('#HelpDes').prop('checked',false)} ",
+      "class": ""
+    },
+    {
+      "id": "",
+      "name": "",
+      "text": "barcode",
+      "type": "button",
+      "onclick": "glAj(\"cpdf3v\",\"ddddd\",\"\",\"\",\"\",\"|\",\"|\",{\"0\":\"0\"});",
+      "class": ""
+    }
+  ],
+  "labels": [
+    {
+      "text": "გადაუდებელი სტაციონარული",
+      "for": null,
+      "class": ""
+    },
+    {
+      "text": "გაწერილი",
+      "for": null,
+      "class": ""
+    },
+    {
+      "text": "გაუწერელი",
+      "for": null,
+      "class": ""
+    },
+    {
+      "text": "გეგმიური სტაციონარული",
+      "for": null,
+      "class": ""
+    },
+    {
+      "text": "გაწერილი",
+      "for": null,
+      "class": ""
+    },
+    {
+      "text": "გაუწერელი",
+      "for": null,
+      "class": ""
+    },
+    {
+      "text": "ამბულატორიული",
+      "for": null,
+      "class": ""
+    }
+  ],
+  "mainContentText": "რეგისტრაცია\n\t\t\t\t\t\tპაციენტის ისტორია\n\t\t\t\t\t\tნომენკლატურა\n\t\t\t\t\t\tადმინისტრირება\n\t\t\t\t\t\tფორვარდი\n\t\t\t\t\t\tანგარიშები"
+}

@@ -1,12 +1,14 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Modal, Button, LoadingOverlay } from '@mantine/core';
+import { Modal, LoadingOverlay, Tabs } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useState, useEffect } from 'react';
 import { useMedplum } from '@medplum/react-hooks';
+import { IconUser, IconHistory } from '@tabler/icons-react';
 import type { Practitioner, PractitionerRole } from '@medplum/fhirtypes';
 import { AccountForm } from './AccountForm';
+import { AccountAuditTimeline } from './AccountAuditTimeline';
 import { useTranslation } from '../../hooks/useTranslation';
 import { updatePractitioner, getPractitionerById } from '../../services/accountService';
 import { practitionerToFormValues } from '../../services/accountHelpers';
@@ -122,11 +124,28 @@ export function AccountEditModal({
     >
       <LoadingOverlay visible={loading && !practitioner} />
       {practitioner && (
-        <AccountForm
-          onSubmit={handleSubmit}
-          initialValues={practitionerToFormValues(practitioner, roles)}
-          loading={loading}
-        />
+        <Tabs defaultValue="details">
+          <Tabs.List>
+            <Tabs.Tab value="details" leftSection={<IconUser size={14} />}>
+              Details
+            </Tabs.Tab>
+            <Tabs.Tab value="audit" leftSection={<IconHistory size={14} />}>
+              Audit History
+            </Tabs.Tab>
+          </Tabs.List>
+
+          <Tabs.Panel value="details" pt="md">
+            <AccountForm
+              onSubmit={handleSubmit}
+              initialValues={practitionerToFormValues(practitioner, roles)}
+              loading={loading}
+            />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="audit" pt="md">
+            <AccountAuditTimeline practitionerId={practitioner.id || ''} />
+          </Tabs.Panel>
+        </Tabs>
       )}
     </Modal>
   );

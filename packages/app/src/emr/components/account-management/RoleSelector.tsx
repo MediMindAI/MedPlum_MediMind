@@ -1,9 +1,12 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 import type { MultiSelectProps } from '@mantine/core';
-import { MultiSelect } from '@mantine/core';
-import { useMemo } from 'react';
+import { MultiSelect, Stack } from '@mantine/core';
+import { useMemo, useEffect, useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { detectRoleConflicts } from '../../services/permissionService';
+import { RoleConflictAlert } from './RoleConflictAlert';
+import type { RoleConflict } from '../../types/account-management';
 import rolesData from '../../translations/account-roles.json';
 
 /**
@@ -12,6 +15,8 @@ import rolesData from '../../translations/account-roles.json';
 export interface RoleSelectorProps extends Omit<MultiSelectProps, 'data'> {
   value: string[];
   onChange: (value: string[]) => void;
+  /** Show role conflict warnings above the selector */
+  showConflictWarnings?: boolean;
 }
 
 /**
@@ -33,8 +38,21 @@ export interface RoleSelectorProps extends Omit<MultiSelectProps, 'data'> {
  * />
  * ```
  */
-export function RoleSelector({ value, onChange, label, ...props }: RoleSelectorProps): JSX.Element {
-  const { t, lang } = useTranslation();
+export function RoleSelector({ value, onChange, label, showConflictWarnings = false, ...props }: RoleSelectorProps): JSX.Element {
+  const { lang } = useTranslation();
+  const [conflicts, setConflicts] = useState<RoleConflict[]>([]);
+
+  /**
+   * Detect role conflicts when selection changes
+   */
+  useEffect(() => {
+    if (showConflictWarnings && value.length > 0) {
+      const detected = detectRoleConflicts(value);
+      setConflicts(detected);
+    } else {
+      setConflicts([]);
+    }
+  }, [value, showConflictWarnings]);
 
   /**
    * Transform role data into Mantine Select format
@@ -73,20 +91,27 @@ export function RoleSelector({ value, onChange, label, ...props }: RoleSelectorP
   }, [label, lang]);
 
   return (
-    <MultiSelect
-      label={displayLabel}
-      placeholder={placeholder}
-      data={roleOptions}
-      value={value}
-      onChange={onChange}
-      searchable
-      size="md"
-      styles={{
-        input: {
-          minHeight: '44px', // Touch-friendly tap target
-        },
-      }}
-      {...props}
-    />
+    <Stack gap="sm">
+      {/* Role Conflict Alert - shown above selector */}
+      {showConflictWarnings && conflicts.length > 0 && (
+        <RoleConflictAlert conflicts={conflicts} />
+      )}
+
+      <MultiSelect
+        label={displayLabel}
+        placeholder={placeholder}
+        data={roleOptions}
+        value={value}
+        onChange={onChange}
+        searchable
+        size="md"
+        styles={{
+          input: {
+            minHeight: '44px', // Touch-friendly tap target
+          },
+        }}
+        {...props}
+      />
+    </Stack>
   );
 }

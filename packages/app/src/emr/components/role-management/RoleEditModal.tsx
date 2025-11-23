@@ -3,7 +3,7 @@
 import { Modal, Button, Group } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { RoleForm } from './RoleForm';
 import { useRoleForm } from '../../hooks/useRoleForm';
 import { getRoleById, updateRole } from '../../services/roleService';
@@ -30,6 +30,9 @@ interface RoleEditModalProps {
 export function RoleEditModal({ opened, onClose, onSuccess, role }: RoleEditModalProps): JSX.Element {
   const medplum = useMedplum();
   const { t } = useTranslation();
+
+  // Track which role's permissions have been loaded to prevent infinite loop
+  const loadedRoleIdRef = useRef<string | null>(null);
 
   const { form, handleSubmit } = useRoleForm({
     initialValues: role
@@ -75,20 +78,28 @@ export function RoleEditModal({ opened, onClose, onSuccess, role }: RoleEditModa
   // Load role permissions when modal opens
   useEffect(() => {
     async function loadRolePermissions(): Promise<void> {
-      if (role && opened) {
+      // Only load if we have a role, modal is open, and we haven't already loaded this role's permissions
+      if (role && opened && loadedRoleIdRef.current !== role.id) {
         try {
+          loadedRoleIdRef.current = role.id; // Mark as loading to prevent re-trigger
           const accessPolicy = await getRoleById(medplum, role.id);
           const permissions = accessPolicyToPermissions(accessPolicy);
           form.setFieldValue('permissions', permissions);
         } catch (error) {
           console.error('Error loading role permissions:', error);
+          loadedRoleIdRef.current = null; // Reset on error so user can retry
         }
       }
     }
 
+    // Reset the ref when modal closes to allow loading again when reopened
+    if (!opened) {
+      loadedRoleIdRef.current = null;
+    }
+
     loadRolePermissions().catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [role, opened, medplum]);
+  }, [role?.id, opened, medplum]);
 
   if (!role) {
     return <></>;

@@ -81,6 +81,8 @@ import { RegistrationSection } from './emr/sections/RegistrationSection';
 import { NomenclatureSection } from './emr/sections/NomenclatureSection';
 import { AccountManagementSection } from './emr/sections/AccountManagementSection';
 import { FormsSection } from './emr/sections/FormsSection';
+import { AccountManagementView } from './emr/views/account-management/AccountManagementView';
+import { AccountEditView } from './emr/views/account-management/AccountEditView';
 import { PatientEditView } from './emr/views/registration/PatientEditView';
 import { UnifiedRegistrationView } from './emr/views/registration/UnifiedRegistrationView';
 import { PatientHistoryView } from './emr/views/patient-history/PatientHistoryView';
@@ -340,20 +342,23 @@ export function AppRoutes(): JSX.Element {
             <Route path="lab-aliases" element={<PlaceholderView titleKey="submenu.nomenclature.labAliases" messageKey="ui.underDevelopment" />} />
             <Route path="groups" element={<PlaceholderView titleKey="submenu.nomenclature.groups" messageKey="ui.underDevelopment" />} />
             <Route path="physical" element={<PlaceholderView titleKey="submenu.nomenclature.physical" messageKey="ui.underDevelopment" />} />
-            <Route path="forms" element={<PlaceholderView titleKey="submenu.nomenclature.forms" messageKey="ui.underDevelopment" />} />
+            <Route path="forms" element={<Navigate to="/emr/forms" replace />} />
             <Route path="settings" element={<PlaceholderView titleKey="submenu.nomenclature.settings" messageKey="ui.underDevelopment" />} />
             <Route path="tests" element={<PlaceholderView titleKey="submenu.nomenclature.tests" messageKey="ui.underDevelopment" />} />
           </Route>
 
           {/* Account Management Section (Admin Only) */}
           <Route
-            path="account-management/*"
+            path="account-management"
             element={
               <ProtectedRoute requireAdmin={true}>
                 <AccountManagementSection />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<AccountManagementView />} />
+            <Route path="edit/:id" element={<AccountEditView />} />
+          </Route>
 
           {/* Forms Section */}
           <Route path="forms" element={<FormsSection />}>

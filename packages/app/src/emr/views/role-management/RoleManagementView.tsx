@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
-import { useState } from 'react';
-import { Container, Title, Button, Stack, Box } from '@mantine/core';
-import { IconPlus } from '@tabler/icons-react';
+import { useState, useMemo } from 'react';
+import { Title, Button, Stack, Box, Paper, Group, Badge } from '@mantine/core';
+import { IconPlus, IconShieldLock, IconChartBar, IconFilter } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
 import { RoleTable } from '../../components/role-management/RoleTable';
@@ -12,6 +12,9 @@ import { RoleDeactivationModal } from '../../components/role-management/RoleDeac
 import { RoleDeleteModal } from '../../components/role-management/RoleDeleteModal';
 import { RoleCloneModal } from '../../components/role-management/RoleCloneModal';
 import { RoleFilters } from '../../components/role-management/RoleFilters';
+import { RoleEmptyState } from '../../components/role-management/RoleEmptyState';
+import { RoleDashboardStats } from '../../components/role-management/RoleDashboardStats';
+import { SectionHeader } from '../../components/common/SectionHeader';
 import { useRoles } from '../../hooks/useRoles';
 import { useTranslation } from '../../hooks/useTranslation';
 import { reactivateRole } from '../../services/roleService';
@@ -28,7 +31,7 @@ import type { RoleRow } from '../../types/role-management';
  */
 export function RoleManagementView(): JSX.Element {
   const medplum = useMedplum();
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
 
   // Filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -50,6 +53,17 @@ export function RoleManagementView(): JSX.Element {
   const [deletingRole, setDeletingRole] = useState<RoleRow | null>(null);
   const [cloneModalOpened, setCloneModalOpened] = useState(false);
   const [cloningRole, setCloningRole] = useState<RoleRow | null>(null);
+  // Template code for pre-filling role form (currently unused but reserved for future)
+  const [, setTemplateCode] = useState<string | null>(null);
+
+  // Calculate stats
+  const stats = useMemo(() => {
+    const total = roles.length;
+    const active = roles.filter((r) => r.status === 'active').length;
+    const inactive = total - active;
+    const totalUsers = roles.reduce((sum, r) => sum + (r.userCount || 0), 0);
+    return { total, active, inactive, totalUsers };
+  }, [roles]);
 
   const handleEdit = (role: RoleRow): void => {
     setEditingRole(role);
@@ -89,37 +103,140 @@ export function RoleManagementView(): JSX.Element {
     setCloneModalOpened(true);
   };
 
+  const handleUseTemplate = (code: string): void => {
+    setTemplateCode(code);
+    setCreateModalOpened(true);
+  };
+
+  // Check if we should show empty state
+  const showEmptyState = !loading && roles.length === 0 && !searchQuery && statusFilter === 'all';
+
   return (
-    <Container size="xl" py="md">
-      <Stack gap="lg">
-        {/* Header */}
-        <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Title order={2}>{t('roleManagement.title')}</Title>
+    <Stack gap="lg">
+      {/* Header with Title and Create Button */}
+      <Group justify="space-between" align="center" wrap="wrap" gap="sm">
+        <Group gap="md" align="center">
+          <Title
+            order={2}
+            style={{
+              color: 'var(--emr-text-primary)',
+              fontWeight: 700,
+            }}
+          >
+            {t('roleManagement.title')}
+          </Title>
+          {roles.length > 0 && (
+            <Badge
+              size="lg"
+              variant="light"
+              color="blue"
+              style={{
+                background: 'var(--emr-light-accent)',
+                color: 'var(--emr-secondary)',
+              }}
+            >
+              {roles.length} {lang === 'ka' ? 'როლი' : lang === 'ru' ? 'ролей' : 'roles'}
+            </Badge>
+          )}
+        </Group>
+        {!showEmptyState && (
           <Button
             leftSection={<IconPlus size={16} />}
-            onClick={() => setCreateModalOpened(true)}
+            onClick={() => {
+              setTemplateCode(null);
+              setCreateModalOpened(true);
+            }}
             style={{
-              background: 'linear-gradient(135deg, #1a365d, #2b6cb0, #3182ce)',
+              background: 'var(--emr-gradient-primary)',
             }}
           >
             {t('roleManagement.createRole')}
           </Button>
-        </Box>
+        )}
+      </Group>
 
-        {/* Filters */}
-        <RoleFilters onSearchChange={setSearchQuery} onStatusChange={setStatusFilter} />
+      {/* Show Empty State OR Dashboard + Table */}
+      {showEmptyState ? (
+        <Paper
+          p="xl"
+          withBorder
+          style={{
+            background: 'var(--emr-text-inverse)',
+            borderRadius: 'var(--emr-border-radius-lg)',
+            borderColor: 'var(--emr-gray-200)',
+          }}
+        >
+          <RoleEmptyState
+            onCreateRole={() => {
+              setTemplateCode(null);
+              setCreateModalOpened(true);
+            }}
+            onUseTemplate={handleUseTemplate}
+          />
+        </Paper>
+      ) : (
+        <>
+          {/* Dashboard Stats */}
+          <Box>
+            <SectionHeader
+              icon={IconChartBar}
+              title={lang === 'ka' ? 'სტატისტიკა' : lang === 'ru' ? 'Статистика' : 'Statistics'}
+              variant="prominent"
+              spacing="sm"
+            />
+            <RoleDashboardStats stats={stats} loading={loading} />
+          </Box>
 
-        {/* Roles Table */}
-        <RoleTable
-          roles={roles}
-          loading={loading}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onDeactivate={handleDeactivate}
-          onReactivate={handleReactivate}
-          onClone={handleClone}
-        />
-      </Stack>
+          {/* Filters Section */}
+          <Box>
+            <SectionHeader
+              icon={IconFilter}
+              title={lang === 'ka' ? 'ძიება და ფილტრები' : lang === 'ru' ? 'Поиск и фильтры' : 'Search & Filters'}
+              spacing="sm"
+            />
+            <Paper
+              p="md"
+              withBorder
+              style={{
+                background: 'var(--emr-text-inverse)',
+                borderRadius: 'var(--emr-border-radius-lg)',
+                borderColor: 'var(--emr-gray-200)',
+              }}
+            >
+              <RoleFilters onSearchChange={setSearchQuery} onStatusChange={setStatusFilter} />
+            </Paper>
+          </Box>
+
+          {/* Roles Table */}
+          <Box>
+            <SectionHeader
+              icon={IconShieldLock}
+              title={lang === 'ka' ? 'როლების სია' : lang === 'ru' ? 'Список ролей' : 'Roles List'}
+              spacing="sm"
+            />
+            <Paper
+              p="md"
+              withBorder
+              style={{
+                background: 'var(--emr-text-inverse)',
+                borderRadius: 'var(--emr-border-radius-lg)',
+                borderColor: 'var(--emr-gray-200)',
+                overflow: 'hidden',
+              }}
+            >
+              <RoleTable
+                roles={roles}
+                loading={loading}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onDeactivate={handleDeactivate}
+                onReactivate={handleReactivate}
+                onClone={handleClone}
+              />
+            </Paper>
+          </Box>
+        </>
+      )}
 
       {/* Create Role Modal */}
       <RoleCreateModal
@@ -171,6 +288,6 @@ export function RoleManagementView(): JSX.Element {
         onSuccess={refresh}
         sourceRole={cloningRole}
       />
-    </Container>
+    </Stack>
   );
 }

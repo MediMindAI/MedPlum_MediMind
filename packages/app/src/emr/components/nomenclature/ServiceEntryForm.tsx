@@ -5,8 +5,7 @@ import { Grid, Button, Group, Badge } from '@mantine/core';
 import { useMedplum } from '@medplum/react-hooks';
 import type { ActivityDefinition } from '@medplum/fhirtypes';
 import { notifications } from '@mantine/notifications';
-import { IconCheck, IconPlus, IconFileSpreadsheet, IconList, IconForms } from '@tabler/icons-react';
-import { useNavigate } from 'react-router-dom';
+import { IconCheck, IconPlus, IconFileSpreadsheet, IconList } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useServiceForm } from '../../hooks/useServiceForm';
 import ServiceGroupSelect from './ServiceGroupSelect';
@@ -57,7 +56,6 @@ interface ServiceEntryFormProps {
 export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false, onExcelExport, totalCount = 0 }: ServiceEntryFormProps) {
   const { t } = useTranslation();
   const medplum = useMedplum();
-  const navigate = useNavigate();
   const { form, clearForm } = useServiceForm();
 
   /**
@@ -195,28 +193,6 @@ export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false,
           >
             ხაზზე ({totalCount})
           </Badge>
-          {/* Create Form Button - Navigate to Form Builder */}
-          <Button
-            size="md"
-            leftSection={<IconForms size={18} />}
-            onClick={() => navigate('/emr/forms/builder')}
-            style={{
-              background: 'var(--emr-gradient-submenu, linear-gradient(90deg, #138496, #17a2b8, #20c4dd))',
-              border: 'none',
-              boxShadow: 'var(--emr-shadow-md, 0 4px 6px -1px rgba(0, 0, 0, 0.1))',
-              minHeight: '44px',
-            }}
-            styles={{
-              root: {
-                '&:hover': {
-                  transform: 'translateY(-1px)',
-                  boxShadow: 'var(--emr-shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1))',
-                },
-              },
-            }}
-          >
-            {t('nomenclature.createForm') || 'ფორმის შექმნა'}
-          </Button>
           {onExcelExport && (
             <Button
               size="md"

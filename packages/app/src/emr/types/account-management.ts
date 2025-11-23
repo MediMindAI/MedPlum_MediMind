@@ -8,6 +8,9 @@ import type { Practitioner, PractitionerRole, Reference } from '@medplum/fhirtyp
  * Maps to Practitioner and PractitionerRole FHIR resources
  */
 export interface AccountFormValues {
+  // Resource ID (for editing existing accounts)
+  id?: string; // Practitioner resource ID (optional, only set when editing)
+
   // Basic Information
   firstName: string;
   lastName: string;
@@ -47,6 +50,9 @@ export interface AccountFormValues {
 
   // Notes
   notes?: string; // Administrative notes
+
+  // Welcome Message (US8)
+  welcomeMessage?: string; // Custom welcome message for invitation email
 }
 
 /**
@@ -273,3 +279,213 @@ export interface ActivationLinkData {
   email: string; // Recipient email
   expiresAt?: string; // ISO 8601 timestamp
 }
+
+// ============================================================================
+// EMR User Management Improvements - New Types (Feature 001)
+// ============================================================================
+
+/**
+ * Invitation status for account invitations
+ * Derived from Invite resource state
+ */
+export type InvitationStatus =
+  | 'pending' // Email sent, awaiting activation
+  | 'accepted' // User activated account
+  | 'expired' // 7+ days since invitation
+  | 'bounced' // Email delivery failed
+  | 'cancelled'; // Admin cancelled invitation
+
+/**
+ * Extended account row with invitation status for table display
+ */
+export interface AccountRowExtended extends AccountRow {
+  invitationStatus?: InvitationStatus;
+  lastLogin?: string; // ISO 8601 timestamp
+  createdAt?: string; // ISO 8601 timestamp
+}
+
+/**
+ * Extended account search filters with additional criteria
+ */
+export interface AccountSearchFiltersExtended extends AccountSearchFilters {
+  search?: string; // Combined name/email search
+  // Note: hireDateFrom/hireDateTo inherited from base as string (ISO 8601)
+  // Date objects for UI convenience
+  hireDateFromDate?: Date;
+  hireDateToDate?: Date;
+  lastLoginFrom?: Date;
+  lastLoginTo?: Date;
+  invitationStatus?: InvitationStatus;
+}
+
+/**
+ * Pagination parameters for server-side pagination
+ */
+export interface PaginationParams {
+  page: number;
+  pageSize: number;
+  sortField?: string;
+  sortDirection?: 'asc' | 'desc';
+}
+
+/**
+ * Paginated response wrapper
+ */
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
+
+/**
+ * Saved filter preset for quick access
+ */
+export interface FilterPreset {
+  id: string;
+  name: string;
+  filters: AccountSearchFiltersExtended;
+  createdAt: string; // ISO 8601 timestamp
+  isDefault?: boolean;
+}
+
+/**
+ * Permission cell in the matrix
+ */
+export interface PermissionCell {
+  resourceType: string;
+  operation: 'create' | 'read' | 'update' | 'delete' | 'search';
+  allowed: boolean;
+  inherited?: boolean; // True if permission comes from another role
+}
+
+/**
+ * Permission row for matrix display
+ */
+export interface PermissionRow {
+  resourceType: string;
+  create: boolean;
+  read: boolean;
+  update: boolean;
+  delete: boolean;
+  search: boolean;
+}
+
+/**
+ * Role conflict detection result
+ */
+export interface RoleConflict {
+  type: 'separation_of_duties' | 'redundant_roles' | 'permission_conflict';
+  roles: string[];
+  message: string;
+  severity: 'error' | 'warning';
+}
+
+/**
+ * Extended audit log entry with display properties
+ */
+export interface AuditLogEntryExtended extends AuditLogEntry {
+  actionDisplay: string; // Human-readable action name
+  outcomeDisplay: string; // Human-readable outcome
+  ipAddress?: string; // Client IP address
+}
+
+/**
+ * Audit log filters for search
+ */
+export interface AuditLogFilters {
+  dateFrom?: Date;
+  dateTo?: Date;
+  actorId?: string;
+  action?: 'C' | 'R' | 'U' | 'D' | 'E';
+  resourceType?: string;
+  outcome?: 0 | 4 | 8 | 12;
+  entityId?: string;
+}
+
+/**
+ * Bulk operation types
+ */
+export type BulkOperationType =
+  | 'deactivate'
+  | 'activate'
+  | 'assignRole'
+  | 'removeRole'
+  | 'export';
+
+/**
+ * Bulk operation result
+ */
+export interface BulkOperationResult {
+  operationType: BulkOperationType;
+  total: number;
+  successful: number;
+  failed: number;
+  errors: BulkOperationError[];
+}
+
+/**
+ * Error details for failed bulk operation items
+ */
+export interface BulkOperationError {
+  id: string;
+  name: string;
+  error: string;
+  code?: string;
+}
+
+/**
+ * Progress callback for bulk operations
+ */
+export interface BulkOperationProgress {
+  current: number;
+  total: number;
+  percentage: number;
+}
+
+/**
+ * Export metadata for generated files
+ */
+export interface ExportMetadata {
+  timestamp: string; // ISO 8601 timestamp
+  exportedBy: string; // User display name
+  filters?: AccountSearchFiltersExtended;
+  totalRecords: number;
+}
+
+/**
+ * DICOM audit event codes used for HIPAA compliance
+ */
+export const AUDIT_EVENT_CODES = {
+  PATIENT_RECORD: '110110',
+  QUERY: '110112',
+  USER_AUTHENTICATION: '110114',
+  SECURITY_ALERT: '110136',
+  USER_SECURITY_ATTRIBUTE_CHANGED: '110137',
+} as const;
+
+/**
+ * FHIR resource types for permission matrix
+ */
+export const PERMISSION_RESOURCES = [
+  'Patient',
+  'Practitioner',
+  'Observation',
+  'MedicationRequest',
+  'DiagnosticReport',
+  'Encounter',
+  'Claim',
+  'Invoice',
+] as const;
+
+/**
+ * CRUD operations for permission matrix
+ */
+export const PERMISSION_OPERATIONS = [
+  'create',
+  'read',
+  'update',
+  'delete',
+  'search',
+] as const;

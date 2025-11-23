@@ -1,33 +1,40 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React from 'react';
-import { Table, Box, ActionIcon, Text, Skeleton, Badge, Group, Tooltip, Button, Menu, Stack, ThemeIcon } from '@mantine/core';
-import { IconEdit, IconTrash, IconDots, IconUserMinus, IconUserCheck, IconUsers } from '@tabler/icons-react';
+import React, { useMemo } from 'react';
+import { Text, Badge, Group, Tooltip, Stack } from '@mantine/core';
+import { IconEdit, IconTrash, IconUserMinus, IconUserCheck, IconMailForward, IconLink } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from '../../hooks/useTranslation';
 import { AccountStatusBadge } from './AccountStatusBadge';
+import { InvitationStatusBadge } from './InvitationStatusBadge';
 import { AccountCard } from './AccountCard';
-import type { AccountRow } from '../../types/account-management';
+import { EMRTable } from '../shared/EMRTable';
+import type { EMRTableColumn, EMRTableActionsConfig } from '../shared/EMRTable';
+import type { AccountRowExtended } from '../../types/account-management';
 
 interface AccountTableProps {
-  accounts: AccountRow[];
-  onEdit: (account: AccountRow) => void;
-  onDelete: (account: AccountRow) => void;
-  onDeactivate?: (account: AccountRow) => void;
-  onReactivate?: (account: AccountRow) => void;
+  accounts: AccountRowExtended[];
+  onEdit: (account: AccountRowExtended) => void;
+  onDelete: (account: AccountRowExtended) => void;
+  onDeactivate?: (account: AccountRowExtended) => void;
+  onReactivate?: (account: AccountRowExtended) => void;
+  onResendInvitation?: (account: AccountRowExtended) => void;
+  onGenerateLink?: (account: AccountRowExtended) => void;
   loading?: boolean;
+  /** Array of selected account IDs for bulk operations */
+  selectedIds?: string[];
+  /** Callback when selection changes */
+  onSelectionChange?: (selectedIds: string[]) => void;
+  /** Whether filters are currently active (changes empty state message) */
+  hasActiveFilters?: boolean;
 }
 
 /**
  * Render roles with badge list and overflow handling
  * Shows first 2 roles, then "+N more" for additional roles
- * @param root0
- * @param root0.roles
  */
 function RolesCell({ roles }: { roles: string[] }): JSX.Element {
-  const { t } = useTranslation();
-
   if (!roles || roles.length === 0) {
     return <Text c="dimmed">-</Text>;
   }
@@ -57,19 +64,14 @@ function RolesCell({ roles }: { roles: string[] }): JSX.Element {
  * Table component for displaying account list
  *
  * Features:
+ * - Uses shared EMRTable component for consistent styling
  * - 10 columns: Staff ID, Name, Email, Phone, Roles, Departments, Status, Last Modified, Actions
  * - Multi-role display with badge list (first 2 roles + "+N more")
- * - Horizontal scroll wrapper for mobile
- * - Turquoise gradient header (var(--emr-gradient-submenu))
- * - Clickable rows with pointer cursor
- * - Edit and delete action buttons
- * - React.memo() optimization
- * - Loading skeleton state
- *
- * @param accounts - Array of account rows
- * @param onEdit - Edit button callback
- * @param onDelete - Delete button callback
- * @param loading - Show loading skeleton
+ * - Row selection with checkboxes for bulk operations
+ * - Combined action pattern (edit as primary, others in dropdown)
+ * - Mobile card view for responsive design
+ * - Loading skeleton state via EMRTable
+ * - Empty state via EMRTable
  */
 export const AccountTable = React.memo(function AccountTable({
   accounts,
@@ -77,52 +79,160 @@ export const AccountTable = React.memo(function AccountTable({
   onDelete,
   onDeactivate,
   onReactivate,
+  onResendInvitation,
+  onGenerateLink,
   loading,
+  selectedIds = [],
+  onSelectionChange,
+  hasActiveFilters = false,
 }: AccountTableProps): JSX.Element {
   const { t } = useTranslation();
   const isMobile = useMediaQuery('(max-width: 768px)');
 
-  if (loading) {
-    return (
-      <Box>
-        <Skeleton height={50} mb="sm" />
-        <Skeleton height={40} mb="xs" />
-        <Skeleton height={40} mb="xs" />
-        <Skeleton height={40} mb="xs" />
-        <Text ta="center" c="dimmed">
-          {t('accountManagement.table.loading')}
-        </Text>
-      </Box>
-    );
-  }
+  // Define columns using EMRTableColumn type
+  const columns = useMemo<EMRTableColumn<AccountRowExtended>[]>(
+    () => [
+      {
+        key: 'staffId',
+        title: t('accountManagement.table.staffId'),
+        width: 120,
+        render: (row) => <Text size="sm">{row.staffId || '-'}</Text>,
+      },
+      {
+        key: 'name',
+        title: t('accountManagement.table.name'),
+        minWidth: 150,
+        render: (row) => (
+          <Text size="sm" fw={500}>
+            {row.name}
+          </Text>
+        ),
+      },
+      {
+        key: 'email',
+        title: t('accountManagement.table.email'),
+        minWidth: 200,
+        hideOnMobile: true,
+        render: (row) => (
+          <Text size="sm" c="dimmed">
+            {row.email}
+          </Text>
+        ),
+      },
+      {
+        key: 'phone',
+        title: t('accountManagement.table.phone'),
+        width: 130,
+        hideOnMobile: true,
+        hideOnTablet: true,
+        render: (row) => <Text size="sm">{row.phone || '-'}</Text>,
+      },
+      {
+        key: 'roles',
+        title: t('accountManagement.table.role'),
+        minWidth: 180,
+        render: (row) => <RolesCell roles={row.roles} />,
+      },
+      {
+        key: 'departments',
+        title: t('accountManagement.table.department'),
+        minWidth: 150,
+        hideOnMobile: true,
+        hideOnTablet: true,
+        render: (row) => <Text size="sm">{row.departments?.join(', ') || '-'}</Text>,
+      },
+      {
+        key: 'status',
+        title: t('accountManagement.table.status'),
+        width: 140,
+        align: 'center',
+        render: (row) => (
+          <Stack gap={4}>
+            <AccountStatusBadge active={row.active} />
+            {row.invitationStatus && <InvitationStatusBadge status={row.invitationStatus} />}
+          </Stack>
+        ),
+      },
+      {
+        key: 'lastModified',
+        title: t('accountManagement.table.lastModified'),
+        width: 120,
+        hideOnMobile: true,
+        render: (row) => (
+          <Text size="sm">{row.lastModified ? new Date(row.lastModified).toLocaleDateString() : '-'}</Text>
+        ),
+      },
+    ],
+    [t]
+  );
 
-  // Empty state with icon and CTA
-  if (accounts.length === 0) {
-    return (
-      <Box ta="center" py={80}>
-        <ThemeIcon
-          size={80}
-          radius={80}
-          variant="light"
-          color="blue"
-          style={{ margin: '0 auto 24px' }}
-        >
-          <IconUsers size={40} />
-        </ThemeIcon>
+  // Define actions using the combined pattern
+  const getActions = useMemo(
+    () =>
+      (row: AccountRowExtended): EMRTableActionsConfig<AccountRowExtended> => {
+        const secondaryActions = [];
 
-        <Text size="xl" fw={600} mb="sm" c="dimmed">
-          {t('accountManagement.table.noAccounts')}
-        </Text>
+        // Edit action
+        secondaryActions.push({
+          icon: IconEdit,
+          label: t('accountManagement.table.edit'),
+          onClick: () => onEdit(row),
+          color: 'blue' as const,
+        });
 
-        <Text size="sm" c="dimmed" mb="xl">
-          {t('accountManagement.table.noAccountsDescription')}
-        </Text>
-      </Box>
-    );
-  }
+        // Deactivate/Reactivate
+        if (row.active && onDeactivate) {
+          secondaryActions.push({
+            icon: IconUserMinus,
+            label: t('accountManagement.table.deactivate'),
+            onClick: () => onDeactivate(row),
+            color: 'yellow' as const,
+          });
+        }
+        if (!row.active && onReactivate) {
+          secondaryActions.push({
+            icon: IconUserCheck,
+            label: t('accountManagement.table.reactivate'),
+            onClick: () => onReactivate(row),
+            color: 'green' as const,
+          });
+        }
+
+        // Invitation actions
+        if ((row.invitationStatus === 'pending' || row.invitationStatus === 'expired') && onResendInvitation) {
+          secondaryActions.push({
+            icon: IconMailForward,
+            label: t('accountManagement.invitation.resend'),
+            onClick: () => onResendInvitation(row),
+            color: 'blue' as const,
+          });
+        }
+        if ((row.invitationStatus === 'pending' || row.invitationStatus === 'expired') && onGenerateLink) {
+          secondaryActions.push({
+            icon: IconLink,
+            label: t('accountManagement.invitation.generateLink'),
+            onClick: () => onGenerateLink(row),
+            color: 'blue' as const,
+          });
+        }
+
+        // Delete action
+        secondaryActions.push({
+          icon: IconTrash,
+          label: t('accountManagement.table.delete'),
+          onClick: () => onDelete(row),
+          color: 'red' as const,
+        });
+
+        return {
+          secondary: secondaryActions,
+        };
+      },
+    [t, onEdit, onDelete, onDeactivate, onReactivate, onResendInvitation, onGenerateLink]
+  );
 
   // Mobile card view
-  if (isMobile) {
+  if (isMobile && !loading && accounts.length > 0) {
     return (
       <Stack gap="md">
         {accounts.map((account) => (
@@ -139,235 +249,33 @@ export const AccountTable = React.memo(function AccountTable({
     );
   }
 
-  // Desktop table view
+  // Desktop table view using EMRTable
   return (
-    <Box style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <Table highlightOnHover style={{ minWidth: '1200px' }}>
-        <Table.Thead>
-          <Table.Tr
-            style={{
-              background: 'var(--emr-gradient-submenu)',
-              position: 'sticky',
-              top: 0,
-              zIndex: 10,
-            }}
-          >
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                padding: '16px',
-              }}
-            >
-              {t('accountManagement.table.staffId')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                padding: '16px',
-              }}
-            >
-              {t('accountManagement.table.name')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                padding: '16px',
-              }}
-            >
-              {t('accountManagement.table.email')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                padding: '16px',
-              }}
-            >
-              {t('accountManagement.table.phone')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                padding: '16px',
-              }}
-            >
-              {t('accountManagement.table.role')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                padding: '16px',
-              }}
-            >
-              {t('accountManagement.table.department')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                padding: '16px',
-              }}
-            >
-              {t('accountManagement.table.status')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                padding: '16px',
-              }}
-            >
-              {t('accountManagement.table.lastModified')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 600,
-                fontSize: '14px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                padding: '16px',
-                textAlign: 'right',
-              }}
-            >
-              {t('accountManagement.table.actions')}
-            </Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-
-        <Table.Tbody>
-          {accounts.map((account) => (
-            <Table.Tr
-              key={account.id}
-              style={{
-                transition: 'all var(--emr-transition-fast)',
-                cursor: 'pointer',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(26, 54, 93, 0.04)';
-                e.currentTarget.style.transform = 'scale(1.005)';
-                e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.05)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent';
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <Table.Td>{account.staffId || '-'}</Table.Td>
-              <Table.Td>{account.name}</Table.Td>
-              <Table.Td>{account.email}</Table.Td>
-              <Table.Td>{account.phone || '-'}</Table.Td>
-              <Table.Td>
-                <RolesCell roles={account.roles} />
-              </Table.Td>
-              <Table.Td>{account.departments?.join(', ') || '-'}</Table.Td>
-              <Table.Td>
-                <AccountStatusBadge active={account.active} />
-              </Table.Td>
-              <Table.Td>
-                {account.lastModified ? new Date(account.lastModified).toLocaleDateString() : '-'}
-              </Table.Td>
-              <Table.Td>
-                <Group gap="xs" wrap="nowrap" justify="flex-end">
-                  {/* Action Menu Dropdown */}
-                  <Menu position="bottom-end">
-                    <Menu.Target>
-                      <ActionIcon
-                        variant="subtle"
-                        color="gray"
-                        size="lg"
-                        style={{
-                          transition: 'var(--emr-transition-fast)',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'var(--emr-gradient-primary)';
-                          e.currentTarget.style.color = 'white';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent';
-                          e.currentTarget.style.color = 'inherit';
-                        }}
-                      >
-                        <IconDots size={18} />
-                      </ActionIcon>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                      <Menu.Item
-                        leftSection={<IconEdit size={14} />}
-                        onClick={() => onEdit(account)}
-                        style={{
-                          transition: 'var(--emr-transition-fast)',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'linear-gradient(90deg, rgba(26,54,93,0.1) 0%, transparent 100%)';
-                        }}
-                      >
-                        {t('accountManagement.table.edit')}
-                      </Menu.Item>
-                      {account.active && onDeactivate && (
-                        <Menu.Item
-                          leftSection={<IconUserMinus size={14} />}
-                          onClick={() => onDeactivate(account)}
-                          color="orange"
-                        >
-                          {t('accountManagement.table.deactivate')}
-                        </Menu.Item>
-                      )}
-                      {!account.active && onReactivate && (
-                        <Menu.Item
-                          leftSection={<IconUserCheck size={14} />}
-                          onClick={() => onReactivate(account)}
-                          color="green"
-                        >
-                          {t('accountManagement.table.reactivate')}
-                        </Menu.Item>
-                      )}
-                      <Menu.Divider />
-                      <Menu.Item
-                        leftSection={<IconTrash size={14} />}
-                        onClick={() => onDelete(account)}
-                        color="red"
-                      >
-                        {t('accountManagement.table.delete')}
-                      </Menu.Item>
-                    </Menu.Dropdown>
-                  </Menu>
-                </Group>
-              </Table.Td>
-            </Table.Tr>
-          ))}
-        </Table.Tbody>
-      </Table>
-    </Box>
+    <EMRTable<AccountRowExtended>
+      columns={columns}
+      data={accounts}
+      loading={loading}
+      loadingConfig={{ rows: 5, animate: true }}
+      emptyState={{
+        title: hasActiveFilters
+          ? t('accountManagement.empty.noResults')
+          : t('accountManagement.empty.title'),
+        description: hasActiveFilters
+          ? t('accountManagement.empty.noResultsDescription')
+          : t('accountManagement.empty.description'),
+      }}
+      // Selection
+      selectable={!!onSelectionChange}
+      selectedRows={selectedIds}
+      onSelectionChange={(ids) => onSelectionChange?.(ids as string[])}
+      allowSelectAll={true}
+      // Actions
+      actions={getActions}
+      // Styling
+      stickyHeader={true}
+      striped={true}
+      minWidth={1100}
+      ariaLabel={t('accountManagement.table.ariaLabel')}
+    />
   );
 });

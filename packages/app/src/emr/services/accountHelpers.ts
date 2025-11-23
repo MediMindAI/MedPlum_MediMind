@@ -91,6 +91,33 @@ export function getStaffId(practitioner: Practitioner): string | undefined {
 }
 
 /**
+ * Alias for getStaffId - used by accountService
+ */
+export function getPractitionerStaffId(practitioner: Practitioner): string | undefined {
+  return getStaffId(practitioner);
+}
+
+/**
+ * Extract practitioner's work email
+ *
+ * @param practitioner - Practitioner FHIR resource
+ * @returns Email address or undefined
+ */
+export function getPractitionerEmail(practitioner: Practitioner): string | undefined {
+  return getTelecomValue(practitioner, 'email', 'work');
+}
+
+/**
+ * Extract practitioner's work phone
+ *
+ * @param practitioner - Practitioner FHIR resource
+ * @returns Phone number or undefined
+ */
+export function getPractitionerPhone(practitioner: Practitioner): string | undefined {
+  return getTelecomValue(practitioner, 'phone', 'work');
+}
+
+/**
  * Convert Practitioner + PractitionerRoles to AccountFormValues
  * Used for editing existing accounts
  *

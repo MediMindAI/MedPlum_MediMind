@@ -280,6 +280,7 @@ export function FormFillerView(): JSX.Element {
           borderRadius: 'var(--emr-border-radius-sm)',
           boxShadow: 'var(--emr-shadow-lg)',
           overflow: 'hidden',
+          border: '1px solid var(--emr-border-color)',
         }}
       >
         {/* Document Header - Official Stamp Area */}
@@ -289,24 +290,29 @@ export function FormFillerView(): JSX.Element {
             borderBottom: '1px solid var(--emr-border-color)',
           }}
         >
-          {/* Right-aligned approval text */}
-          <Box style={{ textAlign: 'right', marginBottom: '24px' }}>
-            <Text size="xs" style={{ color: 'var(--emr-gray-500)', lineHeight: 1.6 }}>
-              დამტკიცებულია
-              <br />
-              საქართველოს შრომის, ჯანმრთელობისა
-              <br />
-              და სოციალური დაცვის მინისტრის
-              <br />
-              2008 წ. 15.10 №230/ნ ბრძანებით
-            </Text>
-          </Box>
+          {/* Right-aligned approval text - Only for Form 100 (IV-100/ა) */}
+          {(questionnaire.name?.includes('100') || questionnaire.title?.includes('100')) && (
+            <Box style={{ textAlign: 'right', marginBottom: '24px' }}>
+              <Text size="xs" style={{ color: 'var(--emr-gray-500)', lineHeight: 1.6 }}>
+                დამტკიცებულია
+                <br />
+                საქართველოს შრომის, ჯანმრთელობისა
+                <br />
+                და სოციალური დაცვის მინისტრის
+                <br />
+                2008 წ. 15.10 №230/ნ ბრძანებით
+              </Text>
+            </Box>
+          )}
 
           {/* Centered Form Title */}
           <Box style={{ textAlign: 'center' }}>
-            <Text size="sm" style={{ color: 'var(--emr-gray-600)', marginBottom: '8px' }}>
-              სამედიცინო დოკუმენტაცია ფორმა № IV-100/ა
-            </Text>
+            {/* Form number subtitle - Only for Form 100 */}
+            {(questionnaire.name?.includes('100') || questionnaire.title?.includes('100')) && (
+              <Text size="sm" style={{ color: 'var(--emr-gray-600)', marginBottom: '8px' }}>
+                სამედიცინო დოკუმენტაცია ფორმა № IV-100/ა
+              </Text>
+            )}
             <Title
               order={2}
               style={{

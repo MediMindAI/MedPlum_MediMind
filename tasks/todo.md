@@ -978,3 +978,99 @@ Phase 13 Part 2 completes the cross-cutting concerns for the FHIR Form Builder:
 | T170 | JSDoc comments | COMPLETED |
 
 **All 12 tasks completed successfully.**
+
+---
+
+# User Story 3: View and Edit Permissions for Roles
+
+**Date**: 2025-11-23
+**Feature**: EMR User Management - Permission Matrix for Roles
+**Tasks**: T037-T047
+**Status**: COMPLETED
+
+## Problem Analysis
+
+Implement visual permission matrix editing for roles. Administrators can view/edit role permissions using a matrix interface showing FHIR resources as rows and CRUD operations as columns.
+
+## Task Status
+
+- [x] T037: Create PermissionMatrix.test.tsx - Already exists with 14 tests
+- [x] T038: Create PermissionPreview.test.tsx - Already exists with 12 tests
+- [x] T039: Create RoleConflictAlert.test.tsx - Already exists with 11 tests
+- [x] T040: Create usePermissions.test.tsx - Already exists with 14 tests
+- [x] T041: Create usePermissions.ts hook - Already exists with full implementation
+- [x] T042: Create PermissionMatrix.tsx component - Already exists (239 lines)
+- [x] T043: Create PermissionPreview.tsx component - Already exists (223 lines)
+- [x] T044: Create RoleConflictAlert.tsx component - Already exists (148 lines)
+- [x] T045: Add permission preview accordion to AccountForm.tsx - Already integrated
+- [x] T046: Add role conflict detection to RoleSelector.tsx - Already integrated
+- [x] T047: Add permissions tab to AccountManagementView.tsx - Already integrated
+
+## Bug Fix Applied
+
+Fixed infinite re-render issue in `usePermissions.ts`:
+- Changed array dependency (`roleIds`, `roleCodes`) to string keys (`roleIdsKey`, `roleCodesKey`)
+- Added proper memoization using `.join(',')` to prevent reference equality issues in React's useEffect
+
+## Files Modified
+
+1. `/packages/app/src/emr/hooks/usePermissions.ts` - Fixed infinite re-render bug
+
+## Files Verified (Already Existing)
+
+1. `/packages/app/src/emr/components/account-management/PermissionMatrix.tsx`
+2. `/packages/app/src/emr/components/account-management/PermissionMatrix.test.tsx`
+3. `/packages/app/src/emr/components/account-management/PermissionPreview.tsx`
+4. `/packages/app/src/emr/components/account-management/PermissionPreview.test.tsx`
+5. `/packages/app/src/emr/components/account-management/RoleConflictAlert.tsx`
+6. `/packages/app/src/emr/components/account-management/RoleConflictAlert.test.tsx`
+7. `/packages/app/src/emr/hooks/usePermissions.test.tsx`
+8. `/packages/app/src/emr/components/account-management/AccountForm.tsx`
+9. `/packages/app/src/emr/components/account-management/RoleSelector.tsx`
+10. `/packages/app/src/emr/views/account-management/AccountManagementView.tsx`
+
+## Test Results
+
+**Total: 97 tests passing**
+
+| Test File | Tests |
+|-----------|-------|
+| PermissionMatrix.test.tsx | 14 passing |
+| PermissionPreview.test.tsx | 12 passing |
+| RoleConflictAlert.test.tsx | 11 passing |
+| usePermissions.test.tsx | 14 passing |
+| permissionService.test.ts | 46 passing |
+
+## Implementation Details
+
+### PermissionMatrix.tsx
+- Grid/table showing FHIR resources as rows, CRUD+search as columns
+- Uses PERMISSION_RESOURCES and PERMISSION_OPERATIONS constants
+- Checkbox for each cell (resourceType + operation)
+- Mantine Table with turquoise gradient header
+- Auto-enable dependencies via `resolvePermissionDependenciesForOperation`
+- Props: `permissions`, `onChange`, `readonly`, `loading`, `hasChanges`, `onSave`, `onRefresh`
+
+### PermissionPreview.tsx
+- Read-only accordion view of combined permissions from multiple roles
+- Used in AccountForm to show what permissions user will have
+- Uses `getCombinedPermissions` from permissionService
+- Shows resource count and total permission count badges
+
+### RoleConflictAlert.tsx
+- Alert component showing role conflicts
+- Different styling for error (red) vs warning (yellow) severity
+- Uses Mantine Alert with appropriate icons
+- Props: `conflicts: RoleConflict[]`
+
+### usePermissions.ts (usePermissionsMatrix hook)
+- Fetch permission matrix using `getPermissionMatrix`
+- Update permissions using `updatePermissionMatrix`
+- Detect conflicts using `detectRoleConflicts`
+- Returns: `{ permissions, conflicts, loading, error, updatePermission, savePermissions, hasChanges }`
+
+## Summary
+
+All components and features for User Story 3 were already implemented in the codebase. The only change needed was fixing an infinite re-render bug in `usePermissions.ts` caused by array reference equality issues in React's `useEffect` dependencies.
+
+**All 11 tasks verified and completed.**

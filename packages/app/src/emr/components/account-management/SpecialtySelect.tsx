@@ -35,7 +35,7 @@ export interface SpecialtySelectProps extends Omit<SelectProps, 'data'> {
  * ```
  */
 export function SpecialtySelect({ value, onChange, label, ...props }: SpecialtySelectProps): JSX.Element {
-  const { t, lang } = useTranslation();
+  const { lang } = useTranslation();
 
   /**
    * Transform specialty data into Mantine Select format

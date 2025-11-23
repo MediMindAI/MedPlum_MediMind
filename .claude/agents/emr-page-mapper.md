@@ -9,73 +9,93 @@ color: cyan
 
 Extract complete page documentation for exact EMR rebuilds using Playwright scripts (token-efficient, no MCP).
 
-## Playwright Scripts (Use Instead of MCP)
+## Playwright Background Server (REQUIRED)
 
-All browser automation uses scripts in `scripts/playwright/`:
+**IMPORTANT**: Use the background server to keep browser session alive across commands!
 
+### Step 1: Start Server (if not running)
+```bash
+# Check if server is running
+ls /var/folders/*/playwright-server.pid 2>/dev/null || npx tsx scripts/playwright/server.ts &
+```
+
+### Step 2: Send Commands via cmd.ts
 ```bash
 # Navigation
-npx tsx scripts/playwright/navigate.ts "http://178.134.21.82:8008/index.php"
-
-# Screenshots
-npx tsx scripts/playwright/screenshot.ts --name "page-name"
-npx tsx scripts/playwright/screenshot.ts --fullpage --name "full-page"
-
-# Get accessibility tree (find clickable elements)
-npx tsx scripts/playwright/snapshot.ts --interesting-only
-
-# Click elements
-npx tsx scripts/playwright/click.ts "#button-id"
-npx tsx scripts/playwright/click.ts --text "Button Text"
-npx tsx scripts/playwright/click.ts --role button --name "Save"
+npx tsx scripts/playwright/cmd.ts navigate "http://178.134.21.82:8008/index.php"
 
 # Fill forms
-npx tsx scripts/playwright/fill.ts "#username" "cicig"
-npx tsx scripts/playwright/fill.ts --label "Password" "Tsotne2011"
+npx tsx scripts/playwright/cmd.ts fill "#username" "cicig"
+npx tsx scripts/playwright/cmd.ts fill "#password" "Tsotne2011"
 
-# Execute JavaScript (DOM extraction)
-npx tsx scripts/playwright/evaluate.ts "document.title"
-npx tsx scripts/playwright/evaluate.ts --file "./extraction-script.js"
+# Click elements
+npx tsx scripts/playwright/cmd.ts click "text=შესვლა"
+npx tsx scripts/playwright/cmd.ts click "#button-id"
+npx tsx scripts/playwright/cmd.ts click "button[type=submit]"
 
-# Wait for conditions
-npx tsx scripts/playwright/wait.ts --selector "#modal" --state visible
-npx tsx scripts/playwright/wait.ts --network
+# Screenshots
+npx tsx scripts/playwright/cmd.ts screenshot "page-name"
 
-# Extract data
-npx tsx scripts/playwright/extract.ts --table "#data-table"
-npx tsx scripts/playwright/extract.ts --forms
-npx tsx scripts/playwright/extract.ts --links
+# Wait
+npx tsx scripts/playwright/cmd.ts wait 2000
+npx tsx scripts/playwright/cmd.ts waitfor ".selector"
 
-# Close browser when done
-npx tsx scripts/playwright/close.ts
+# Get current URL
+npx tsx scripts/playwright/cmd.ts url
+
+# Get text content
+npx tsx scripts/playwright/cmd.ts text "#selector"
+
+# Execute JavaScript
+npx tsx scripts/playwright/cmd.ts evaluate "document.title"
+
+# Stop server when done
+npx tsx scripts/playwright/cmd.ts stop
 ```
+
+### Why Server Approach?
+Each `cmd.ts` command shares the **same browser session**:
+- Login once → stay logged in
+- Navigate → page persists
+- Fill form → values stay
+- Click → same page reacts
 
 ## Quick Start Protocol
 
-1. **Login**:
+1. **Start Server** (if not already running):
 ```bash
-npx tsx scripts/playwright/navigate.ts "http://178.134.21.82:8008/index.php"
-npx tsx scripts/playwright/fill.ts "#username" "cicig"
-npx tsx scripts/playwright/fill.ts "#password" "Tsotne2011"
-npx tsx scripts/playwright/click.ts "button[type=submit]"
-npx tsx scripts/playwright/wait.ts --network
+npx tsx scripts/playwright/server.ts &
+# Wait 3 seconds for browser to launch
+sleep 3
 ```
 
-2. **Navigate**: Go to requested page/section
+2. **Login**:
 ```bash
-npx tsx scripts/playwright/navigate.ts "http://178.134.21.82:8008/index.php?page=target"
+npx tsx scripts/playwright/cmd.ts navigate "http://178.134.21.82:8008/index.php"
+npx tsx scripts/playwright/cmd.ts fill "#username" "cicig"
+npx tsx scripts/playwright/cmd.ts fill "#password" "Tsotne2011"
+npx tsx scripts/playwright/cmd.ts click "text=შესვლა"
+npx tsx scripts/playwright/cmd.ts wait 2000
 ```
 
-3. **Extract Everything**:
+3. **Navigate** to requested page/section:
 ```bash
-# Get all form inputs
-npx tsx scripts/playwright/extract.ts --forms
-
-# Run comprehensive DOM extraction
-npx tsx scripts/playwright/evaluate.ts --file "scripts/playwright/emr-extract.js"
+npx tsx scripts/playwright/cmd.ts navigate "http://178.134.21.82:8008/clinic.php?page=target"
+# OR click menu items
+npx tsx scripts/playwright/cmd.ts click "text=პაციენტის ისტორია"
 ```
 
-4. **Document**: Create markdown with field tables, API endpoints, modal content, conditional logic
+4. **Take Screenshots**:
+```bash
+npx tsx scripts/playwright/cmd.ts screenshot "page-name"
+```
+
+5. **Extract Data** via JavaScript:
+```bash
+npx tsx scripts/playwright/cmd.ts evaluate "JSON.stringify(Array.from(document.querySelectorAll('input,select,textarea')).map(e=>({id:e.id,name:e.name,type:e.type})))"
+```
+
+6. **Document**: Create markdown with field tables, API endpoints, modal content
 
 ## DOM Extraction Script
 

@@ -100,13 +100,52 @@ var(--emr-transition-slow)  /* 0.3s - complex animations */
 
 ## Browser Automation Tools (Token-Efficient Scripts)
 
-Use these Playwright scripts for design research and validation. They are 99% more token-efficient than MCP tools.
+Use these Playwright scripts for design implementation and visual verification. They are 99% more token-efficient than MCP tools.
 
-### Available Scripts (run via `npx tsx`)
+### Playwright Background Server (REQUIRED)
+
+**CRITICAL**: Use the background server to keep browser session alive across commands!
+
+#### Step 1: Start Server (if not running)
+```bash
+# Check if server is running, start if not
+ls /tmp/playwright-server.pid 2>/dev/null || npx tsx scripts/playwright/server.ts &
+sleep 3  # Wait for browser to launch
+```
+
+#### Step 2: Send Commands via cmd.ts
+```bash
+# Navigation
+npx tsx scripts/playwright/cmd.ts navigate "http://localhost:3000/emr/account-management"
+
+# Click elements
+npx tsx scripts/playwright/cmd.ts click "text=Roles"
+npx tsx scripts/playwright/cmd.ts click "button[type=submit]"
+
+# Screenshots
+npx tsx scripts/playwright/cmd.ts screenshot "page-name"
+
+# Wait
+npx tsx scripts/playwright/cmd.ts wait 2000
+npx tsx scripts/playwright/cmd.ts waitfor ".selector"
+
+# Get current URL
+npx tsx scripts/playwright/cmd.ts url
+
+# Execute JavaScript
+npx tsx scripts/playwright/cmd.ts evaluate "document.title"
+
+# Stop server when done
+npx tsx scripts/playwright/cmd.ts stop
+```
+
+### Available Scripts (Alternative - Direct Calls)
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
-| `navigate.ts` | Go to URL | `npx tsx scripts/playwright/navigate.ts "https://example.com"` |
+| `server.ts` | Start background server | `npx tsx scripts/playwright/server.ts &` |
+| `cmd.ts` | Send commands to server | `npx tsx scripts/playwright/cmd.ts <command> <args>` |
+| `navigate.ts` | Go to URL | `npx tsx scripts/playwright/navigate.ts "http://localhost:3000"` |
 | `screenshot.ts` | Capture page | `npx tsx scripts/playwright/screenshot.ts --fullpage` |
 | `snapshot.ts` | Accessibility tree | `npx tsx scripts/playwright/snapshot.ts --interesting-only` |
 | `click.ts` | Click element | `npx tsx scripts/playwright/click.ts "button.submit"` |
@@ -116,25 +155,195 @@ Use these Playwright scripts for design research and validation. They are 99% mo
 | `extract.ts` | Extract data | `npx tsx scripts/playwright/extract.ts --table "#data"` |
 | `close.ts` | Close browser | `npx tsx scripts/playwright/close.ts` |
 
-### Design Research Workflow
-```bash
-# 1. Navigate to inspiration site
-npx tsx scripts/playwright/navigate.ts "https://dribbble.com/shots/popular/web-design"
-
-# 2. Take full-page screenshot for analysis
-npx tsx scripts/playwright/screenshot.ts --fullpage
-
-# 3. Get accessibility snapshot to understand structure
-npx tsx scripts/playwright/snapshot.ts --interesting-only
-
-# 4. Extract specific design elements
-npx tsx scripts/playwright/extract.ts --table ".component-specs"
-```
-
 ### State Management
 - Browser persists across calls within session
 - State file: `/tmp/playwright-state.json`
 - Screenshots: `/tmp/playwright-screenshots/`
+
+---
+
+## MediMind Local App Integration
+
+### Common Routes
+
+| Page | URL | Notes |
+|------|-----|-------|
+| Account Management | `http://localhost:3000/emr/account-management` | Dashboard with Accounts/Roles/Permissions tabs |
+| Roles Tab | Click `text=Roles` tab | Role creation and management |
+| Forms Builder | `http://localhost:3000/emr/forms/builder` | Drag-and-drop form builder |
+| Registration | `http://localhost:3000/emr/registration/registration` | Patient registration |
+| Patient History | `http://localhost:3000/emr/patient-history/history` | Visit history table |
+| Nomenclature | `http://localhost:3000/emr/nomenclature/medical-1` | Medical services catalog |
+
+### Quick Connect Workflow
+```bash
+# 1. Start server
+npx tsx scripts/playwright/server.ts &
+sleep 3
+
+# 2. Navigate to the page you're redesigning
+npx tsx scripts/playwright/cmd.ts navigate "http://localhost:3000/emr/account-management"
+
+# 3. Click to specific tab/section
+npx tsx scripts/playwright/cmd.ts click "text=Roles"
+npx tsx scripts/playwright/cmd.ts wait 1000
+
+# 4. Take initial screenshot
+npx tsx scripts/playwright/cmd.ts screenshot "roles-initial"
+```
+
+---
+
+## Design-Implement-Verify Workflow
+
+**CRITICAL**: Follow this cycle for ALL design changes!
+
+### The Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. CAPTURE → 2. ANALYZE → 3. IMPLEMENT → 4. VERIFY → 5. ITERATE │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Step 1: CAPTURE - Screenshot Current State
+```bash
+npx tsx scripts/playwright/cmd.ts navigate "http://localhost:3000/emr/account-management"
+npx tsx scripts/playwright/cmd.ts click "text=Roles"
+npx tsx scripts/playwright/cmd.ts wait 1000
+npx tsx scripts/playwright/cmd.ts screenshot "BEFORE-roles-page"
+```
+
+### Step 2: ANALYZE - Identify Issues
+Look at the screenshot and identify:
+- Visual hierarchy problems
+- Spacing/alignment issues
+- Color inconsistencies (should use theme variables!)
+- Empty states that need improvement
+- Mobile responsiveness concerns
+- Accessibility gaps
+
+### Step 3: IMPLEMENT - Make Code Changes
+Edit the relevant component files:
+- Use theme CSS variables ONLY
+- Follow mobile-first approach
+- Add proper loading/empty states
+- Ensure touch targets are 44px+
+
+### Step 4: VERIFY - Screenshot After Changes
+```bash
+# Refresh the page to see changes (after HMR or manual refresh)
+npx tsx scripts/playwright/cmd.ts navigate "http://localhost:3000/emr/account-management"
+npx tsx scripts/playwright/cmd.ts click "text=Roles"
+npx tsx scripts/playwright/cmd.ts wait 1000
+npx tsx scripts/playwright/cmd.ts screenshot "AFTER-roles-page"
+```
+
+### Step 5: ITERATE - Compare and Refine
+- Compare `/tmp/playwright-screenshots/BEFORE-*.png` vs `AFTER-*.png`
+- If improvements aren't visible or correct, go back to Step 3
+- Continue until design meets quality standards
+
+---
+
+## Before/After Screenshot Comparison
+
+### Naming Convention
+```bash
+# Before changes
+npx tsx scripts/playwright/cmd.ts screenshot "BEFORE-{component}-{state}"
+
+# After changes
+npx tsx scripts/playwright/cmd.ts screenshot "AFTER-{component}-{state}"
+```
+
+Examples:
+- `BEFORE-roles-empty-state`
+- `AFTER-roles-empty-state`
+- `BEFORE-role-modal-open`
+- `AFTER-role-modal-open`
+
+### Multiple Viewport Testing
+```bash
+# Desktop (default 1280x720)
+npx tsx scripts/playwright/cmd.ts screenshot "desktop-roles-page"
+
+# For mobile testing, use evaluate to resize
+npx tsx scripts/playwright/cmd.ts evaluate "window.resizeTo(375, 812)"
+npx tsx scripts/playwright/cmd.ts wait 500
+npx tsx scripts/playwright/cmd.ts screenshot "mobile-roles-page"
+
+# Reset to desktop
+npx tsx scripts/playwright/cmd.ts evaluate "window.resizeTo(1280, 720)"
+```
+
+### Screenshot Location
+All screenshots saved to: `/tmp/playwright-screenshots/`
+
+---
+
+## Complete Design Session Example
+
+```bash
+# ============================================
+# DESIGN SESSION: Roles Management UI Redesign
+# ============================================
+
+# 1. Start browser server
+npx tsx scripts/playwright/server.ts &
+sleep 3
+
+# 2. Navigate to roles page
+npx tsx scripts/playwright/cmd.ts navigate "http://localhost:3000/emr/account-management"
+npx tsx scripts/playwright/cmd.ts click "text=Roles"
+npx tsx scripts/playwright/cmd.ts wait 1000
+
+# 3. Capture BEFORE state
+npx tsx scripts/playwright/cmd.ts screenshot "BEFORE-roles-dashboard"
+
+# 4. Open role creation modal
+npx tsx scripts/playwright/cmd.ts click "text=როლის შექმნა"
+npx tsx scripts/playwright/cmd.ts wait 500
+npx tsx scripts/playwright/cmd.ts screenshot "BEFORE-role-create-modal"
+
+# 5. Close modal
+npx tsx scripts/playwright/cmd.ts click ".mantine-Modal-close"
+npx tsx scripts/playwright/cmd.ts wait 300
+
+# ---- NOW MAKE CODE CHANGES ----
+# Edit: packages/app/src/emr/components/role-management/*.tsx
+# Edit: packages/app/src/emr/views/role-management/*.tsx
+
+# 6. After changes - verify
+npx tsx scripts/playwright/cmd.ts navigate "http://localhost:3000/emr/account-management"
+npx tsx scripts/playwright/cmd.ts click "text=Roles"
+npx tsx scripts/playwright/cmd.ts wait 1000
+npx tsx scripts/playwright/cmd.ts screenshot "AFTER-roles-dashboard"
+
+# 7. Check modal changes
+npx tsx scripts/playwright/cmd.ts click "text=როლის შექმნა"
+npx tsx scripts/playwright/cmd.ts wait 500
+npx tsx scripts/playwright/cmd.ts screenshot "AFTER-role-create-modal"
+
+# 8. Stop server when done
+npx tsx scripts/playwright/cmd.ts stop
+```
+
+---
+
+## Design Research (External Sites)
+
+For inspiration from external sites:
+
+```bash
+# Navigate to design inspiration
+npx tsx scripts/playwright/cmd.ts navigate "https://dribbble.com/shots/popular/web-design"
+npx tsx scripts/playwright/cmd.ts screenshot "inspiration-dribbble"
+
+# Check a specific component library
+npx tsx scripts/playwright/cmd.ts navigate "https://mantine.dev/core/modal/"
+npx tsx scripts/playwright/cmd.ts screenshot "mantine-modal-reference"
+```
 
 ---
 

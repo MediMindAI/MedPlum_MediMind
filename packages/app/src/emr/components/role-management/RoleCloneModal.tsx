@@ -3,7 +3,7 @@
 import { Modal, Button, Group, Stack } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { RoleForm } from './RoleForm';
 import { useRoleForm } from '../../hooks/useRoleForm';
 import { cloneRole, getRoleById } from '../../services/roleService';
@@ -38,6 +38,9 @@ export function RoleCloneModal({ opened, onClose, onSuccess, sourceRole }: RoleC
   const medplum = useMedplum();
   const { t } = useTranslation();
   const [loadingPermissions, setLoadingPermissions] = useState(false);
+
+  // Track which role's permissions have been loaded to prevent infinite loop
+  const loadedRoleIdRef = useRef<string | null>(null);
 
   const { form, handleSubmit } = useRoleForm({
     initialValues: sourceRole
@@ -78,14 +81,17 @@ export function RoleCloneModal({ opened, onClose, onSuccess, sourceRole }: RoleC
   // Load source role permissions when modal opens
   useEffect(() => {
     async function loadSourcePermissions(): Promise<void> {
-      if (sourceRole && opened) {
+      // Only load if we have a role, modal is open, and we haven't already loaded this role's permissions
+      if (sourceRole && opened && loadedRoleIdRef.current !== sourceRole.id) {
         setLoadingPermissions(true);
+        loadedRoleIdRef.current = sourceRole.id; // Mark as loading to prevent re-trigger
         try {
           const accessPolicy = await getRoleById(medplum, sourceRole.id);
           const permissions = accessPolicyToPermissions(accessPolicy);
           form.setFieldValue('permissions', permissions);
         } catch (error) {
           console.error('Error loading source permissions:', error);
+          loadedRoleIdRef.current = null; // Reset on error so user can retry
           notifications.show({
             title: 'Error',
             message: 'Failed to load source role permissions',
@@ -97,15 +103,14 @@ export function RoleCloneModal({ opened, onClose, onSuccess, sourceRole }: RoleC
       }
     }
 
-    loadSourcePermissions().catch(console.error);
-  }, [sourceRole, opened, medplum, form]);
-
-  // Reset form when modal closes
-  useEffect(() => {
+    // Reset the ref when modal closes to allow loading again when reopened
     if (!opened) {
-      form.reset();
+      loadedRoleIdRef.current = null;
     }
-  }, [opened, form]);
+
+    loadSourcePermissions().catch(console.error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sourceRole?.id, opened, medplum]);
 
   return (
     <Modal

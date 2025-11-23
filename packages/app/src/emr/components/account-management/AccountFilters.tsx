@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Paper, Group, SegmentedControl, ActionIcon, Text } from '@mantine/core';
+import { Paper, Group, SegmentedControl, ActionIcon, Text, Stack, Box } from '@mantine/core';
 import { IconSearch, IconX, IconFilter } from '@tabler/icons-react';
-import { useDebouncedValue } from '@mantine/hooks';
+import { useDebouncedValue, useMediaQuery } from '@mantine/hooks';
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { EMRTextInput, EMRSelect } from '../shared/EMRFormFields';
@@ -54,6 +54,7 @@ export function AccountFilters({
   const { t } = useTranslation();
   const [localSearchQuery, setLocalSearchQuery] = useState(filters.searchQuery);
   const [debouncedSearchQuery] = useDebouncedValue(localSearchQuery, 500);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   // Update parent filter state when debounced search changes
   useEffect(() => {
@@ -75,101 +76,112 @@ export function AccountFilters({
     onFiltersChange({ ...filters, searchQuery: '' });
   };
 
+  // Check if any filters are active
+  const hasActiveFilters = filters.searchQuery !== '' || filters.statusFilter !== 'all' || filters.roleFilter !== '';
+
   return (
     <Paper
-      p="xl"
+      p="lg"
       withBorder
       style={{
         background: 'var(--emr-text-inverse)',
         borderRadius: 'var(--emr-border-radius-lg)',
-        boxShadow: 'var(--emr-shadow-card)',
-        borderLeft: '4px solid var(--emr-primary)',
-        transition: 'var(--emr-transition-base)',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--emr-shadow-card-hover)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--emr-shadow-card)';
+        boxShadow: 'var(--emr-shadow-sm)',
+        border: '1px solid var(--emr-gray-200)',
+        transition: 'var(--emr-transition-smooth)',
       }}
     >
-      <Group justify="space-between" wrap="nowrap" mb="lg">
-        {/* Search Input */}
-        <EMRTextInput
-          placeholder={t('accountManagement.filters.searchPlaceholder')}
-          leftSection={<IconSearch size={18} color="var(--emr-primary)" />}
-          rightSection={
-            localSearchQuery && (
-              <ActionIcon onClick={handleClearSearch} variant="subtle" size="sm" color="gray">
-                <IconX size={16} />
-              </ActionIcon>
-            )
-          }
-          value={localSearchQuery}
-          onChange={(value) => setLocalSearchQuery(value)}
-          style={{
-            flex: 1,
-            minWidth: '200px',
-            maxWidth: '400px',
-          }}
-        />
+      <Stack gap="md">
+        {/* Search Row */}
+        <Group gap="md" wrap={isMobile ? 'wrap' : 'nowrap'} align="center">
+          {/* Search Input */}
+          <Box style={{ flex: 1, minWidth: isMobile ? '100%' : '240px' }}>
+            <EMRTextInput
+              placeholder={t('accountManagement.filters.searchPlaceholder')}
+              leftSection={<IconSearch size={16} color="var(--emr-gray-400)" />}
+              rightSection={
+                localSearchQuery && (
+                  <ActionIcon
+                    onClick={handleClearSearch}
+                    variant="subtle"
+                    size="sm"
+                    color="gray"
+                    style={{ marginRight: '4px' }}
+                  >
+                    <IconX size={14} />
+                  </ActionIcon>
+                )
+              }
+              value={localSearchQuery}
+              onChange={(value) => setLocalSearchQuery(value)}
+              style={{ width: '100%' }}
+            />
+          </Box>
 
-        {/* Result Count */}
-        <Text
-          size="sm"
-          c="dimmed"
-          fw={500}
-          style={{
-            whiteSpace: 'nowrap',
-            background: 'var(--emr-section-header-bg)',
-            padding: '6px 12px',
-            borderRadius: 'var(--emr-border-radius)',
-          }}
-        >
-          {t('accountManagement.filters.showing', { count: resultCount, total: totalCount })}
-        </Text>
-      </Group>
-
-      <Group gap="md" wrap="wrap">
-        {/* Status Filter */}
-        <SegmentedControl
-          data={[
-            { label: t('accountManagement.filters.all'), value: 'all' },
-            { label: t('accountManagement.filters.active'), value: 'active' },
-            { label: t('accountManagement.filters.inactive'), value: 'inactive' },
-          ]}
-          value={filters.statusFilter}
-          onChange={handleStatusChange}
-          size="md"
-          styles={{
-            root: {
-              background: 'var(--emr-gray-100)',
-            },
-            indicator: {
-              background: 'var(--emr-gradient-primary)',
-            },
-            label: {
-              '&[data-active]': {
-                color: 'white',
+          {/* Status Filter */}
+          <SegmentedControl
+            data={[
+              { label: t('accountManagement.filters.all'), value: 'all' },
+              { label: t('accountManagement.filters.active'), value: 'active' },
+              { label: t('accountManagement.filters.inactive'), value: 'inactive' },
+            ]}
+            value={filters.statusFilter}
+            onChange={handleStatusChange}
+            size="sm"
+            styles={{
+              root: {
+                background: 'var(--emr-gray-100)',
+                borderRadius: 'var(--emr-border-radius)',
+                padding: '3px',
               },
-            },
-          }}
-        />
+              indicator: {
+                background: 'var(--emr-gradient-primary)',
+                borderRadius: 'var(--emr-border-radius-sm)',
+                boxShadow: 'var(--emr-shadow-sm)',
+              },
+              label: {
+                fontSize: '12px',
+                fontWeight: 500,
+                padding: '6px 12px',
+                '&[data-active]': {
+                  color: 'var(--emr-text-inverse)',
+                },
+              },
+            }}
+          />
 
-        {/* Role Filter */}
-        <EMRSelect
-          placeholder={t('accountManagement.filters.rolePlaceholder')}
-          leftSection={<IconFilter size={16} color="var(--emr-primary)" />}
-          data={[{ value: '', label: t('accountManagement.filters.allRoles') }, ...roleOptions]}
-          value={filters.roleFilter}
-          onChange={handleRoleChange}
-          clearable
-          searchable
-          style={{
-            minWidth: '200px',
-          }}
-        />
-      </Group>
+          {/* Role Filter */}
+          <Box style={{ minWidth: isMobile ? '100%' : '180px' }}>
+            <EMRSelect
+              placeholder={t('accountManagement.filters.rolePlaceholder')}
+              leftSection={<IconFilter size={14} color="var(--emr-gray-400)" />}
+              data={[{ value: '', label: t('accountManagement.filters.allRoles') }, ...roleOptions]}
+              value={filters.roleFilter}
+              onChange={handleRoleChange}
+              clearable
+              searchable
+              size="sm"
+              style={{ width: '100%' }}
+            />
+          </Box>
+
+          {/* Result Count Badge */}
+          <Text
+            size="xs"
+            fw={500}
+            style={{
+              whiteSpace: 'nowrap',
+              background: hasActiveFilters ? 'var(--emr-light-accent)' : 'var(--emr-gray-100)',
+              color: hasActiveFilters ? 'var(--emr-primary)' : 'var(--emr-gray-600)',
+              padding: '6px 10px',
+              borderRadius: 'var(--emr-border-radius)',
+              transition: 'var(--emr-transition-fast)',
+            }}
+          >
+            {t('accountManagement.filters.showing', { count: resultCount, total: totalCount })}
+          </Text>
+        </Group>
+      </Stack>
     </Paper>
   );
 }

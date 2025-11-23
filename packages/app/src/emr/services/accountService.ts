@@ -3,7 +3,20 @@
 
 import type { MedplumClient } from '@medplum/core';
 import type { Practitioner, ProjectMembership } from '@medplum/fhirtypes';
-import type { AccountFormValues, AccountSearchFilters, InviteRequest } from '../types/account-management';
+import type {
+  AccountFormValues,
+  AccountSearchFilters,
+  AccountSearchFiltersExtended,
+  InviteRequest,
+  AccountRowExtended,
+  PaginationParams,
+  PaginatedResponse,
+  BulkOperationResult,
+  BulkOperationError,
+  BulkOperationProgress,
+} from '../types/account-management';
+import { getInvitationStatus, findInviteForPractitioner } from './invitationService';
+import { getPractitionerName, getPractitionerEmail, getPractitionerPhone, getPractitionerStaffId } from './accountHelpers';
 import { formValuesToPractitioner } from './accountHelpers';
 import { createAuditEvent } from './auditService';
 import { assignRoleToUser, removeRoleFromUser, getUserRoles } from './roleService';
@@ -359,5 +372,337 @@ export async function updatePractitionerRoles(
       }
     }
   }
+}
+
+// ============================================================================
+// EMR User Management Improvements - Pagination and Bulk Operations (Feature 001)
+// ============================================================================
+
+/**
+ * Convert Practitioner to AccountRowExtended with invitation status
+ */
+async function practitionerToAccountRow(
+  medplum: MedplumClient,
+  practitioner: Practitioner,
+  includeInvitationStatus: boolean = false
+): Promise<AccountRowExtended> {
+  const roles = await getUserRoles(medplum, practitioner.id || '');
+  const roleNames = roles.map((r) =>
+    r.code?.[0]?.coding?.[0]?.display || r.code?.[0]?.text || 'Unknown'
+  );
+
+  let invitationStatus;
+  if (includeInvitationStatus && practitioner.id) {
+    const invite = await findInviteForPractitioner(medplum, practitioner.id);
+    invitationStatus = getInvitationStatus(invite, undefined);
+  }
+
+  return {
+    id: practitioner.id || '',
+    staffId: getPractitionerStaffId(practitioner),
+    name: getPractitionerName(practitioner),
+    email: getPractitionerEmail(practitioner) || '',
+    phone: getPractitionerPhone(practitioner),
+    roles: roleNames,
+    active: practitioner.active !== false,
+    lastModified: practitioner.meta?.lastUpdated,
+    invitationStatus,
+    createdAt: practitioner.meta?.lastUpdated, // Use lastUpdated as proxy for createdAt
+  };
+}
+
+/**
+ * Search accounts with server-side pagination and extended filters
+ *
+ * Uses FHIR search parameters with _count, _offset, _total for pagination.
+ * Returns accounts with invitation status for enhanced display.
+ *
+ * @param medplum - Medplum client
+ * @param filters - Extended search filters including invitation status
+ * @param pagination - Pagination parameters (page, pageSize, sort)
+ * @returns Paginated response with accounts and total count
+ *
+ * @example
+ * ```typescript
+ * const { data, total, totalPages } = await searchAccounts(medplum, {
+ *   search: 'john',
+ *   active: true,
+ *   role: 'physician'
+ * }, { page: 1, pageSize: 20, sortField: 'name', sortDirection: 'asc' });
+ * ```
+ */
+export async function searchAccounts(
+  medplum: MedplumClient,
+  filters: AccountSearchFiltersExtended = {},
+  pagination: PaginationParams = { page: 1, pageSize: 20 }
+): Promise<PaginatedResponse<AccountRowExtended>> {
+  const searchParams: Record<string, string> = {
+    _count: pagination.pageSize.toString(),
+    _offset: ((pagination.page - 1) * pagination.pageSize).toString(),
+    _total: 'accurate',
+  };
+
+  // Sort
+  if (pagination.sortField) {
+    const sortPrefix = pagination.sortDirection === 'desc' ? '-' : '';
+    const sortField = pagination.sortField === 'name' ? 'family' : pagination.sortField;
+    searchParams._sort = `${sortPrefix}${sortField}`;
+  } else {
+    searchParams._sort = '-_lastUpdated';
+  }
+
+  // Combined name/email search
+  if (filters.search) {
+    searchParams['name:contains'] = filters.search;
+  }
+
+  // Individual field filters
+  if (filters.name) {
+    searchParams['name:contains'] = filters.name;
+  }
+
+  if (filters.email) {
+    searchParams.email = filters.email;
+  }
+
+  if (filters.staffId) {
+    searchParams.identifier = `http://medimind.ge/identifiers/staff-id|${filters.staffId}`;
+  }
+
+  // Role filter via PractitionerRole search (future enhancement)
+  // For now, filter in memory after fetching
+
+  // Active status
+  if (filters.active !== undefined) {
+    searchParams.active = filters.active ? 'true' : 'false';
+  }
+
+  // Execute search with Bundle to get total
+  const bundle = await medplum.search('Practitioner', searchParams);
+  const practitioners = (bundle.entry?.map((e) => e.resource).filter(Boolean) as Practitioner[]) || [];
+
+  // Convert to AccountRowExtended with invitation status
+  const accounts: AccountRowExtended[] = [];
+  for (const practitioner of practitioners) {
+    const row = await practitionerToAccountRow(medplum, practitioner, true);
+    accounts.push(row);
+  }
+
+  // Filter by invitation status if specified (post-fetch filter)
+  let filteredAccounts = accounts;
+  if (filters.invitationStatus) {
+    filteredAccounts = accounts.filter((a) => a.invitationStatus === filters.invitationStatus);
+  }
+
+  const total = bundle.total ?? filteredAccounts.length;
+  const totalPages = Math.ceil(total / pagination.pageSize);
+
+  return {
+    data: filteredAccounts,
+    total,
+    page: pagination.page,
+    pageSize: pagination.pageSize,
+    totalPages,
+  };
+}
+
+/**
+ * Bulk deactivate multiple practitioner accounts
+ *
+ * Processes accounts sequentially to prevent rate limiting.
+ * Automatically excludes the current user from deactivation.
+ * Reports progress via callback and returns detailed results.
+ *
+ * @param medplum - Medplum client
+ * @param practitionerIds - Array of practitioner IDs to deactivate
+ * @param currentUserId - ID of current user (to prevent self-deactivation)
+ * @param reason - Optional reason for deactivation
+ * @param onProgress - Optional progress callback
+ * @returns Bulk operation result with success/failure counts
+ *
+ * @example
+ * ```typescript
+ * const result = await bulkDeactivate(
+ *   medplum,
+ *   ['pract-1', 'pract-2', 'pract-3'],
+ *   currentUser.id,
+ *   'Annual audit - inactive accounts',
+ *   (progress) => console.log(`${progress.percentage}% complete`)
+ * );
+ * console.log(`${result.successful} deactivated, ${result.failed} failed`);
+ * ```
+ */
+export async function bulkDeactivate(
+  medplum: MedplumClient,
+  practitionerIds: string[],
+  currentUserId: string,
+  reason?: string,
+  onProgress?: (progress: BulkOperationProgress) => void
+): Promise<BulkOperationResult> {
+  // Filter out current user
+  const idsToProcess = practitionerIds.filter((id) => id !== currentUserId);
+  const selfExcluded = practitionerIds.length - idsToProcess.length;
+
+  const errors: BulkOperationError[] = [];
+  let successful = 0;
+
+  for (let i = 0; i < idsToProcess.length; i++) {
+    const id = idsToProcess[i];
+
+    try {
+      await deactivatePractitioner(medplum, id, reason);
+      successful++;
+    } catch (error) {
+      const practitioner = await medplum.readResource('Practitioner', id).catch(() => null);
+      errors.push({
+        id,
+        name: practitioner ? getPractitionerName(practitioner) : id,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+
+    // Report progress
+    if (onProgress) {
+      onProgress({
+        current: i + 1,
+        total: idsToProcess.length,
+        percentage: Math.round(((i + 1) / idsToProcess.length) * 100),
+      });
+    }
+  }
+
+  // Add self-exclusion note if applicable
+  if (selfExcluded > 0) {
+    errors.push({
+      id: currentUserId,
+      name: 'Your account',
+      error: 'Cannot deactivate your own account',
+      code: 'SELF_EXCLUDED',
+    });
+  }
+
+  return {
+    operationType: 'deactivate',
+    total: practitionerIds.length,
+    successful,
+    failed: errors.length,
+    errors,
+  };
+}
+
+/**
+ * Bulk assign role to multiple practitioner accounts
+ *
+ * Processes accounts sequentially to prevent rate limiting.
+ * Reports progress via callback and returns detailed results.
+ *
+ * @param medplum - Medplum client
+ * @param practitionerIds - Array of practitioner IDs
+ * @param roleCode - Role code to assign
+ * @param onProgress - Optional progress callback
+ * @returns Bulk operation result with success/failure counts
+ *
+ * @example
+ * ```typescript
+ * const result = await bulkAssignRole(
+ *   medplum,
+ *   ['pract-1', 'pract-2'],
+ *   'nurse',
+ *   (progress) => console.log(`${progress.percentage}% complete`)
+ * );
+ * ```
+ */
+export async function bulkAssignRole(
+  medplum: MedplumClient,
+  practitionerIds: string[],
+  roleCode: string,
+  onProgress?: (progress: BulkOperationProgress) => void
+): Promise<BulkOperationResult> {
+  const errors: BulkOperationError[] = [];
+  let successful = 0;
+
+  for (let i = 0; i < practitionerIds.length; i++) {
+    const id = practitionerIds[i];
+
+    try {
+      await assignRoleToUser(medplum, id, roleCode);
+      successful++;
+    } catch (error) {
+      const practitioner = await medplum.readResource('Practitioner', id).catch(() => null);
+      errors.push({
+        id,
+        name: practitioner ? getPractitionerName(practitioner) : id,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+
+    // Report progress
+    if (onProgress) {
+      onProgress({
+        current: i + 1,
+        total: practitionerIds.length,
+        percentage: Math.round(((i + 1) / practitionerIds.length) * 100),
+      });
+    }
+  }
+
+  return {
+    operationType: 'assignRole',
+    total: practitionerIds.length,
+    successful,
+    failed: errors.length,
+    errors,
+  };
+}
+
+/**
+ * Bulk activate multiple practitioner accounts
+ *
+ * @param medplum - Medplum client
+ * @param practitionerIds - Array of practitioner IDs to activate
+ * @param reason - Optional reason for activation
+ * @param onProgress - Optional progress callback
+ * @returns Bulk operation result
+ */
+export async function bulkActivate(
+  medplum: MedplumClient,
+  practitionerIds: string[],
+  reason?: string,
+  onProgress?: (progress: BulkOperationProgress) => void
+): Promise<BulkOperationResult> {
+  const errors: BulkOperationError[] = [];
+  let successful = 0;
+
+  for (let i = 0; i < practitionerIds.length; i++) {
+    const id = practitionerIds[i];
+
+    try {
+      await reactivatePractitioner(medplum, id, reason);
+      successful++;
+    } catch (error) {
+      const practitioner = await medplum.readResource('Practitioner', id).catch(() => null);
+      errors.push({
+        id,
+        name: practitioner ? getPractitionerName(practitioner) : id,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+
+    if (onProgress) {
+      onProgress({
+        current: i + 1,
+        total: practitionerIds.length,
+        percentage: Math.round(((i + 1) / practitionerIds.length) * 100),
+      });
+    }
+  }
+
+  return {
+    operationType: 'activate',
+    total: practitionerIds.length,
+    successful,
+    failed: errors.length,
+    errors,
+  };
 }
 

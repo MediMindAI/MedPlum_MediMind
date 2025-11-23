@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Button, Text, Stack, Alert, Group } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';

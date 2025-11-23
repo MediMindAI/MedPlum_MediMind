@@ -689,17 +689,54 @@ export function FormRenderer({
             </div>
           </Box>
         ) : (
-          // Standard rendering for smaller forms
-          <Stack
-            gap="lg"
+          // Standard rendering for smaller forms - compact spacing like original EMR
+          <Box
             role="group"
             aria-label="Form fields"
             style={{
-              padding: '4px 0',
+              padding: '8px 0',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '8px 16px',
+              alignItems: 'flex-start',
             }}
           >
-            {questionnaire.item?.map((item, index) => renderField(item, index))}
-          </Stack>
+            {questionnaire.item?.map((item, index) => {
+              // Check if this is a section header (display type)
+              const isSection = item.type === 'display';
+              // Check if this is a checkbox/boolean field
+              const isCheckbox = item.type === 'boolean';
+              // Check if this is a checkbox-group (choice with repeats)
+              const isCheckboxGroup = item.type === 'choice' && item.repeats === true;
+              // Check if this is a textarea
+              const isTextarea = item.type === 'text';
+
+              // Full width items: sections, checkbox-groups, textareas
+              const isFullWidth = isSection || isCheckboxGroup || isTextarea;
+
+              return (
+                <Box
+                  key={item.linkId}
+                  style={{
+                    // Full-width items
+                    width: isFullWidth ? '100%' : isCheckbox ? 'auto' : undefined,
+                    // Non-full-width fields can flex
+                    flex: isFullWidth || isCheckbox ? undefined : '1 1 300px',
+                    maxWidth: isFullWidth ? '100%' : isCheckbox ? undefined : '500px',
+                    minWidth: isCheckbox ? undefined : '200px',
+                    // Add top margin for sections
+                    marginTop: isSection ? '16px' : undefined,
+                    paddingTop: isSection ? '8px' : undefined,
+                    borderTop: isSection ? '2px solid var(--emr-secondary)' : undefined,
+                    // Checkbox-group row styling
+                    paddingBottom: isCheckboxGroup ? '4px' : undefined,
+                  }}
+                >
+                  {renderField(item, index)}
+                </Box>
+              );
+            })}
+          </Box>
         )}
 
         {/* Action buttons */}

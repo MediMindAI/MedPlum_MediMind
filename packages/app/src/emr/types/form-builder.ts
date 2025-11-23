@@ -18,6 +18,28 @@ export interface FormTemplate {
   createdBy?: string;
   category?: string[];
   resourceType?: 'Questionnaire';
+  // Form-level styling for container and title
+  formStyling?: FormStyling;
+}
+
+/**
+ * Form-level styling configuration for exact visual matching
+ */
+export interface FormStyling {
+  container?: {
+    border?: string;
+    borderRadius?: string;
+    backgroundColor?: string;
+    padding?: string;
+    margin?: string;
+  };
+  title?: {
+    textAlign?: 'left' | 'center' | 'right';
+    fontWeight?: string;
+    fontSize?: string;
+    marginBottom?: string;
+    color?: string;
+  };
 }
 
 /**
@@ -33,6 +55,9 @@ export interface FieldConfig {
   readOnly?: boolean;
   repeats?: boolean;
 
+  // Default value (for pre-filled fields)
+  defaultValue?: string | number | boolean;
+
   // Patient data binding
   patientBinding?: PatientBinding;
 
@@ -44,6 +69,9 @@ export interface FieldConfig {
 
   // Options for select/radio/checkbox
   options?: FieldOption[];
+
+  // For checkbox-group: whether to include a text field at the end
+  hasTextField?: boolean;
 
   // Conditional logic
   conditional?: ConditionalLogic;
@@ -83,8 +111,14 @@ export type FieldType =
 export interface FieldOption {
   value: string;
   label: string;
+  labelEn?: string;
   coding?: Coding;
 }
+
+/**
+ * Dropdown option (alias for FieldOption with English label)
+ */
+export type DropdownOption = FieldOption;
 
 /**
  * Patient data binding configuration
@@ -147,6 +181,9 @@ export interface FieldStyling {
   height?: string;
   padding?: string;
   margin?: string;
+  resizable?: boolean;  // For textareas - allow user to resize
+  inputStyle?: 'underline' | 'bordered' | 'dropdown';  // Visual style of input
+  display?: 'block' | 'inline' | 'inline-block';  // CSS display property for inline layouts
 }
 
 /**

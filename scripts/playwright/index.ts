@@ -80,37 +80,40 @@ export async function getBrowser(options: {
     return browserInstance;
   }
 
-  // Try to connect to existing browser via CDP
-  const state = loadState();
-  if (state.wsEndpoint && !forceNew) {
-    try {
-      browserInstance = await chromium.connectOverCDP(state.wsEndpoint);
-      console.error('[playwright] Connected to existing browser');
-      return browserInstance;
-    } catch {
-      // Browser no longer available, launch new one
-      console.error('[playwright] Existing browser unavailable, launching new');
-      clearState();
-    }
+  // Use persistent context with user data directory
+  // This keeps cookies, session storage, and login state across script calls
+  const userDataDir = path.join(os.tmpdir(), 'playwright-user-data');
+
+  // Ensure user data directory exists
+  if (!fs.existsSync(userDataDir)) {
+    fs.mkdirSync(userDataDir, { recursive: true });
   }
 
-  // Launch new browser with CDP endpoint for reconnection
-  browserInstance = await chromium.launch({
+  // Launch persistent context
+  const context = await chromium.launchPersistentContext(userDataDir, {
     headless: !headed,
     args: [
-      '--remote-debugging-port=9222',
       '--no-first-run',
       '--no-default-browser-check',
     ],
+    viewport: { width: 1280, height: 720 },
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
   });
 
-  // Save CDP endpoint for reconnection
-  const wsEndpoint = browserInstance.contexts()[0]?.pages()[0]
-    ? `ws://localhost:9222`
-    : undefined;
+  // Store context as browser (they share similar APIs for our use)
+  browserInstance = context.browser() as Browser;
+  contextInstance = context;
+
+  // Get or create page
+  const pages = context.pages();
+  if (pages.length > 0) {
+    pageInstance = pages[0];
+  } else {
+    pageInstance = await context.newPage();
+  }
 
   saveState({
-    wsEndpoint,
+    wsEndpoint: 'persistent',
     isHeaded: headed,
     launchedAt: new Date().toISOString(),
   });
@@ -126,30 +129,39 @@ export async function getPage(options: {
   headed?: boolean;
   forceNew?: boolean;
 } = {}): Promise<Page> {
-  const browser = await getBrowser(options);
+  // getBrowser now also sets up pageInstance for persistent context
+  await getBrowser(options);
+  const state = loadState();
 
-  // Return existing page if available
+  // Return existing page if available (same process)
   if (pageInstance && !pageInstance.isClosed()) {
+    // Navigate to stored URL if page is on blank page
+    const currentUrl = pageInstance.url();
+    if (currentUrl === 'about:blank' && state.currentUrl && state.currentUrl !== 'about:blank') {
+      console.error(`[playwright] Navigating to stored URL: ${state.currentUrl}`);
+      await pageInstance.goto(state.currentUrl, { waitUntil: 'load' });
+    }
     return pageInstance;
   }
 
-  // Get or create context
-  const contexts = browser.contexts();
-  if (contexts.length > 0) {
-    contextInstance = contexts[0];
-  } else {
-    contextInstance = await browser.newContext({
-      viewport: { width: 1280, height: 720 },
-      userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-    });
+  // This shouldn't happen with persistent context, but fallback
+  if (contextInstance) {
+    const pages = contextInstance.pages();
+    if (pages.length > 0) {
+      pageInstance = pages[0];
+    } else {
+      pageInstance = await contextInstance.newPage();
+    }
+
+    // Navigate to stored URL if we have one
+    if (state.currentUrl && state.currentUrl !== 'about:blank') {
+      console.error(`[playwright] Navigating to stored URL: ${state.currentUrl}`);
+      await pageInstance.goto(state.currentUrl, { waitUntil: 'load' });
+    }
   }
 
-  // Get or create page
-  const pages = contextInstance.pages();
-  if (pages.length > 0) {
-    pageInstance = pages[0];
-  } else {
-    pageInstance = await contextInstance.newPage();
+  if (!pageInstance) {
+    throw new Error('Failed to get page - no context available');
   }
 
   return pageInstance;

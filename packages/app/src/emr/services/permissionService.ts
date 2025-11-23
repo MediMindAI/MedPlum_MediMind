@@ -1,7 +1,10 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
+import type { MedplumClient } from '@medplum/core';
 import type { AccessPolicy, AccessPolicyResource } from '@medplum/fhirtypes';
 import type { PermissionCategory } from '../types/role-management';
+import type { PermissionRow, RoleConflict } from '../types/account-management';
+import { PERMISSION_RESOURCES, PERMISSION_OPERATIONS } from '../types/account-management';
 import { Permission } from '../types/role-management';
 
 /**
@@ -428,4 +431,382 @@ export function accessPolicyToPermissions(policy: AccessPolicy): string[] {
   });
 
   return selectedPermissions;
+}
+
+// ============================================================================
+// Permission Matrix Functions (FHIR AccessPolicy-based)
+// ============================================================================
+
+/**
+ * Default permission row with all operations set to false
+ *
+ * @param resourceType - FHIR resource type
+ * @returns PermissionRow with all operations false
+ */
+function createDefaultPermissionRow(resourceType: string): PermissionRow {
+  return {
+    resourceType,
+    create: false,
+    read: false,
+    update: false,
+    delete: false,
+    search: false,
+  };
+}
+
+/**
+ * Gets the permission matrix for a role (AccessPolicy)
+ * Returns a row for each PERMISSION_RESOURCES with CRUD+search operations
+ *
+ * @param medplum - MedplumClient instance
+ * @param policyId - AccessPolicy resource ID
+ * @returns Promise<PermissionRow[]> - Array of permission rows for each resource type
+ * @throws Error if AccessPolicy not found or fetch fails
+ *
+ * @example
+ * ```typescript
+ * const matrix = await getPermissionMatrix(medplum, 'abc123');
+ * // [
+ * //   { resourceType: 'Patient', create: true, read: true, update: true, delete: false, search: true },
+ * //   { resourceType: 'Practitioner', create: false, read: true, update: false, delete: false, search: true },
+ * //   ...
+ * // ]
+ * ```
+ */
+export async function getPermissionMatrix(
+  medplum: MedplumClient,
+  policyId: string
+): Promise<PermissionRow[]> {
+  // Fetch the AccessPolicy resource
+  const policy = await medplum.readResource('AccessPolicy', policyId);
+
+  // Initialize matrix with all resources set to false
+  const matrix: Map<string, PermissionRow> = new Map();
+  for (const resourceType of PERMISSION_RESOURCES) {
+    matrix.set(resourceType, createDefaultPermissionRow(resourceType));
+  }
+
+  // Parse AccessPolicy.resource rules into permission matrix
+  if (policy.resource) {
+    for (const rule of policy.resource) {
+      const resourceType = rule.resourceType;
+      if (!resourceType || !matrix.has(resourceType)) {
+        continue; // Skip resources not in our PERMISSION_RESOURCES list
+      }
+
+      const row = matrix.get(resourceType)!;
+
+      // In FHIR AccessPolicy, readonly: true means only read/search allowed
+      // readonly: false (or undefined) means all operations allowed
+      const readonly = rule.readonly ?? false;
+
+      if (readonly) {
+        // Read-only: enable read and search only
+        row.read = true;
+        row.search = true;
+      } else {
+        // Full access: enable all operations
+        row.create = true;
+        row.read = true;
+        row.update = true;
+        row.delete = true;
+        row.search = true;
+      }
+    }
+  }
+
+  return Array.from(matrix.values());
+}
+
+/**
+ * Updates the permission matrix for a role (AccessPolicy)
+ * Converts PermissionRow[] back to AccessPolicy.resource rules
+ *
+ * @param medplum - MedplumClient instance
+ * @param policyId - AccessPolicy resource ID
+ * @param permissions - Array of PermissionRow with updated permissions
+ * @returns Promise<AccessPolicy> - Updated AccessPolicy resource
+ * @throws Error if AccessPolicy not found or update fails
+ *
+ * @example
+ * ```typescript
+ * const permissions = [
+ *   { resourceType: 'Patient', create: true, read: true, update: true, delete: false, search: true },
+ *   { resourceType: 'Practitioner', create: false, read: true, update: false, delete: false, search: true },
+ * ];
+ * const updated = await updatePermissionMatrix(medplum, 'abc123', permissions);
+ * ```
+ */
+export async function updatePermissionMatrix(
+  medplum: MedplumClient,
+  policyId: string,
+  permissions: PermissionRow[]
+): Promise<AccessPolicy> {
+  // Fetch existing AccessPolicy to preserve other fields
+  const existingPolicy = await medplum.readResource('AccessPolicy', policyId);
+
+  // Convert PermissionRow[] to AccessPolicyResource[]
+  const resources: AccessPolicyResource[] = [];
+
+  for (const row of permissions) {
+    // Skip if no permissions are granted for this resource
+    if (!row.create && !row.read && !row.update && !row.delete && !row.search) {
+      continue;
+    }
+
+    // Determine if this is read-only (only read and/or search enabled)
+    const isReadOnly = !row.create && !row.update && !row.delete && (row.read || row.search);
+
+    resources.push({
+      resourceType: row.resourceType,
+      readonly: isReadOnly,
+    });
+  }
+
+  // Update the AccessPolicy
+  const updatedPolicy: AccessPolicy = {
+    ...existingPolicy,
+    resource: resources,
+  };
+
+  return medplum.updateResource(updatedPolicy);
+}
+
+// ============================================================================
+// Role Conflict Detection
+// ============================================================================
+
+/**
+ * Role codes that are considered administrative roles
+ */
+const ADMIN_ROLES = ['admin', 'administrator', 'superadmin', 'super-admin', 'system-admin'];
+
+/**
+ * Role codes that are considered billing roles
+ */
+const BILLING_ROLES = ['billing', 'billing-admin', 'finance', 'accountant', 'cashier'];
+
+/**
+ * Role hierarchy where higher roles include permissions of lower roles
+ */
+const ROLE_HIERARCHY: Record<string, string[]> = {
+  superadmin: ['admin', 'manager', 'physician', 'nurse', 'receptionist'],
+  'super-admin': ['admin', 'manager', 'physician', 'nurse', 'receptionist'],
+  admin: ['manager', 'physician', 'nurse', 'receptionist'],
+  administrator: ['manager', 'physician', 'nurse', 'receptionist'],
+  manager: ['receptionist'],
+};
+
+/**
+ * Detects role conflicts based on separation of duties and redundant roles
+ * Implements the following rules:
+ * - 'separation_of_duties': admin role + billing role is a conflict (error severity)
+ * - 'redundant_roles': superadmin includes admin permissions (warning severity)
+ * - 'permission_conflict': conflicting resource access rules (warning severity)
+ *
+ * @param roles - Array of role codes to check for conflicts
+ * @returns RoleConflict[] - Array of detected conflicts
+ *
+ * @example
+ * ```typescript
+ * const conflicts = detectRoleConflicts(['admin', 'billing']);
+ * // [{ type: 'separation_of_duties', roles: ['admin', 'billing'], message: '...', severity: 'error' }]
+ *
+ * const conflicts2 = detectRoleConflicts(['superadmin', 'admin']);
+ * // [{ type: 'redundant_roles', roles: ['superadmin', 'admin'], message: '...', severity: 'warning' }]
+ * ```
+ */
+export function detectRoleConflicts(roles: string[]): RoleConflict[] {
+  const conflicts: RoleConflict[] = [];
+  const normalizedRoles = roles.map((r) => r.toLowerCase());
+
+  // Check for separation of duties violations (admin + billing)
+  const hasAdminRole = normalizedRoles.some((r) => ADMIN_ROLES.includes(r));
+  const hasBillingRole = normalizedRoles.some((r) => BILLING_ROLES.includes(r));
+
+  if (hasAdminRole && hasBillingRole) {
+    const adminRolesFound = normalizedRoles.filter((r) => ADMIN_ROLES.includes(r));
+    const billingRolesFound = normalizedRoles.filter((r) => BILLING_ROLES.includes(r));
+
+    conflicts.push({
+      type: 'separation_of_duties',
+      roles: [...adminRolesFound, ...billingRolesFound],
+      message:
+        'Separation of duties violation: Administrative and billing roles should not be assigned to the same user. ' +
+        'This combination presents a fraud risk as the user could create accounts and process payments.',
+      severity: 'error',
+    });
+  }
+
+  // Check for redundant roles (higher role includes lower role permissions)
+  for (const role of normalizedRoles) {
+    const includedRoles = ROLE_HIERARCHY[role];
+    if (includedRoles) {
+      const redundantRoles = normalizedRoles.filter((r) => r !== role && includedRoles.includes(r));
+      if (redundantRoles.length > 0) {
+        conflicts.push({
+          type: 'redundant_roles',
+          roles: [role, ...redundantRoles],
+          message:
+            `Redundant role assignment: "${role}" already includes permissions from: ${redundantRoles.join(', ')}. ` +
+            'Consider removing the redundant lower-level roles to simplify permission management.',
+          severity: 'warning',
+        });
+      }
+    }
+  }
+
+  // Check for permission conflicts (same resource with conflicting access levels)
+  // This is detected by checking if multiple roles grant different access to the same resource
+  // For simplicity, we flag when a read-only role is combined with a write role for the same resource type
+  const readOnlyRoles = ['viewer', 'read-only', 'readonly', 'auditor', 'observer'];
+  const writeRoles = ['editor', 'creator', 'admin', 'administrator', 'manager'];
+
+  const hasReadOnlyRole = normalizedRoles.some((r) => readOnlyRoles.includes(r));
+  const hasWriteRole = normalizedRoles.some((r) => writeRoles.includes(r));
+
+  if (hasReadOnlyRole && hasWriteRole) {
+    const readOnlyFound = normalizedRoles.filter((r) => readOnlyRoles.includes(r));
+    const writeFound = normalizedRoles.filter((r) => writeRoles.includes(r));
+
+    conflicts.push({
+      type: 'permission_conflict',
+      roles: [...readOnlyFound, ...writeFound],
+      message:
+        `Permission conflict: Read-only roles (${readOnlyFound.join(', ')}) conflict with ` +
+        `write roles (${writeFound.join(', ')}). The write permissions will override read-only restrictions.`,
+      severity: 'warning',
+    });
+  }
+
+  return conflicts;
+}
+
+// ============================================================================
+// Permission Dependency Resolution (Resource/Operation based)
+// ============================================================================
+
+/**
+ * Permission dependencies based on CRUD operations
+ * - update requires read
+ * - delete requires read
+ * - search requires read (implicit)
+ */
+const OPERATION_DEPENDENCIES: Record<string, string[]> = {
+  update: ['read'],
+  delete: ['read'],
+  search: ['read'],
+  create: [], // create does not require other permissions
+  read: [], // read has no dependencies
+};
+
+/**
+ * Resolves permission dependencies for resource-level operations
+ * Auto-enables required permissions based on dependencies:
+ * - update requires read
+ * - delete requires read
+ * - search requires read
+ *
+ * @param resourceType - FHIR resource type (e.g., 'Patient', 'Observation')
+ * @param operation - CRUD operation ('create', 'read', 'update', 'delete', 'search')
+ * @param currentPermissions - Current permission matrix
+ * @returns PermissionRow[] - Updated permission matrix with dependencies resolved
+ *
+ * @example
+ * ```typescript
+ * // If user enables 'update' for Patient, 'read' is auto-enabled
+ * const current = [{ resourceType: 'Patient', create: false, read: false, update: true, delete: false, search: false }];
+ * const resolved = resolvePermissionDependenciesForOperation('Patient', 'update', current);
+ * // Result: [{ resourceType: 'Patient', create: false, read: true, update: true, delete: false, search: false }]
+ * ```
+ */
+export function resolvePermissionDependenciesForOperation(
+  resourceType: string,
+  operation: string,
+  currentPermissions: PermissionRow[]
+): PermissionRow[] {
+  // Validate operation
+  if (!PERMISSION_OPERATIONS.includes(operation as (typeof PERMISSION_OPERATIONS)[number])) {
+    return currentPermissions;
+  }
+
+  // Create a deep copy to avoid mutating the input
+  const result = currentPermissions.map((row) => ({ ...row }));
+
+  // Find the row for the specified resource type
+  const targetRow = result.find((row) => row.resourceType === resourceType);
+  if (!targetRow) {
+    return result;
+  }
+
+  // Get dependencies for the operation
+  const dependencies = OPERATION_DEPENDENCIES[operation] || [];
+
+  // Auto-enable each dependency
+  for (const dep of dependencies) {
+    if (dep === 'read') {
+      targetRow.read = true;
+    } else if (dep === 'search') {
+      targetRow.search = true;
+    }
+    // Add more dependencies as needed
+  }
+
+  return result;
+}
+
+// ============================================================================
+// Combined Permissions from Multiple Roles
+// ============================================================================
+
+/**
+ * Merges permissions from multiple AccessPolicy resources
+ * Uses union logic: if any role grants a permission, it's enabled in the result
+ *
+ * @param medplum - MedplumClient instance
+ * @param roleIds - Array of AccessPolicy resource IDs
+ * @returns Promise<PermissionRow[]> - Combined permission matrix
+ * @throws Error if any AccessPolicy fetch fails
+ *
+ * @example
+ * ```typescript
+ * // User has 'physician' and 'lab-tech' roles
+ * const combined = await getCombinedPermissions(medplum, ['role-physician-id', 'role-lab-tech-id']);
+ * // Result merges permissions from both roles
+ * ```
+ */
+export async function getCombinedPermissions(
+  medplum: MedplumClient,
+  roleIds: string[]
+): Promise<PermissionRow[]> {
+  if (roleIds.length === 0) {
+    // Return empty permissions for all resources
+    return PERMISSION_RESOURCES.map((rt) => createDefaultPermissionRow(rt));
+  }
+
+  // Fetch permission matrix for each role
+  const matrices = await Promise.all(roleIds.map((id) => getPermissionMatrix(medplum, id)));
+
+  // Initialize combined matrix with all resources set to false
+  const combined: Map<string, PermissionRow> = new Map();
+  for (const resourceType of PERMISSION_RESOURCES) {
+    combined.set(resourceType, createDefaultPermissionRow(resourceType));
+  }
+
+  // Merge permissions using union logic
+  for (const matrix of matrices) {
+    for (const row of matrix) {
+      const combinedRow = combined.get(row.resourceType);
+      if (combinedRow) {
+        // Union: if any role grants the permission, enable it
+        combinedRow.create = combinedRow.create || row.create;
+        combinedRow.read = combinedRow.read || row.read;
+        combinedRow.update = combinedRow.update || row.update;
+        combinedRow.delete = combinedRow.delete || row.delete;
+        combinedRow.search = combinedRow.search || row.search;
+      }
+    }
+  }
+
+  return Array.from(combined.values());
 }

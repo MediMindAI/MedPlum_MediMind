@@ -1508,19 +1508,38 @@ packages/app/src/emr/
 
 ### Overview
 
-Manages practitioner/staff accounts with FHIR Practitioner, PractitionerRole, and AccessPolicy resources. Provides account creation, multi-role assignment, and deactivation workflows.
+Manages practitioner/staff accounts with FHIR Practitioner, PractitionerRole, and AccessPolicy resources. Provides account creation, multi-role assignment, deactivation workflows, invitation status tracking, audit logs, permission matrix, bulk operations, and data export.
 
-**Status**: ✅ **PRODUCTION READY** (85% test coverage)
+**Status**: ✅ **PRODUCTION READY** (250+ tests passing)
 **Route**: `/emr/account-management`
 **FHIR Resources**: Practitioner, PractitionerRole, Invite, AccessPolicy, AuditEvent
+
+### Recent Updates (2025-11-23)
+
+**8 User Story Enhancements Implemented:**
+- ✅ **US1 - Invitation Status**: View invitation status badges (pending/accepted/expired/bounced), resend invitations, generate activation links
+- ✅ **US2 - Audit Logs**: Complete audit trail with filtering, 7-column table, timeline view, Excel/CSV export
+- ✅ **US3 - Permission Matrix**: Visual checkbox-based permission editing, role conflict detection, permission preview
+- ✅ **US4 - Pagination/Search**: Server-side pagination (_count/_offset), advanced filters, filter presets (localStorage)
+- ✅ **US5 - Bulk Operations**: Multi-select accounts, bulk deactivate/assign role with progress bar
+- ✅ **US6 - UX Polish**: Loading skeletons, empty states, keyboard shortcuts (⌘K search, ⌘N create, ⌘/ help)
+- ✅ **US7 - Export**: Export filtered accounts to Excel (.xlsx) or CSV with xlsx library
+- ✅ **US8 - Welcome Message**: Customize invitation emails with placeholders ({firstName}, {role}, {adminName})
 
 ### Key Features
 
 - **Account Creation**: Email-based invitations via Medplum Invite API
+- **Invitation Status Tracking**: View status badges, resend invitations, generate activation links
 - **Multi-Role Assignment**: Multiple roles with medical specialties per practitioner
+- **Permission Matrix**: Visual checkbox-based permission editing with 6 categories, 30+ permissions
+- **Audit Logging**: HIPAA-compliant audit trail with DICOM codes (110110, 110112, 110114, 110136, 110137)
+- **Bulk Operations**: Multi-select accounts for bulk deactivate/assign role with progress feedback
+- **Server-Side Pagination**: Efficient pagination for 1000+ accounts with filter presets
+- **Export**: Export accounts/audit logs to Excel or CSV
 - **Deactivation Workflow**: Soft delete with audit trails (DICOM DCM 110137)
 - **Validation**: RFC 5322 email, E.164 phone (+995 Georgia), date validation
 - **Security**: Self-deactivation prevention, admin-only permissions
+- **Keyboard Shortcuts**: ⌘K (search), ⌘N (new account), ⌘/ (help)
 - **Multilingual**: Georgian (ka), English (en), Russian (ru)
 
 ### File Structure
@@ -1528,24 +1547,54 @@ Manages practitioner/staff accounts with FHIR Practitioner, PractitionerRole, an
 ```
 packages/app/src/emr/
 ├── views/account-management/
-│   └── AccountManagementView.tsx        # Main page (form + table)
+│   ├── AccountManagementView.tsx        # Main page (form + table + tabs)
+│   └── AuditLogView.tsx                 # Audit log view with filters
 ├── components/account-management/
-│   ├── AccountForm.tsx                  # Create/edit form
-│   ├── AccountTable.tsx                 # Account list table
-│   ├── RoleSelector.tsx                 # Multi-role dropdown
+│   ├── AccountForm.tsx                  # Create/edit form with welcome message
+│   ├── AccountTable.tsx                 # Account list with selection, pagination
+│   ├── RoleSelector.tsx                 # Multi-role dropdown with conflict detection
 │   ├── SpecialtySelect.tsx              # Medical specialty (NUCC codes)
+│   ├── InvitationStatusBadge.tsx        # Status badge (pending/accepted/expired/bounced)
+│   ├── ActivationLinkModal.tsx          # Generate/copy activation link
+│   ├── AuditLogTable.tsx                # 7-column audit log table
+│   ├── AuditLogFilters.tsx              # Date range, action, outcome filters
+│   ├── AccountAuditTimeline.tsx         # Timeline view of account history
+│   ├── PermissionMatrix.tsx             # Visual checkbox permission editor
+│   ├── PermissionPreview.tsx            # Expandable permission preview
+│   ├── RoleConflictAlert.tsx            # Role conflict warning
+│   ├── AdvancedFiltersPanel.tsx         # Advanced search filters
+│   ├── FilterPresetSelect.tsx           # Save/load filter presets
+│   ├── TablePagination.tsx              # Pagination controls
+│   ├── BulkActionBar.tsx                # Bulk action toolbar
+│   ├── BulkDeactivationModal.tsx        # Bulk deactivate confirmation
+│   ├── BulkRoleAssignModal.tsx          # Bulk role assignment
+│   ├── TableSkeleton.tsx                # Loading skeleton
+│   ├── EmptyState.tsx                   # No results state
+│   ├── KeyboardShortcutsHelp.tsx        # Keyboard shortcuts modal
+│   ├── ExportButton.tsx                 # Excel/CSV export dropdown
+│   ├── WelcomeMessageEditor.tsx         # Welcome message customization
 │   └── deactivation/
 │       └── DeactivationConfirmationModal.tsx
 ├── services/
-│   ├── accountService.ts                # Practitioner + Invite CRUD
+│   ├── accountService.ts                # Practitioner CRUD + pagination + bulk ops
+│   ├── invitationService.ts             # Invitation status, resend, activation links
+│   ├── auditService.ts                  # AuditEvent CRUD + search
+│   ├── permissionService.ts             # Permission matrix + conflict detection
+│   ├── exportService.ts                 # Excel/CSV export with xlsx
 │   ├── accountValidators.ts             # Form validation utilities
 │   └── accountHelpers.ts                # FHIR data extraction
 ├── hooks/
 │   ├── useAccountForm.ts                # Form state management
+│   ├── useAccountManagement.ts          # Pagination + filters + presets
+│   ├── useAuditLogs.ts                  # Audit log fetching
+│   ├── usePermissions.ts                # Permission matrix state
+│   ├── useBulkOperations.ts             # Bulk operation state + progress
+│   ├── useKeyboardShortcuts.ts          # Keyboard shortcut handling
 │   └── useDeactivation.ts               # Deactivation workflow
 ├── types/
-│   └── account-management.ts            # TypeScript interfaces
+│   └── account-management.ts            # TypeScript interfaces (extended)
 └── translations/
+    ├── ka.json, en.json, ru.json        # Translations (65+ new keys)
     ├── account-roles.json               # 12 role types
     └── medical-specialties.json         # 25 NUCC specialties
 ```
@@ -1586,6 +1635,65 @@ await deactivatePractitioner(medplum, practitionerId, 'Resigned', currentUserId)
 // Creates AuditEvent with DICOM code DCM 110137
 ```
 
+#### Invitation Status & Resend
+```typescript
+import { getInvitationStatus, resendInvitation, generateActivationLink } from '@/emr/services/invitationService';
+
+// Get invitation status
+const status = await getInvitationStatus(medplum, practitionerId);
+// Returns: 'pending' | 'accepted' | 'expired' | 'bounced' | 'cancelled'
+
+// Resend invitation email
+await resendInvitation(medplum, practitionerId);
+
+// Generate activation link (for manual sharing)
+const { url, expiresAt } = await generateActivationLink(medplum, practitionerId);
+```
+
+#### Audit Log Search
+```typescript
+import { searchAuditEvents, getAccountAuditHistory } from '@/emr/services/auditService';
+
+// Search audit events with filters
+const events = await searchAuditEvents(medplum, {
+  dateFrom: new Date('2025-01-01'),
+  dateTo: new Date(),
+  action: 'Create',
+  outcome: 'success',
+});
+
+// Get audit history for specific account
+const history = await getAccountAuditHistory(medplum, practitionerId);
+```
+
+#### Bulk Operations
+```typescript
+import { bulkDeactivate, bulkAssignRole } from '@/emr/services/accountService';
+
+// Bulk deactivate with progress callback
+await bulkDeactivate(
+  medplum,
+  practitionerIds,
+  currentUserId,
+  'Annual cleanup',
+  (progress) => console.log(`${progress.completed}/${progress.total}`)
+);
+
+// Bulk assign role
+await bulkAssignRole(medplum, practitionerIds, 'nurse', currentUserId);
+```
+
+#### Export to Excel/CSV
+```typescript
+import { exportToExcel, exportToCSV, exportAuditLogs } from '@/emr/services/exportService';
+
+// Export accounts to Excel
+const blob = exportToExcel(accounts, 'accounts-export');
+
+// Export audit logs to CSV
+const csvBlob = exportAuditLogs(events, 'csv', filters);
+```
+
 ### FHIR Mappings
 
 - **Practitioner.active** → Account status
@@ -1600,7 +1708,21 @@ await deactivatePractitioner(medplum, practitionerId, 'Resigned', currentUserId)
 
 ```bash
 cd packages/app
-npm test -- account-management  # 91/107 tests passing (85%)
+
+# Run all account management tests
+npm test -- account-management  # 250+ tests passing
+
+# Run specific component tests
+npm test -- InvitationStatusBadge.test.tsx
+npm test -- AuditLogTable.test.tsx
+npm test -- PermissionMatrix.test.tsx
+npm test -- BulkActionBar.test.tsx
+npm test -- ExportButton.test.tsx
+
+# Run service tests
+npm test -- auditService.test.ts      # 33 tests
+npm test -- permissionService.test.ts # 46 tests
+npm test -- exportService.test.ts     # 37 tests
 ```
 
 ### Dashboard Navigation
@@ -1919,6 +2041,8 @@ npm test -- FormFillerView    # Filler tests
 - React 19 with Mantine UI
 - PostgreSQL (Medplum server) storing FHIR resources
 - Vite for app bundling
+- TypeScript 5.x (strict mode) + React 19, Mantine UI, @medplum/core, @medplum/react-hooks, @medplum/fhirtypes (001-emr-user-management-improvements)
+- PostgreSQL via Medplum FHIR server (all data as FHIR resources) (001-emr-user-management-improvements)
 
 ## Recent Changes (2025-11-22)
 - Added FHIR Form Builder System with drag-and-drop form creation, management, and filling

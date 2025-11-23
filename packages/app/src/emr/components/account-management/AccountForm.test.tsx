@@ -179,7 +179,7 @@ describe('AccountForm (T020)', () => {
 
   it('should show loading state during submission', async () => {
     const mockOnSubmit = jest.fn(
-      () => new Promise((resolve) => setTimeout(resolve, 1000))
+      (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 1000))
     );
 
     renderWithProviders(<AccountForm onSubmit={mockOnSubmit} />, { medplum });
