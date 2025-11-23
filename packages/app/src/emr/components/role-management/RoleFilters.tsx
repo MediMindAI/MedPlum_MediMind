@@ -40,7 +40,7 @@ export function RoleFilters({ onSearchChange, onStatusChange }: RoleFiltersProps
       <EMRSelect
         placeholder={t('roleManagement.filterByStatus')}
         data={[
-          { value: 'all', label: 'All Roles' },
+          { value: 'all', label: t('roleManagement.allRoles') },
           { value: 'active', label: t('roleManagement.active') },
           { value: 'inactive', label: t('roleManagement.inactive') },
         ]}

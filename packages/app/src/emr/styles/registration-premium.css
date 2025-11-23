@@ -1,0 +1,671 @@
+/*
+ * Premium Registration Page Theme
+ * Aesthetic: "Clinical Elegance with Georgian Soul"
+ * A refined medical interface that balances clinical precision with warmth
+ */
+
+/* ==================== PREMIUM REGISTRATION VARIABLES ==================== */
+:root {
+  /* Distinctive accent palette - warm terracotta meets clinical navy */
+  --reg-accent-warm: #c45c3e;
+  --reg-accent-warm-light: rgba(196, 92, 62, 0.08);
+  --reg-accent-sage: #8db596;
+  --reg-accent-sage-light: rgba(141, 181, 150, 0.1);
+
+  /* Refined backgrounds */
+  --reg-bg-canvas: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #e8eef5 100%);
+  --reg-bg-card: linear-gradient(180deg, #ffffff 0%, #fafcff 100%);
+  --reg-bg-section-header: linear-gradient(135deg, #1a365d 0%, #234876 100%);
+
+  /* Premium shadows */
+  --reg-shadow-card:
+    0 1px 3px rgba(26, 54, 93, 0.04),
+    0 4px 12px rgba(26, 54, 93, 0.06),
+    0 -1px 0 rgba(255, 255, 255, 0.8) inset;
+  --reg-shadow-card-hover:
+    0 4px 12px rgba(26, 54, 93, 0.08),
+    0 8px 24px rgba(26, 54, 93, 0.1),
+    0 -1px 0 rgba(255, 255, 255, 0.9) inset;
+  --reg-shadow-section:
+    0 2px 8px rgba(26, 54, 93, 0.04),
+    0 1px 2px rgba(26, 54, 93, 0.02);
+  --reg-shadow-glow-warm: 0 0 30px rgba(196, 92, 62, 0.15);
+
+  /* Typography refinements */
+  --reg-font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --reg-letter-spacing-tight: -0.02em;
+  --reg-letter-spacing-wide: 0.08em;
+
+  /* Spacing rhythm */
+  --reg-section-gap: 20px;
+  --reg-card-radius: 16px;
+  --reg-section-radius: 12px;
+
+  /* Animation curves */
+  --reg-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --reg-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --reg-duration-fast: 180ms;
+  --reg-duration-normal: 280ms;
+  --reg-duration-slow: 400ms;
+}
+
+/* ==================== PAGE LAYOUT ==================== */
+.registration-page {
+  background: var(--reg-bg-canvas);
+  min-height: 100vh;
+  padding: 28px 32px;
+  position: relative;
+}
+
+/* Subtle geometric pattern overlay */
+.registration-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(141, 181, 150, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(196, 92, 62, 0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.registration-page > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ==================== MAIN CARD CONTAINER ==================== */
+.registration-card {
+  background: var(--reg-bg-card);
+  border-radius: var(--reg-card-radius);
+  box-shadow: var(--reg-shadow-card);
+  border: 1px solid rgba(26, 54, 93, 0.06);
+  overflow: hidden;
+  transition:
+    box-shadow var(--reg-duration-normal) var(--reg-ease-smooth),
+    transform var(--reg-duration-fast) var(--reg-ease-smooth);
+}
+
+.registration-card:hover {
+  box-shadow: var(--reg-shadow-card-hover);
+}
+
+/* ==================== PAGE HEADER ==================== */
+.registration-header {
+  background: var(--reg-bg-section-header);
+  padding: 24px 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative diagonal accent */
+.registration-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 180px;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(196, 92, 62, 0.15) 50%,
+    rgba(196, 92, 62, 0.25) 100%
+  );
+  clip-path: polygon(30% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+.registration-header-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.registration-header-title {
+  color: white;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: var(--reg-letter-spacing-tight);
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.registration-header-subtitle {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  margin-top: 2px;
+  letter-spacing: 0.01em;
+}
+
+/* ==================== FORM SECTIONS ==================== */
+.registration-form-content {
+  padding: 24px 28px;
+}
+
+/* Section wrapper with staggered animation */
+.registration-section {
+  margin-bottom: var(--reg-section-gap);
+  animation: sectionFadeIn var(--reg-duration-slow) var(--reg-ease-smooth) both;
+}
+
+.registration-section:nth-child(1) { animation-delay: 50ms; }
+.registration-section:nth-child(2) { animation-delay: 100ms; }
+.registration-section:nth-child(3) { animation-delay: 150ms; }
+.registration-section:nth-child(4) { animation-delay: 200ms; }
+
+@keyframes sectionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== COLLAPSIBLE SECTION PREMIUM ==================== */
+.section-header-premium {
+  width: 100%;
+  padding: 16px 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(26, 54, 93, 0.08);
+  border-radius: var(--reg-section-radius);
+  cursor: pointer;
+  transition: all var(--reg-duration-normal) var(--reg-ease-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Left accent bar */
+.section-header-premium::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--emr-gradient-primary);
+  opacity: 0;
+  transition: opacity var(--reg-duration-normal) var(--reg-ease-smooth);
+}
+
+.section-header-premium:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #f3f7fc 100%);
+  border-color: rgba(43, 108, 176, 0.15);
+  box-shadow: var(--reg-shadow-section);
+}
+
+.section-header-premium:hover::before {
+  opacity: 1;
+}
+
+.section-header-premium.expanded {
+  border-radius: var(--reg-section-radius) var(--reg-section-radius) 0 0;
+  border-bottom: 1px solid transparent;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.section-header-premium.expanded::before {
+  opacity: 1;
+}
+
+/* Section icon container */
+.section-icon-container {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(43, 108, 176, 0.08) 0%, rgba(99, 179, 237, 0.06) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--emr-secondary);
+  transition: all var(--reg-duration-normal) var(--reg-ease-spring);
+}
+
+.section-header-premium:hover .section-icon-container {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, rgba(43, 108, 176, 0.12) 0%, rgba(99, 179, 237, 0.1) 100%);
+}
+
+.section-header-premium.expanded .section-icon-container {
+  background: var(--emr-gradient-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(43, 108, 176, 0.25);
+}
+
+/* Section title */
+.section-title-premium {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--emr-primary);
+  letter-spacing: var(--reg-letter-spacing-tight);
+  margin: 0;
+  transition: color var(--reg-duration-fast) var(--reg-ease-smooth);
+}
+
+.section-header-premium:hover .section-title-premium {
+  color: var(--emr-secondary);
+}
+
+/* Chevron animation */
+.section-chevron {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(107, 114, 128, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--emr-gray-500);
+  transition: all var(--reg-duration-normal) var(--reg-ease-spring);
+}
+
+.section-header-premium:hover .section-chevron {
+  background: rgba(43, 108, 176, 0.08);
+  color: var(--emr-secondary);
+}
+
+.section-chevron.rotated {
+  transform: rotate(180deg);
+  background: rgba(43, 108, 176, 0.1);
+  color: var(--emr-secondary);
+}
+
+/* Section content area */
+.section-content-premium {
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border: 1px solid rgba(26, 54, 93, 0.08);
+  border-top: none;
+  border-radius: 0 0 var(--reg-section-radius) var(--reg-section-radius);
+  padding: 20px 24px;
+  position: relative;
+}
+
+/* Left border continuation */
+.section-content-premium::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--emr-gradient-primary);
+  border-radius: 0 0 0 var(--reg-section-radius);
+}
+
+/* ==================== PATIENT TABLE PREMIUM ==================== */
+.patient-table-card {
+  background: var(--reg-bg-card);
+  border-radius: var(--reg-card-radius);
+  box-shadow: var(--reg-shadow-card);
+  border: 1px solid rgba(26, 54, 93, 0.06);
+  overflow: hidden;
+}
+
+.patient-table-header {
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(26, 54, 93, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.patient-table-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--emr-gray-700);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.patient-count-badge {
+  background: var(--emr-gradient-primary);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(26, 54, 93, 0.2);
+}
+
+/* Table header premium styling */
+.table-header-premium th {
+  background: linear-gradient(180deg, #f3f6fa 0%, #e9eef5 100%) !important;
+  color: var(--emr-gray-700) !important;
+  font-weight: 600 !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: var(--reg-letter-spacing-wide) !important;
+  padding: 14px 16px !important;
+  border-bottom: 2px solid rgba(43, 108, 176, 0.15) !important;
+  position: relative;
+}
+
+/* Subtle column separator */
+.table-header-premium th:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background: rgba(26, 54, 93, 0.1);
+}
+
+/* Table row premium styling */
+.table-row-premium {
+  transition: all var(--reg-duration-fast) var(--reg-ease-smooth);
+  position: relative;
+}
+
+.table-row-premium:hover {
+  background: linear-gradient(90deg, rgba(43, 108, 176, 0.04) 0%, rgba(99, 179, 237, 0.02) 100%) !important;
+}
+
+/* Hover indicator line */
+.table-row-premium::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--emr-gradient-primary);
+  opacity: 0;
+  transition: opacity var(--reg-duration-fast) var(--reg-ease-smooth);
+}
+
+.table-row-premium:hover::before {
+  opacity: 1;
+}
+
+/* ==================== SUBMIT BUTTON PREMIUM ==================== */
+.submit-button-premium {
+  background: var(--emr-gradient-primary);
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  padding: 14px 28px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all var(--reg-duration-normal) var(--reg-ease-spring);
+  box-shadow:
+    0 4px 12px rgba(26, 54, 93, 0.25),
+    0 2px 4px rgba(26, 54, 93, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.submit-button-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left var(--reg-duration-slow) var(--reg-ease-smooth);
+}
+
+.submit-button-premium:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 20px rgba(26, 54, 93, 0.3),
+    0 4px 8px rgba(26, 54, 93, 0.2);
+}
+
+.submit-button-premium:hover::before {
+  left: 100%;
+}
+
+.submit-button-premium:active {
+  transform: translateY(0);
+}
+
+/* ==================== SEARCH TOGGLE BUTTON PREMIUM ==================== */
+.search-toggle-premium {
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--emr-gradient-primary);
+  border: none;
+  border-radius: 0 10px 10px 0;
+  padding: 16px 10px 16px 8px;
+  cursor: pointer;
+  transition: all var(--reg-duration-normal) var(--reg-ease-spring);
+  box-shadow:
+    4px 0 12px rgba(26, 54, 93, 0.15),
+    2px 0 6px rgba(26, 54, 93, 0.1);
+  z-index: 10;
+}
+
+.search-toggle-premium:hover {
+  padding-right: 16px;
+  box-shadow:
+    6px 0 16px rgba(26, 54, 93, 0.2),
+    3px 0 8px rgba(26, 54, 93, 0.15);
+}
+
+.search-toggle-premium span {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: var(--reg-letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+/* ==================== FORM INPUT ENHANCEMENTS ==================== */
+.input-group-premium {
+  position: relative;
+}
+
+.input-group-premium label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--emr-gray-600);
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-group-premium input,
+.input-group-premium select {
+  background: linear-gradient(180deg, #ffffff 0%, #fafcff 100%);
+  border: 1.5px solid #d1d9e6;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  transition: all var(--reg-duration-fast) var(--reg-ease-smooth);
+  width: 100%;
+}
+
+.input-group-premium input:hover,
+.input-group-premium select:hover {
+  border-color: rgba(43, 108, 176, 0.4);
+}
+
+.input-group-premium input:focus,
+.input-group-premium select:focus {
+  border-color: var(--emr-secondary);
+  box-shadow:
+    0 0 0 3px rgba(43, 108, 176, 0.12),
+    0 4px 12px rgba(43, 108, 176, 0.08);
+  outline: none;
+  background: #ffffff;
+}
+
+/* Required field indicator */
+.input-group-premium.required label::after {
+  content: '*';
+  color: var(--reg-accent-warm);
+  margin-left: 4px;
+  font-weight: 700;
+}
+
+/* ==================== QUICK STATS FLOATING PANEL ==================== */
+.quick-stats-panel {
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow:
+    0 8px 32px rgba(26, 54, 93, 0.12),
+    0 4px 16px rgba(26, 54, 93, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  z-index: 100;
+  min-width: 180px;
+}
+
+.quick-stats-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--emr-gray-500);
+  letter-spacing: var(--reg-letter-spacing-wide);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.quick-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(26, 54, 93, 0.06);
+}
+
+.quick-stat-item:last-child {
+  border-bottom: none;
+}
+
+.quick-stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-stat-icon.patients {
+  background: linear-gradient(135deg, rgba(43, 108, 176, 0.1) 0%, rgba(99, 179, 237, 0.08) 100%);
+  color: var(--emr-secondary);
+}
+
+.quick-stat-icon.today {
+  background: linear-gradient(135deg, rgba(141, 181, 150, 0.15) 0%, rgba(141, 181, 150, 0.1) 100%);
+  color: var(--reg-accent-sage);
+}
+
+.quick-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--emr-primary);
+  line-height: 1;
+}
+
+.quick-stat-label {
+  font-size: 11px;
+  color: var(--emr-gray-500);
+  margin-top: 2px;
+}
+
+/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
+@media (max-width: 1200px) {
+  .quick-stats-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .registration-page {
+    padding: 16px;
+  }
+
+  .registration-header {
+    padding: 20px;
+  }
+
+  .registration-header-title {
+    font-size: 18px;
+  }
+
+  .registration-form-content {
+    padding: 16px 20px;
+  }
+
+  .section-header-premium {
+    padding: 14px 16px;
+  }
+
+  .section-content-premium {
+    padding: 16px 18px;
+  }
+}
+
+/* ==================== LOADING STATES ==================== */
+.skeleton-premium {
+  background: linear-gradient(
+    90deg,
+    #f0f4f8 0%,
+    #e4ecf4 50%,
+    #f0f4f8 100%
+  );
+  background-size: 200% 100%;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeletonPulse {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ==================== SUCCESS STATE ==================== */
+.success-flash {
+  animation: successPulse 600ms var(--reg-ease-spring);
+}
+
+@keyframes successPulse {
+  0%, 100% {
+    box-shadow: var(--reg-shadow-card);
+  }
+  50% {
+    box-shadow:
+      0 0 0 4px rgba(141, 181, 150, 0.3),
+      var(--reg-shadow-card-hover);
+  }
+}

@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, UnstyledButton } from '@mantine/core';
+import { Box, UnstyledButton, ScrollArea } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
+import styles from './HorizontalSubMenu.module.css';
 
 interface SubMenuItem {
   key: string;
@@ -53,15 +54,13 @@ interface HorizontalSubMenuProps {
 }
 
 /**
- * HorizontalSubMenu - Row 3 (turquoise gradient horizontal tabs)
+ * HorizontalSubMenu - Premium sub-navigation with refined tab design
  *
  * Features:
- * - Turquoise gradient background
- * - White 3px bottom border for active tab
- * - Conditional rendering based on section
- * - Multilingual support
- * @param root0
- * @param root0.section
+ * - Clean gradient background
+ * - Elegant active tab indicator
+ * - Smooth transitions
+ * - Horizontal scroll for many items
  */
 export function HorizontalSubMenu({ section }: HorizontalSubMenuProps) {
   const { t } = useTranslation();
@@ -76,59 +75,33 @@ export function HorizontalSubMenu({ section }: HorizontalSubMenuProps) {
       : nomenclatureSubMenu;
 
   const isActive = (path: string) => {
-    // Check if current path matches or starts with the menu item path
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };
 
   return (
-    <Box
-      style={{
-        height: '30px',
-        background: 'linear-gradient(90deg, #3182ce 0%, #63b3ed 50%, #bee3f8 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 0.75rem',
-        gap: '0.35rem',
-        overflowX: 'auto',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-      }}
-    >
-      {subMenuItems.map((item) => {
-        const active = isActive(item.path);
-        return (
-          <UnstyledButton
-            key={item.key}
-            onClick={() => navigate(item.path)}
-            style={{
-              padding: '0.25rem 0.65rem',
-              fontSize: 'var(--emr-font-base)',
-              fontWeight: 'var(--emr-font-medium)',
-              cursor: 'pointer',
-              color: 'white',
-              background: 'transparent',
-              borderBottom: active ? '2px solid white' : '2px solid transparent',
-              borderLeft: 'none',
-              borderRight: 'none',
-              borderTop: 'none',
-              transition: 'all 0.2s ease',
-              whiteSpace: 'nowrap',
-              opacity: active ? 1 : 0.85,
-            }}
-            onMouseEnter={(e) => {
-              if (!active) {
-                e.currentTarget.style.opacity = '1';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!active) {
-                e.currentTarget.style.opacity = '0.85';
-              }
-            }}
-          >
-            {t(item.translationKey)}
-          </UnstyledButton>
-        );
-      })}
+    <Box className={styles.container} data-testid="submenu">
+      <ScrollArea
+        type="scroll"
+        scrollbarSize={0}
+        className={styles.scrollArea}
+      >
+        <Box className={styles.tabContainer}>
+          {subMenuItems.map((item) => {
+            const active = isActive(item.path);
+            return (
+              <UnstyledButton
+                key={item.key}
+                onClick={() => navigate(item.path)}
+                className={`${styles.tab} ${active ? styles.active : ''}`}
+                data-testid={`submenu-${item.key}`}
+              >
+                <span className={styles.tabLabel}>{t(item.translationKey)}</span>
+                {active && <span className={styles.activeBar} />}
+              </UnstyledButton>
+            );
+          })}
+        </Box>
+      </ScrollArea>
     </Box>
   );
 }

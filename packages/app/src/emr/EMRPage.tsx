@@ -9,16 +9,18 @@ import { HorizontalSubMenu } from './components/HorizontalSubMenu/HorizontalSubM
 import { TranslationProvider } from './contexts/TranslationContext';
 
 /**
- * Main EMR Page layout with 3-row structure
+ * Main EMR Page layout with 3-row structure (under Medplum AppShell header)
  *
  * Layout:
- * ┌─────────────────────────────────────┐
- * │ Row 1: MainMenu + LanguageSelector  │
- * ├─────────────────────────────────────┤
- * │ Row 2: HorizontalSubMenu (light blue)│ ← Conditional
- * ├─────────────────────────────────────┤
- * │ Row 3: Content Area (flex: 1)      │
- * └─────────────────────────────────────┘
+ * ┌─────────────────────────────────────────┐
+ * │ Medplum AppShell Header (native)       │ 50px - Customized in App.tsx
+ * ├─────────────────────────────────────────┤
+ * │ Row 1: MainMenu (navigation items)     │ 42px - White with subtle shadow
+ * ├─────────────────────────────────────────┤
+ * │ Row 2: SubMenu (section tabs)          │ 36px - Blue gradient (conditional)
+ * ├─────────────────────────────────────────┤
+ * │ Row 3: Content Area                    │ flex: 1
+ * └─────────────────────────────────────────┘
  */
 export function EMRPage(): JSX.Element {
   const location = useLocation();
@@ -52,14 +54,16 @@ export function EMRPage(): JSX.Element {
         {/* Row 1: Main Navigation Menu */}
         <Box
           style={{
-            height: '35px',
+            height: '42px',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
             padding: '0 16px',
             background: 'white',
             borderBottom: '1px solid #e5e7eb',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
           }}
+          data-testid="main-menu"
         >
           <EMRMainMenu />
         </Box>

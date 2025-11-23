@@ -1,14 +1,14 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import type { MantineColorScheme } from '@mantine/core';
 import {
   Avatar,
   Box,
   Group,
-  Menu,
-  SegmentedControl,
   Stack,
   Text,
+  UnstyledButton,
   useMantineColorScheme,
 } from '@mantine/core';
 import type { ProfileResource } from '@medplum/core';
@@ -18,32 +18,32 @@ import { useMedplumContext } from '@medplum/react-hooks';
 import {
   IconLogout,
   IconSettings,
-  IconSwitchHorizontal,
-  IconDashboard,
+  IconUserPlus,
+  IconLayoutDashboard,
   IconSun,
   IconMoon,
   IconDeviceDesktop,
 } from '@tabler/icons-react';
 import type { JSX } from 'react';
+import { useState } from 'react';
 import { HumanNameDisplay } from '../HumanNameDisplay/HumanNameDisplay';
 import { ResourceAvatar } from '../ResourceAvatar/ResourceAvatar';
 import { getAppName } from '../utils/app';
 
-// EMR Theme Colors (from THEME_COLORS.md)
-const THEME = {
+// EMR Theme Colors
+const C = {
   primary: '#1a365d',
   secondary: '#2b6cb0',
   accent: '#63b3ed',
   lightAccent: '#bee3f8',
-  gradientPrimary: 'linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)',
-  gradientSecondary: 'linear-gradient(135deg, #2b6cb0 0%, #3182ce 50%, #63b3ed 100%)',
   gray50: '#f9fafb',
   gray100: '#f3f4f6',
   gray200: '#e5e7eb',
   gray500: '#6b7280',
-  gray800: '#1f2937',
+  textPrimary: '#1f2937',
   white: '#ffffff',
-  danger: '#dc2626',
+  error: '#dc2626',
+  errorLight: '#fee2e2',
 };
 
 export interface HeaderDropdownProps {
@@ -55,183 +55,190 @@ export function HeaderDropdown(props: HeaderDropdownProps): JSX.Element {
   const { medplum, profile, navigate } = context;
   const logins = medplum.getLogins();
   const { colorScheme, setColorScheme } = useMantineColorScheme();
-
-  // Consistent menu item style using theme
-  const menuItemStyle = {
-    borderRadius: '6px',
-    margin: '2px 6px',
-    transition: 'all 0.15s ease',
-  };
-
-  // Icon container style using theme colors
-  const iconStyle = (bgColor: string) => ({
-    width: 32,
-    height: 32,
-    borderRadius: '6px',
-    backgroundColor: bgColor,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  });
+  const [hovered, setHovered] = useState<string | null>(null);
 
   return (
     <>
-      {/* Profile Header with EMR gradient */}
+      {/* Profile Header */}
       <Box
+        p="md"
         style={{
-          background: THEME.gradientPrimary,
-          padding: '20px 24px',
+          background: `linear-gradient(135deg, ${C.primary} 0%, ${C.secondary} 100%)`,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
-        <Stack align="center" gap={8}>
-          <Box
-            style={{
-              padding: '2px',
-              borderRadius: '50%',
-              background: THEME.accent,
-            }}
-          >
-            <ResourceAvatar
-              size={60}
-              radius={100}
-              value={context.profile}
-              style={{ border: `2px solid ${THEME.white}` }}
-            />
-          </Box>
-          <Text size="md" fw={600} c="white" ta="center">
-            <HumanNameDisplay value={context.profile?.name?.[0] as HumanName} />
-          </Text>
-          <Text size="xs" c={THEME.lightAccent}>
-            {medplum.getActiveLogin()?.project.display}
-          </Text>
-        </Stack>
+        <Box
+          mb="sm"
+          style={{
+            padding: 3,
+            borderRadius: '50%',
+            background: C.accent,
+          }}
+        >
+          <ResourceAvatar
+            size={52}
+            radius={100}
+            value={context.profile}
+            style={{ border: `2px solid ${C.white}` }}
+          />
+        </Box>
+        <Text fw={600} c="white" ta="center" size="sm">
+          <HumanNameDisplay value={context.profile?.name?.[0] as HumanName} />
+        </Text>
+        <Text size="xs" ta="center" c={C.lightAccent} mt={4}>
+          {medplum.getActiveLogin()?.project.display}
+        </Text>
       </Box>
 
-      {/* Multiple logins section */}
+      {/* Switch Account */}
       {logins.length > 1 && (
-        <>
-          <Text size="xs" c={THEME.gray500} fw={600} px="md" py="xs" tt="uppercase">
+        <Box style={{ borderBottom: `1px solid ${C.gray200}` }}>
+          <Text px="md" pt="sm" pb="xs" size="xs" fw={700} c={C.gray500} tt="uppercase" style={{ letterSpacing: '0.05em' }}>
             Switch Account
           </Text>
           {logins.map(
             (login) =>
               login.profile.reference !== getReferenceString(context.profile as ProfileResource) && (
-                <Menu.Item
+                <UnstyledButton
                   key={login.profile.reference}
-                  style={menuItemStyle}
-                  onClick={() => {
-                    medplum
-                      .setActiveLogin(login)
-                      .then(() => locationUtils.reload())
-                      .catch(console.log);
-                  }}
+                  w="100%"
+                  p="sm"
+                  onClick={() => medplum.setActiveLogin(login).then(() => locationUtils.reload()).catch(console.log)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, background: hovered === login.profile.reference ? C.gray50 : 'transparent' }}
+                  onMouseEnter={() => setHovered(login.profile.reference || null)}
+                  onMouseLeave={() => setHovered(null)}
                 >
-                  <Group gap="xs">
-                    <Avatar radius="xl" size="sm" color="blue" />
-                    <div style={{ flex: 1 }}>
-                      <Text size="sm" fw={500}>{login.profile.display}</Text>
-                      <Text size="xs" c={THEME.gray500}>{login.project.display}</Text>
-                    </div>
-                  </Group>
-                </Menu.Item>
+                  <Avatar radius="xl" size={32} color="blue" />
+                  <Box style={{ flex: 1 }}>
+                    <Text size="xs" fw={600} c={C.textPrimary}>{login.profile.display}</Text>
+                    <Text size="xs" c={C.gray500}>{login.project.display}</Text>
+                  </Box>
+                </UnstyledButton>
               )
           )}
-          <Menu.Divider />
-        </>
+        </Box>
       )}
 
-      {/* Theme Toggle */}
-      <Box px="md" py="sm">
-        <Text size="xs" c={THEME.gray500} fw={600} mb={8} tt="uppercase">
+      {/* Appearance */}
+      <Box p="md" style={{ borderBottom: `1px solid ${C.gray200}` }}>
+        <Text size="xs" fw={700} c={C.gray500} mb="sm" tt="uppercase" style={{ letterSpacing: '0.05em' }}>
           Appearance
         </Text>
-        <SegmentedControl
-          fullWidth
-          size="xs"
-          radius="md"
-          value={colorScheme}
-          onChange={(newValue) => setColorScheme(newValue as MantineColorScheme)}
-          data={[
-            { label: <Group gap={3} justify="center" wrap="nowrap"><IconSun size={14} /><Text size="xs">Light</Text></Group>, value: 'light' },
-            { label: <Group gap={3} justify="center" wrap="nowrap"><IconMoon size={14} /><Text size="xs">Dark</Text></Group>, value: 'dark' },
-            { label: <Group gap={3} justify="center" wrap="nowrap"><IconDeviceDesktop size={14} /><Text size="xs">Auto</Text></Group>, value: 'auto' },
-          ]}
-          styles={{
-            root: { backgroundColor: THEME.gray100, padding: '3px' },
-            indicator: { boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
-          }}
-        />
+        <Group gap="xs">
+          {[
+            { v: 'light', i: IconSun, l: 'Light' },
+            { v: 'dark', i: IconMoon, l: 'Dark' },
+            { v: 'auto', i: IconDeviceDesktop, l: 'Auto' },
+          ].map((o) => {
+            const active = colorScheme === o.v;
+            return (
+              <UnstyledButton
+                key={o.v}
+                onClick={() => setColorScheme(o.v as MantineColorScheme)}
+                style={{
+                  flex: 1,
+                  padding: '8px 6px',
+                  borderRadius: 8,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 4,
+                  background: active ? C.secondary : C.gray100,
+                  color: active ? C.white : C.gray500,
+                  border: `1px solid ${active ? C.secondary : C.gray200}`,
+                }}
+              >
+                <o.i size={16} />
+                <Text size="xs" fw={600}>{o.l}</Text>
+              </UnstyledButton>
+            );
+          })}
+        </Group>
       </Box>
 
-      <Menu.Divider />
+      {/* Menu Items */}
+      <Box py="xs">
+        {[
+          { id: 'dashboard', Icon: IconLayoutDashboard, label: 'Dashboard', path: '/emr/account-management' },
+          { id: 'add', Icon: IconUserPlus, label: 'Add Account', path: '/signin' },
+          { id: 'settings', Icon: IconSettings, label: 'Settings', path: `/${getReferenceString(profile as ProfileResource)}` },
+        ].map((item) => (
+          <UnstyledButton
+            key={item.id}
+            w="100%"
+            px="md"
+            py="xs"
+            onClick={() => navigate(item.path)}
+            onMouseEnter={() => setHovered(item.id)}
+            onMouseLeave={() => setHovered(null)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              background: hovered === item.id ? C.gray50 : 'transparent',
+            }}
+          >
+            <Box
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 8,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: hovered === item.id ? C.secondary : C.lightAccent,
+                color: hovered === item.id ? C.white : C.secondary,
+              }}
+            >
+              <item.Icon size={16} />
+            </Box>
+            <Text size="sm" fw={500} c={hovered === item.id ? C.secondary : C.textPrimary}>
+              {item.label}
+            </Text>
+          </UnstyledButton>
+        ))}
+      </Box>
 
-      {/* Menu Actions */}
-      <Menu.Item
-        leftSection={
-          <Box style={iconStyle(THEME.lightAccent)}>
-            <IconDashboard size={16} color={THEME.secondary} />
+      {/* Sign Out */}
+      <Box p="sm" style={{ borderTop: `1px solid ${C.gray200}` }}>
+        <UnstyledButton
+          w="100%"
+          p="sm"
+          onClick={async () => { await medplum.signOut(); navigate('/signin'); }}
+          onMouseEnter={() => setHovered('signout')}
+          onMouseLeave={() => setHovered(null)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            borderRadius: 8,
+            background: hovered === 'signout' ? C.errorLight : 'transparent',
+            border: `1px solid ${hovered === 'signout' ? C.error : C.gray200}`,
+          }}
+        >
+          <Box
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: hovered === 'signout' ? C.error : C.errorLight,
+              color: hovered === 'signout' ? C.white : C.error,
+            }}
+          >
+            <IconLogout size={16} />
           </Box>
-        }
-        style={menuItemStyle}
-        onClick={() => navigate('/emr/account-management')}
-      >
-        <Text size="sm" fw={500}>Dashboard</Text>
-      </Menu.Item>
-
-      <Menu.Item
-        leftSection={
-          <Box style={iconStyle(THEME.lightAccent)}>
-            <IconSwitchHorizontal size={16} color={THEME.secondary} />
-          </Box>
-        }
-        style={menuItemStyle}
-        onClick={() => navigate('/signin')}
-      >
-        <Text size="sm" fw={500}>Add another account</Text>
-      </Menu.Item>
-
-      <Menu.Item
-        leftSection={
-          <Box style={iconStyle(THEME.lightAccent)}>
-            <IconSettings size={16} color={THEME.secondary} />
-          </Box>
-        }
-        style={menuItemStyle}
-        onClick={() => navigate(`/${getReferenceString(profile as ProfileResource)}`)}
-      >
-        <Text size="sm" fw={500}>Account settings</Text>
-      </Menu.Item>
-
-      <Menu.Divider />
-
-      <Menu.Item
-        leftSection={
-          <Box style={iconStyle('#fee2e2')}>
-            <IconLogout size={16} color={THEME.danger} />
-          </Box>
-        }
-        style={menuItemStyle}
-        onClick={async () => {
-          await medplum.signOut();
-          navigate('/signin');
-        }}
-      >
-        <Text size="sm" fw={500} c={THEME.danger}>Sign out</Text>
-      </Menu.Item>
+          <Text size="sm" fw={500} c={C.error}>Sign Out</Text>
+        </UnstyledButton>
+      </Box>
 
       {/* Footer */}
-      <Box
-        style={{
-          borderTop: `1px solid ${THEME.gray200}`,
-          backgroundColor: THEME.gray50,
-          padding: '8px 16px',
-          marginTop: '4px',
-        }}
-      >
-        <Text size="xs" c={THEME.gray500} ta="center">
-          {getAppName()} {props.version}
-        </Text>
+      <Box p="sm" style={{ background: C.gray50, borderTop: `1px solid ${C.gray200}` }}>
+        <Text size="xs" c={C.gray500} ta="center">{getAppName()} {props.version}</Text>
       </Box>
     </>
   );

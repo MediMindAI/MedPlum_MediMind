@@ -1,0 +1,731 @@
+/* PermissionMatrix Premium Styles - Clinical Precision Design */
+/* A refined, healthcare-focused permission matrix with visual hierarchy */
+
+/* ==================== CONTAINER ==================== */
+.matrixContainer {
+  position: relative;
+}
+
+/* ==================== HEADER SECTION ==================== */
+.matrixHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.headerIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(26, 54, 93, 0.2);
+}
+
+.headerIcon svg {
+  color: white;
+}
+
+.headerTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--emr-text-primary);
+  letter-spacing: -0.3px;
+  margin: 0;
+}
+
+.headerSubtitle {
+  font-size: 13px;
+  color: var(--emr-gray-500);
+  margin-top: 2px;
+}
+
+/* ==================== ACTION BUTTONS ==================== */
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.refreshButton {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--emr-gray-200);
+  color: var(--emr-gray-600);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.refreshButton:hover {
+  background: var(--emr-gray-50);
+  border-color: var(--emr-gray-300);
+  transform: translateY(-1px);
+}
+
+.refreshButton:active {
+  transform: translateY(0);
+}
+
+.saveButton {
+  background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(26, 54, 93, 0.25);
+}
+
+.saveButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(26, 54, 93, 0.35);
+}
+
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.saveButtonActive {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(26, 54, 93, 0.25);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(26, 54, 93, 0.4), 0 0 0 4px rgba(43, 108, 176, 0.1);
+  }
+}
+
+/* ==================== TABLE WRAPPER ==================== */
+.tableWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+/* ==================== PERMISSION TABLE ==================== */
+.permissionTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 780px;
+  table-layout: fixed;
+}
+
+/* Table Header */
+.tableHead {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tableHead th {
+  padding: 16px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--emr-gray-500);
+  border-bottom: 2px solid var(--emr-gray-200);
+  text-align: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.tableHead th:first-child {
+  text-align: left;
+  padding-left: 20px;
+  width: 280px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+}
+
+.tableHead th:not(:first-child) {
+  width: 100px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+}
+
+/* Operation Headers */
+.operationHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.operationIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.operationIcon.create {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.operationIcon.read {
+  color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.operationIcon.update {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.operationIcon.delete {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.operationIcon.search {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.operationLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--emr-gray-600);
+}
+
+/* Table Body */
+.tableBody tr {
+  transition: background-color 0.15s ease;
+}
+
+.tableBody tr:hover {
+  background: rgba(59, 130, 246, 0.03);
+}
+
+.tableBody tr:nth-child(even) {
+  background: rgba(248, 250, 252, 0.5);
+}
+
+.tableBody tr:nth-child(even):hover {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.tableBody td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--emr-gray-100);
+  text-align: center;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+.tableBody td:first-child {
+  text-align: left;
+  padding-left: 20px;
+  width: 280px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+}
+
+/* ==================== RESOURCE CELL ==================== */
+.resourceCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Expand Button */
+.expandButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--emr-gray-400);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.expandButton:hover {
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--emr-primary);
+}
+
+.expandButton:active {
+  transform: scale(0.95);
+}
+
+/* Expanded Row */
+.expandedRow {
+  background: rgba(59, 130, 246, 0.03) !important;
+}
+
+.expandedRow td:first-child {
+  border-left: 3px solid var(--emr-primary);
+}
+
+/* Description Row */
+.descriptionRow {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.04) 0%, rgba(59, 130, 246, 0.01) 100%) !important;
+}
+
+.descriptionRow td {
+  padding: 0 !important;
+  border-bottom: 1px solid var(--emr-gray-100);
+}
+
+.descriptionContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 20px 12px 52px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--emr-gray-600);
+}
+
+.descriptionIcon {
+  flex-shrink: 0;
+  color: var(--emr-primary);
+  margin-top: 2px;
+}
+
+.resourceIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.resourceIcon.clinical {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  color: #3b82f6;
+}
+
+.resourceIcon.administrative {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(139, 92, 246, 0.05) 100%);
+  color: #8b5cf6;
+}
+
+.resourceIcon.financial {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+  color: #10b981;
+}
+
+.resourceIcon.diagnostic {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+  color: #f59e0b;
+}
+
+.resourceInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.resourceName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--emr-text-primary);
+  letter-spacing: -0.2px;
+}
+
+.resourceCode {
+  font-size: 11px;
+  color: var(--emr-gray-400);
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, monospace;
+}
+
+/* ==================== CUSTOM TOGGLE SWITCH ==================== */
+.toggleCell {
+  text-align: center !important;
+  vertical-align: middle !important;
+  width: 100px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+  padding: 12px 8px !important;
+  box-sizing: border-box;
+}
+
+.tableBody td.toggleCell {
+  width: 100px !important;
+  min-width: 100px !important;
+  max-width: 100px !important;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  min-width: 44px;
+  min-height: 24px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggleTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 24px;
+  background: #d1d5db;
+  border-radius: 12px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #c7d2d9;
+}
+
+.toggle input:checked + .toggleTrack {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.toggle input:focus-visible + .toggleTrack {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.toggleThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.toggle input:checked ~ .toggleThumb {
+  transform: translateX(20px);
+}
+
+.toggle:hover .toggleThumb {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.toggle.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toggle.disabled .toggleTrack,
+.toggle.disabled .toggleThumb {
+  cursor: not-allowed;
+}
+
+/* ==================== CATEGORY SEPARATOR ==================== */
+.categoryRow {
+  background: linear-gradient(90deg, var(--emr-gray-50) 0%, transparent 100%) !important;
+}
+
+.categoryRow td {
+  padding: 10px 20px !important;
+  border-bottom: 1px solid var(--emr-gray-200) !important;
+}
+
+.categoryLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--emr-gray-500);
+}
+
+.categoryDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.categoryDot.clinical {
+  background: #3b82f6;
+}
+
+.categoryDot.administrative {
+  background: #8b5cf6;
+}
+
+.categoryDot.financial {
+  background: #10b981;
+}
+
+.categoryDot.diagnostic {
+  background: #f59e0b;
+}
+
+/* ==================== UNSAVED CHANGES INDICATOR ==================== */
+.unsavedIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.04) 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.unsavedDot {
+  width: 8px;
+  height: 8px;
+  background: #f59e0b;
+  border-radius: 50%;
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.unsavedText {
+  font-size: 13px;
+  font-weight: 500;
+  color: #b45309;
+}
+
+/* ==================== LOADING SKELETON ==================== */
+.skeletonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeletonHeader {
+  height: 48px;
+  background: linear-gradient(90deg, var(--emr-gray-100) 25%, var(--emr-gray-50) 50%, var(--emr-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 12px;
+}
+
+.skeletonRow {
+  height: 56px;
+  background: linear-gradient(90deg, var(--emr-gray-100) 25%, var(--emr-gray-50) 50%, var(--emr-gray-100) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ==================== EMPTY STATE ==================== */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 32px;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--emr-gray-100) 0%, var(--emr-gray-50) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: var(--emr-gray-400);
+}
+
+.emptyTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--emr-text-primary);
+  margin-bottom: 8px;
+}
+
+.emptySubtitle {
+  font-size: 14px;
+  color: var(--emr-gray-500);
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .matrixHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .headerLeft {
+    justify-content: center;
+  }
+
+  .actionButtons {
+    justify-content: center;
+  }
+
+  .tableHead th {
+    padding: 12px 8px;
+    font-size: 10px;
+  }
+
+  .operationIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .resourceCell {
+    gap: 8px;
+  }
+
+  .resourceIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .resourceName {
+    font-size: 13px;
+  }
+
+  .toggle {
+    width: 40px;
+    height: 22px;
+  }
+
+  .toggleThumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  .toggle input:checked ~ .toggleThumb {
+    transform: translateX(18px);
+  }
+}
+
+/* ==================== PERMISSION QUICK STATS ==================== */
+.quickStats {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.statBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: white;
+  border: 1px solid var(--emr-gray-200);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--emr-gray-600);
+}
+
+.statBadge .statCount {
+  font-weight: 700;
+  color: var(--emr-primary);
+}
+
+.statBadge.enabled {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: #059669;
+}
+
+.statBadge.enabled .statCount {
+  color: #059669;
+}
+
+/* ==================== SELECT ALL ROW ==================== */
+.selectAllRow {
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.04) 0%, transparent 100%);
+}
+
+.selectAllRow td {
+  padding: 8px 12px !important;
+}
+
+.selectAllToggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--emr-gray-500);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.selectAllToggle:hover {
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--emr-primary);
+}

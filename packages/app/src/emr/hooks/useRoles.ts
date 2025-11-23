@@ -50,6 +50,7 @@ export function useRoles(options: UseRolesOptions = {}): UseRolesResult {
         accessPolicies.map(async (policy) => {
           const roleTag = policy.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-identifier');
           const statusTag = policy.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-status');
+          const descriptionTag = policy.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-description');
 
           const userCount = await getRoleUserCount(medplum, policy.id!);
 
@@ -57,7 +58,7 @@ export function useRoles(options: UseRolesOptions = {}): UseRolesResult {
             id: policy.id!,
             code: roleTag?.code || '',
             name: roleTag?.display || '',
-            description: policy.description,
+            description: descriptionTag?.display,
             status: (statusTag?.code as 'active' | 'inactive') || 'active',
             permissionCount: policy.resource?.length || 0,
             userCount,

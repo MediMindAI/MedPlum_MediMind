@@ -1,13 +1,14 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Container, Title, Stack, Paper, Group, Button, Modal, Box, Tabs, Select, Text } from '@mantine/core';
+import { Container, Title, Stack, Paper, Group, Button, Modal, Box, Tabs, Select, Text, CloseButton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useState, useMemo, useCallback } from 'react';
-import { IconPlus, IconChartBar, IconFilter, IconUsers, IconShieldLock, IconHistory, IconKey } from '@tabler/icons-react';
+import { IconPlus, IconChartBar, IconFilter, IconUsers, IconShieldLock, IconHistory, IconKey, IconUserPlus, IconX } from '@tabler/icons-react';
+import modalStyles from '../../components/account-management/CreateAccountModal.module.css';
+import styles from './AccountManagement.module.css';
 import { useMedplum } from '@medplum/react-hooks';
 import { useMediaQuery } from '@mantine/hooks';
-import { SectionHeader } from '../../components/common/SectionHeader';
 import { DashboardStats  } from '../../components/account-management/DashboardStats';
 import type {DashboardStatsData} from '../../components/account-management/DashboardStats';
 import { AccountFilters  } from '../../components/account-management/AccountFilters';
@@ -449,36 +450,31 @@ export function AccountManagementView(): JSX.Element {
   };
 
   return (
-    <Box
-      style={{
-        background: 'var(--emr-gray-50)',
-        minHeight: '100vh',
-      }}
-    >
-      <Container size="100%" px={{ base: 16, sm: 24, md: 32, lg: 40 }} py={{ base: 16, md: 24 }} style={{ maxWidth: '1600px' }}>
-        <Stack gap={{ base: 16, md: 20 }}>
-          {/* Page Header - Compact */}
-          <Group justify="space-between" align="center" wrap="wrap" gap="sm">
-            <Title
-              order={1}
-              style={{
-                fontSize: isMobile ? '22px' : '26px',
-                fontWeight: 700,
-                color: 'var(--emr-text-primary)',
-                letterSpacing: '-0.5px',
-              }}
-            >
-              {t('accountManagement.title')}
-            </Title>
+    <Box className={styles.dashboardContainer}>
+      <Container size="100%" px={{ base: 16, sm: 24, md: 32, lg: 40 }} py={{ base: 20, md: 28 }} style={{ maxWidth: '1600px' }}>
+        <Stack gap="lg">
+          {/* Page Header - Premium Design */}
+          <Group justify="space-between" align="flex-start" wrap="wrap" gap="md" className={styles.pageHeader}>
+            <Stack gap={4}>
+              <Title order={1} className={styles.pageTitle}>
+                {t('accountManagement.title')}
+              </Title>
+              <Text className={styles.pageSubtitle}>
+                {t('accountManagement.dashboard.subtitle') || 'Manage user accounts, roles, and permissions'}
+              </Text>
+            </Stack>
 
             {/* Create Button (Mobile only - FAB shown on desktop) */}
             {isMobile && (
               <Button
-                leftSection={<IconPlus size={16} />}
+                leftSection={<IconPlus size={18} />}
                 onClick={() => setCreateModalOpened(true)}
-                size="sm"
+                size="md"
                 style={{
                   background: 'var(--emr-gradient-primary)',
+                  borderRadius: '12px',
+                  padding: '10px 20px',
+                  boxShadow: '0 4px 12px rgba(26, 54, 93, 0.2)',
                 }}
               >
                 {t('accountManagement.create.title')}
@@ -486,121 +482,174 @@ export function AccountManagementView(): JSX.Element {
             )}
           </Group>
 
-          {/* Tabs for Accounts, Roles, Permissions, and Audit Log */}
+          {/* Tabs for Accounts, Roles, Permissions, and Audit Log - Premium Design */}
           <Tabs
             defaultValue="accounts"
             variant="pills"
             styles={{
               root: {
-                background: 'var(--emr-text-inverse)',
-                borderRadius: 'var(--emr-border-radius-lg)',
-                padding: '12px 16px',
-                boxShadow: 'var(--emr-shadow-sm)',
-                border: '1px solid var(--emr-gray-200)',
+                background: 'rgba(255, 255, 255, 0.8)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                borderRadius: '16px',
+                padding: '16px 20px',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(26, 54, 93, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8)',
+                border: '1px solid rgba(255, 255, 255, 0.6)',
+                position: 'relative',
+                overflow: 'hidden',
               },
               list: {
-                gap: '8px',
+                gap: '10px',
                 flexWrap: 'wrap',
               },
               tab: {
                 fontSize: '13px',
-                fontWeight: 500,
-                padding: '8px 14px',
-                borderRadius: 'var(--emr-border-radius)',
-                transition: 'var(--emr-transition-fast)',
+                fontWeight: 600,
+                padding: '10px 18px',
+                borderRadius: '10px',
+                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                 '&[data-active]': {
                   background: 'var(--emr-gradient-primary)',
-                  color: 'var(--emr-text-inverse)',
+                  color: 'white',
+                  boxShadow: '0 4px 12px rgba(26, 54, 93, 0.25)',
                 },
                 '&:not([data-active]):hover': {
-                  background: 'var(--emr-gray-100)',
+                  background: 'rgba(43, 108, 176, 0.08)',
+                  color: 'var(--emr-primary)',
                 },
               },
             }}
           >
             <Tabs.List>
-              <Tabs.Tab value="accounts" leftSection={<IconUsers size={16} />}>
+              <Tabs.Tab value="accounts" leftSection={<IconUsers size={17} stroke={1.8} />}>
                 Accounts
               </Tabs.Tab>
-              <Tabs.Tab value="roles" leftSection={<IconShieldLock size={16} />}>
+              <Tabs.Tab value="roles" leftSection={<IconShieldLock size={17} stroke={1.8} />}>
                 Roles
               </Tabs.Tab>
-              <Tabs.Tab value="permissions" leftSection={<IconKey size={16} />}>
+              <Tabs.Tab value="permissions" leftSection={<IconKey size={17} stroke={1.8} />}>
                 {t('accountManagement.permissions.title')}
               </Tabs.Tab>
-              <Tabs.Tab value="audit" leftSection={<IconHistory size={16} />}>
+              <Tabs.Tab value="audit" leftSection={<IconHistory size={17} stroke={1.8} />}>
                 Audit Log
               </Tabs.Tab>
             </Tabs.List>
 
-            <Tabs.Panel value="accounts" pt="md">
-              <Stack gap={{ base: 16, md: 20 }}>
-                {/* Dashboard Stats Section - More compact */}
-                <Box>
-                  <SectionHeader icon={IconChartBar} title={t('accountManagement.dashboard.metrics')} variant="prominent" spacing="sm" />
+            <Tabs.Panel value="accounts" pt="lg">
+              <Stack gap="xl">
+                {/* Dashboard Stats Section - Premium Glassmorphism Cards */}
+                <Box className={`${styles.statsSection} ${styles.animateFadeIn} ${styles.animateDelay1}`}>
+                  <Group gap="md" align="center" mb="md">
+                    <Box className={styles.sectionIcon}>
+                      <IconChartBar size={18} stroke={2} />
+                    </Box>
+                    <Text fw={600} size="sm" c="var(--emr-text-primary)" style={{ letterSpacing: '-0.2px' }}>
+                      {t('accountManagement.dashboard.metrics')}
+                    </Text>
+                  </Group>
                   <DashboardStats stats={stats} loading={loading} />
                 </Box>
 
-                {/* Filters Section - Streamlined */}
-                <Box>
-                  <SectionHeader icon={IconFilter} title={t('accountManagement.filters.searchAndFilter')} spacing="sm" />
-                  <AccountFilters
-                    filters={filters}
-                    onFiltersChange={setFilters}
-                    roleOptions={roleOptions}
-                    resultCount={filteredAccounts.length}
-                    totalCount={accounts.length}
-                  />
+                {/* Filters Section - Premium Card */}
+                <Box className={`${styles.animateFadeIn} ${styles.animateDelay2}`}>
+                  <Paper
+                    p="lg"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.95)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
+                      borderRadius: '16px',
+                      border: '1px solid rgba(255, 255, 255, 0.6)',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06)',
+                    }}
+                  >
+                    <Group gap="md" align="center" mb="md">
+                      <Box className={styles.sectionIcon}>
+                        <IconFilter size={18} stroke={2} />
+                      </Box>
+                      <Text fw={600} size="sm" c="var(--emr-text-primary)" style={{ letterSpacing: '-0.2px' }}>
+                        {t('accountManagement.filters.searchAndFilter')}
+                      </Text>
+                    </Group>
+                    <AccountFilters
+                      filters={filters}
+                      onFiltersChange={setFilters}
+                      roleOptions={roleOptions}
+                      resultCount={filteredAccounts.length}
+                      totalCount={accounts.length}
+                    />
+                  </Paper>
                 </Box>
 
-                {/* Account Table Section */}
-                <Box>
-                  <Group justify="space-between" align="center" mb="sm" wrap="wrap" gap="sm">
-                    <SectionHeader icon={IconUsers} title={t('accountManagement.table.userList')} spacing="xs" />
-                    <ExportButton
-                      data={filteredAccounts as AccountRowExtended[]}
-                      exportedBy={medplum.getProfile()?.name?.[0]?.text || 'Unknown User'}
-                      filters={advancedFilters}
-                      onSuccess={() => {
-                        notifications.show({
-                          title: t('accountManagement.export.success'),
-                          message: t('accountManagement.export.success'),
-                          color: 'green',
-                        });
-                      }}
-                      onError={(error) => {
-                        notifications.show({
-                          title: t('accountManagement.export.error'),
-                          message: error.message || t('accountManagement.export.error'),
-                          color: 'red',
-                        });
-                      }}
-                    />
-                  </Group>
+                {/* Account Table Section - Premium Card */}
+                <Box className={`${styles.animateFadeIn} ${styles.animateDelay3}`}>
                   <Paper
-                    p={{ base: 'sm', md: 'md' }}
-                    withBorder
                     style={{
-                      background: 'var(--emr-text-inverse)',
-                      borderRadius: 'var(--emr-border-radius-lg)',
-                      boxShadow: 'var(--emr-shadow-sm)',
-                      border: '1px solid var(--emr-gray-200)',
+                      background: 'rgba(255, 255, 255, 0.98)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
+                      borderRadius: '16px',
+                      border: '1px solid rgba(255, 255, 255, 0.6)',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06)',
                       overflow: 'hidden',
                     }}
                   >
-                    <AccountTable
-                      accounts={filteredAccounts as AccountRowExtended[]}
-                      onEdit={handleEdit}
-                      onDelete={handleDelete}
-                      onDeactivate={openDeactivationModal}
-                      onReactivate={handleReactivate}
-                      onResendInvitation={handleResendInvitation}
-                      onGenerateLink={handleGenerateLink}
-                      loading={loading}
-                      hasActiveFilters={filters.searchQuery !== '' || filters.statusFilter !== 'all' || filters.roleFilter !== ''}
-                      selectedIds={selectedIds}
-                      onSelectionChange={setSelection}
-                    />
+                    {/* Table Header */}
+                    <Group
+                      justify="space-between"
+                      align="center"
+                      wrap="wrap"
+                      gap="sm"
+                      p="lg"
+                      style={{
+                        background: 'linear-gradient(180deg, #fafbfc 0%, #f5f7fa 100%)',
+                        borderBottom: '1px solid var(--emr-gray-200)',
+                      }}
+                    >
+                      <Group gap="md" align="center">
+                        <Box className={styles.sectionIcon}>
+                          <IconUsers size={18} stroke={2} />
+                        </Box>
+                        <Text fw={600} size="sm" c="var(--emr-text-primary)" style={{ letterSpacing: '-0.2px' }}>
+                          {t('accountManagement.table.userList')}
+                        </Text>
+                      </Group>
+                      <ExportButton
+                        data={filteredAccounts as AccountRowExtended[]}
+                        exportedBy={medplum.getProfile()?.name?.[0]?.text || 'Unknown User'}
+                        filters={advancedFilters}
+                        onSuccess={() => {
+                          notifications.show({
+                            title: t('accountManagement.export.success'),
+                            message: t('accountManagement.export.success'),
+                            color: 'green',
+                          });
+                        }}
+                        onError={(error) => {
+                          notifications.show({
+                            title: t('accountManagement.export.error'),
+                            message: error.message || t('accountManagement.export.error'),
+                            color: 'red',
+                          });
+                        }}
+                      />
+                    </Group>
+                    {/* Table Content */}
+                    <Box p={{ base: 'sm', md: 'md' }}>
+                      <AccountTable
+                        accounts={filteredAccounts as AccountRowExtended[]}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onDeactivate={openDeactivationModal}
+                        onReactivate={handleReactivate}
+                        onResendInvitation={handleResendInvitation}
+                        onGenerateLink={handleGenerateLink}
+                        loading={loading}
+                        hasActiveFilters={filters.searchQuery !== '' || filters.statusFilter !== 'all' || filters.roleFilter !== ''}
+                        selectedIds={selectedIds}
+                        onSelectionChange={setSelection}
+                      />
+                    </Box>
                   </Paper>
                 </Box>
               </Stack>
@@ -612,23 +661,54 @@ export function AccountManagementView(): JSX.Element {
 
             <Tabs.Panel value="permissions" pt="md">
               <Stack gap={24}>
-                {/* Role Selector for Permission Matrix */}
+                {/* Premium Role Selector Card */}
                 <Paper
-                  p={24}
-                  withBorder
+                  p={0}
                   style={{
-                    background: 'var(--emr-text-inverse)',
-                    borderRadius: 'var(--emr-border-radius-lg)',
-                    boxShadow: 'var(--emr-shadow-card)',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    borderRadius: '20px',
+                    border: '1px solid rgba(255, 255, 255, 0.6)',
+                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(26, 54, 93, 0.08)',
+                    overflow: 'hidden',
                   }}
                 >
-                  <Stack gap="md">
-                    <Text fw={600} size="lg" c="var(--emr-primary)">
-                      {t('accountManagement.permissions.matrix')}
-                    </Text>
-                    <Text size="sm" c="dimmed">
-                      Select a role to view and edit its permissions. Changes are saved when you click the Save button.
-                    </Text>
+                  {/* Card Header with Gradient */}
+                  <Box
+                    style={{
+                      background: 'linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)',
+                      padding: '20px 24px',
+                    }}
+                  >
+                    <Group gap={14} align="center">
+                      <Box
+                        style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: '12px',
+                          background: 'rgba(255, 255, 255, 0.15)',
+                          backdropFilter: 'blur(8px)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <IconKey size={22} color="white" />
+                      </Box>
+                      <Box>
+                        <Text fw={700} size="lg" c="white" style={{ letterSpacing: '-0.3px' }}>
+                          {t('accountManagement.permissions.matrix')}
+                        </Text>
+                        <Text size="xs" c="rgba(255, 255, 255, 0.8)" mt={2}>
+                          {t('common.selectRoleHint')}
+                        </Text>
+                      </Box>
+                    </Group>
+                  </Box>
+
+                  {/* Role Selector Body */}
+                  <Box p={24}>
                     <Select
                       label={t('roleManagement.roleName')}
                       placeholder={t('roleManagement.searchRoles')}
@@ -642,26 +722,40 @@ export function AccountManagementView(): JSX.Element {
                       clearable
                       size="md"
                       disabled={rolesLoading}
+                      leftSection={<IconShieldLock size={18} style={{ color: 'var(--emr-gray-400)' }} />}
                       styles={{
                         input: {
-                          minHeight: '44px',
+                          minHeight: '48px',
+                          borderRadius: '12px',
+                          border: '1.5px solid var(--emr-gray-200)',
+                          background: 'white',
+                          transition: 'all 0.2s ease',
+                          '&:focus': {
+                            borderColor: 'var(--emr-secondary)',
+                            boxShadow: '0 0 0 3px rgba(43, 108, 176, 0.15)',
+                          },
+                        },
+                        label: {
+                          fontWeight: 600,
+                          color: 'var(--emr-text-primary)',
+                          marginBottom: '8px',
                         },
                       }}
                     />
-                  </Stack>
+                  </Box>
                 </Paper>
 
                 {/* Permission Matrix */}
                 {selectedRoleId && (
                   <Paper
                     p={24}
-                    withBorder
                     style={{
-                      background: 'var(--emr-text-inverse)',
-                      borderRadius: 'var(--emr-border-radius-lg)',
-                      boxShadow: 'var(--emr-shadow-card)',
-                      borderTop: '4px solid transparent',
-                      borderImage: 'var(--emr-gradient-submenu) 1',
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      borderRadius: '20px',
+                      border: '1px solid rgba(255, 255, 255, 0.6)',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(26, 54, 93, 0.08)',
                     }}
                   >
                     <PermissionMatrix
@@ -676,6 +770,14 @@ export function AccountManagementView(): JSX.Element {
                             title: t('accountManagement.edit.success'),
                             message: t('roleManagement.roleUpdatedSuccess'),
                             color: 'green',
+                            styles: {
+                              root: {
+                                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                border: 'none',
+                              },
+                              title: { color: 'white' },
+                              description: { color: 'white' },
+                            },
                           });
                         } catch (error) {
                           notifications.show({
@@ -690,21 +792,54 @@ export function AccountManagementView(): JSX.Element {
                   </Paper>
                 )}
 
-                {/* Empty state when no role selected */}
+                {/* Premium Empty State */}
                 {!selectedRoleId && (
                   <Paper
-                    p={48}
-                    withBorder
+                    p={0}
                     style={{
-                      background: 'var(--emr-text-inverse)',
-                      borderRadius: 'var(--emr-border-radius-lg)',
-                      textAlign: 'center',
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%)',
+                      backdropFilter: 'blur(20px)',
+                      WebkitBackdropFilter: 'blur(20px)',
+                      borderRadius: '20px',
+                      border: '1px solid rgba(255, 255, 255, 0.6)',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(26, 54, 93, 0.08)',
+                      overflow: 'hidden',
                     }}
                   >
-                    <IconKey size={48} style={{ color: 'var(--emr-gray-400)', marginBottom: '16px' }} />
-                    <Text size="lg" c="dimmed">
-                      Select a role above to view and edit its permissions
-                    </Text>
+                    <Box
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '64px 32px',
+                        textAlign: 'center',
+                        background: 'linear-gradient(180deg, rgba(99, 179, 237, 0.03) 0%, transparent 100%)',
+                      }}
+                    >
+                      <Box
+                        style={{
+                          width: '100px',
+                          height: '100px',
+                          borderRadius: '24px',
+                          background: 'linear-gradient(135deg, rgba(43, 108, 176, 0.08) 0%, rgba(99, 179, 237, 0.08) 100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: '24px',
+                          border: '2px dashed var(--emr-gray-300)',
+                          animation: 'pulse 2s ease-in-out infinite',
+                        }}
+                      >
+                        <IconKey size={44} style={{ color: 'var(--emr-secondary)', opacity: 0.7 }} />
+                      </Box>
+                      <Text fw={700} size="lg" c="var(--emr-text-primary)" mb={8} style={{ letterSpacing: '-0.3px' }}>
+                        {t('accountManagement.permissions.title')}
+                      </Text>
+                      <Text size="sm" c="var(--emr-gray-500)" maw={360} lh={1.6}>
+                        {t('common.noRoleSelected')}
+                      </Text>
+                    </Box>
                   </Paper>
                 )}
               </Stack>
@@ -720,15 +855,62 @@ export function AccountManagementView(): JSX.Element {
       {/* Floating Action Button (Desktop only) */}
       <CreateAccountFAB onClick={() => setCreateModalOpened(true)} />
 
-      {/* Create Account Modal */}
+      {/* Create Account Modal - Premium Ultra-Wide Design */}
       <Modal
         opened={createModalOpened}
         onClose={() => setCreateModalOpened(false)}
-        title={t('accountManagement.create.title')}
-        size="lg"
+        size={isMobile ? '100%' : 1140}
+        fullScreen={isMobile}
         centered
+        padding={0}
+        radius={isMobile ? 0 : 24}
+        withCloseButton={false}
+        transitionProps={{ transition: 'scale-y', duration: 300 }}
+        overlayProps={{
+          backgroundOpacity: 0.4,
+          blur: 8,
+        }}
+        styles={{
+          content: {
+            background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+            overflow: 'hidden',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+          },
+          body: {
+            padding: 0,
+          },
+          inner: {
+            padding: isMobile ? 0 : '20px',
+          },
+        }}
       >
-        <AccountForm onSubmit={handleCreate} loading={creating} />
+        {/* Custom Premium Header - Ultra Wide */}
+        <Box className={modalStyles.modalHeader}>
+          <Group gap={18} align="center">
+            <Box className={modalStyles.modalTitleIcon}>
+              <IconUserPlus size={28} stroke={1.8} color="white" />
+            </Box>
+            <Box>
+              <Text className={modalStyles.modalTitle} component="span" style={{ fontSize: '22px' }}>
+                {t('accountManagement.create.title')}
+              </Text>
+              <Text className={modalStyles.modalSubtitle}>
+                {t('accountManagement.create.subtitle') || 'Fill in the details to create a new user account'}
+              </Text>
+            </Box>
+          </Group>
+          <CloseButton
+            onClick={() => setCreateModalOpened(false)}
+            className={modalStyles.modalCloseButton}
+            icon={<IconX size={20} />}
+            aria-label="Close"
+          />
+        </Box>
+
+        {/* Form Body */}
+        <Box className={modalStyles.modalBody}>
+          <AccountForm onSubmit={handleCreate} loading={creating} />
+        </Box>
       </Modal>
 
       {/* Edit Modal */}

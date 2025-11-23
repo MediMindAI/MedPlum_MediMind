@@ -1,15 +1,17 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Stack, Title, Box, Paper } from '@mantine/core';
-import { useState } from 'react';
-import { IconUserPlus } from '@tabler/icons-react';
+import { Stack, Box, Text, Badge } from '@mantine/core';
+import { useState, useEffect } from 'react';
+import { IconUserPlus, IconUsers, IconSearch } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { PatientForm } from '../../components/registration/PatientForm';
 import { PatientTable } from '../../components/registration/PatientTable';
-import { SearchToggleButton } from '../../components/registration/SearchToggleButton';
 import { SearchPanel } from '../../components/registration/SearchPanel';
 import { RegistrationVisitModal } from '../../components/registration/RegistrationVisitModal';
+
+// Import premium styles
+import '../../styles/registration-premium.css';
 
 interface SearchFilters {
   personalId?: string;
@@ -19,12 +21,14 @@ interface SearchFilters {
 }
 
 /**
- * Professional Unified Registration View
- * Modern, production-ready layout:
- * - Blue gradient search button on left border
- * - Slide-out search panel from left (separate overlay with different styling)
- * - Full-width registration form (patient addition window)
- * - Patient table (always visible below)
+ * Premium Unified Registration View
+ * Aesthetic: "Clinical Elegance with Georgian Soul"
+ * Features:
+ * - Refined card-based layout with elegant shadows
+ * - Staggered fade-in animations
+ * - Premium header with decorative accent
+ * - Floating quick stats panel (desktop)
+ * - Smooth micro-interactions throughout
  */
 export function UnifiedRegistrationView() {
   const { t } = useTranslation();
@@ -33,6 +37,14 @@ export function UnifiedRegistrationView() {
   const [searchPanelOpen, setSearchPanelOpen] = useState(false);
   const [visitModalOpen, setVisitModalOpen] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
+  const [patientCount, setPatientCount] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Trigger entrance animation
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handlePatientChange = () => {
     setRefreshKey((prev) => prev + 1);
@@ -41,13 +53,9 @@ export function UnifiedRegistrationView() {
   const handleSearch = (filters: SearchFilters) => {
     setSearchFilters(filters);
     setRefreshKey((prev) => prev + 1);
-    setSearchPanelOpen(false); // Close panel after search
+    setSearchPanelOpen(false);
   };
 
-  /**
-   * Handle patient row click - opens registration visit modal
-   * @param patientId
-   */
   const handlePatientClick = (patientId: string) => {
     setSelectedPatientId(patientId);
     setVisitModalOpen(true);
@@ -59,60 +67,101 @@ export function UnifiedRegistrationView() {
   };
 
   return (
-    <Stack gap="xl" p="xl" style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+    <Box className="registration-page">
       {/* Search Panel - Slide-out Overlay */}
       <SearchPanel opened={searchPanelOpen} onClose={() => setSearchPanelOpen(false)} onSearch={handleSearch} />
 
-      {/* Registration Form Section - Full Width */}
-      <Paper
-        shadow="sm"
-        p="xl"
-        radius="md"
+<Stack
+        gap="xl"
         style={{
-          background: 'white',
-          border: '1px solid var(--emr-gray-200)',
-          position: 'relative',
+          width: '100%',
+          margin: '0 auto',
+          opacity: isLoaded ? 1 : 0,
+          transform: isLoaded ? 'translateY(0)' : 'translateY(20px)',
+          transition: 'all 400ms cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
-        {/* Search Toggle Button - On Left Border of Paper */}
-        <SearchToggleButton
-          onClick={() => setSearchPanelOpen(true)}
-          label={t('registration.sections.patientSearch') || 'ძიება'}
-        />
-        {/* Section Header */}
-        <Box mb="xl" pb="md" style={{ borderBottom: '2px solid var(--emr-gray-200)' }}>
-          <Box style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <IconUserPlus size={28} color="var(--emr-primary)" stroke={2} />
-            <Title
-              order={2}
+        {/* Registration Form Card - Premium Design */}
+        <Box className="registration-card">
+          {/* Premium Header with Decorative Accent */}
+          <Box className="registration-header">
+            <Box className="registration-header-icon">
+              <IconUserPlus size={24} stroke={2} />
+            </Box>
+            <Box>
+              <Text className="registration-header-title">
+                {t('registration.sections.addPatient') || 'პაციენტის დამატება'}
+              </Text>
+              <Text className="registration-header-subtitle">
+                {t('registration.headerSubtitle') || 'შეავსეთ პაციენტის მონაცემები რეგისტრაციისთვის'}
+              </Text>
+            </Box>
+
+            {/* Search Badge Button */}
+            <Badge
+              size="lg"
+              radius="md"
+              variant="light"
+              leftSection={<IconSearch size={14} />}
+              onClick={() => setSearchPanelOpen(true)}
               style={{
-                color: 'var(--emr-primary)',
-                fontWeight: 700,
-                fontSize: '22px',
-                letterSpacing: '-0.3px',
+                marginLeft: 'auto',
+                cursor: 'pointer',
+                background: 'rgba(255, 255, 255, 0.15)',
+                color: 'white',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(8px)',
+                padding: '8px 16px',
+                height: 'auto',
+                transition: 'all 200ms ease',
+                zIndex: 1,
+              }}
+              styles={{
+                root: {
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.25)',
+                    transform: 'translateY(-1px)',
+                  },
+                },
               }}
             >
-              {t('registration.sections.addPatient') || 'პაციენტის დამატება'}
-            </Title>
+              {t('registration.sections.patientSearch') || 'ძიება'}
+            </Badge>
+          </Box>
+
+          {/* Form Content Area */}
+          <Box className="registration-form-content">
+            <PatientForm onSuccess={handlePatientChange} />
           </Box>
         </Box>
 
-        {/* Patient Form - Full Width */}
-        <PatientForm onSuccess={handlePatientChange} />
-      </Paper>
+        {/* Patient Table Card - Premium Design */}
+        <Box
+          className="registration-card"
+          style={{
+            animationDelay: '150ms',
+          }}
+        >
+          {/* Table Header */}
+          <Box className="patient-table-header">
+            <Box className="patient-table-title">
+              <IconUsers size={18} stroke={2} color="var(--emr-secondary)" />
+              <span>{t('registration.registeredPatients') || 'რეგისტრირებული პაციენტები'}</span>
+            </Box>
+            <Box className="patient-count-badge">{patientCount}</Box>
+          </Box>
 
-      {/* Patient Table Section */}
-      <Paper
-        shadow="sm"
-        p="xl"
-        radius="md"
-        style={{
-          background: 'white',
-          border: '1px solid var(--emr-gray-200)',
-        }}
-      >
-        <PatientTable key={refreshKey} searchFilters={searchFilters} onPatientClick={handlePatientClick} />
-      </Paper>
+          {/* Table Content */}
+          <Box p="md">
+            <PatientTable
+              key={refreshKey}
+              searchFilters={searchFilters}
+              onPatientClick={handlePatientClick}
+              onCountChange={setPatientCount}
+            />
+          </Box>
+        </Box>
+      </Stack>
 
       {/* Registration Visit Modal */}
       <RegistrationVisitModal
@@ -121,6 +170,6 @@ export function UnifiedRegistrationView() {
         patientId={selectedPatientId}
         onSuccess={handleVisitModalSuccess}
       />
-    </Stack>
+    </Box>
   );
 }

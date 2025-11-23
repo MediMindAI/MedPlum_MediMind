@@ -3,30 +3,40 @@
 
 import { Box, UnstyledButton } from '@mantine/core';
 import { useNavigate, useLocation } from 'react-router-dom';
+import {
+  IconUserPlus,
+  IconHistory,
+  IconList,
+  IconSettings,
+  IconSend,
+  IconChartBar,
+} from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
+import styles from './EMRMainMenu.module.css';
 
 interface MenuItem {
   key: string;
   translationKey: string;
   path: string;
+  icon: React.ReactNode;
 }
 
 const menuItems: MenuItem[] = [
-  { key: 'registration', translationKey: 'menu.registration', path: '/emr/registration' },
-  { key: 'patientHistory', translationKey: 'menu.patientHistory', path: '/emr/patient-history' },
-  { key: 'nomenclature', translationKey: 'menu.nomenclature', path: '/emr/nomenclature' },
-  { key: 'administration', translationKey: 'menu.administration', path: '/emr/administration' },
-  { key: 'forward', translationKey: 'menu.forward', path: '/emr/forward' },
-  { key: 'reports', translationKey: 'menu.reports', path: '/emr/reports' },
+  { key: 'registration', translationKey: 'menu.registration', path: '/emr/registration', icon: <IconUserPlus size={15} /> },
+  { key: 'patientHistory', translationKey: 'menu.patientHistory', path: '/emr/patient-history', icon: <IconHistory size={15} /> },
+  { key: 'nomenclature', translationKey: 'menu.nomenclature', path: '/emr/nomenclature', icon: <IconList size={15} /> },
+  { key: 'administration', translationKey: 'menu.administration', path: '/emr/administration', icon: <IconSettings size={15} /> },
+  { key: 'forward', translationKey: 'menu.forward', path: '/emr/forward', icon: <IconSend size={15} /> },
+  { key: 'reports', translationKey: 'menu.reports', path: '/emr/reports', icon: <IconChartBar size={15} /> },
 ];
 
 /**
- * EMRMainMenu - Row 2 left side (horizontal main menu with 6 items)
+ * EMRMainMenu - Premium horizontal navigation with refined aesthetics
  *
  * Features:
- * - 6 main menu items
- * - Blue gradient active states
- * - Navigation to main sections
+ * - 6 main menu items with icons
+ * - Elegant active states with gradient
+ * - Smooth hover transitions
  * - Multilingual support
  */
 export function EMRMainMenu() {
@@ -39,47 +49,19 @@ export function EMRMainMenu() {
   };
 
   return (
-    <Box style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+    <Box className={styles.menuContainer}>
       {menuItems.map((item) => {
         const active = isActive(item.path);
         return (
           <UnstyledButton
             key={item.key}
             onClick={() => navigate(item.path)}
-            style={{
-              padding: '6px 14px',
-              borderRadius: '6px',
-              fontSize: 'var(--emr-font-base)',
-              fontWeight: 'var(--emr-font-semibold)',
-              cursor: 'pointer',
-              color: active ? 'white' : '#374151',
-              background: active
-                ? 'linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%)'
-                : 'transparent',
-              transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-              border: 'none',
-              boxShadow: active ? '0 3px 8px rgba(26, 54, 93, 0.3)' : 'none',
-              transform: active ? 'translateY(-0.5px)' : 'none',
-              letterSpacing: '-0.1px',
-            }}
-            onMouseEnter={(e) => {
-              if (!active) {
-                e.currentTarget.style.backgroundColor = '#f3f4f6';
-                e.currentTarget.style.color = '#1a365d';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!active) {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#374151';
-                e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = 'none';
-              }
-            }}
+            className={`${styles.menuItem} ${active ? styles.active : ''}`}
+            data-testid={`menu-${item.key}`}
           >
-            {t(item.translationKey)}
+            <span className={styles.menuIcon}>{item.icon}</span>
+            <span className={styles.menuLabel}>{t(item.translationKey)}</span>
+            {active && <span className={styles.activeIndicator} />}
           </UnstyledButton>
         );
       })}

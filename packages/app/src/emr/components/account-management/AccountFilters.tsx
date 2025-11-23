@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Paper, Group, SegmentedControl, ActionIcon, Text, Stack, Box } from '@mantine/core';
+import { Group, SegmentedControl, ActionIcon, Box } from '@mantine/core';
 import { IconSearch, IconX, IconFilter } from '@tabler/icons-react';
 import { useDebouncedValue, useMediaQuery } from '@mantine/hooks';
 import { useState, useEffect } from 'react';
@@ -80,108 +80,97 @@ export function AccountFilters({
   const hasActiveFilters = filters.searchQuery !== '' || filters.statusFilter !== 'all' || filters.roleFilter !== '';
 
   return (
-    <Paper
-      p="lg"
-      withBorder
-      style={{
-        background: 'var(--emr-text-inverse)',
-        borderRadius: 'var(--emr-border-radius-lg)',
-        boxShadow: 'var(--emr-shadow-sm)',
-        border: '1px solid var(--emr-gray-200)',
-        transition: 'var(--emr-transition-smooth)',
-      }}
-    >
-      <Stack gap="md">
-        {/* Search Row */}
-        <Group gap="md" wrap={isMobile ? 'wrap' : 'nowrap'} align="center">
-          {/* Search Input */}
-          <Box style={{ flex: 1, minWidth: isMobile ? '100%' : '240px' }}>
-            <EMRTextInput
-              placeholder={t('accountManagement.filters.searchPlaceholder')}
-              leftSection={<IconSearch size={16} color="var(--emr-gray-400)" />}
-              rightSection={
-                localSearchQuery && (
-                  <ActionIcon
-                    onClick={handleClearSearch}
-                    variant="subtle"
-                    size="sm"
-                    color="gray"
-                    style={{ marginRight: '4px' }}
-                  >
-                    <IconX size={14} />
-                  </ActionIcon>
-                )
-              }
-              value={localSearchQuery}
-              onChange={(value) => setLocalSearchQuery(value)}
-              style={{ width: '100%' }}
-            />
-          </Box>
+    <Group gap="md" wrap={isMobile ? 'wrap' : 'nowrap'} align="center">
+      {/* Search Input - Premium Design */}
+      <Box style={{ flex: 1, minWidth: isMobile ? '100%' : '280px' }}>
+        <EMRTextInput
+          placeholder={t('accountManagement.filters.searchPlaceholder')}
+          leftSection={<IconSearch size={18} color="var(--emr-gray-400)" />}
+          rightSection={
+            localSearchQuery && (
+              <ActionIcon
+                onClick={handleClearSearch}
+                variant="subtle"
+                size="sm"
+                color="gray"
+                style={{ marginRight: '4px' }}
+              >
+                <IconX size={14} />
+              </ActionIcon>
+            )
+          }
+          value={localSearchQuery}
+          onChange={(value) => setLocalSearchQuery(value)}
+          style={{ width: '100%' }}
+        />
+      </Box>
 
-          {/* Status Filter */}
-          <SegmentedControl
-            data={[
-              { label: t('accountManagement.filters.all'), value: 'all' },
-              { label: t('accountManagement.filters.active'), value: 'active' },
-              { label: t('accountManagement.filters.inactive'), value: 'inactive' },
-            ]}
-            value={filters.statusFilter}
-            onChange={handleStatusChange}
-            size="sm"
-            styles={{
-              root: {
-                background: 'var(--emr-gray-100)',
-                borderRadius: 'var(--emr-border-radius)',
-                padding: '3px',
-              },
-              indicator: {
-                background: 'var(--emr-gradient-primary)',
-                borderRadius: 'var(--emr-border-radius-sm)',
-                boxShadow: 'var(--emr-shadow-sm)',
-              },
-              label: {
-                fontSize: '12px',
-                fontWeight: 500,
-                padding: '6px 12px',
-                '&[data-active]': {
-                  color: 'var(--emr-text-inverse)',
-                },
-              },
-            }}
-          />
+      {/* Status Filter - Premium Segmented Control */}
+      <SegmentedControl
+        data={[
+          { label: t('accountManagement.filters.all'), value: 'all' },
+          { label: t('accountManagement.filters.active'), value: 'active' },
+          { label: t('accountManagement.filters.inactive'), value: 'inactive' },
+        ]}
+        value={filters.statusFilter}
+        onChange={handleStatusChange}
+        size="sm"
+        styles={{
+          root: {
+            background: 'var(--emr-gray-100)',
+            borderRadius: '12px',
+            padding: '4px',
+          },
+          indicator: {
+            background: 'var(--emr-gradient-primary)',
+            borderRadius: '8px',
+            boxShadow: '0 2px 8px rgba(26, 54, 93, 0.2)',
+          },
+          label: {
+            fontSize: '13px',
+            fontWeight: 600,
+            padding: '8px 16px',
+            transition: 'all 0.2s ease',
+            '&[data-active]': {
+              color: 'white',
+            },
+          },
+        }}
+      />
 
-          {/* Role Filter */}
-          <Box style={{ minWidth: isMobile ? '100%' : '180px' }}>
-            <EMRSelect
-              placeholder={t('accountManagement.filters.rolePlaceholder')}
-              leftSection={<IconFilter size={14} color="var(--emr-gray-400)" />}
-              data={[{ value: '', label: t('accountManagement.filters.allRoles') }, ...roleOptions]}
-              value={filters.roleFilter}
-              onChange={handleRoleChange}
-              clearable
-              searchable
-              size="sm"
-              style={{ width: '100%' }}
-            />
-          </Box>
+      {/* Role Filter - Premium Select */}
+      <Box style={{ minWidth: isMobile ? '100%' : '200px' }}>
+        <EMRSelect
+          placeholder={t('accountManagement.filters.rolePlaceholder')}
+          leftSection={<IconFilter size={16} color="var(--emr-gray-400)" />}
+          data={[{ value: '', label: t('accountManagement.filters.allRoles') }, ...roleOptions]}
+          value={filters.roleFilter}
+          onChange={handleRoleChange}
+          clearable
+          searchable
+          size="sm"
+          style={{ width: '100%' }}
+        />
+      </Box>
 
-          {/* Result Count Badge */}
-          <Text
-            size="xs"
-            fw={500}
-            style={{
-              whiteSpace: 'nowrap',
-              background: hasActiveFilters ? 'var(--emr-light-accent)' : 'var(--emr-gray-100)',
-              color: hasActiveFilters ? 'var(--emr-primary)' : 'var(--emr-gray-600)',
-              padding: '6px 10px',
-              borderRadius: 'var(--emr-border-radius)',
-              transition: 'var(--emr-transition-fast)',
-            }}
-          >
-            {t('accountManagement.filters.showing', { count: resultCount, total: totalCount })}
-          </Text>
-        </Group>
-      </Stack>
-    </Paper>
+      {/* Result Count Badge - Premium Design */}
+      <Box
+        style={{
+          whiteSpace: 'nowrap',
+          background: hasActiveFilters
+            ? 'linear-gradient(135deg, rgba(99, 179, 237, 0.15) 0%, rgba(43, 108, 176, 0.1) 100%)'
+            : 'var(--emr-gray-100)',
+          color: hasActiveFilters ? 'var(--emr-primary)' : 'var(--emr-gray-600)',
+          padding: '8px 14px',
+          borderRadius: '20px',
+          fontSize: '12px',
+          fontWeight: 600,
+          border: hasActiveFilters ? '1px solid rgba(99, 179, 237, 0.2)' : '1px solid transparent',
+          transition: 'all 0.25s ease',
+        }}
+      >
+        {t('accountManagement.filters.showing', { count: resultCount, total: totalCount })}
+      </Box>
+    </Group>
   );
 }

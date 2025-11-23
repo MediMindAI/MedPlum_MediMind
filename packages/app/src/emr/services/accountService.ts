@@ -87,6 +87,22 @@ export async function createPractitioner(
     }
   }
 
+  // Create audit event for account creation
+  if (practitionerId) {
+    const displayName = `${values.firstName} ${values.lastName}`.trim();
+    await createAuditEvent(
+      medplum,
+      'C',
+      { reference: `Practitioner/${practitionerId}`, display: displayName },
+      0, // success
+      'Account created',
+      {
+        email: values.email,
+        role: values.role || 'none',
+      }
+    );
+  }
+
   return membership;
 }
 
@@ -279,7 +295,8 @@ export async function deactivatePractitioner(
   await createAuditEvent(
     medplum,
     'D',
-    updated,
+    { reference: `Practitioner/${updated.id}`, display: getPractitionerName(updated) },
+    0, // success
     reason ? `Account deactivated: ${reason}` : 'Account deactivated',
     auditDetails
   );
@@ -324,7 +341,8 @@ export async function reactivatePractitioner(
   await createAuditEvent(
     medplum,
     'U',
-    updated,
+    { reference: `Practitioner/${updated.id}`, display: getPractitionerName(updated) },
+    0, // success
     reason ? `Account reactivated: ${reason}` : 'Account reactivated',
     auditDetails
   );
@@ -481,10 +499,14 @@ export async function searchAccounts(
   const bundle = await medplum.search('Practitioner', searchParams);
   const practitioners = (bundle.entry?.map((e) => e.resource).filter(Boolean) as Practitioner[]) || [];
 
-  // Convert to AccountRowExtended with invitation status
+  // Convert to AccountRowExtended
+  // Note: Invitation status fetching is disabled because the Medplum server
+  // does not support searching Invite resources by membership:Practitioner.
+  // This caused 400 Bad Request errors for every account loaded.
+  // To enable invitation status, the server would need to support this search parameter.
   const accounts: AccountRowExtended[] = [];
   for (const practitioner of practitioners) {
-    const row = await practitionerToAccountRow(medplum, practitioner, true);
+    const row = await practitionerToAccountRow(medplum, practitioner, false);
     accounts.push(row);
   }
 

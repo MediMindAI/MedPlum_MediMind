@@ -1,79 +1,113 @@
 /**
- * EMR Main Menu Component Styles
+ * EMRMainMenu Component Styles - Premium Medical Design
  *
- * Provides horizontal layout for 6 main menu items with active states
- * - Horizontal arrangement of menu items
- * - Clear visual feedback for active/inactive states
- * - Hover effects for better UX
- * - Consistent with EMR UI design system
+ * Refined horizontal navigation with:
+ * - Elegant pill-style menu items
+ * - Smooth gradient active states
+ * - Subtle hover animations
+ * - Clean visual hierarchy
  */
 
-.mainMenu {
+.menuContainer {
   /* Horizontal layout */
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 4px;
-
-  /* Spacing and sizing */
-  height: var(--emr-mainmenu-height);
-  padding: 0 16px;
-  width: 100%;
-
-  /* Background and border */
-  background-color: var(--emr-mainmenu-bg);
-  border-bottom: 1px solid var(--emr-border-color);
+  padding: 0;
 }
 
-/* Menu item button styling */
+/* Menu item styling */
 .menuItem {
   /* Layout */
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
 
   /* Spacing */
-  padding: 10px 20px;
+  padding: 7px 14px;
   margin: 0;
 
   /* Typography */
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
-  color: var(--emr-gray-500);
+  color: var(--emr-gray-600);
   text-align: center;
   white-space: nowrap;
+  letter-spacing: -0.1px;
 
   /* Visual styling */
   background-color: transparent;
   border: none;
-  border-radius: var(--emr-border-radius);
+  border-radius: 8px;
   cursor: pointer;
 
-  /* Transitions */
-  transition: var(--emr-transition-base);
+  /* Smooth transitions */
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Prevent text selection */
   user-select: none;
+
+  /* Georgian text support */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Georgian', 'Noto Sans', sans-serif;
+}
+
+/* Menu icon */
+.menuIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Menu label */
+.menuLabel {
+  display: inline;
 }
 
 /* Hover state for inactive menu items */
 .menuItem:hover:not(.active) {
-  background-color: var(--emr-light-accent);
-  color: var(--emr-text-primary);
+  background-color: rgba(43, 108, 176, 0.06);
+  color: var(--emr-secondary);
+}
+
+.menuItem:hover:not(.active) .menuIcon {
+  opacity: 1;
+  transform: scale(1.05);
 }
 
 /* Active menu item styling */
 .menuItem.active {
-  background: var(--emr-gradient-primary);
-  color: var(--emr-text-inverse);
+  background: linear-gradient(135deg, var(--emr-primary) 0%, var(--emr-secondary) 100%);
+  color: white;
   font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(26, 54, 93, 0.25);
 }
 
-/* Active menu item hover - slightly enhanced gradient */
+.menuItem.active .menuIcon {
+  opacity: 1;
+}
+
+/* Active indicator dot */
+.activeIndicator {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+/* Active menu item hover */
 .menuItem.active:hover {
-  background: var(--emr-gradient-secondary);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(26, 54, 93, 0.3);
+  transform: translateY(-1px);
 }
 
 /* Focus styles for accessibility */
@@ -85,55 +119,45 @@
 
 /* Active focus state */
 .menuItem.active:focus-visible {
-  outline-color: var(--emr-text-inverse);
+  outline-color: white;
+  outline-offset: 3px;
 }
 
-/* Georgian text rendering support */
-.menuItem {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Georgian', 'Noto Sans', sans-serif;
+/* Press state */
+.menuItem:active:not(.active) {
+  transform: scale(0.98);
 }
 
-/* Responsive adjustments for smaller screens */
+/* Responsive adjustments */
 @media (max-width: 1024px) {
   .menuItem {
-    font-size: 14px;
-    padding: 8px 16px;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .menuIcon {
+    display: none;
   }
 }
 
 @media (max-width: 768px) {
-  .mainMenu {
+  .menuContainer {
     gap: 2px;
-    padding: 6px 12px;
     overflow-x: auto;
     overflow-y: hidden;
+    padding: 0 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .menuContainer::-webkit-scrollbar {
+    display: none;
   }
 
   .menuItem {
-    font-size: 13px;
-    padding: 7px 12px;
+    font-size: 11px;
+    padding: 5px 8px;
     flex-shrink: 0;
   }
 }
-
-/* Dark mode disabled - keeping the menu always white like original Medplum */
-/* @media (prefers-color-scheme: dark) {
-  .mainMenu {
-    background-color: var(--mantine-color-dark-7);
-    border-bottom-color: var(--mantine-color-dark-5);
-  }
-
-  .menuItem {
-    color: var(--mantine-color-gray-4);
-  }
-
-  .menuItem:hover:not(.active) {
-    background-color: var(--mantine-color-dark-6);
-    color: var(--mantine-color-gray-2);
-  }
-
-  .menuItem.active {
-    background-color: var(--mantine-color-blue-6);
-    color: var(--mantine-color-white);
-  }
-} */

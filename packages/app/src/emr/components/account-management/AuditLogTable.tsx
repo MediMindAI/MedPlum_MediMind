@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Table, Badge, Text, Skeleton, Stack, Pagination, Group, Box } from '@mantine/core';
-import { IconFileAlert } from '@tabler/icons-react';
+import { Text, Stack, Pagination, Box } from '@mantine/core';
+import { IconFileSearch, IconCheck, IconAlertTriangle, IconX } from '@tabler/icons-react';
 import type { AuditLogEntryExtended } from '../../types/account-management';
 import { useTranslation } from '../../hooks/useTranslation';
+import styles from '../../views/account-management/AuditLog.module.css';
 
 /**
  * Props for AuditLogTable component
@@ -22,68 +23,92 @@ export interface AuditLogTableProps {
   pageSize?: number;
   /** Callback when page changes */
   onPageChange?: (page: number) => void;
+  /** Callback when a row is clicked */
+  onRowClick?: (event: AuditLogEntryExtended) => void;
 }
 
 /**
- * Format ISO timestamp to readable date/time
+ * Format ISO timestamp to readable date/time with two lines
  * @param timestamp - ISO 8601 timestamp
- * @returns Formatted date string
+ * @returns Object with time and date strings
  */
-function formatTimestamp(timestamp: string): string {
+function formatTimestamp(timestamp: string): { time: string; date: string } {
   try {
-    const date = new Date(timestamp);
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
+    const dateObj = new Date(timestamp);
+    const time = dateObj.toLocaleString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
+      second: '2-digit',
       hour12: false,
     });
+    const date = dateObj.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+    });
+    return { time, date };
   } catch {
-    return timestamp;
+    return { time: timestamp, date: '' };
   }
 }
 
 /**
- * Get badge color based on outcome code
- * @param outcome - Outcome code ('0', '4', '8', '12')
- * @returns Mantine color string
- */
-function getOutcomeColor(outcome: string): string {
-  switch (outcome) {
-    case '0':
-      return 'green';
-    case '4':
-      return 'yellow';
-    case '8':
-      return 'orange';
-    case '12':
-      return 'red';
-    default:
-      return 'gray';
-  }
-}
-
-/**
- * Get badge color based on action type
+ * Get badge class based on action type
  * @param action - Action code ('C', 'R', 'U', 'D', 'E')
- * @returns Mantine color string
+ * @returns CSS class name
  */
-function getActionColor(action: string): string {
+function getActionBadgeClass(action: string): string {
   switch (action) {
     case 'C':
-      return 'blue';
+      return styles.actionBadgeCreate;
     case 'R':
-      return 'gray';
+      return styles.actionBadgeRead;
     case 'U':
-      return 'cyan';
+      return styles.actionBadgeUpdate;
     case 'D':
-      return 'red';
+      return styles.actionBadgeDelete;
     case 'E':
-      return 'violet';
+      return styles.actionBadgeExecute;
     default:
-      return 'gray';
+      return styles.actionBadgeRead;
+  }
+}
+
+/**
+ * Get badge class based on outcome code
+ * @param outcome - Outcome code ('0', '4', '8', '12')
+ * @returns CSS class name
+ */
+function getOutcomeBadgeClass(outcome: string): string {
+  switch (outcome) {
+    case '0':
+      return styles.outcomeBadgeSuccess;
+    case '4':
+      return styles.outcomeBadgeMinor;
+    case '8':
+      return styles.outcomeBadgeSerious;
+    case '12':
+      return styles.outcomeBadgeMajor;
+    default:
+      return styles.outcomeBadgeSuccess;
+  }
+}
+
+/**
+ * Get icon for outcome badge
+ */
+function getOutcomeIcon(outcome: string) {
+  switch (outcome) {
+    case '0':
+      return <IconCheck size={12} stroke={2.5} />;
+    case '4':
+      return <IconAlertTriangle size={12} stroke={2.5} />;
+    case '8':
+      return <IconAlertTriangle size={12} stroke={2.5} />;
+    case '12':
+      return <IconX size={12} stroke={2.5} />;
+    default:
+      return <IconCheck size={12} stroke={2.5} />;
   }
 }
 
@@ -92,13 +117,21 @@ function getActionColor(action: string): string {
  */
 function LoadingSkeleton(): JSX.Element {
   return (
-    <Stack gap="sm" data-testid="audit-log-loading">
+    <Box className={styles.skeletonContainer} data-testid="audit-log-loading">
       {Array(5)
         .fill(null)
         .map((_, i) => (
-          <Skeleton key={i} height={40} radius="sm" />
+          <Box key={i} className={styles.skeletonRow}>
+            <Box className={`${styles.skeletonCell} ${styles.skeletonTimestamp}`} />
+            <Box className={`${styles.skeletonCell} ${styles.skeletonActor}`} />
+            <Box className={`${styles.skeletonCell} ${styles.skeletonAction}`} />
+            <Box className={`${styles.skeletonCell} ${styles.skeletonResource}`} />
+            <Box className={`${styles.skeletonCell} ${styles.skeletonEntity}`} />
+            <Box className={`${styles.skeletonCell} ${styles.skeletonOutcome}`} />
+            <Box className={`${styles.skeletonCell} ${styles.skeletonIp}`} />
+          </Box>
         ))}
-    </Stack>
+    </Box>
   );
 }
 
@@ -109,17 +142,22 @@ function EmptyState(): JSX.Element {
   const { t } = useTranslation();
 
   return (
-    <Stack align="center" py="xl" gap="md">
-      <IconFileAlert size={48} style={{ color: 'var(--mantine-color-gray-5)' }} />
-      <Text c="dimmed" size="lg">
+    <Box className={styles.emptyState}>
+      <Box className={styles.emptyIconContainer}>
+        <IconFileSearch size={48} style={{ color: 'var(--emr-secondary)', opacity: 0.7 }} />
+      </Box>
+      <Text className={styles.emptyTitle}>
         {t('accountManagement.audit.noLogs')}
       </Text>
-    </Stack>
+      <Text className={styles.emptyDescription}>
+        No audit events match your current filters. Try adjusting the date range or clearing filters to see more results.
+      </Text>
+    </Box>
   );
 }
 
 /**
- * AuditLogTable displays audit log entries in a 7-column table
+ * AuditLogTable displays audit log entries in a premium 7-column table
  *
  * Columns:
  * 1. Timestamp
@@ -131,11 +169,12 @@ function EmptyState(): JSX.Element {
  * 7. IP Address
  *
  * Features:
- * - Turquoise gradient header (theme: var(--emr-gradient-submenu))
- * - Pagination controls
+ * - Premium glassmorphism design
+ * - Elegant row hover states
+ * - Refined action and outcome badges
  * - Loading skeleton
- * - Empty state
- * - Color-coded action and outcome badges
+ * - Animated empty state
+ * - Pagination controls
  *
  * @param props - Component props
  * @returns AuditLogTable component
@@ -147,6 +186,7 @@ export function AuditLogTable({
   total = 0,
   pageSize = 20,
   onPageChange,
+  onRowClick,
 }: AuditLogTableProps): JSX.Element {
   const { t } = useTranslation();
   const totalPages = Math.ceil(total / pageSize);
@@ -160,68 +200,103 @@ export function AuditLogTable({
   }
 
   return (
-    <Stack gap="md">
+    <Stack gap={0}>
       <Box style={{ overflowX: 'auto' }}>
-        <Table striped highlightOnHover withTableBorder withColumnBorders>
-          <Table.Thead
-            style={{
-              background: 'var(--emr-gradient-submenu)',
-            }}
-          >
-            <Table.Tr>
-              <Table.Th style={{ color: 'white', minWidth: '160px' }}>{t('accountManagement.audit.timestamp')}</Table.Th>
-              <Table.Th style={{ color: 'white', minWidth: '140px' }}>{t('accountManagement.audit.actor')}</Table.Th>
-              <Table.Th style={{ color: 'white', minWidth: '100px' }}>{t('accountManagement.audit.action')}</Table.Th>
-              <Table.Th style={{ color: 'white', minWidth: '120px' }}>Resource Type</Table.Th>
-              <Table.Th style={{ color: 'white', minWidth: '150px' }}>{t('accountManagement.audit.entity')}</Table.Th>
-              <Table.Th style={{ color: 'white', minWidth: '110px' }}>{t('accountManagement.audit.outcome')}</Table.Th>
-              <Table.Th style={{ color: 'white', minWidth: '120px' }}>IP Address</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {logs.map((log) => (
-              <Table.Tr key={log.id}>
-                <Table.Td>
-                  <Text size="sm">{formatTimestamp(log.timestamp)}</Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" fw={500}>
-                    {log.agent}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  <Badge color={getActionColor(log.action)} variant="light" size="sm">
-                    {log.actionDisplay}
-                  </Badge>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" c="dimmed">
-                    {log.entityType}
-                  </Text>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm">{log.entityDisplay || log.entityId}</Text>
-                </Table.Td>
-                <Table.Td>
-                  <Badge color={getOutcomeColor(log.outcome)} variant="filled" size="sm">
-                    {log.outcomeDisplay}
-                  </Badge>
-                </Table.Td>
-                <Table.Td>
-                  <Text size="sm" c="dimmed" ff="monospace">
-                    {log.ipAddress || '-'}
-                  </Text>
-                </Table.Td>
-              </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
+        <table className={styles.premiumTable}>
+          <thead>
+            <tr>
+              <th style={{ minWidth: '150px' }}>{t('accountManagement.audit.timestamp')}</th>
+              <th style={{ minWidth: '140px' }}>{t('accountManagement.audit.actor')}</th>
+              <th style={{ minWidth: '110px' }}>{t('accountManagement.audit.action')}</th>
+              <th style={{ minWidth: '130px' }}>Resource Type</th>
+              <th style={{ minWidth: '160px' }}>{t('accountManagement.audit.entity')}</th>
+              <th style={{ minWidth: '100px' }}>{t('accountManagement.audit.outcome')}</th>
+              <th style={{ minWidth: '120px' }}>IP Address</th>
+            </tr>
+          </thead>
+          <tbody>
+            {logs.map((log) => {
+              const { time, date } = formatTimestamp(log.timestamp);
+              return (
+                <tr
+                  key={log.id}
+                  onClick={() => onRowClick?.(log)}
+                  style={{ cursor: onRowClick ? 'pointer' : 'default' }}
+                >
+                  {/* Timestamp */}
+                  <td>
+                    <span className={styles.timestamp}>
+                      {time}
+                      <span className={styles.timestampDate}>{date}</span>
+                    </span>
+                  </td>
+
+                  {/* Actor */}
+                  <td>
+                    <Text className={styles.actorName}>{log.agent}</Text>
+                  </td>
+
+                  {/* Action */}
+                  <td>
+                    <span className={`${styles.actionBadge} ${getActionBadgeClass(log.action)}`}>
+                      {log.actionDisplay}
+                    </span>
+                  </td>
+
+                  {/* Resource Type */}
+                  <td>
+                    <span className={styles.resourceType}>{log.entityType}</span>
+                  </td>
+
+                  {/* Entity */}
+                  <td>
+                    <Text className={styles.entityName}>{log.entityDisplay || log.entityId}</Text>
+                  </td>
+
+                  {/* Outcome */}
+                  <td>
+                    <span className={`${styles.outcomeBadge} ${getOutcomeBadgeClass(log.outcome)}`}>
+                      {getOutcomeIcon(log.outcome)}
+                      {log.outcomeDisplay}
+                    </span>
+                  </td>
+
+                  {/* IP Address */}
+                  <td>
+                    <span className={styles.ipAddress}>{log.ipAddress || '-'}</span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </Box>
 
       {totalPages > 1 && onPageChange && (
-        <Group justify="center" py="md">
-          <Pagination value={page} onChange={onPageChange} total={totalPages} size="sm" />
-        </Group>
+        <Box className={styles.paginationWrapper}>
+          <Pagination
+            value={page}
+            onChange={onPageChange}
+            total={totalPages}
+            size="sm"
+            radius="md"
+            withEdges
+            styles={{
+              control: {
+                borderRadius: '8px',
+                border: '1px solid var(--emr-gray-200)',
+                transition: 'all 0.2s ease',
+                '&[data-active]': {
+                  background: 'var(--emr-gradient-primary)',
+                  border: 'none',
+                },
+                '&:hover:not([data-active])': {
+                  background: 'var(--emr-gray-100)',
+                },
+              },
+            }}
+          />
+        </Box>
       )}
     </Stack>
   );

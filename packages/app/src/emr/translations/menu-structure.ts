@@ -47,6 +47,7 @@ export const mainMenuItems: MenuItem[] = [
       { key: 'prescriptions', translationKey: 'submenu.patientHistory.prescriptions', path: '/emr/patient-history/prescriptions' },
       { key: 'execution', translationKey: 'submenu.patientHistory.execution', path: '/emr/patient-history/execution' },
       { key: 'laboratory', translationKey: 'submenu.patientHistory.laboratory', path: '/emr/patient-history/laboratory' },
+      { key: 'diagnostics', translationKey: 'submenu.patientHistory.diagnostics', path: '/emr/patient-history/diagnostics' },
       { key: 'duty', translationKey: 'submenu.patientHistory.duty', path: '/emr/patient-history/duty' },
       { key: 'appointments', translationKey: 'submenu.patientHistory.appointments', path: '/emr/patient-history/appointments' },
       { key: 'hospital', translationKey: 'submenu.patientHistory.hospital', path: '/emr/patient-history/hospital' },

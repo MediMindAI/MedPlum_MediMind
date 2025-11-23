@@ -14,6 +14,7 @@ import {
 
 interface UseRoleFormOptions {
   initialValues?: Partial<RoleFormValues>;
+  roleId?: string; // Role ID for edit mode (to exclude from duplicate check)
   onSubmit: (values: RoleFormValues) => void | Promise<void>;
 }
 
@@ -67,7 +68,7 @@ export function useRoleForm(options: UseRoleFormOptions): {
       return;
     }
 
-    const nameDuplicate = await checkDuplicateRoleName(medplum, values.name, options.initialValues?.code);
+    const nameDuplicate = await checkDuplicateRoleName(medplum, values.name, options.roleId);
     if (nameDuplicate) {
       form.setFieldError('name', 'A role with this name already exists');
       return;
@@ -80,7 +81,7 @@ export function useRoleForm(options: UseRoleFormOptions): {
       return;
     }
 
-    const codeDuplicate = await checkDuplicateRoleCode(medplum, values.code, options.initialValues?.code);
+    const codeDuplicate = await checkDuplicateRoleCode(medplum, values.code, options.roleId);
     if (codeDuplicate) {
       form.setFieldError('code', 'A role with this code already exists');
       return;

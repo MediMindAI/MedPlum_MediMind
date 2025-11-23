@@ -1,11 +1,10 @@
 /**
- * TopNavBar Component Styles
+ * TopNavBar Component Styles - Premium Medical Design
  *
- * Horizontal navigation bar at the very top of the EMR layout (Row 1)
- * - Gray background with subtle shadow
- * - Left-aligned navigation items
- * - Right-aligned user menu
- * - Hover effects and transitions
+ * A refined, professional navigation bar with:
+ * - Subtle gradient background with depth
+ * - Premium brand presentation
+ * - Elegant hover states and transitions
  */
 
 .topNavBar {
@@ -15,14 +14,14 @@
   justify-content: space-between;
   align-items: center;
 
-  /* Sizing */
-  height: var(--emr-topnav-height);
+  /* Sizing - Premium compact height */
+  height: 44px;
   width: 100%;
 
-  /* Background and visual styling - Gray background for TopNavBar (Row 1) */
-  background: var(--emr-topnav-bg);
-  border-bottom: 1px solid var(--emr-border-color);
-  box-shadow: var(--emr-shadow-sm);
+  /* Premium gradient background */
+  background: linear-gradient(180deg, #1a365d 0%, #1e4175 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(26, 54, 93, 0.15);
 
   /* Spacing */
   padding: 0 20px;
@@ -32,151 +31,220 @@
   z-index: var(--emr-z-topnav);
 }
 
-/* Left navigation container */
-.leftNav {
+/* Left section - Brand and Dashboard */
+.leftSection {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0;
+  gap: 12px;
 }
 
-/* Right navigation container */
-.rightNav {
+/* Right section - Language and User */
+.rightSection {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 16px; /* Increased gap to accommodate language selector */
+  gap: 12px;
 }
 
-/* Navigation item button styling */
-.navItem {
-  /* Layout */
-  display: inline-flex;
+/* Brand container */
+.brand {
+  display: flex;
   align-items: center;
-  justify-content: center;
-
-  /* Spacing */
-  padding: 0 16px;
-  height: 40px;
-
-  /* Typography */
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--emr-text-primary);
-  white-space: nowrap;
-
-  /* Visual styling */
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-
-  /* Transitions */
-  transition: all 0.2s ease-in-out;
-
-  /* Prevent text selection */
-  user-select: none;
-}
-
-/* Hover state for navigation items */
-.navItem:hover {
-  background-color: var(--emr-gray-100);
-  color: var(--emr-gray-900);
-}
-
-/* User menu button styling - Match Medplum's style */
-.userButton {
-  /* Layout */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   gap: 8px;
-
-  /* Spacing */
-  padding: 6px 12px;
-  height: 36px;
-  min-width: 120px;
-
-  /* Typography */
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--emr-text-primary);
-  white-space: nowrap;
-
-  /* Visual styling - Clean button like Medplum */
-  background-color: var(--emr-gray-50);
-  border: 1px solid var(--emr-border-color);
-  border-radius: 6px;
   cursor: pointer;
-
-  /* Transitions */
-  transition: all 0.15s ease;
-
-  /* Prevent text selection */
-  user-select: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
-/* Hover state for user button */
+.brand:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Logo icon container */
+.logoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, var(--emr-accent) 0%, var(--emr-secondary) 100%);
+  border-radius: 6px;
+  color: white;
+  box-shadow: 0 2px 6px rgba(99, 179, 237, 0.3);
+}
+
+/* Brand text */
+.brandText {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: baseline;
+}
+
+.brandMedi {
+  color: white;
+}
+
+.brandMind {
+  color: var(--emr-accent);
+}
+
+/* Vertical divider */
+.divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 4px;
+}
+
+/* Dashboard button */
+.dashboardBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboardBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* User button */
+.userButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 5px 6px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
 .userButton:hover {
-  background-color: var(--emr-gray-100);
-  border-color: var(--emr-gray-300);
-  box-shadow: var(--emr-shadow-sm);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* User avatar circle */
+.userAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(135deg, var(--emr-accent) 0%, var(--emr-secondary) 100%);
+  border-radius: 50%;
+  color: white;
+}
+
+/* User name text */
+.userName {
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Chevron icon */
+.chevron {
+  color: rgba(255, 255, 255, 0.6);
+  transition: transform 0.2s ease;
+}
+
+.userButton:hover .chevron {
+  color: white;
+}
+
+/* Menu dropdown styling */
+.menuDropdown {
+  border-radius: 10px;
+  border: 1px solid var(--emr-border-color);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+/* Menu header */
+.menuHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(26, 54, 93, 0.04) 0%, rgba(43, 108, 176, 0.04) 100%);
+}
+
+.menuHeaderAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--emr-primary) 0%, var(--emr-secondary) 100%);
+  border-radius: 50%;
+  color: white;
 }
 
 /* Focus styles for accessibility */
-.navItem:focus-visible,
-.userButton:focus-visible {
+.dashboardBtn:focus-visible,
+.userButton:focus-visible,
+.brand:focus-visible {
   outline: 2px solid var(--emr-accent);
   outline-offset: 2px;
-  z-index: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .topNavBar {
+    padding: 0 12px;
+    height: 40px;
+  }
+
+  .brandText {
+    display: none;
+  }
+
+  .dashboardBtn span {
+    display: none;
+  }
+
+  .dashboardBtn {
+    padding: 6px 8px;
+  }
+
+  .userName {
+    display: none;
+  }
+
+  .userButton {
+    padding: 4px;
+    border-radius: 50%;
+  }
+
+  .divider {
+    display: none;
+  }
 }
 
 /* Georgian text rendering support */
-.navItem,
-.userButton {
+.dashboardBtn,
+.userName {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Georgian', 'Noto Sans', sans-serif;
-}
-
-/* Responsive adjustments for smaller screens */
-@media (max-width: 768px) {
-  .topNavBar {
-    padding: 0 8px;
-  }
-
-  .navItem {
-    font-size: 13px;
-    padding: 0 12px;
-  }
-
-  .userButton {
-    font-size: 13px;
-    padding: 0 12px;
-  }
-}
-
-/* Dark mode support (if enabled in the future) */
-@media (prefers-color-scheme: dark) {
-  .topNavBar {
-    background: var(--emr-gray-800);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  }
-
-  .navItem {
-    color: var(--emr-gray-300);
-  }
-
-  .navItem:hover {
-    background-color: var(--emr-gray-700);
-    color: var(--emr-gray-100);
-  }
-
-  .userButton {
-    background-color: var(--emr-gray-700);
-    border-color: var(--emr-gray-600);
-    color: var(--emr-gray-300);
-  }
-
-  .userButton:hover {
-    background-color: var(--emr-gray-600);
-    border-color: var(--emr-gray-500);
-  }
 }

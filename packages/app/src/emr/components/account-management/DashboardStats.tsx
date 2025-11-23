@@ -22,7 +22,8 @@ interface StatCardProps {
   title: string;
   value: number;
   icon: React.ReactNode;
-  color: string;
+  iconColor: string;
+  accentColor: string;
   gradient: string;
   index: number;
   loading?: boolean;
@@ -31,27 +32,29 @@ interface StatCardProps {
 }
 
 /**
- * Loading skeleton for stat card - compact version
+ * Loading skeleton for stat card - premium glassmorphism version
  */
 function StatCardSkeleton(): JSX.Element {
   return (
     <Paper
-      p="md"
+      p="lg"
       style={{
-        background: 'linear-gradient(135deg, var(--emr-gray-100) 0%, var(--emr-gray-50) 100%)',
-        border: '1px solid var(--emr-gray-200)',
-        borderRadius: 'var(--emr-border-radius-lg)',
-        boxShadow: 'var(--emr-shadow-sm)',
+        background: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.6)',
+        borderRadius: '16px',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06)',
         position: 'relative',
         overflow: 'hidden',
-        minHeight: '88px',
+        minHeight: '100px',
       }}
     >
-      <Group gap="md" align="center" wrap="nowrap">
-        <Skeleton height={44} width={44} radius="md" />
-        <Stack gap={6} style={{ flex: 1 }}>
-          <Skeleton height={28} width="50%" radius="sm" />
-          <Skeleton height={12} width="70%" radius="sm" />
+      <Group gap="lg" align="center" wrap="nowrap">
+        <Skeleton height={52} width={52} radius={14} />
+        <Stack gap={8} style={{ flex: 1 }}>
+          <Skeleton height={32} width="45%" radius="sm" />
+          <Skeleton height={14} width="65%" radius="sm" />
         </Stack>
       </Group>
     </Paper>
@@ -59,14 +62,17 @@ function StatCardSkeleton(): JSX.Element {
 }
 
 /**
- * Individual stat card component - compact horizontal layout
+ * Individual stat card component - premium glassmorphism design
  * Enhanced with:
- * - Cleaner horizontal design with icon on left
- * - Subtle gradient backgrounds
- * - Smooth hover transitions
- * - Trend indicator pill
+ * - Glassmorphism background with blur
+ * - Elegant left accent bar on hover
+ * - Refined icon container with gradient overlay
+ * - Smooth spring animations
+ * - Premium trend indicator badges
  */
-function StatCard({ title, value, icon, color, gradient, index, loading, trend, trendValue }: StatCardProps): JSX.Element {
+function StatCard({ title, value, icon, iconColor, accentColor, gradient, index, loading, trend, trendValue }: StatCardProps): JSX.Element {
+  const [isHovered, setIsHovered] = React.useState(false);
+
   if (loading) {
     return <StatCardSkeleton />;
   }
@@ -75,75 +81,85 @@ function StatCard({ title, value, icon, color, gradient, index, loading, trend, 
 
   return (
     <Paper
-      p="md"
+      p="lg"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
-        background: 'var(--emr-text-inverse)',
-        border: '1px solid var(--emr-gray-200)',
-        borderRadius: 'var(--emr-border-radius-lg)',
-        boxShadow: 'var(--emr-shadow-sm)',
-        transition: 'all var(--emr-transition-smooth)',
+        background: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: `1px solid ${isHovered ? accentColor : 'rgba(255, 255, 255, 0.6)'}`,
+        borderRadius: '16px',
+        boxShadow: isHovered
+          ? '0 4px 8px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(26, 54, 93, 0.12)'
+          : '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06)',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: 'default',
         position: 'relative',
         overflow: 'hidden',
-        minHeight: '88px',
-        animation: `statCardFadeIn 0.3s ease-out ${index * 0.05}s both`,
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--emr-shadow-md)';
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.borderColor = 'var(--emr-accent)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--emr-shadow-sm)';
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.borderColor = 'var(--emr-gray-200)';
+        minHeight: '100px',
+        transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
+        animation: `statCardSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.08}s both`,
       }}
     >
-      {/* Subtle gradient overlay */}
+      {/* Left accent bar that appears on hover */}
       <Box
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
-          right: 0,
-          height: '3px',
-          background: gradient,
-          borderRadius: 'var(--emr-border-radius-lg) var(--emr-border-radius-lg) 0 0',
+          width: '4px',
+          height: '100%',
+          background: accentColor,
+          opacity: isHovered ? 1 : 0,
+          transition: 'opacity 0.3s ease',
         }}
       />
 
-      <Group gap="md" align="center" wrap="nowrap" style={{ position: 'relative', zIndex: 1 }}>
-        {/* Icon container with gradient */}
+      <Group gap="lg" align="center" wrap="nowrap" style={{ position: 'relative', zIndex: 1 }}>
+        {/* Icon container with gradient overlay */}
         <Box
           style={{
-            background: gradient,
-            borderRadius: 'var(--emr-border-radius)',
-            padding: '10px',
+            width: '52px',
+            height: '52px',
+            borderRadius: '14px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: 'var(--emr-shadow-sm)',
+            position: 'relative',
             flexShrink: 0,
+            transition: 'transform 0.3s ease',
+            transform: isHovered ? 'scale(1.05)' : 'scale(1)',
           }}
         >
+          {/* Gradient background overlay */}
+          <Box
+            style={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: '14px',
+              background: gradient,
+              opacity: 0.12,
+            }}
+          />
           {typeof icon === 'object' && React.isValidElement(icon)
             ? React.cloneElement(icon as React.ReactElement<{ size?: number; color?: string; stroke?: number }>, {
-                size: 22,
-                color: 'white',
-                stroke: 2,
+                size: 26,
+                color: iconColor,
+                stroke: 1.8,
               })
             : icon}
         </Box>
 
         {/* Value and title */}
-        <Stack gap={2} style={{ flex: 1, minWidth: 0 }}>
-          <Group gap="xs" align="baseline" wrap="nowrap">
+        <Stack gap={4} style={{ flex: 1, minWidth: 0 }}>
+          <Group gap="sm" align="baseline" wrap="nowrap">
             <Text
               fw={700}
               style={{
-                fontSize: '26px',
+                fontSize: '32px',
                 lineHeight: 1,
-                letterSpacing: '-1px',
+                letterSpacing: '-1.5px',
                 fontVariantNumeric: 'tabular-nums',
                 color: 'var(--emr-text-primary)',
               }}
@@ -152,27 +168,31 @@ function StatCard({ title, value, icon, color, gradient, index, loading, trend, 
             </Text>
             {trend && trendValue && (
               <Group
-                gap={2}
+                gap={4}
                 style={{
                   background:
                     trend === 'up'
-                      ? 'rgba(16, 185, 129, 0.1)'
+                      ? 'rgba(16, 185, 129, 0.12)'
                       : trend === 'down'
-                        ? 'rgba(239, 68, 68, 0.1)'
+                        ? 'rgba(239, 68, 68, 0.12)'
                         : 'var(--emr-gray-100)',
-                  padding: '2px 6px',
-                  borderRadius: '10px',
+                  padding: '3px 8px',
+                  borderRadius: '20px',
+                  transition: 'transform 0.2s ease',
+                  transform: isHovered ? 'scale(1.05)' : 'scale(1)',
                 }}
               >
                 <TrendIcon
-                  size={12}
-                  color={trend === 'up' ? 'var(--emr-stat-success)' : trend === 'down' ? 'var(--emr-stat-danger)' : 'var(--emr-gray-500)'}
+                  size={13}
+                  color={trend === 'up' ? '#059669' : trend === 'down' ? '#dc2626' : 'var(--emr-gray-500)'}
                   stroke={2.5}
                 />
                 <Text
                   size="xs"
                   fw={600}
-                  c={trend === 'up' ? 'var(--emr-stat-success)' : trend === 'down' ? 'var(--emr-stat-danger)' : 'var(--emr-gray-500)'}
+                  style={{
+                    color: trend === 'up' ? '#059669' : trend === 'down' ? '#dc2626' : 'var(--emr-gray-500)',
+                  }}
                 >
                   {trendValue}
                 </Text>
@@ -180,12 +200,12 @@ function StatCard({ title, value, icon, color, gradient, index, loading, trend, 
             )}
           </Group>
           <Text
-            c="dimmed"
-            fw={500}
+            fw={600}
             style={{
               fontSize: '12px',
               textTransform: 'uppercase',
-              letterSpacing: '0.3px',
+              letterSpacing: '0.5px',
+              color: 'var(--emr-gray-500)',
             }}
           >
             {title}
@@ -196,10 +216,10 @@ function StatCard({ title, value, icon, color, gradient, index, loading, trend, 
       {/* CSS Animation */}
       <style>
         {`
-          @keyframes statCardFadeIn {
+          @keyframes statCardSlideIn {
             from {
               opacity: 0;
-              transform: translateY(8px);
+              transform: translateY(20px);
             }
             to {
               opacity: 1;
@@ -213,21 +233,20 @@ function StatCard({ title, value, icon, color, gradient, index, loading, trend, 
 }
 
 /**
- * Main dashboard stats component
+ * Main dashboard stats component - Premium Design
  *
  * Features:
  * - 4 KPI cards: Total, Active, Pending, Inactive
+ * - Premium glassmorphism card design
  * - Responsive grid: 2×2 on mobile, 1×4 on desktop
- * - Gradient icons with themed colors
- * - Hover effects with shadow and transform
+ * - Elegant icon containers with gradient overlays
+ * - Smooth hover effects with accent borders
  * - Staggered entrance animations
  * - Loading skeleton state
- * - Optional trend indicators
+ * - Refined trend indicator badges
  *
  * @param stats - Statistics data to display
- * @param stats.stats
  * @param loading - Show loading skeleton
- * @param stats.loading
  */
 export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Element {
   const { t } = useTranslation();
@@ -237,14 +256,15 @@ export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Ele
   const inactivePercent = stats.total > 0 ? Math.round((stats.inactive / stats.total) * 100) : 0;
 
   return (
-    <Grid gutter={{ base: 16, sm: 24 }}>
+    <Grid gutter={{ base: 16, sm: 20, md: 24 }}>
       <Grid.Col span={{ base: 6, sm: 3 }}>
         <StatCard
           title={t('accountManagement.dashboard.total')}
           value={stats.total}
-          icon={<IconUsers size={28} stroke={2} />}
-          color="var(--emr-secondary)"
-          gradient="var(--emr-stat-gradient-total)"
+          icon={<IconUsers size={26} stroke={1.8} />}
+          iconColor="#2b6cb0"
+          accentColor="#2b6cb0"
+          gradient="linear-gradient(135deg, #2b6cb0, #3182ce)"
           index={0}
           loading={loading}
         />
@@ -254,9 +274,10 @@ export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Ele
         <StatCard
           title={t('accountManagement.dashboard.active')}
           value={stats.active}
-          icon={<IconUserCheck size={28} stroke={2} />}
-          color="var(--emr-primary)"
-          gradient="var(--emr-stat-gradient-active)"
+          icon={<IconUserCheck size={26} stroke={1.8} />}
+          iconColor="#10b981"
+          accentColor="#10b981"
+          gradient="linear-gradient(135deg, #10b981, #34d399)"
           index={1}
           loading={loading}
           trend={activePercent > 50 ? 'up' : activePercent < 50 ? 'down' : 'neutral'}
@@ -268,9 +289,10 @@ export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Ele
         <StatCard
           title={t('accountManagement.dashboard.pending')}
           value={stats.pending}
-          icon={<IconClock size={28} stroke={2} />}
-          color="var(--emr-accent)"
-          gradient="var(--emr-stat-gradient-pending)"
+          icon={<IconClock size={26} stroke={1.8} />}
+          iconColor="#3182ce"
+          accentColor="#3182ce"
+          gradient="linear-gradient(135deg, #3182ce, #63b3ed)"
           index={2}
           loading={loading}
         />
@@ -280,9 +302,10 @@ export function DashboardStats({ stats, loading }: DashboardStatsProps): JSX.Ele
         <StatCard
           title={t('accountManagement.dashboard.inactive')}
           value={stats.inactive}
-          icon={<IconBan size={28} stroke={2} />}
-          color="var(--emr-gray-500)"
-          gradient="var(--emr-stat-gradient-inactive)"
+          icon={<IconBan size={26} stroke={1.8} />}
+          iconColor="#6b7280"
+          accentColor="#6b7280"
+          gradient="linear-gradient(135deg, #6b7280, #9ca3af)"
           index={3}
           loading={loading}
           trend={inactivePercent > 10 ? 'down' : 'neutral'}

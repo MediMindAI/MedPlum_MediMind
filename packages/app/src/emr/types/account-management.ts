@@ -467,16 +467,41 @@ export const AUDIT_EVENT_CODES = {
 
 /**
  * FHIR resource types for permission matrix
+ * Organized by category for better UX
  */
 export const PERMISSION_RESOURCES = [
+  // Clinical - Patient Data
   'Patient',
-  'Practitioner',
+  'Encounter',
   'Observation',
   'MedicationRequest',
   'DiagnosticReport',
-  'Encounter',
-  'Claim',
+
+  // Administrative - Staff & Organization
+  'Practitioner',
+  'PractitionerRole',
+  'AccessPolicy',
+
+  // Financial - Billing & Insurance
   'Invoice',
+  'Claim',
+  'Coverage',
+
+  // Forms & Documents
+  'Questionnaire',
+  'QuestionnaireResponse',
+  'DocumentReference',
+
+  // Nomenclature & Catalog
+  'ActivityDefinition',
+
+  // Laboratory
+  'SpecimenDefinition',
+  'ObservationDefinition',
+  'DeviceDefinition',
+
+  // Audit & Security
+  'AuditEvent',
 ] as const;
 
 /**

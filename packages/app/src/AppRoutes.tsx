@@ -88,6 +88,8 @@ import { UnifiedRegistrationView } from './emr/views/registration/UnifiedRegistr
 import { PatientHistoryView } from './emr/views/patient-history/PatientHistoryView';
 import { NomenclatureMedical1View } from './emr/views/nomenclature/NomenclatureMedical1View';
 import { LaboratoryNomenclatureView } from './emr/views/nomenclature/LaboratoryNomenclatureView';
+import { MedicationRequestView } from './emr/views/medications/MedicationRequestView';
+import { DiagnosticReportView } from './emr/views/diagnostics/DiagnosticReportView';
 import { ErrorBoundary } from '@medplum/react';
 
 // ============================================================================
@@ -250,11 +252,9 @@ export function AppRoutes(): JSX.Element {
             <Route
               path="prescriptions"
               element={
-                <PlaceholderView
-                  titleKey="submenu.patientHistory.prescriptions"
-                  messageKey="ui.underDevelopment"
-                  testId="patient-history-prescriptions-placeholder"
-                />
+                <ProtectedRoute requiredPermission={EMRPermission.VIEW_PATIENTS}>
+                  <MedicationRequestView />
+                </ProtectedRoute>
               }
             />
             <Route
@@ -275,6 +275,14 @@ export function AppRoutes(): JSX.Element {
                   messageKey="ui.underDevelopment"
                   testId="patient-history-laboratory-placeholder"
                 />
+              }
+            />
+            <Route
+              path="diagnostics"
+              element={
+                <ProtectedRoute requiredPermission={EMRPermission.VIEW_PATIENTS}>
+                  <DiagnosticReportView />
+                </ProtectedRoute>
               }
             />
             <Route

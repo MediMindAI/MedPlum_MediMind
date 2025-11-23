@@ -70,7 +70,7 @@ export function usePermissions(): UsePermissionsBasicResult {
     setLoading(true);
 
     // Get permission tree for current language
-    const tree = getPermissionTree();
+    const tree = getPermissionTree(lang as 'ka' | 'en' | 'ru');
     setCategories(tree);
 
     setLoading(false);

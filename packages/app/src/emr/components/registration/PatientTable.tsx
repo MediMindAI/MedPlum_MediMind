@@ -23,6 +23,7 @@ interface SearchFilters {
 interface PatientTableProps {
   searchFilters?: SearchFilters;
   onPatientClick?: (patientId: string) => void;
+  onCountChange?: (count: number) => void;
 }
 
 // Extended Patient type with required id for EMRTable
@@ -35,7 +36,7 @@ interface PatientRow extends Patient {
  * Patient table displaying registered patients with edit/delete actions
  * Now using EMRTable component for consistent Apple-inspired styling
  */
-export function PatientTable({ searchFilters, onPatientClick }: PatientTableProps) {
+export function PatientTable({ searchFilters, onPatientClick, onCountChange }: PatientTableProps) {
   const { t } = useTranslation();
   const medplum = useMedplum();
   const [patients, setPatients] = useState<PatientRow[]>([]);
@@ -77,6 +78,7 @@ export function PatientTable({ searchFilters, onPatientClick }: PatientTableProp
         .filter((p): p is PatientRow => !!p.id)
         .map((p, index) => ({ ...p, rowIndex: index + 1 }));
       setPatients(validPatients);
+      onCountChange?.(validPatients.length);
     } catch (error) {
       notifications.show({
         title: t('registration.error.title') || 'Error',

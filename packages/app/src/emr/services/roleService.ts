@@ -4,6 +4,7 @@ import type { MedplumClient } from '@medplum/core';
 import type { AccessPolicy, PractitionerRole } from '@medplum/fhirtypes';
 import type { RoleFormValues } from '../types/role-management';
 import { permissionsToAccessPolicy } from './permissionService';
+import { createAuditEvent } from './auditService';
 
 /**
  * Creates a new role (AccessPolicy) with permissions
@@ -16,27 +17,57 @@ export async function createRole(medplum: MedplumClient, values: RoleFormValues)
   // Convert permissions to AccessPolicy resources
   const resources = permissionsToAccessPolicy(values.permissions);
 
+  const tags = [
+    {
+      system: 'http://medimind.ge/role-identifier',
+      code: values.code,
+      display: values.name,
+    },
+    {
+      system: 'http://medimind.ge/role-status',
+      code: values.status,
+      display: values.status === 'active' ? 'Active' : 'Inactive',
+    },
+  ];
+
+  // Store description in a tag (AccessPolicy doesn't have a description field)
+  if (values.description) {
+    tags.push({
+      system: 'http://medimind.ge/role-description',
+      code: 'description',
+      display: values.description,
+    });
+  }
+
   const role: AccessPolicy = {
     resourceType: 'AccessPolicy',
     meta: {
-      tag: [
-        {
-          system: 'http://medimind.ge/role-identifier',
-          code: values.code,
-          display: values.name,
-        },
-        {
-          system: 'http://medimind.ge/role-status',
-          code: values.status,
-          display: values.status === 'active' ? 'Active' : 'Inactive',
-        },
-      ],
+      tag: tags,
     },
-    description: values.description,
     resource: resources,
   };
 
-  return medplum.createResource(role);
+  const created = await medplum.createResource(role);
+
+  // Create audit event for role creation
+  try {
+    await createAuditEvent(
+      medplum,
+      'C',
+      { reference: `AccessPolicy/${created.id}`, display: values.name },
+      0, // success
+      `Role created: ${values.name}`,
+      {
+        roleCode: values.code,
+        permissions: values.permissions.join(', '),
+      }
+    );
+    console.log('✅ Audit event created for role creation:', values.name);
+  } catch (auditError) {
+    console.error('❌ Failed to create audit event for role creation:', auditError);
+  }
+
+  return created;
 }
 
 /**
@@ -118,27 +149,58 @@ export async function updateRole(
   // Convert permissions to AccessPolicy resources
   const resources = permissionsToAccessPolicy(values.permissions);
 
+  // Build updated tags
+  const updatedTags = [
+    {
+      system: 'http://medimind.ge/role-identifier',
+      code: values.code,
+      display: values.name,
+    },
+    {
+      system: 'http://medimind.ge/role-status',
+      code: values.status,
+      display: values.status === 'active' ? 'Active' : 'Inactive',
+    },
+  ];
+
+  // Store description in a tag (AccessPolicy doesn't have a description field)
+  if (values.description) {
+    updatedTags.push({
+      system: 'http://medimind.ge/role-description',
+      code: 'description',
+      display: values.description,
+    });
+  }
+
   // Update meta tags
   role.meta = {
     ...role.meta,
-    tag: [
-      {
-        system: 'http://medimind.ge/role-identifier',
-        code: values.code,
-        display: values.name,
-      },
-      {
-        system: 'http://medimind.ge/role-status',
-        code: values.status,
-        display: values.status === 'active' ? 'Active' : 'Inactive',
-      },
-    ],
+    tag: updatedTags,
   };
 
-  role.description = values.description;
   role.resource = resources;
 
-  return medplum.updateResource(role);
+  const updated = await medplum.updateResource(role);
+
+  // Create audit event for role update
+  try {
+    await createAuditEvent(
+      medplum,
+      'U',
+      { reference: `AccessPolicy/${updated.id}`, display: values.name },
+      0, // success
+      `Role updated: ${values.name}`,
+      {
+        roleCode: values.code,
+        permissions: values.permissions.join(', '),
+      }
+    );
+    console.log('✅ Audit event created for role update:', values.name);
+  } catch (auditError) {
+    console.error('❌ Failed to create audit event for role update:', auditError);
+  }
+
+  return updated;
 }
 
 /**
@@ -150,6 +212,7 @@ export async function updateRole(
  */
 export async function deactivateRole(medplum: MedplumClient, id: string): Promise<AccessPolicy> {
   const role = await medplum.readResource('AccessPolicy', id);
+  const roleName = role.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-identifier')?.display || 'Unknown';
 
   // Update status tag to inactive
   role.meta = {
@@ -166,7 +229,18 @@ export async function deactivateRole(medplum: MedplumClient, id: string): Promis
     }),
   };
 
-  return medplum.updateResource(role);
+  const updated = await medplum.updateResource(role);
+
+  // Create audit event for role deactivation
+  await createAuditEvent(
+    medplum,
+    'D',
+    { reference: `AccessPolicy/${updated.id}`, display: roleName },
+    0, // success
+    `Role deactivated: ${roleName}`
+  );
+
+  return updated;
 }
 
 /**
@@ -178,6 +252,7 @@ export async function deactivateRole(medplum: MedplumClient, id: string): Promis
  */
 export async function reactivateRole(medplum: MedplumClient, id: string): Promise<AccessPolicy> {
   const role = await medplum.readResource('AccessPolicy', id);
+  const roleName = role.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-identifier')?.display || 'Unknown';
 
   // Update status tag to active
   role.meta = {
@@ -194,7 +269,18 @@ export async function reactivateRole(medplum: MedplumClient, id: string): Promis
     }),
   };
 
-  return medplum.updateResource(role);
+  const updated = await medplum.updateResource(role);
+
+  // Create audit event for role reactivation
+  await createAuditEvent(
+    medplum,
+    'U',
+    { reference: `AccessPolicy/${updated.id}`, display: roleName },
+    0, // success
+    `Role reactivated: ${roleName}`
+  );
+
+  return updated;
 }
 
 /**
@@ -211,7 +297,22 @@ export async function hardDeleteRole(medplum: MedplumClient, id: string): Promis
     throw new Error(`Cannot delete role with ${userCount} assigned users. Deactivate the role instead.`);
   }
 
+  // Get role info before deleting for audit log
+  const role = await medplum.readResource('AccessPolicy', id);
+  const roleName = role.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-identifier')?.display || 'Unknown';
+  const roleCode = role.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-identifier')?.code || '';
+
   await medplum.deleteResource('AccessPolicy', id);
+
+  // Create audit event for role deletion (after delete to ensure it succeeded)
+  await createAuditEvent(
+    medplum,
+    'D',
+    { reference: `AccessPolicy/${id}`, display: roleName },
+    0, // success
+    `Role permanently deleted: ${roleName}`,
+    { roleCode }
+  );
 }
 
 /**
@@ -231,27 +332,61 @@ export async function cloneRole(
 ): Promise<AccessPolicy> {
   const sourceRole = await medplum.readResource('AccessPolicy', sourceId);
 
+  // Get original description from tag
+  const originalDescription = sourceRole.meta?.tag?.find(
+    (tag) => tag.system === 'http://medimind.ge/role-description'
+  )?.display;
+
+  const cloneTags = [
+    {
+      system: 'http://medimind.ge/role-identifier',
+      code: newCode,
+      display: newName,
+    },
+    {
+      system: 'http://medimind.ge/role-status',
+      code: 'active',
+      display: 'Active',
+    },
+  ];
+
+  // Copy description with " (Copy)" suffix if exists
+  if (originalDescription) {
+    cloneTags.push({
+      system: 'http://medimind.ge/role-description',
+      code: 'description',
+      display: `${originalDescription} (Copy)`,
+    });
+  }
+
   const clonedRole: AccessPolicy = {
     resourceType: 'AccessPolicy',
     meta: {
-      tag: [
-        {
-          system: 'http://medimind.ge/role-identifier',
-          code: newCode,
-          display: newName,
-        },
-        {
-          system: 'http://medimind.ge/role-status',
-          code: 'active',
-          display: 'Active',
-        },
-      ],
+      tag: cloneTags,
     },
-    description: sourceRole.description ? `${sourceRole.description} (Copy)` : undefined,
     resource: sourceRole.resource,
   };
 
-  return medplum.createResource(clonedRole);
+  const created = await medplum.createResource(clonedRole);
+
+  // Get source role name for audit
+  const sourceRoleName = sourceRole.meta?.tag?.find((t) => t.system === 'http://medimind.ge/role-identifier')?.display || 'Unknown';
+
+  // Create audit event for role cloning
+  await createAuditEvent(
+    medplum,
+    'C',
+    { reference: `AccessPolicy/${created.id}`, display: newName },
+    0, // success
+    `Role cloned: ${newName} (from ${sourceRoleName})`,
+    {
+      sourceRoleId: sourceId,
+      sourceRoleName,
+      newRoleCode: newCode,
+    }
+  );
+
+  return created;
 }
 
 /**

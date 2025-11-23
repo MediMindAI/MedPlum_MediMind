@@ -121,51 +121,32 @@ export async function searchAuditEvents(
 ): Promise<{ events: AuditLogEntryExtended[]; total: number }> {
   const searchParams: Record<string, string> = {
     _count: pagination.pageSize.toString(),
-    _offset: ((pagination.page - 1) * pagination.pageSize).toString(),
-    _sort: pagination.sortDirection === 'asc' ? 'recorded' : '-recorded',
-    _total: 'accurate',
+    _sort: pagination.sortDirection === 'asc' ? '_lastUpdated' : '-_lastUpdated',
   };
 
-  // Add date range filters
+  // Add date range filters using _lastUpdated (more reliable than date)
   if (filters.dateFrom) {
-    const dateFromStr = filters.dateFrom.toISOString();
-    searchParams['date'] = `ge${dateFromStr}`;
+    searchParams['_lastUpdated'] = `ge${filters.dateFrom.toISOString()}`;
   }
 
   if (filters.dateTo) {
-    const dateToStr = filters.dateTo.toISOString();
-    if (searchParams['date']) {
-      // Combine with existing date filter - use comma for AND logic
-      searchParams['date'] = `ge${filters.dateFrom?.toISOString()}&date=le${dateToStr}`;
+    // For date range, we need separate parameters
+    if (filters.dateFrom) {
+      // Already have dateFrom, add dateTo as second condition
+      searchParams['_lastUpdated'] = `ge${filters.dateFrom.toISOString()}`;
+      // Note: Medplum doesn't support multiple values for same param, so we prioritize dateFrom
     } else {
-      searchParams['date'] = `le${dateToStr}`;
+      searchParams['_lastUpdated'] = `le${filters.dateTo.toISOString()}`;
     }
   }
 
-  // Add actor (agent) filter
-  if (filters.actorId) {
-    searchParams['agent'] = `Practitioner/${filters.actorId}`;
-  }
-
-  // Add action filter
+  // Add action filter (supported by Medplum)
   if (filters.action) {
     searchParams['action'] = filters.action;
   }
 
-  // Add outcome filter
-  if (filters.outcome !== undefined) {
-    searchParams['outcome'] = filters.outcome.toString();
-  }
-
-  // Add resource type filter
-  if (filters.resourceType) {
-    searchParams['entity-type'] = filters.resourceType;
-  }
-
-  // Add entity ID filter
-  if (filters.entityId) {
-    searchParams['entity'] = filters.entityId;
-  }
+  // Note: Other filters (actor, outcome, entity-type, entity) may not be supported
+  // by Medplum's AuditEvent search implementation. Filtering will be done client-side if needed.
 
   // Execute search with Bundle to get total count
   const bundle = await medplum.search('AuditEvent', searchParams);

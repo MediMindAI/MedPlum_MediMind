@@ -6,41 +6,265 @@ import type { PermissionCategory } from '../types/role-management';
 import type { PermissionRow, RoleConflict } from '../types/account-management';
 import { PERMISSION_RESOURCES, PERMISSION_OPERATIONS } from '../types/account-management';
 import { Permission } from '../types/role-management';
+import permissionTranslations from '../translations/permissions.json';
+import categoryTranslations from '../translations/permission-categories.json';
+
+type SupportedLanguage = 'ka' | 'en' | 'ru';
+
+// Category descriptions for each language
+const categoryDescriptions: Record<string, Record<SupportedLanguage, string>> = {
+  'patient-management': {
+    ka: 'პაციენტის რეგისტრაციის, დემოგრაფიის და ისტორიის უფლებები',
+    en: 'Permissions for patient registration, demographics, and history',
+    ru: 'Разрешения для регистрации пациентов, демографии и истории',
+  },
+  'clinical-documentation': {
+    ka: 'ვიზიტების, კლინიკური ჩანაწერებისა და სამედიცინო დოკუმენტაციის უფლებები',
+    en: 'Permissions for encounters, clinical notes, and medical records',
+    ru: 'Разрешения для визитов, клинических заметок и медицинских записей',
+  },
+  laboratory: {
+    ka: 'ლაბორატორიული შეკვეთების, შედეგებისა და ნიმუშების მართვის უფლებები',
+    en: 'Permissions for lab orders, results, and specimen management',
+    ru: 'Разрешения для лабораторных заказов, результатов и управления образцами',
+  },
+  'billing-financial': {
+    ka: 'ინვოისების, გადახდებისა და სადაზღვევო პრეტენზიების უფლებები',
+    en: 'Permissions for invoicing, payments, and insurance claims',
+    ru: 'Разрешения для выставления счетов, платежей и страховых претензий',
+  },
+  administration: {
+    ka: 'მომხმარებლების მართვის, როლებისა და სისტემის პარამეტრების უფლებები',
+    en: 'Permissions for user management, roles, and system settings',
+    ru: 'Разрешения для управления пользователями, ролями и настройками системы',
+  },
+  reports: {
+    ka: 'ანალიტიკის, ექსპორტისა და შესაბამისობის ანგარიშების უფლებები',
+    en: 'Permissions for analytics, exports, and compliance reports',
+    ru: 'Разрешения для аналитики, экспорта и отчетов о соответствии',
+  },
+};
+
+// Permission descriptions for each language
+const permissionDescriptions: Record<string, Record<SupportedLanguage, string>> = {
+  'view-patient-list': {
+    ka: 'პაციენტების რეგისტრაციის გვერდზე წვდომა და პაციენტთა სიის ნახვა',
+    en: 'Access the patient registration page and view list of patients',
+    ru: 'Доступ к странице регистрации пациентов и просмотр списка пациентов',
+  },
+  'view-patient-demographics': {
+    ka: 'პაციენტის პირადი ინფორმაციის ნახვა (სახელი, დაბადების თარიღი, მისამართი და სხვ.)',
+    en: 'View patient personal information (name, DOB, address, etc.)',
+    ru: 'Просмотр личной информации пациента (имя, дата рождения, адрес и т.д.)',
+  },
+  'edit-patient-demographics': {
+    ka: 'პაციენტის პირადი ინფორმაციის შეცვლა',
+    en: 'Modify patient personal information',
+    ru: 'Изменение личной информации пациента',
+  },
+  'create-patient': {
+    ka: 'ახალი პაციენტების რეგისტრაცია სისტემაში',
+    en: 'Register new patients in the system',
+    ru: 'Регистрация новых пациентов в системе',
+  },
+  'delete-patient': {
+    ka: 'პაციენტის ჩანაწერების წაშლა სისტემიდან',
+    en: 'Remove patient records from the system',
+    ru: 'Удаление записей пациентов из системы',
+  },
+  'view-patient-history': {
+    ka: 'პაციენტის ვიზიტების ისტორიისა და დეტალების ნახვა',
+    en: 'View patient visit history and encounter details',
+    ru: 'Просмотр истории визитов пациента и деталей посещений',
+  },
+  'view-encounters': {
+    ka: 'პაციენტის ვიზიტებისა და დეტალების ნახვა',
+    en: 'View patient encounters and visit details',
+    ru: 'Просмотр визитов пациента и деталей посещений',
+  },
+  'create-encounter': {
+    ka: 'ახალი ვიზიტის შექმნა',
+    en: 'Create new patient encounters',
+    ru: 'Создание новых визитов пациентов',
+  },
+  'edit-encounter': {
+    ka: 'არსებული ვიზიტების რედაქტირება',
+    en: 'Modify existing encounters',
+    ru: 'Редактирование существующих визитов',
+  },
+  'view-clinical-notes': {
+    ka: 'კლინიკური ჩანაწერებისა და დოკუმენტაციის წაკითხვა',
+    en: 'Read clinical notes and documentation',
+    ru: 'Чтение клинических заметок и документации',
+  },
+  'create-clinical-notes': {
+    ka: 'ახალი კლინიკური ჩანაწერების შექმნა',
+    en: 'Create new clinical notes',
+    ru: 'Создание новых клинических заметок',
+  },
+  'sign-clinical-documents': {
+    ka: 'კლინიკური დოკუმენტების ციფრული ხელმოწერა და დამტკიცება',
+    en: 'Digitally sign and approve clinical documents',
+    ru: 'Цифровая подпись и утверждение клинических документов',
+  },
+  'view-lab-results': {
+    ka: 'ლაბორატორიული კვლევის შედეგების ნახვა',
+    en: 'View laboratory test results',
+    ru: 'Просмотр результатов лабораторных исследований',
+  },
+  'order-lab-tests': {
+    ka: 'ახალი ლაბორატორიული კვლევების შეკვეთა',
+    en: 'Create new laboratory test orders',
+    ru: 'Создание новых заказов лабораторных исследований',
+  },
+  'edit-lab-results': {
+    ka: 'ლაბორატორიული კვლევის შედეგების რედაქტირება',
+    en: 'Modify laboratory test results',
+    ru: 'Редактирование результатов лабораторных исследований',
+  },
+  'approve-lab-results': {
+    ka: 'ლაბორატორიული შედეგების დამტკიცება და დასრულება',
+    en: 'Approve and finalize laboratory results',
+    ru: 'Утверждение и завершение результатов лабораторных исследований',
+  },
+  'view-invoices': {
+    ka: 'პაციენტის ინვოისებისა და ბილინგის ინფორმაციის ნახვა',
+    en: 'View patient invoices and billing information',
+    ru: 'Просмотр счетов пациентов и информации о выставлении счетов',
+  },
+  'create-invoices': {
+    ka: 'მომსახურებისთვის ახალი ინვოისების შექმნა',
+    en: 'Create new invoices for services',
+    ru: 'Создание новых счетов за услуги',
+  },
+  'process-payments': {
+    ka: 'პაციენტის გადახდების დამუშავება და აღრიცხვა',
+    en: 'Process and record patient payments',
+    ru: 'Обработка и учет платежей пациентов',
+  },
+  'view-financial-reports': {
+    ka: 'ფინანსურ ანგარიშებზე და ანალიტიკაზე წვდომა',
+    en: 'Access financial reports and analytics',
+    ru: 'Доступ к финансовым отчетам и аналитике',
+  },
+  'manage-insurance-claims': {
+    ka: 'სადაზღვევო პრეტენზიების შექმნა, წარდგენა და მართვა',
+    en: 'Create, submit, and manage insurance claims',
+    ru: 'Создание, подача и управление страховыми претензиями',
+  },
+  'view-users': {
+    ka: 'ანგარიშების მართვის გვერდზე წვდომა და პრაქტიკოსთა ანგარიშების ნახვა',
+    en: 'Access the account management page and view practitioner accounts',
+    ru: 'Доступ к странице управления учетными записями и просмотр учетных записей практикующих врачей',
+  },
+  'create-user': {
+    ka: 'ახალი პრაქტიკოსთა ანგარიშების რეგისტრაცია',
+    en: 'Register new practitioner accounts',
+    ru: 'Регистрация новых учетных записей практикующих врачей',
+  },
+  'edit-user': {
+    ka: 'პრაქტიკოსთა ანგარიშების დეტალების შეცვლა',
+    en: 'Modify practitioner account details',
+    ru: 'Изменение деталей учетных записей практикующих врачей',
+  },
+  'view-roles': {
+    ka: 'როლების მართვის გვერდზე წვდომა და არსებული როლების ნახვა',
+    en: 'Access the role management page and view existing roles',
+    ru: 'Доступ к странице управления ролями и просмотр существующих ролей',
+  },
+  'create-role': {
+    ka: 'ახალი როლების შექმნა უფლებებით',
+    en: 'Create new roles with permissions',
+    ru: 'Создание новых ролей с разрешениями',
+  },
+  'edit-role': {
+    ka: 'არსებული როლების სახელების, აღწერებისა და უფლებების შეცვლა',
+    en: 'Modify existing role names, descriptions, and permissions',
+    ru: 'Изменение имен, описаний и разрешений существующих ролей',
+  },
+  'delete-role': {
+    ka: 'როლების წაშლა სისტემიდან',
+    en: 'Remove roles from the system',
+    ru: 'Удаление ролей из системы',
+  },
+  'assign-roles': {
+    ka: 'პრაქტიკოსთა ანგარიშებისთვის როლების დამატება ან წაშლა',
+    en: 'Add or remove roles from practitioner accounts',
+    ru: 'Добавление или удаление ролей из учетных записей практикующих врачей',
+  },
+  'view-audit-logs': {
+    ka: 'სისტემის აუდიტის ჟურნალსა და უსაფრთხოების ჩანაწერებზე წვდომა',
+    en: 'Access system audit trail and security logs',
+    ru: 'Доступ к журналу аудита системы и журналам безопасности',
+  },
+};
+
+/**
+ * Helper function to get translated permission name
+ */
+function getPermissionName(code: string, lang: SupportedLanguage): string {
+  const translations = permissionTranslations as Record<string, Record<string, string>>;
+  return translations[code]?.[lang] || translations[code]?.en || code;
+}
+
+/**
+ * Helper function to get translated category name
+ */
+function getCategoryName(code: string, lang: SupportedLanguage): string {
+  const translations = categoryTranslations as Record<string, Record<string, string>>;
+  return translations[code]?.[lang] || translations[code]?.en || code;
+}
+
+/**
+ * Helper function to get translated permission description
+ */
+function getPermissionDescription(code: string, lang: SupportedLanguage): string {
+  return permissionDescriptions[code]?.[lang] || permissionDescriptions[code]?.en || '';
+}
+
+/**
+ * Helper function to get translated category description
+ */
+function getCategoryDescription(code: string, lang: SupportedLanguage): string {
+  return categoryDescriptions[code]?.[lang] || categoryDescriptions[code]?.en || '';
+}
 
 /**
  * Returns the complete permission tree with all 6 categories and permissions
+ * Now supports multiple languages
  *
+ * @param lang - Language code ('ka', 'en', 'ru')
  * @returns Array of PermissionCategory with nested permissions
  */
-export function getPermissionTree(): PermissionCategory[] {
+export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCategory[] {
   return [
     {
       code: 'patient-management',
-      name: 'Patient Management',
-      description: 'Permissions for patient registration, demographics, and history',
+      name: getCategoryName('patient-management', lang),
+      description: getCategoryDescription('patient-management', lang),
       displayOrder: 1,
       icon: 'user',
       permissions: [
         {
           code: 'view-patient-list',
-          name: 'View Patient List',
-          description: 'Access the patient registration page and view list of patients',
+          name: getPermissionName('view-patient-list', lang),
+          description: getPermissionDescription('view-patient-list', lang),
           category: 'patient-management',
           resourceType: 'Patient',
           accessLevel: 'read',
         },
         {
           code: 'view-patient-demographics',
-          name: 'View Patient Demographics',
-          description: 'View patient personal information (name, DOB, address, etc.)',
+          name: getPermissionName('view-patient-demographics', lang),
+          description: getPermissionDescription('view-patient-demographics', lang),
           category: 'patient-management',
           resourceType: 'Patient',
           accessLevel: 'read',
         },
         {
           code: 'edit-patient-demographics',
-          name: 'Edit Patient Demographics',
-          description: 'Modify patient personal information',
+          name: getPermissionName('edit-patient-demographics', lang),
+          description: getPermissionDescription('edit-patient-demographics', lang),
           category: 'patient-management',
           resourceType: 'Patient',
           accessLevel: 'write',
@@ -48,8 +272,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'create-patient',
-          name: 'Create New Patient',
-          description: 'Register new patients in the system',
+          name: getPermissionName('create-patient', lang),
+          description: getPermissionDescription('create-patient', lang),
           category: 'patient-management',
           resourceType: 'Patient',
           accessLevel: 'write',
@@ -57,8 +281,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'delete-patient',
-          name: 'Delete Patient',
-          description: 'Remove patient records from the system',
+          name: getPermissionName('delete-patient', lang),
+          description: getPermissionDescription('delete-patient', lang),
           category: 'patient-management',
           resourceType: 'Patient',
           accessLevel: 'delete',
@@ -66,8 +290,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'view-patient-history',
-          name: 'Access Patient History',
-          description: 'View patient visit history and encounter details',
+          name: getPermissionName('view-patient-history', lang),
+          description: getPermissionDescription('view-patient-history', lang),
           category: 'patient-management',
           resourceType: 'Encounter',
           accessLevel: 'read',
@@ -77,23 +301,23 @@ export function getPermissionTree(): PermissionCategory[] {
     },
     {
       code: 'clinical-documentation',
-      name: 'Clinical Documentation',
-      description: 'Permissions for encounters, clinical notes, and medical records',
+      name: getCategoryName('clinical-documentation', lang),
+      description: getCategoryDescription('clinical-documentation', lang),
       displayOrder: 2,
       icon: 'file-text',
       permissions: [
         {
           code: 'view-encounters',
-          name: 'View Encounters',
-          description: 'View patient encounters and visit details',
+          name: getPermissionName('view-encounters', lang),
+          description: getPermissionDescription('view-encounters', lang),
           category: 'clinical-documentation',
           resourceType: 'Encounter',
           accessLevel: 'read',
         },
         {
           code: 'create-encounter',
-          name: 'Create Encounter',
-          description: 'Create new patient encounters',
+          name: getPermissionName('create-encounter', lang),
+          description: getPermissionDescription('create-encounter', lang),
           category: 'clinical-documentation',
           resourceType: 'Encounter',
           accessLevel: 'write',
@@ -101,8 +325,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'edit-encounter',
-          name: 'Edit Encounter',
-          description: 'Modify existing encounters',
+          name: getPermissionName('edit-encounter', lang),
+          description: getPermissionDescription('edit-encounter', lang),
           category: 'clinical-documentation',
           resourceType: 'Encounter',
           accessLevel: 'write',
@@ -110,16 +334,16 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'view-clinical-notes',
-          name: 'View Clinical Notes',
-          description: 'Read clinical notes and documentation',
+          name: getPermissionName('view-clinical-notes', lang),
+          description: getPermissionDescription('view-clinical-notes', lang),
           category: 'clinical-documentation',
           resourceType: 'DocumentReference',
           accessLevel: 'read',
         },
         {
           code: 'create-clinical-notes',
-          name: 'Create Clinical Notes',
-          description: 'Create new clinical notes',
+          name: getPermissionName('create-clinical-notes', lang),
+          description: getPermissionDescription('create-clinical-notes', lang),
           category: 'clinical-documentation',
           resourceType: 'DocumentReference',
           accessLevel: 'write',
@@ -127,8 +351,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'sign-clinical-documents',
-          name: 'Sign Clinical Documents',
-          description: 'Digitally sign and approve clinical documents',
+          name: getPermissionName('sign-clinical-documents', lang),
+          description: getPermissionDescription('sign-clinical-documents', lang),
           category: 'clinical-documentation',
           resourceType: 'DocumentReference',
           accessLevel: 'write',
@@ -138,31 +362,31 @@ export function getPermissionTree(): PermissionCategory[] {
     },
     {
       code: 'laboratory',
-      name: 'Laboratory',
-      description: 'Permissions for lab orders, results, and specimen management',
+      name: getCategoryName('laboratory', lang),
+      description: getCategoryDescription('laboratory', lang),
       displayOrder: 3,
       icon: 'flask',
       permissions: [
         {
           code: 'view-lab-results',
-          name: 'View Lab Results',
-          description: 'View laboratory test results',
+          name: getPermissionName('view-lab-results', lang),
+          description: getPermissionDescription('view-lab-results', lang),
           category: 'laboratory',
           resourceType: 'Observation',
           accessLevel: 'read',
         },
         {
           code: 'order-lab-tests',
-          name: 'Order Lab Tests',
-          description: 'Create new laboratory test orders',
+          name: getPermissionName('order-lab-tests', lang),
+          description: getPermissionDescription('order-lab-tests', lang),
           category: 'laboratory',
           resourceType: 'ServiceRequest',
           accessLevel: 'write',
         },
         {
           code: 'edit-lab-results',
-          name: 'Edit Lab Results',
-          description: 'Modify laboratory test results',
+          name: getPermissionName('edit-lab-results', lang),
+          description: getPermissionDescription('edit-lab-results', lang),
           category: 'laboratory',
           resourceType: 'Observation',
           accessLevel: 'write',
@@ -170,8 +394,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'approve-lab-results',
-          name: 'Approve Lab Results',
-          description: 'Approve and finalize laboratory results',
+          name: getPermissionName('approve-lab-results', lang),
+          description: getPermissionDescription('approve-lab-results', lang),
           category: 'laboratory',
           resourceType: 'Observation',
           accessLevel: 'write',
@@ -181,23 +405,23 @@ export function getPermissionTree(): PermissionCategory[] {
     },
     {
       code: 'billing-financial',
-      name: 'Billing & Financial',
-      description: 'Permissions for invoicing, payments, and insurance claims',
+      name: getCategoryName('billing-financial', lang),
+      description: getCategoryDescription('billing-financial', lang),
       displayOrder: 4,
       icon: 'currency-dollar',
       permissions: [
         {
           code: 'view-invoices',
-          name: 'View Invoices',
-          description: 'View patient invoices and billing information',
+          name: getPermissionName('view-invoices', lang),
+          description: getPermissionDescription('view-invoices', lang),
           category: 'billing-financial',
           resourceType: 'Invoice',
           accessLevel: 'read',
         },
         {
           code: 'create-invoices',
-          name: 'Create Invoices',
-          description: 'Create new invoices for services',
+          name: getPermissionName('create-invoices', lang),
+          description: getPermissionDescription('create-invoices', lang),
           category: 'billing-financial',
           resourceType: 'Invoice',
           accessLevel: 'write',
@@ -205,24 +429,24 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'process-payments',
-          name: 'Process Payments',
-          description: 'Process and record patient payments',
+          name: getPermissionName('process-payments', lang),
+          description: getPermissionDescription('process-payments', lang),
           category: 'billing-financial',
           resourceType: 'PaymentReconciliation',
           accessLevel: 'write',
         },
         {
           code: 'view-financial-reports',
-          name: 'View Financial Reports',
-          description: 'Access financial reports and analytics',
+          name: getPermissionName('view-financial-reports', lang),
+          description: getPermissionDescription('view-financial-reports', lang),
           category: 'billing-financial',
           resourceType: 'Invoice',
           accessLevel: 'read',
         },
         {
           code: 'manage-insurance-claims',
-          name: 'Manage Insurance Claims',
-          description: 'Create, submit, and manage insurance claims',
+          name: getPermissionName('manage-insurance-claims', lang),
+          description: getPermissionDescription('manage-insurance-claims', lang),
           category: 'billing-financial',
           resourceType: 'Claim',
           accessLevel: 'write',
@@ -231,23 +455,23 @@ export function getPermissionTree(): PermissionCategory[] {
     },
     {
       code: 'administration',
-      name: 'Administration',
-      description: 'Permissions for user management, roles, and system settings',
+      name: getCategoryName('administration', lang),
+      description: getCategoryDescription('administration', lang),
       displayOrder: 5,
       icon: 'settings',
       permissions: [
         {
           code: 'view-users',
-          name: 'View User Accounts',
-          description: 'Access the account management page and view practitioner accounts',
+          name: getPermissionName('view-users', lang),
+          description: getPermissionDescription('view-users', lang),
           category: 'administration',
           resourceType: 'Practitioner',
           accessLevel: 'read',
         },
         {
           code: 'create-user',
-          name: 'Create User Accounts',
-          description: 'Register new practitioner accounts',
+          name: getPermissionName('create-user', lang),
+          description: getPermissionDescription('create-user', lang),
           category: 'administration',
           resourceType: 'Practitioner',
           accessLevel: 'write',
@@ -255,8 +479,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'edit-user',
-          name: 'Edit User Accounts',
-          description: 'Modify practitioner account details',
+          name: getPermissionName('edit-user', lang),
+          description: getPermissionDescription('edit-user', lang),
           category: 'administration',
           resourceType: 'Practitioner',
           accessLevel: 'write',
@@ -264,16 +488,16 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'view-roles',
-          name: 'View Roles',
-          description: 'Access the role management page and view existing roles',
+          name: getPermissionName('view-roles', lang),
+          description: getPermissionDescription('view-roles', lang),
           category: 'administration',
           resourceType: 'AccessPolicy',
           accessLevel: 'read',
         },
         {
           code: 'create-role',
-          name: 'Create Roles',
-          description: 'Create new roles with permissions',
+          name: getPermissionName('create-role', lang),
+          description: getPermissionDescription('create-role', lang),
           category: 'administration',
           resourceType: 'AccessPolicy',
           accessLevel: 'write',
@@ -281,8 +505,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'edit-role',
-          name: 'Edit Roles',
-          description: 'Modify existing role names, descriptions, and permissions',
+          name: getPermissionName('edit-role', lang),
+          description: getPermissionDescription('edit-role', lang),
           category: 'administration',
           resourceType: 'AccessPolicy',
           accessLevel: 'write',
@@ -290,8 +514,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'delete-role',
-          name: 'Delete Roles',
-          description: 'Remove roles from the system',
+          name: getPermissionName('delete-role', lang),
+          description: getPermissionDescription('delete-role', lang),
           category: 'administration',
           resourceType: 'AccessPolicy',
           accessLevel: 'delete',
@@ -299,8 +523,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'assign-roles',
-          name: 'Assign Roles to Users',
-          description: 'Add or remove roles from practitioner accounts',
+          name: getPermissionName('assign-roles', lang),
+          description: getPermissionDescription('assign-roles', lang),
           category: 'administration',
           resourceType: 'PractitionerRole',
           accessLevel: 'write',
@@ -308,8 +532,8 @@ export function getPermissionTree(): PermissionCategory[] {
         },
         {
           code: 'view-audit-logs',
-          name: 'View Audit Logs',
-          description: 'Access system audit trail and security logs',
+          name: getPermissionName('view-audit-logs', lang),
+          description: getPermissionDescription('view-audit-logs', lang),
           category: 'administration',
           resourceType: 'AuditEvent',
           accessLevel: 'read',
@@ -318,8 +542,8 @@ export function getPermissionTree(): PermissionCategory[] {
     },
     {
       code: 'reports',
-      name: 'Reports',
-      description: 'Permissions for analytics, exports, and compliance reports',
+      name: getCategoryName('reports', lang),
+      description: getCategoryDescription('reports', lang),
       displayOrder: 6,
       icon: 'chart-bar',
       permissions: [],

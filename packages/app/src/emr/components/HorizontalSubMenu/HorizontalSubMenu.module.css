@@ -1,46 +1,35 @@
 /**
- * HorizontalSubMenu Component Styles (Row 3)
+ * HorizontalSubMenu Component Styles - Premium Medical Design
  *
- * Provides horizontal tab layout with turquoise gradient for sub-menu items
- * - Horizontal tab arrangement with scrolling support
- * - Turquoise gradient background (#17a2b8)
- * - Active tab: white 3px bottom border, bold font
- * - Hover: semi-transparent white overlay
- * - Supports Georgian text rendering
- * - Consistent with EMR UI design system
+ * Refined sub-navigation tabs with:
+ * - Elegant gradient background
+ * - Clean active indicator bar
+ * - Smooth hover transitions
+ * - Horizontal scroll support
  */
 
-/* Container - Row 3 with turquoise gradient background */
+/* Container - Row 3 with refined gradient */
 .container {
   /* Layout */
   display: flex;
   width: 100%;
-  height: var(--emr-submenu-height); /* 45px */
+  height: 36px;
 
-  /* Background - Turquoise gradient */
-  background: var(--emr-gradient-submenu); /* linear-gradient(90deg, #138496 0%, #17a2b8 50%, #20c4dd 100%) */
+  /* Premium gradient background - subtle blue tones */
+  background: linear-gradient(90deg, #2b6cb0 0%, #3182ce 50%, #4299e1 100%);
 
   /* Visual effects */
-  box-shadow: var(--emr-shadow-md);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
   /* Z-index for proper layering */
   position: relative;
   z-index: var(--emr-z-submenu);
 }
 
-/* ScrollArea wrapper - enables horizontal scrolling */
+/* ScrollArea wrapper */
 .scrollArea {
-  /* Full width and height */
   width: 100%;
   height: 100%;
-
-  /* Hide scrollbar but keep functionality */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.scrollArea::-webkit-scrollbar {
-  display: none;
 }
 
 /* Tab container - horizontal flex layout */
@@ -50,122 +39,116 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  gap: 2px;
 
-  /* Prevent wrapping - enable horizontal scroll */
+  /* Prevent wrapping */
   flex-wrap: nowrap;
   white-space: nowrap;
 
   /* Full height */
   height: 100%;
   min-width: fit-content;
+  padding: 0 12px;
 }
 
 /* Individual tab styling */
 .tab {
   /* Layout */
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  /* Spacing - matches design spec */
-  padding: 10px 20px;
+  /* Spacing */
+  padding: 0 14px;
   margin: 0;
   height: 100%;
 
-  /* Typography - white text */
-  font-size: 14px;
+  /* Typography */
+  font-size: 12px;
   font-weight: 500;
-  color: var(--emr-text-inverse); /* white */
+  color: rgba(255, 255, 255, 0.8);
   text-align: center;
   white-space: nowrap;
 
   /* Visual styling */
   background-color: transparent;
   border: none;
-  border-bottom: 3px solid transparent;
   cursor: pointer;
 
-  /* Transitions - smooth 0.2s */
-  transition:
-    background-color var(--emr-transition-base),
-    border-color var(--emr-transition-base),
-    font-weight var(--emr-transition-base);
+  /* Smooth transitions */
+  transition: all 0.2s ease;
 
   /* Prevent text selection */
   user-select: none;
 
   /* Georgian text rendering support */
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Noto Sans Georgian',
-    'Noto Sans',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Georgian', 'Noto Sans', sans-serif;
+}
+
+/* Tab label */
+.tabLabel {
+  position: relative;
+  z-index: 1;
 }
 
 /* Hover state for inactive tabs */
 .tab:hover:not(.active) {
+  color: white;
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Active tab styling - white bottom border, bold font */
+/* Active tab styling */
 .tab.active {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: var(--emr-text-inverse); /* white */
+  color: white;
   font-weight: 600;
-  border-bottom-color: var(--emr-text-inverse); /* white 3px solid border */
 }
 
-/* Active tab hover - slightly more transparent */
+/* Active indicator bar - bottom border */
+.activeBar {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 16px);
+  height: 2px;
+  background: white;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+/* Active tab hover */
 .tab.active:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Focus styles for accessibility */
 .tab:focus-visible {
-  outline: 2px solid var(--emr-text-inverse);
+  outline: 2px solid rgba(255, 255, 255, 0.5);
   outline-offset: -2px;
   z-index: 1;
 }
 
-/* Active focus state - white outline */
-.tab.active:focus-visible {
-  outline-color: var(--emr-text-inverse);
-}
-
-/* Responsive adjustments for smaller screens */
+/* Responsive adjustments */
 @media (max-width: 1024px) {
   .tab {
-    font-size: 13px;
-    padding: 8px 16px;
+    font-size: 11px;
+    padding: 0 10px;
   }
 }
 
 @media (max-width: 768px) {
   .container {
-    height: 40px;
+    height: 32px;
+  }
+
+  .tabContainer {
+    padding: 0 8px;
+    gap: 0;
   }
 
   .tab {
-    font-size: 12px;
-    padding: 6px 12px;
-  }
-}
-
-/* Dark mode support (if enabled in the future) */
-@media (prefers-color-scheme: dark) {
-  .tab {
-    color: var(--emr-text-inverse);
-  }
-
-  .tab:hover:not(.active) {
-    background-color: rgba(255, 255, 255, 0.15);
-  }
-
-  .tab.active {
-    background-color: rgba(255, 255, 255, 0.25);
-    border-bottom-color: var(--emr-text-inverse);
+    font-size: 11px;
+    padding: 0 8px;
   }
 }

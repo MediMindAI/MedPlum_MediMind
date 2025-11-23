@@ -1,21 +1,23 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Menu, Text, UnstyledButton, Button } from '@mantine/core';
-import { IconUser, IconChevronDown, IconDashboard } from '@tabler/icons-react';
+import { Box, Menu, Text, UnstyledButton } from '@mantine/core';
+import { IconUser, IconChevronDown, IconLayoutDashboard, IconSettings, IconLogout } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useEMRPermissions } from '../../hooks/useEMRPermissions';
 import { LanguageSelector } from '../LanguageSelector/LanguageSelector';
+import styles from './TopNavBar.module.css';
 
 /**
- * TopNavBar - Row 1 of EMR layout (gray navigation bar, 40px height)
+ * TopNavBar - Premium top navigation bar
  *
  * Features:
- * - 5 navigation items (currently placeholders)
- * - User menu dropdown on the right
- * - Gray background (#e9ecef)
+ * - Refined glass-like aesthetic with subtle depth
+ * - MediMind branding with logo
+ * - Language selector with pill design
+ * - Premium user menu dropdown
  */
 export function TopNavBar() {
   const medplum = useMedplum();
@@ -26,79 +28,92 @@ export function TopNavBar() {
   const userName = profile?.name?.[0]?.text || 'User';
 
   return (
-    <Box
-      style={{
-        height: '20px',
-        backgroundColor: '#e9ecef',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 0.5rem',
-        borderBottom: '1px solid #dee2e6',
-      }}
-    >
-      {/* Left side - Dashboard button and Language selector */}
-      <Box style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-        <Button
-          leftSection={<IconDashboard size={10} />}
-          size="compact-xs"
-          variant="light"
+    <Box className={styles.topNavBar} data-testid="topnav">
+      {/* Left side - Brand and Dashboard */}
+      <Box className={styles.leftSection}>
+        {/* MediMind Logo/Brand */}
+        <Box className={styles.brand} onClick={() => navigate('/')}>
+          <Box className={styles.logoIcon}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </Box>
+          <Text className={styles.brandText}>
+            <span className={styles.brandMedi}>Medi</span>
+            <span className={styles.brandMind}>Mind</span>
+          </Text>
+        </Box>
+
+        {/* Vertical Divider */}
+        <Box className={styles.divider} />
+
+        {/* Dashboard Button */}
+        <UnstyledButton
+          className={styles.dashboardBtn}
           onClick={() => navigate('/')}
-          style={{
-            background: 'var(--emr-gradient-primary)',
-            color: 'white',
-            height: '16px',
-            fontSize: '9px',
-            padding: '0 6px',
-          }}
         >
-          {t('topnav.dashboard')}
-        </Button>
-        <LanguageSelector compact />
+          <IconLayoutDashboard size={14} />
+          <span>{t('topnav.dashboard')}</span>
+        </UnstyledButton>
       </Box>
 
-      {/* Right side - User menu */}
-      <Menu shadow="md" width={200}>
-        <Menu.Target>
-          <UnstyledButton
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.25rem',
-              padding: '0.1rem 0.25rem',
-              borderRadius: '2px',
-              cursor: 'pointer',
-            }}
-          >
-            <IconUser size={10} />
-            <Text size="xs" style={{ fontSize: '9px' }}>{userName}</Text>
-            <IconChevronDown size={8} />
-          </UnstyledButton>
-        </Menu.Target>
+      {/* Right side - Language and User */}
+      <Box className={styles.rightSection}>
+        <LanguageSelector />
 
-        <Menu.Dropdown>
-          <Menu.Item disabled>
-            <Text size="sm" fw={600}>
-              {userName}
-            </Text>
-          </Menu.Item>
-          <Menu.Divider />
+        {/* Vertical Divider */}
+        <Box className={styles.divider} />
 
-          {/* Admin-only menu items */}
-          {isAdmin() && (
-            <>
-              <Menu.Item onClick={() => navigate('/emr/account-management')}>
-                {t('topnav.accountManagement')}
-              </Menu.Item>
-              <Menu.Divider />
-            </>
-          )}
+        {/* User Menu */}
+        <Menu shadow="lg" width={220} position="bottom-end" withArrow arrowPosition="center">
+          <Menu.Target>
+            <UnstyledButton className={styles.userButton}>
+              <Box className={styles.userAvatar}>
+                <IconUser size={14} />
+              </Box>
+              <Text className={styles.userName}>{userName}</Text>
+              <IconChevronDown size={12} className={styles.chevron} />
+            </UnstyledButton>
+          </Menu.Target>
 
-          <Menu.Item onClick={() => medplum.signOut()}>
-            {t('topnav.logout')}
-          </Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
+          <Menu.Dropdown className={styles.menuDropdown}>
+            <Box className={styles.menuHeader}>
+              <Box className={styles.menuHeaderAvatar}>
+                <IconUser size={20} />
+              </Box>
+              <Box>
+                <Text fw={600} size="sm">{userName}</Text>
+                <Text size="xs" c="dimmed">EMR System</Text>
+              </Box>
+            </Box>
+
+            <Menu.Divider />
+
+            {/* Admin-only menu items */}
+            {isAdmin() && (
+              <>
+                <Menu.Item
+                  leftSection={<IconSettings size={16} />}
+                  onClick={() => navigate('/emr/account-management')}
+                >
+                  {t('topnav.accountManagement')}
+                </Menu.Item>
+                <Menu.Divider />
+              </>
+            )}
+
+            <Menu.Item
+              leftSection={<IconLogout size={16} />}
+              onClick={() => medplum.signOut()}
+              color="red"
+            >
+              {t('topnav.logout')}
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      </Box>
     </Box>
   );
 }

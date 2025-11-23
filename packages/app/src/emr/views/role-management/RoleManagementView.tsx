@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 import { useState, useMemo } from 'react';
-import { Title, Button, Stack, Box, Paper, Group, Badge } from '@mantine/core';
+import { Title, Button, Stack, Box, Paper, Group, Badge, Text } from '@mantine/core';
 import { IconPlus, IconShieldLock, IconChartBar, IconFilter } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
@@ -14,11 +14,11 @@ import { RoleCloneModal } from '../../components/role-management/RoleCloneModal'
 import { RoleFilters } from '../../components/role-management/RoleFilters';
 import { RoleEmptyState } from '../../components/role-management/RoleEmptyState';
 import { RoleDashboardStats } from '../../components/role-management/RoleDashboardStats';
-import { SectionHeader } from '../../components/common/SectionHeader';
 import { useRoles } from '../../hooks/useRoles';
 import { useTranslation } from '../../hooks/useTranslation';
 import { reactivateRole } from '../../services/roleService';
 import type { RoleRow } from '../../types/role-management';
+import styles from './RoleManagement.module.css';
 
 /**
  * Main role management page
@@ -112,59 +112,56 @@ export function RoleManagementView(): JSX.Element {
   const showEmptyState = !loading && roles.length === 0 && !searchQuery && statusFilter === 'all';
 
   return (
-    <Stack gap="lg">
-      {/* Header with Title and Create Button */}
-      <Group justify="space-between" align="center" wrap="wrap" gap="sm">
-        <Group gap="md" align="center">
-          <Title
-            order={2}
-            style={{
-              color: 'var(--emr-text-primary)',
-              fontWeight: 700,
-            }}
-          >
-            {t('roleManagement.title')}
-          </Title>
-          {roles.length > 0 && (
-            <Badge
-              size="lg"
-              variant="light"
-              color="blue"
-              style={{
-                background: 'var(--emr-light-accent)',
-                color: 'var(--emr-secondary)',
+    <Stack gap="xl">
+      {/* Premium Header with Glassmorphism */}
+      <Box className={`${styles.headerSection} ${styles.animateFadeIn}`}>
+        <Group justify="space-between" align="center" wrap="wrap" gap="md">
+          <Group gap="lg" align="center">
+            {/* Icon container */}
+            <Box className={styles.headerIcon}>
+              <IconShieldLock size={26} stroke={1.8} />
+            </Box>
+
+            <Box>
+              <Title order={2} className={styles.headerTitle}>
+                {t('roleManagement.title')}
+              </Title>
+              <Text className={styles.headerSubtitle}>
+                {lang === 'ka'
+                  ? 'მართეთ როლები და წვდომის უფლებები'
+                  : lang === 'ru'
+                    ? 'Управление ролями и правами доступа'
+                    : 'Manage roles and access permissions'}
+              </Text>
+            </Box>
+
+            {roles.length > 0 && (
+              <Box className={styles.roleBadge}>
+                {roles.length} {lang === 'ka' ? 'როლი' : lang === 'ru' ? 'ролей' : 'roles'}
+              </Box>
+            )}
+          </Group>
+
+          {!showEmptyState && (
+            <Button
+              leftSection={<IconPlus size={18} stroke={2} />}
+              onClick={() => {
+                setTemplateCode(null);
+                setCreateModalOpened(true);
               }}
+              className={styles.createButton}
             >
-              {roles.length} {lang === 'ka' ? 'როლი' : lang === 'ru' ? 'ролей' : 'roles'}
-            </Badge>
+              {t('roleManagement.createRole')}
+            </Button>
           )}
         </Group>
-        {!showEmptyState && (
-          <Button
-            leftSection={<IconPlus size={16} />}
-            onClick={() => {
-              setTemplateCode(null);
-              setCreateModalOpened(true);
-            }}
-            style={{
-              background: 'var(--emr-gradient-primary)',
-            }}
-          >
-            {t('roleManagement.createRole')}
-          </Button>
-        )}
-      </Group>
+      </Box>
 
       {/* Show Empty State OR Dashboard + Table */}
       {showEmptyState ? (
         <Paper
           p="xl"
-          withBorder
-          style={{
-            background: 'var(--emr-text-inverse)',
-            borderRadius: 'var(--emr-border-radius-lg)',
-            borderColor: 'var(--emr-gray-200)',
-          }}
+          className={styles.sectionCard}
         >
           <RoleEmptyState
             onCreateRole={() => {
@@ -176,63 +173,58 @@ export function RoleManagementView(): JSX.Element {
         </Paper>
       ) : (
         <>
-          {/* Dashboard Stats */}
-          <Box>
-            <SectionHeader
-              icon={IconChartBar}
-              title={lang === 'ka' ? 'სტატისტიკა' : lang === 'ru' ? 'Статистика' : 'Statistics'}
-              variant="prominent"
-              spacing="sm"
-            />
+          {/* Dashboard Stats - Premium Design */}
+          <Box className={`${styles.animateFadeIn} ${styles.animateDelay1}`}>
+            <Group gap="md" align="center" mb="md">
+              <Box className={styles.sectionIcon}>
+                <IconChartBar size={18} stroke={2} />
+              </Box>
+              <Text fw={600} size="sm" c="var(--emr-text-primary)" style={{ letterSpacing: '-0.2px' }}>
+                {lang === 'ka' ? 'სტატისტიკა' : lang === 'ru' ? 'Статистика' : 'Statistics'}
+              </Text>
+            </Group>
             <RoleDashboardStats stats={stats} loading={loading} />
           </Box>
 
-          {/* Filters Section */}
-          <Box>
-            <SectionHeader
-              icon={IconFilter}
-              title={lang === 'ka' ? 'ძიება და ფილტრები' : lang === 'ru' ? 'Поиск и фильтры' : 'Search & Filters'}
-              spacing="sm"
-            />
-            <Paper
-              p="md"
-              withBorder
-              style={{
-                background: 'var(--emr-text-inverse)',
-                borderRadius: 'var(--emr-border-radius-lg)',
-                borderColor: 'var(--emr-gray-200)',
-              }}
-            >
-              <RoleFilters onSearchChange={setSearchQuery} onStatusChange={setStatusFilter} />
+          {/* Filters Section - Premium Card */}
+          <Box className={`${styles.animateFadeIn} ${styles.animateDelay2}`}>
+            <Paper className={styles.sectionCard}>
+              <Box className={styles.sectionHeader}>
+                <Box className={styles.sectionIcon}>
+                  <IconFilter size={18} stroke={2} />
+                </Box>
+                <Text className={styles.sectionTitle}>
+                  {lang === 'ka' ? 'ძიება და ფილტრები' : lang === 'ru' ? 'Поиск и фильтры' : 'Search & Filters'}
+                </Text>
+              </Box>
+              <Box className={styles.sectionContent}>
+                <RoleFilters onSearchChange={setSearchQuery} onStatusChange={setStatusFilter} />
+              </Box>
             </Paper>
           </Box>
 
-          {/* Roles Table */}
-          <Box>
-            <SectionHeader
-              icon={IconShieldLock}
-              title={lang === 'ka' ? 'როლების სია' : lang === 'ru' ? 'Список ролей' : 'Roles List'}
-              spacing="sm"
-            />
-            <Paper
-              p="md"
-              withBorder
-              style={{
-                background: 'var(--emr-text-inverse)',
-                borderRadius: 'var(--emr-border-radius-lg)',
-                borderColor: 'var(--emr-gray-200)',
-                overflow: 'hidden',
-              }}
-            >
-              <RoleTable
-                roles={roles}
-                loading={loading}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onDeactivate={handleDeactivate}
-                onReactivate={handleReactivate}
-                onClone={handleClone}
-              />
+          {/* Roles Table - Premium Card */}
+          <Box className={`${styles.animateFadeIn} ${styles.animateDelay3}`}>
+            <Paper className={styles.sectionCard}>
+              <Box className={styles.sectionHeader}>
+                <Box className={styles.sectionIcon}>
+                  <IconShieldLock size={18} stroke={2} />
+                </Box>
+                <Text className={styles.sectionTitle}>
+                  {lang === 'ka' ? 'როლების სია' : lang === 'ru' ? 'Список ролей' : 'Roles List'}
+                </Text>
+              </Box>
+              <Box p="md">
+                <RoleTable
+                  roles={roles}
+                  loading={loading}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onDeactivate={handleDeactivate}
+                  onReactivate={handleReactivate}
+                  onClone={handleClone}
+                />
+              </Box>
             </Paper>
           </Box>
         </>

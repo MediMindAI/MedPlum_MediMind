@@ -1,0 +1,393 @@
+/* Role Management Premium Dashboard Styles */
+/* Refined medical-professional aesthetic using EMR theme colors */
+
+/* ==================== PAGE HEADER ==================== */
+.headerSection {
+  padding: 24px 28px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(26, 54, 93, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.headerSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--emr-gradient-submenu);
+}
+
+.headerIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--emr-gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(26, 54, 93, 0.25);
+  color: white;
+}
+
+.headerTitle {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.headerSubtitle {
+  font-size: 14px;
+  color: var(--emr-gray-500);
+  margin-top: 2px;
+}
+
+.roleBadge {
+  background: linear-gradient(135deg, rgba(43, 108, 176, 0.1), rgba(99, 179, 237, 0.15));
+  color: var(--emr-secondary);
+  border: 1px solid rgba(43, 108, 176, 0.15);
+  font-weight: 600;
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.createButton {
+  background: var(--emr-gradient-primary);
+  box-shadow: 0 4px 12px rgba(26, 54, 93, 0.2);
+  font-weight: 600;
+  min-height: 44px;
+  padding: 0 24px;
+  border-radius: 12px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.createButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(26, 54, 93, 0.3);
+}
+
+/* ==================== SECTION STYLING ==================== */
+.sectionCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(26, 54, 93, 0.06);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.sectionCard:hover {
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 8px 24px rgba(26, 54, 93, 0.08);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(180deg, #fafbfc 0%, #f5f7fa 100%);
+  border-bottom: 1px solid var(--emr-gray-200);
+}
+
+.sectionIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--emr-gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 2px 8px rgba(26, 54, 93, 0.2);
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--emr-text-primary);
+  letter-spacing: -0.2px;
+}
+
+.sectionContent {
+  padding: 20px;
+}
+
+/* ==================== STAT CARDS ==================== */
+.statCard {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(26, 54, 93, 0.06);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: default;
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--card-accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.06),
+    0 12px 32px rgba(26, 54, 93, 0.12);
+  border-color: var(--card-accent);
+}
+
+.statCard:hover::before {
+  opacity: 1;
+}
+
+.statIconWrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.statIconWrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: var(--icon-gradient);
+  opacity: 0.12;
+}
+
+.statIconWrapper svg {
+  position: relative;
+  z-index: 1;
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--emr-text-primary);
+}
+
+.statLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--emr-gray-500);
+  margin-top: 4px;
+}
+
+/* ==================== MODAL STYLING ==================== */
+.modalHeader {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 24px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.modalHeader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--emr-gradient-submenu);
+}
+
+.modalHeaderIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--emr-gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(26, 54, 93, 0.25);
+  color: white;
+}
+
+.modalTitle {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: var(--emr-text-primary);
+}
+
+.modalSubtitle {
+  font-size: 14px;
+  color: var(--emr-gray-500);
+  margin-top: 2px;
+}
+
+.modalCloseButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--emr-gray-100);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--emr-gray-500);
+  transition: all 0.2s ease;
+}
+
+.modalCloseButton:hover {
+  background: var(--emr-gray-200);
+  color: var(--emr-gray-700);
+}
+
+.modalFooter {
+  background: linear-gradient(180deg, #fafbfc 0%, #f4f6f8 100%);
+  border-top: 1px solid var(--emr-gray-200);
+  padding: 20px 28px;
+}
+
+.permissionBadge {
+  background: rgba(43, 108, 176, 0.1);
+  color: var(--emr-secondary);
+  border: 1px solid rgba(43, 108, 176, 0.15);
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.coverageBadge {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  padding: 6px 14px;
+  border-radius: 20px;
+}
+
+.coverageBadgeGood {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--emr-stat-success);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+.coverageBadgeLow {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--emr-stat-warning);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+}
+
+.submitButton {
+  background: var(--emr-gradient-primary);
+  min-width: 160px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(26, 54, 93, 0.2);
+  border-radius: 10px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.submitButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(26, 54, 93, 0.3);
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animateFadeIn {
+  animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animateDelay1 { animation-delay: 0.05s; opacity: 0; }
+.animateDelay2 { animation-delay: 0.1s; opacity: 0; }
+.animateDelay3 { animation-delay: 0.15s; opacity: 0; }
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .headerSection {
+    padding: 16px 20px;
+  }
+
+  .headerIcon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .headerTitle {
+    font-size: 20px;
+  }
+
+  .statCard {
+    padding: 16px;
+  }
+
+  .statValue {
+    font-size: 26px;
+  }
+
+  .statIconWrapper {
+    width: 44px;
+    height: 44px;
+  }
+
+  .modalHeader {
+    padding: 20px;
+  }
+
+  .modalHeaderIcon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .modalTitle {
+    font-size: 18px;
+  }
+}

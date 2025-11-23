@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Grid, Button, Stack, Box, Group, Text, ActionIcon, Badge, Alert } from '@mantine/core';
-import { IconPlus, IconTrash, IconAlertTriangle } from '@tabler/icons-react';
+import { Grid, Button, Stack, Box, Text, ActionIcon, Badge, Alert } from '@mantine/core';
+import { IconPlus, IconTrash, IconAlertTriangle, IconUser, IconPhone, IconBriefcase, IconShieldCheck, IconMail } from '@tabler/icons-react';
 import { useMemo } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAccountForm } from '../../hooks/useAccountForm';
@@ -15,6 +15,7 @@ import { RoleConflictAlert } from './RoleConflictAlert';
 import { WelcomeMessageEditor } from './WelcomeMessageEditor';
 import accountRolesData from '../../translations/account-roles.json';
 import { EMRTextInput, EMRSelect, EMRDatePicker } from '../shared/EMRFormFields';
+import styles from './CreateAccountModal.module.css';
 
 interface AccountFormProps {
   onSubmit: (values: AccountFormValues) => void | Promise<void>;
@@ -122,7 +123,7 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
 
   return (
     <form onSubmit={form.onSubmit(onSubmit)}>
-      <Stack gap="md">
+      <Stack gap="lg">
         {/* Inactive Account Warning */}
         {isInactive && (
           <Alert
@@ -133,6 +134,7 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
             styles={{
               root: {
                 background: 'linear-gradient(135deg, #f76707 0%, #fd7e14 100%)',
+                borderRadius: '14px',
               },
             }}
           >
@@ -140,148 +142,188 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
           </Alert>
         )}
 
-        {/* Basic Information */}
-        <Grid gutter="md">
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <EMRTextInput
-              label={t('accountManagement.form.firstName')}
-              placeholder={t('accountManagement.form.firstNamePlaceholder')}
-              required
-              {...form.getInputProps('firstName')}
-            />
-          </Grid.Col>
+        {/* === SECTION 1: Personal Information === */}
+        <Box className={`${styles.formSection} ${styles.sectionPersonal}`}>
+          <Box className={styles.sectionHeader}>
+            <Box className={`${styles.sectionIconWrapper} ${styles.iconPersonal}`}>
+              <IconUser size={24} stroke={1.8} />
+            </Box>
+            <Box className={styles.sectionTitleGroup}>
+              <Text className={styles.sectionTitle}>
+                {t('accountManagement.form.sectionPersonal') || 'Personal Information'}
+              </Text>
+              <Text className={styles.sectionDescription}>
+                {t('accountManagement.form.sectionPersonalDesc') || 'Basic details about the user'}
+              </Text>
+            </Box>
+          </Box>
 
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <EMRTextInput
-              label={t('accountManagement.form.lastName')}
-              placeholder={t('accountManagement.form.lastNamePlaceholder')}
-              required
-              {...form.getInputProps('lastName')}
-            />
-          </Grid.Col>
+          <Grid gutter="xl">
+            <Grid.Col span={{ base: 12, sm: 6, lg: 4 }}>
+              <EMRTextInput
+                label={t('accountManagement.form.firstName')}
+                placeholder={t('accountManagement.form.firstNamePlaceholder')}
+                required
+                {...form.getInputProps('firstName')}
+              />
+            </Grid.Col>
 
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <EMRTextInput
-              label={t('accountManagement.form.fatherName')}
-              placeholder={t('accountManagement.form.fatherNamePlaceholder')}
-              {...form.getInputProps('fatherName')}
-            />
-          </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, lg: 4 }}>
+              <EMRTextInput
+                label={t('accountManagement.form.lastName')}
+                placeholder={t('accountManagement.form.lastNamePlaceholder')}
+                required
+                {...form.getInputProps('lastName')}
+              />
+            </Grid.Col>
 
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <EMRSelect
-              label={t('accountManagement.form.gender')}
-              placeholder={t('accountManagement.form.genderPlaceholder')}
-              data={genderOptions}
-              {...form.getInputProps('gender')}
-            />
-          </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, lg: 4 }}>
+              <EMRTextInput
+                label={t('accountManagement.form.fatherName')}
+                placeholder={t('accountManagement.form.fatherNamePlaceholder')}
+                {...form.getInputProps('fatherName')}
+              />
+            </Grid.Col>
 
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <EMRDatePicker
-              label={t('accountManagement.form.birthDate')}
-              placeholder={t('accountManagement.form.birthDatePlaceholder')}
-              {...form.getInputProps('birthDate')}
-            />
-          </Grid.Col>
-        </Grid>
+            <Grid.Col span={{ base: 12, sm: 6, lg: 4 }}>
+              <EMRSelect
+                label={t('accountManagement.form.gender')}
+                placeholder={t('accountManagement.form.genderPlaceholder')}
+                data={genderOptions}
+                {...form.getInputProps('gender')}
+              />
+            </Grid.Col>
 
-        {/* Contact Information */}
-        <Grid gutter="md">
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <EMRTextInput
-              label={t('accountManagement.form.email')}
-              placeholder={t('accountManagement.form.emailPlaceholder')}
-              type="email"
-              required
-              {...form.getInputProps('email')}
-            />
-          </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, lg: 4 }}>
+              <EMRDatePicker
+                label={t('accountManagement.form.birthDate')}
+                placeholder={t('accountManagement.form.birthDatePlaceholder')}
+                {...form.getInputProps('birthDate')}
+              />
+            </Grid.Col>
+          </Grid>
+        </Box>
 
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <EMRTextInput
-              label={t('accountManagement.form.phoneNumber')}
-              placeholder={t('accountManagement.form.phoneNumberPlaceholder')}
-              {...form.getInputProps('phoneNumber')}
-            />
-          </Grid.Col>
-        </Grid>
+        {/* === SECTION 2: Contact Information === */}
+        <Box className={`${styles.formSection} ${styles.sectionContact}`}>
+          <Box className={styles.sectionHeader}>
+            <Box className={`${styles.sectionIconWrapper} ${styles.iconContact}`}>
+              <IconPhone size={24} stroke={1.8} />
+            </Box>
+            <Box className={styles.sectionTitleGroup}>
+              <Text className={styles.sectionTitle}>
+                {t('accountManagement.form.sectionContact') || 'Contact Information'}
+              </Text>
+              <Text className={styles.sectionDescription}>
+                {t('accountManagement.form.sectionContactDesc') || 'Email and phone for communication'}
+              </Text>
+            </Box>
+          </Box>
 
-        {/* Employment Details */}
-        <Grid gutter="md">
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <EMRTextInput
-              label={t('accountManagement.form.staffId')}
-              placeholder={t('accountManagement.form.staffIdPlaceholder')}
-              {...form.getInputProps('staffId')}
-            />
-          </Grid.Col>
+          <Grid gutter="xl">
+            <Grid.Col span={{ base: 12, lg: 6 }}>
+              <EMRTextInput
+                label={t('accountManagement.form.email')}
+                placeholder={t('accountManagement.form.emailPlaceholder')}
+                type="email"
+                required
+                leftSection={<IconMail size={18} stroke={1.5} style={{ color: '#3182ce' }} />}
+                {...form.getInputProps('email')}
+              />
+            </Grid.Col>
 
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <EMRDatePicker
-              label={t('accountManagement.form.hireDate')}
-              placeholder={t('accountManagement.form.hireDatePlaceholder')}
-              {...form.getInputProps('hireDate')}
-            />
-          </Grid.Col>
-        </Grid>
+            <Grid.Col span={{ base: 12, lg: 6 }}>
+              <EMRTextInput
+                label={t('accountManagement.form.phoneNumber')}
+                placeholder={t('accountManagement.form.phoneNumberPlaceholder')}
+                leftSection={<IconPhone size={18} stroke={1.5} style={{ color: '#3182ce' }} />}
+                {...form.getInputProps('phoneNumber')}
+              />
+            </Grid.Col>
+          </Grid>
+        </Box>
 
-        {/* Multi-Role Assignment Section */}
-        <Box
-          style={{
-            background: 'var(--emr-section-header-bg)',
-            padding: '16px',
-            borderRadius: 'var(--emr-border-radius-lg)',
-            marginTop: '8px',
-          }}
-        >
-          <Group justify="space-between" mb="md">
-            <Text size="sm" fw={600} c="var(--emr-primary)">
-              {t('accountManagement.form.roleAssignment')}
-            </Text>
+        {/* === SECTION 3: Employment Details === */}
+        <Box className={`${styles.formSection} ${styles.sectionEmployment}`}>
+          <Box className={styles.sectionHeader}>
+            <Box className={`${styles.sectionIconWrapper} ${styles.iconEmployment}`}>
+              <IconBriefcase size={24} stroke={1.8} />
+            </Box>
+            <Box className={styles.sectionTitleGroup}>
+              <Text className={styles.sectionTitle}>
+                {t('accountManagement.form.sectionEmployment') || 'Employment Details'}
+              </Text>
+              <Text className={styles.sectionDescription}>
+                {t('accountManagement.form.sectionEmploymentDesc') || 'Staff ID and employment dates'}
+              </Text>
+            </Box>
+          </Box>
+
+          <Grid gutter="xl">
+            <Grid.Col span={{ base: 12, lg: 6 }}>
+              <EMRTextInput
+                label={t('accountManagement.form.staffId')}
+                placeholder={t('accountManagement.form.staffIdPlaceholder')}
+                {...form.getInputProps('staffId')}
+              />
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, lg: 6 }}>
+              <EMRDatePicker
+                label={t('accountManagement.form.hireDate')}
+                placeholder={t('accountManagement.form.hireDatePlaceholder')}
+                {...form.getInputProps('hireDate')}
+              />
+            </Grid.Col>
+          </Grid>
+        </Box>
+
+        {/* === SECTION 4: Role Assignment === */}
+        <Box className={`${styles.formSection} ${styles.sectionRoles}`}>
+          <Box className={styles.sectionHeader}>
+            <Box className={`${styles.sectionIconWrapper} ${styles.iconRoles}`}>
+              <IconShieldCheck size={24} stroke={1.8} />
+            </Box>
+            <Box className={styles.sectionTitleGroup} style={{ flex: 1 }}>
+              <Text className={styles.sectionTitle}>
+                {t('accountManagement.form.roleAssignment')}
+              </Text>
+              <Text className={styles.sectionDescription}>
+                {t('accountManagement.form.sectionRolesDesc') || 'Assign roles and specialties to this user'}
+              </Text>
+            </Box>
             <Button
-              leftSection={<IconPlus size={16} />}
+              leftSection={<IconPlus size={18} />}
               onClick={handleAddRole}
-              size="xs"
+              size="sm"
               variant="light"
-              style={{
-                background: 'var(--emr-gradient-primary)',
-                color: 'white',
-              }}
+              className={styles.addRoleButton}
+              style={{ width: 'auto', padding: '10px 20px', border: 'none' }}
             >
               {t('accountManagement.form.addRole')}
             </Button>
-          </Group>
+          </Box>
 
           {/* Role List */}
           {form.values.roles && form.values.roles.length > 0 ? (
-            <Stack gap="md">
+            <Stack gap="lg">
               {form.values.roles.map((roleAssignment, index) => (
-                <Box
-                  key={index}
-                  style={{
-                    background: 'var(--emr-text-inverse)',
-                    padding: '16px',
-                    borderRadius: 'var(--emr-border-radius-lg)',
-                    border: '1px solid var(--emr-gray-200)',
-                  }}
-                >
-                  <Group justify="space-between" mb="sm">
-                    <Badge color="blue" variant="light">
+                <Box key={index} className={styles.roleCard}>
+                  <Box className={styles.roleCardHeader}>
+                    <Badge className={styles.roleBadge}>
                       {t('accountManagement.form.role')} {index + 1}
                     </Badge>
                     <ActionIcon
-                      color="red"
-                      variant="subtle"
+                      className={styles.roleRemoveButton}
                       onClick={() => handleRemoveRole(index)}
                       aria-label={t('accountManagement.form.removeRole')}
                     >
                       <IconTrash size={16} />
                     </ActionIcon>
-                  </Group>
+                  </Box>
 
-                  <Grid gutter="md">
-                    <Grid.Col span={{ base: 12, md: 6 }}>
+                  <Grid gutter="xl">
+                    <Grid.Col span={{ base: 12, lg: 6 }}>
                       <EMRSelect
                         label={t('accountManagement.form.role')}
                         placeholder={t('accountManagement.form.selectRole')}
@@ -293,7 +335,7 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
                       />
                     </Grid.Col>
 
-                    <Grid.Col span={{ base: 12, md: 6 }}>
+                    <Grid.Col span={{ base: 12, lg: 6 }}>
                       <SpecialtySelect
                         label={t('accountManagement.form.specialty')}
                         value={roleAssignment.specialty || null}
@@ -306,21 +348,19 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
               ))}
             </Stack>
           ) : (
-            <Text size="sm" c="dimmed" ta="center" py="xl">
-              {t('accountManagement.form.noRoles')}
-            </Text>
+            <Box className={styles.emptyRolesState}>
+              <Box className={styles.emptyRolesIcon}>
+                <IconShieldCheck size={32} stroke={1.5} />
+              </Box>
+              <Text className={styles.emptyRolesText}>
+                {t('accountManagement.form.noRoles')}
+              </Text>
+            </Box>
           )}
         </Box>
 
         {/* RBAC Role Assignment (AccessPolicy-based) */}
-        <Box
-          style={{
-            background: 'var(--emr-section-header-bg)',
-            padding: '16px',
-            borderRadius: 'var(--emr-border-radius-lg)',
-            marginTop: '8px',
-          }}
-        >
+        <Box className={`${styles.formSection} ${styles.sectionRoles}`} style={{ marginTop: '-8px' }}>
           <RoleAssignmentPanel
             practitionerId={initialValues?.id}
             value={
@@ -356,7 +396,23 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
         )}
 
         {/* Submit Button */}
-        <Button type="submit" size="md" loading={loading} fullWidth>
+        <Button
+          type="submit"
+          size="xl"
+          loading={loading}
+          fullWidth
+          className={styles.submitButton}
+          style={{
+            background: 'var(--emr-gradient-primary)',
+            height: '64px',
+            borderRadius: '16px',
+            fontSize: '17px',
+            fontWeight: 600,
+            letterSpacing: '0.3px',
+            boxShadow: '0 8px 24px rgba(26, 54, 93, 0.3), 0 4px 8px rgba(0, 0, 0, 0.12)',
+            marginTop: '24px',
+          }}
+        >
           {t('accountManagement.form.save')}
         </Button>
       </Stack>
