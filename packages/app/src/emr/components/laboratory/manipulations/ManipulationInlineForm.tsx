@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
-import { Box, TextInput, Button, Group } from '@mantine/core';
+import { Box, Button, Group } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { EMRTextInput } from '../../shared/EMRFormFields';
 
 interface ManipulationInlineFormProps {
   /** Callback when form is submitted */
@@ -48,14 +49,13 @@ export function ManipulationInlineForm({ onSubmit, loading }: ManipulationInline
       }}
     >
       <Group align="flex-end" gap="sm">
-        <TextInput
+        <EMRTextInput
           label={t('laboratory.manipulations.field.name')}
           placeholder={t('laboratory.manipulations.field.name')}
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={setName}
           required
           style={{ flex: 1 }}
-          size="md"
         />
         <Button
           type="submit"

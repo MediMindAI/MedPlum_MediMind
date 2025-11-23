@@ -1,0 +1,764 @@
+/**
+ * EMRFormFields - Standardized Form Input Styles
+ * ENHANCED: Production-ready, visually distinct form styling
+ * Features: Shadows, gradients, animations, colored accents
+ */
+
+/* ==================== BASE INPUT STYLES ==================== */
+.emr-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--emr-input-label-spacing);
+  width: 100%;
+  position: relative;
+}
+
+.emr-field-wrapper.full-width {
+  width: 100%;
+}
+
+/* ==================== LABEL STYLES ==================== */
+.emr-field-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--emr-input-label-size);
+  font-weight: var(--emr-input-label-weight);
+  color: var(--emr-input-label-color);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.emr-field-label-required {
+  color: var(--emr-input-required-color);
+  font-size: 14px;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+/* ==================== INPUT BASE STYLES ==================== */
+.emr-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--emr-input-height-md);
+  padding: var(--emr-input-padding-y) var(--emr-input-padding-x);
+  font-size: var(--emr-input-font-size);
+  font-family: inherit;
+  color: var(--emr-input-text);
+  background: var(--emr-input-bg-solid);
+  border: var(--emr-input-border-width, 1.5px) solid var(--emr-input-border);
+  border-radius: var(--emr-input-border-radius);
+  outline: none;
+  transition: var(--emr-input-transition);
+  box-sizing: border-box;
+  box-shadow: var(--emr-input-shadow);
+}
+
+/* Size variants */
+.emr-input.size-sm {
+  min-height: var(--emr-input-height-sm);
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.emr-input.size-md {
+  min-height: var(--emr-input-height-md);
+}
+
+.emr-input.size-lg {
+  min-height: var(--emr-input-height-lg);
+  padding: 14px 16px;
+  font-size: 15px;
+}
+
+/* Placeholder */
+.emr-input::placeholder {
+  color: var(--emr-input-placeholder);
+  opacity: 1;
+  font-style: italic;
+}
+
+/* Hover state - ENHANCED with shadow */
+.emr-input:hover:not(:disabled):not(:focus):not(.has-error) {
+  border-color: var(--emr-input-border-hover);
+  box-shadow: var(--emr-input-shadow-hover);
+  transform: translateY(-1px);
+}
+
+/* Focus state - ENHANCED with glow */
+.emr-input:focus,
+.emr-input:focus-within {
+  border-color: var(--emr-input-border-focus);
+  box-shadow: var(--emr-input-shadow-focus);
+  background-color: var(--emr-input-bg-focus);
+  transform: translateY(-1px);
+}
+
+/* Disabled state */
+.emr-input:disabled,
+.emr-input.disabled {
+  background-color: var(--emr-input-bg-disabled);
+  color: var(--emr-input-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.65;
+  box-shadow: none;
+  border-style: dashed;
+}
+
+/* Read-only state */
+.emr-input:read-only:not(:disabled) {
+  background-color: var(--emr-input-bg-disabled);
+  cursor: default;
+  box-shadow: none;
+}
+
+/* ==================== VALIDATION STATES ==================== */
+/* Error state */
+.emr-input.has-error,
+.emr-field-wrapper.has-error .emr-input {
+  border-color: var(--emr-input-error-border);
+  background-color: var(--emr-input-error-bg);
+}
+
+.emr-input.has-error:focus,
+.emr-field-wrapper.has-error .emr-input:focus {
+  box-shadow: var(--emr-input-error-glow);
+}
+
+/* Success state */
+.emr-input.has-success,
+.emr-field-wrapper.has-success .emr-input {
+  border-color: var(--emr-input-success-border);
+  background-color: var(--emr-input-success-bg);
+}
+
+.emr-input.has-success:focus,
+.emr-field-wrapper.has-success .emr-input:focus {
+  box-shadow: var(--emr-input-success-glow);
+}
+
+/* Warning state */
+.emr-input.has-warning,
+.emr-field-wrapper.has-warning .emr-input {
+  border-color: var(--emr-input-warning-border);
+  background-color: var(--emr-input-warning-bg);
+}
+
+.emr-input.has-warning:focus,
+.emr-field-wrapper.has-warning .emr-input:focus {
+  box-shadow: var(--emr-input-warning-glow);
+}
+
+/* ==================== HELP TEXT & ERROR MESSAGE ==================== */
+.emr-field-help {
+  font-size: var(--emr-input-help-size);
+  color: var(--emr-input-help-color);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.emr-field-error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--emr-input-help-size);
+  color: var(--emr-input-error-text);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.emr-field-success {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--emr-input-help-size);
+  color: var(--emr-input-success-text);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.emr-field-warning {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--emr-input-help-size);
+  color: var(--emr-input-warning-text);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+/* ==================== INPUT WITH SECTIONS ==================== */
+.emr-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.emr-input-left-section {
+  position: absolute;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--emr-input-icon-color);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.emr-input-right-section {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--emr-input-icon-color);
+  z-index: 1;
+}
+
+.emr-input.has-left-section {
+  padding-left: 40px;
+}
+
+.emr-input.has-right-section {
+  padding-right: 40px;
+}
+
+/* Clear button in right section */
+.emr-input-clear-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  color: var(--emr-input-icon-color);
+  cursor: pointer;
+  transition: var(--emr-input-transition);
+}
+
+.emr-input-clear-btn:hover {
+  background-color: var(--emr-gray-200);
+  color: var(--emr-input-text);
+}
+
+/* ==================== TEXTAREA SPECIFIC ==================== */
+.emr-textarea {
+  resize: vertical;
+  min-height: 80px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  line-height: 1.5;
+}
+
+.emr-textarea.no-resize {
+  resize: none;
+}
+
+.emr-textarea-counter {
+  display: flex;
+  justify-content: flex-end;
+  font-size: var(--emr-input-help-size);
+  color: var(--emr-input-help-color);
+  margin-top: 4px;
+}
+
+.emr-textarea-counter.at-limit {
+  color: var(--emr-input-warning-text);
+}
+
+.emr-textarea-counter.over-limit {
+  color: var(--emr-input-error-text);
+}
+
+/* ==================== SELECT SPECIFIC ==================== */
+.emr-select-input {
+  cursor: pointer;
+}
+
+.emr-select-input:disabled {
+  cursor: not-allowed;
+}
+
+/* ==================== CHECKBOX & SWITCH ==================== */
+.emr-checkbox-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.emr-checkbox-wrapper.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.emr-checkbox-wrapper.label-left {
+  flex-direction: row-reverse;
+}
+
+.emr-checkbox-input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--emr-input-border);
+  border-radius: 4px;
+  background-color: var(--emr-input-bg);
+  cursor: inherit;
+  transition: var(--emr-input-transition);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.emr-checkbox-input:checked {
+  background-color: var(--emr-secondary);
+  border-color: var(--emr-secondary);
+}
+
+.emr-checkbox-input:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.emr-checkbox-input:focus {
+  box-shadow: var(--emr-input-focus-ring);
+}
+
+.emr-checkbox-input.indeterminate::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 6px;
+  width: 8px;
+  height: 2px;
+  background-color: white;
+  transform: none;
+  border: none;
+}
+
+/* Switch */
+.emr-switch-input {
+  appearance: none;
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background-color: var(--emr-gray-300);
+  cursor: inherit;
+  transition: var(--emr-input-transition);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.emr-switch-input::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: var(--emr-input-transition);
+}
+
+.emr-switch-input:checked {
+  background-color: var(--emr-secondary);
+}
+
+.emr-switch-input:checked::after {
+  left: 20px;
+}
+
+.emr-switch-input:focus {
+  box-shadow: var(--emr-input-focus-ring);
+}
+
+/* ==================== RADIO GROUP ==================== */
+.emr-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.emr-radio-group.horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.emr-radio-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.emr-radio-option.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.emr-radio-input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--emr-input-border);
+  border-radius: 50%;
+  background-color: var(--emr-input-bg);
+  cursor: inherit;
+  transition: var(--emr-input-transition);
+  position: relative;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.emr-radio-input:checked {
+  border-color: var(--emr-secondary);
+}
+
+.emr-radio-input:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--emr-secondary);
+}
+
+.emr-radio-input:focus {
+  box-shadow: var(--emr-input-focus-ring);
+}
+
+.emr-radio-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.emr-radio-label {
+  font-size: var(--emr-input-font-size);
+  color: var(--emr-input-text);
+  line-height: 1.4;
+}
+
+.emr-radio-description {
+  font-size: var(--emr-input-help-size);
+  color: var(--emr-input-help-color);
+  line-height: 1.4;
+}
+
+/* ==================== FORM ROW ==================== */
+.emr-form-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.emr-form-row.wrap {
+  flex-wrap: wrap;
+}
+
+.emr-form-row.gap-sm {
+  gap: 8px;
+}
+
+.emr-form-row.gap-md {
+  gap: 16px;
+}
+
+.emr-form-row.gap-lg {
+  gap: 24px;
+}
+
+.emr-form-row.align-start {
+  align-items: flex-start;
+}
+
+.emr-form-row.align-center {
+  align-items: center;
+}
+
+.emr-form-row.align-end {
+  align-items: flex-end;
+}
+
+.emr-form-row.align-stretch {
+  align-items: stretch;
+}
+
+.emr-form-row > * {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .emr-form-row {
+    flex-direction: column;
+  }
+
+  .emr-form-row > * {
+    width: 100%;
+  }
+}
+
+/* ==================== FORM SECTION ==================== */
+.emr-form-section {
+  border: 2px solid var(--emr-section-personal);
+  border-radius: var(--emr-border-radius-lg);
+  overflow: hidden;
+  background-color: white;
+  margin-bottom: 16px;
+}
+
+.emr-form-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: var(--emr-section-header-bg);
+  cursor: pointer;
+  transition: var(--emr-input-transition);
+  user-select: none;
+}
+
+.emr-form-section-header:hover {
+  background-color: var(--emr-section-hover-bg);
+}
+
+.emr-form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--emr-font-md);
+  font-weight: var(--emr-font-semibold);
+  color: var(--emr-section-personal);
+}
+
+.emr-form-section-icon {
+  color: var(--emr-section-personal);
+}
+
+.emr-form-section-chevron {
+  color: var(--emr-gray-500);
+  transition: transform var(--emr-transition-fast);
+}
+
+.emr-form-section.open .emr-form-section-chevron {
+  transform: rotate(180deg);
+}
+
+.emr-form-section-content {
+  padding: 16px;
+  display: none;
+}
+
+.emr-form-section.open .emr-form-section-content {
+  display: block;
+}
+
+/* ==================== FORM ACTIONS ==================== */
+.emr-form-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid var(--emr-border-color);
+}
+
+.emr-form-actions.align-left {
+  justify-content: flex-start;
+}
+
+.emr-form-actions.align-center {
+  justify-content: center;
+}
+
+.emr-form-actions.align-right {
+  justify-content: flex-end;
+}
+
+.emr-form-actions.align-space-between {
+  justify-content: space-between;
+}
+
+.emr-form-actions-primary {
+  display: flex;
+  gap: 12px;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes emr-shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+
+.emr-input.shake {
+  animation: emr-shake 0.5s ease-in-out;
+}
+
+@keyframes emr-pulse-success {
+  0% { box-shadow: var(--emr-input-success-glow); }
+  50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.1); }
+  100% { box-shadow: var(--emr-input-success-glow); }
+}
+
+.emr-input.pulse-success {
+  animation: emr-pulse-success 1s ease-in-out;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .emr-input.shake,
+  .emr-input.pulse-success {
+    animation: none;
+  }
+
+  .emr-input,
+  .emr-checkbox-input,
+  .emr-switch-input,
+  .emr-radio-input,
+  .emr-form-section-header,
+  .emr-form-section-chevron {
+    transition: none;
+  }
+}
+
+/* ==================== MANTINE OVERRIDES ==================== */
+/* ENHANCED: Apply production-ready EMR styling to Mantine components */
+
+/* Base input styles for all Mantine inputs */
+.emr-field-wrapper .mantine-TextInput-input,
+.emr-field-wrapper .mantine-Select-input,
+.emr-field-wrapper .mantine-NumberInput-input,
+.emr-field-wrapper .mantine-Textarea-input,
+.emr-field-wrapper .mantine-DateInput-input,
+.emr-field-wrapper .mantine-DatePickerInput-input,
+.emr-field-wrapper .mantine-PasswordInput-input {
+  min-height: var(--emr-input-height-md) !important;
+  font-size: var(--emr-input-font-size) !important;
+  border: var(--emr-input-border-width, 1.5px) solid var(--emr-input-border) !important;
+  border-radius: var(--emr-input-border-radius) !important;
+  box-shadow: var(--emr-input-shadow) !important;
+  transition: var(--emr-input-transition) !important;
+  padding: var(--emr-input-padding-y) var(--emr-input-padding-x) !important;
+  background-color: var(--emr-input-bg-solid) !important;
+}
+
+/* Hover state - with shadow lift */
+.emr-field-wrapper .mantine-TextInput-input:hover:not(:disabled):not(:focus),
+.emr-field-wrapper .mantine-Select-input:hover:not(:disabled):not(:focus),
+.emr-field-wrapper .mantine-NumberInput-input:hover:not(:disabled):not(:focus),
+.emr-field-wrapper .mantine-Textarea-input:hover:not(:disabled):not(:focus),
+.emr-field-wrapper .mantine-DateInput-input:hover:not(:disabled):not(:focus),
+.emr-field-wrapper .mantine-DatePickerInput-input:hover:not(:disabled):not(:focus) {
+  border-color: var(--emr-input-border-hover) !important;
+  box-shadow: var(--emr-input-shadow-hover) !important;
+  transform: translateY(-1px);
+}
+
+/* Focus state - with glow effect */
+.emr-field-wrapper .mantine-TextInput-input:focus,
+.emr-field-wrapper .mantine-Select-input:focus,
+.emr-field-wrapper .mantine-NumberInput-input:focus,
+.emr-field-wrapper .mantine-Textarea-input:focus,
+.emr-field-wrapper .mantine-DateInput-input:focus,
+.emr-field-wrapper .mantine-DatePickerInput-input:focus,
+.emr-field-wrapper .mantine-PasswordInput-input:focus {
+  border-color: var(--emr-input-border-focus) !important;
+  box-shadow: var(--emr-input-shadow-focus) !important;
+  transform: translateY(-1px);
+}
+
+/* Error state */
+.emr-field-wrapper.has-error .mantine-TextInput-input,
+.emr-field-wrapper.has-error .mantine-Select-input,
+.emr-field-wrapper.has-error .mantine-NumberInput-input,
+.emr-field-wrapper.has-error .mantine-Textarea-input,
+.emr-field-wrapper.has-error .mantine-DateInput-input {
+  border-color: var(--emr-input-error-border) !important;
+  background-color: var(--emr-input-error-bg) !important;
+  box-shadow: var(--emr-input-error-glow) !important;
+}
+
+/* Select dropdown styling */
+.emr-field-wrapper .mantine-Select-dropdown {
+  border-radius: var(--emr-input-border-radius) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--emr-input-border) !important;
+}
+
+.emr-field-wrapper .mantine-Select-option {
+  padding: 10px 14px !important;
+  border-radius: 6px !important;
+  margin: 2px 4px !important;
+}
+
+.emr-field-wrapper .mantine-Select-option:hover,
+.emr-field-wrapper .mantine-Select-option[data-hovered] {
+  background-color: rgba(49, 130, 206, 0.1) !important;
+}
+
+.emr-field-wrapper .mantine-Select-option[data-selected] {
+  background-color: var(--emr-secondary) !important;
+  color: white !important;
+}
+
+/* Hide default Mantine error/label when using EMR wrapper */
+.emr-field-wrapper .mantine-InputWrapper-label,
+.emr-field-wrapper .mantine-InputWrapper-error {
+  display: none;
+}
+
+/* DatePicker calendar styling */
+.mantine-DatePicker-day[data-selected] {
+  background-color: var(--emr-secondary) !important;
+}
+
+.mantine-DatePicker-day:hover:not([data-selected]) {
+  background-color: rgba(49, 130, 206, 0.1) !important;
+}
+
+/* ==================== MOBILE TOUCH TARGETS ==================== */
+@media (max-width: 768px) {
+  .emr-input {
+    min-height: 44px; /* iOS minimum touch target */
+    font-size: 16px; /* Prevent iOS zoom on focus */
+  }
+
+  .emr-checkbox-input,
+  .emr-radio-input {
+    width: 22px;
+    height: 22px;
+  }
+
+  .emr-switch-input {
+    width: 48px;
+    height: 26px;
+  }
+
+  .emr-switch-input::after {
+    width: 22px;
+    height: 22px;
+  }
+
+  .emr-switch-input:checked::after {
+    left: 24px;
+  }
+}

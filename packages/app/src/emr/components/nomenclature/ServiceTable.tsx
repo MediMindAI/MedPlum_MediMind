@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Table, ActionIcon, Text, Skeleton, Checkbox, Box, Tooltip, Stack } from '@mantine/core';
+import { Text } from '@mantine/core';
+import { EMRCheckbox } from '../shared/EMRFormFields';
 import { IconEdit, IconTrash, IconFolder } from '@tabler/icons-react';
-import type { JSX } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import type { ServiceTableRow } from '../../types/nomenclature';
+import { EMRTable } from '../shared/EMRTable';
+import type { EMRTableColumn, SortDirection } from '../shared/EMRTable';
 
 interface ServiceTableProps {
   /** Array of services to display */
@@ -28,16 +30,7 @@ interface ServiceTableProps {
 
 /**
  * Service table component for displaying medical services
- * Features: sortable columns, edit/delete actions, loading states, empty states
- * @param root0
- * @param root0.services
- * @param root0.loading
- * @param root0.onEdit
- * @param root0.onDelete
- * @param root0.onOpenRegisteredServices
- * @param root0.onSort
- * @param root0.sortField
- * @param root0.sortOrder
+ * Now using EMRTable component for consistent Apple-inspired styling
  */
 export function ServiceTable({
   services,
@@ -48,13 +41,10 @@ export function ServiceTable({
   onSort,
   sortField,
   sortOrder = 'asc',
-}: ServiceTableProps): JSX.Element {
+}: ServiceTableProps): React.JSX.Element {
   const { t } = useTranslation();
 
-  /**
-   * Format currency value to 2 decimal places with GEL suffix
-   * @param value
-   */
+  // Format currency value to 2 decimal places with GEL symbol
   const formatCurrency = (value: number | undefined): string => {
     if (value === undefined || value === null) {
       return '-';
@@ -62,10 +52,7 @@ export function ServiceTable({
     return `${value.toFixed(2)} ₾`;
   };
 
-  /**
-   * Format number or display dash if undefined
-   * @param value
-   */
+  // Format number or display dash if undefined
   const formatNumber = (value: number | undefined): string => {
     if (value === undefined || value === null) {
       return '-';
@@ -73,575 +60,180 @@ export function ServiceTable({
     return value.toString();
   };
 
-  /**
-   * Render sort indicator for sortable columns
-   * @param field
-   */
-  const renderSortIndicator = (field: string): string => {
-    if (sortField !== field) {
-      return '';
-    }
-    return sortOrder === 'asc' ? ' ↑' : ' ↓';
-  };
-
-  /**
-   * Handle column header click for sorting
-   * @param field
-   */
-  const handleSort = (field: string) => {
+  // Handle sort - convert EMRTable format to existing API
+  const handleSort = (field: string, _direction: SortDirection) => {
     if (onSort) {
       onSort(field);
     }
   };
 
-  /**
-   * Loading skeleton
-   */
-  if (loading) {
-    return (
-      <Box style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-        <Table style={{ minWidth: '1200px' }}>
-          <Table.Thead
-            style={{
-              background: 'var(--emr-gradient-submenu)',
-              position: 'sticky',
-              top: 0,
-              zIndex: 10,
-            }}
-          >
-            <Table.Tr>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.code')}
-              </Table.Th>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.name')}
-              </Table.Th>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.group')}
-              </Table.Th>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.type')}
-              </Table.Th>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  textAlign: 'right',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.price')}
-              </Table.Th>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  textAlign: 'right',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.total')}
-              </Table.Th>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  textAlign: 'center',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.calhed')}
-              </Table.Th>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  textAlign: 'center',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.prt')}
-              </Table.Th>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  textAlign: 'center',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.itmGetPrc')}
-              </Table.Th>
-              <Table.Th
-                style={{
-                  color: 'white',
-                  fontWeight: 700,
-                  fontSize: '14px',
-                  padding: '16px 20px',
-                  borderBottom: '2px solid rgba(255,255,255,0.3)',
-                }}
-              >
-                {t('nomenclature.medical1.table.actions')}
-              </Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {[...Array(5)].map((_, i) => (
-              <Table.Tr key={i}>
-                {[...Array(10)].map((_, j) => (
-                  <Table.Td key={j} style={{ padding: '16px 20px' }}>
-                    <Skeleton height={20} />
-                  </Table.Td>
-                ))}
-              </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
-      </Box>
-    );
-  }
+  // Define columns
+  const columns: EMRTableColumn<ServiceTableRow>[] = [
+    {
+      key: 'code',
+      title: t('nomenclature.medical1.table.code'),
+      sortable: !!onSort,
+      width: 100,
+      render: (service) => (
+        <Text ff="monospace" fw={600} size="sm">
+          {service.code}
+        </Text>
+      ),
+    },
+    {
+      key: 'name',
+      title: t('nomenclature.medical1.table.name'),
+      sortable: !!onSort,
+      minWidth: 200,
+      maxWidth: 400,
+      render: (service) => (
+        <Text fw={500} size="sm">
+          {service.name}
+        </Text>
+      ),
+    },
+    {
+      key: 'group',
+      title: t('nomenclature.medical1.table.group'),
+      width: 140,
+      hideOnMobile: true,
+      render: (service) => (
+        <Text size="sm" c="dimmed">
+          {service.group}
+        </Text>
+      ),
+    },
+    {
+      key: 'type',
+      title: t('nomenclature.medical1.table.type'),
+      width: 100,
+      hideOnMobile: true,
+      render: (service) => (
+        <Text size="sm" c="dimmed">
+          {service.type}
+        </Text>
+      ),
+    },
+    {
+      key: 'price',
+      title: t('nomenclature.medical1.table.price'),
+      align: 'right',
+      width: 100,
+      render: (service) => (
+        <Text fw={600} size="sm">
+          {formatCurrency(service.price)}
+        </Text>
+      ),
+    },
+    {
+      key: 'totalAmount',
+      title: t('nomenclature.medical1.table.total'),
+      align: 'right',
+      width: 100,
+      render: (service) => (
+        <Text fw={600} size="sm">
+          {formatCurrency(service.totalAmount)}
+        </Text>
+      ),
+    },
+    {
+      key: 'calHed',
+      title: t('nomenclature.medical1.table.calhed'),
+      align: 'center',
+      width: 80,
+      hideOnMobile: true,
+      render: (service) => (
+        <Text size="sm" c="dimmed">
+          {formatNumber(service.calHed)}
+        </Text>
+      ),
+    },
+    {
+      key: 'printable',
+      title: t('nomenclature.medical1.table.prt'),
+      align: 'center',
+      width: 60,
+      hideOnMobile: true,
+      render: (service) => (
+        <EMRCheckbox
+          checked={service.printable ?? false}
+          readOnly
+        />
+      ),
+    },
+    {
+      key: 'itemGetPrice',
+      title: t('nomenclature.medical1.table.itmGetPrc'),
+      align: 'center',
+      width: 80,
+      hideOnMobile: true,
+      render: (service) => (
+        <Text size="sm" c="dimmed">
+          {formatNumber(service.itemGetPrice)}
+        </Text>
+      ),
+    },
+  ];
 
-  /**
-   * Empty state
-   */
-  if (services.length === 0) {
-    return (
-      <Box
-        style={{
-          textAlign: 'center',
-          padding: '80px 20px',
-          background: 'linear-gradient(to bottom, #f8f9fa, white)',
-          borderRadius: '8px',
-        }}
-      >
-        <Stack align="center" gap="md">
-          <IconFolder
-            size={64}
-            style={{
-              color: 'var(--emr-secondary, #2b6cb0)',
-              opacity: 0.3,
-            }}
-          />
-          <Text size="lg" fw={600} c="dimmed">
-            {t('nomenclature.medical1.empty.noServices')}
-          </Text>
-          <Text size="sm" c="dimmed" maw={400}>
-            სცადეთ ფილტრების გასუფთავება ან დაამატეთ ახალი სერვისი
-          </Text>
-        </Stack>
-      </Box>
-    );
-  }
-
-  /**
-   * Main table
-   */
   return (
-    <Box style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      <Table
-        style={{
-          minWidth: '1200px',
-          borderCollapse: 'separate',
-          borderSpacing: 0,
-        }}
-      >
-        <Table.Thead
-          style={{
-            background: 'var(--emr-gradient-submenu)',
-            position: 'sticky',
-            top: 0,
-            zIndex: 10,
-          }}
-        >
-          <Table.Tr>
-            <Table.Th
-              onClick={() => handleSort('code')}
-              style={{
-                cursor: onSort ? 'pointer' : 'default',
-                userSelect: 'none',
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-                transition: 'background 0.2s ease',
-              }}
-            >
-              {t('nomenclature.medical1.table.code')}
-              {renderSortIndicator('code')}
-            </Table.Th>
-            <Table.Th
-              onClick={() => handleSort('name')}
-              style={{
-                cursor: onSort ? 'pointer' : 'default',
-                userSelect: 'none',
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-                transition: 'background 0.2s ease',
-              }}
-            >
-              {t('nomenclature.medical1.table.name')}
-              {renderSortIndicator('name')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-              }}
-            >
-              {t('nomenclature.medical1.table.group')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-              }}
-            >
-              {t('nomenclature.medical1.table.type')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                textAlign: 'right',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-              }}
-            >
-              {t('nomenclature.medical1.table.price')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                textAlign: 'right',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-              }}
-            >
-              {t('nomenclature.medical1.table.total')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                textAlign: 'center',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-              }}
-            >
-              {t('nomenclature.medical1.table.calhed')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                textAlign: 'center',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-              }}
-            >
-              {t('nomenclature.medical1.table.prt')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                textAlign: 'center',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-              }}
-            >
-              {t('nomenclature.medical1.table.itmGetPrc')}
-            </Table.Th>
-            <Table.Th
-              style={{
-                color: 'white',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '16px 20px',
-                textAlign: 'center',
-                borderBottom: '2px solid rgba(255,255,255,0.3)',
-              }}
-            >
-              {t('nomenclature.medical1.table.actions')}
-            </Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {services.map((service, index) => (
-            <Table.Tr
-              key={service.id}
-              style={{
-                background: 'white',
-                transition: 'all 0.2s ease',
-                cursor: 'default',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(59, 130, 246, 0.05)';
-                e.currentTarget.style.transform = 'scale(1.001)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'white';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  fontFamily: 'monospace',
-                  fontWeight: 600,
-                  fontSize: '13px',
-                  color: 'var(--emr-text-primary, #1a202c)',
-                }}
-              >
-                {service.code}
-              </Table.Td>
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  fontSize: '14px',
-                  fontWeight: 500,
-                  color: 'var(--emr-text-primary, #1a202c)',
-                  maxWidth: '400px',
-                }}
-              >
-                {service.name}
-              </Table.Td>
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  fontSize: '13px',
-                  color: 'var(--emr-text-secondary, #4a5568)',
-                }}
-              >
-                {service.group}
-              </Table.Td>
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  fontSize: '13px',
-                  color: 'var(--emr-text-secondary, #4a5568)',
-                }}
-              >
-                {service.type}
-              </Table.Td>
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  textAlign: 'right',
-                  fontWeight: 600,
-                  fontSize: '14px',
-                  color: 'var(--emr-text-primary, #1a202c)',
-                }}
-              >
-                {formatCurrency(service.price)}
-              </Table.Td>
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  textAlign: 'right',
-                  fontWeight: 600,
-                  fontSize: '14px',
-                  color: 'var(--emr-text-primary, #1a202c)',
-                }}
-              >
-                {formatCurrency(service.totalAmount)}
-              </Table.Td>
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  textAlign: 'center',
-                  fontSize: '13px',
-                  color: 'var(--emr-text-secondary, #4a5568)',
-                }}
-              >
-                {formatNumber(service.calHed)}
-              </Table.Td>
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  textAlign: 'center',
-                }}
-              >
-                <Checkbox
-                  checked={service.printable ?? false}
-                  readOnly
-                  styles={{
-                    input: { cursor: 'default' },
-                  }}
-                />
-              </Table.Td>
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  textAlign: 'center',
-                  fontSize: '13px',
-                  color: 'var(--emr-text-secondary, #4a5568)',
-                }}
-              >
-                {formatNumber(service.itemGetPrice)}
-              </Table.Td>
-              <Table.Td
-                style={{
-                  padding: '16px 20px',
-                  borderBottom: '1px solid #e5e7eb',
-                  textAlign: 'center',
-                }}
-              >
-                {onOpenRegisteredServices && (
-                  <Tooltip label="რეგისტრირებული სერვისები" position="top">
-                    <ActionIcon
-                      onClick={() => onOpenRegisteredServices(service)}
-                      mr="xs"
-                      aria-label="Open registered services modal"
-                      style={{
-                        background: 'var(--emr-gradient-submenu, linear-gradient(90deg, #138496, #17a2b8, #20c4dd))',
-                        color: 'white',
-                        border: 'none',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                        transition: 'all 0.2s ease',
-                        minWidth: '32px',
-                        minHeight: '32px',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                      }}
-                    >
-                      <IconFolder size={16} />
-                    </ActionIcon>
-                  </Tooltip>
-                )}
-                {onEdit && (
-                  <Tooltip label="რედაქტირება" position="top">
-                    <ActionIcon
-                      onClick={() => onEdit(service)}
-                      mr={onDelete ? 'xs' : undefined}
-                      aria-label="Edit service"
-                      style={{
-                        background: 'var(--emr-gradient-primary, linear-gradient(135deg, #1a365d, #2b6cb0, #3182ce))',
-                        color: 'white',
-                        border: 'none',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                        transition: 'all 0.2s ease',
-                        minWidth: '32px',
-                        minHeight: '32px',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                      }}
-                    >
-                      <IconEdit size={16} />
-                    </ActionIcon>
-                  </Tooltip>
-                )}
-                {onDelete && (
-                  <Tooltip label="წაშლა" position="top">
-                    <ActionIcon
-                      onClick={() => onDelete(service)}
-                      aria-label="Delete service"
-                      style={{
-                        background: 'linear-gradient(135deg, #dc2626, #ef4444, #f87171)',
-                        color: 'white',
-                        border: 'none',
-                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                        transition: 'all 0.2s ease',
-                        minWidth: '32px',
-                        minHeight: '32px',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'scale(1.1)';
-                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'scale(1)';
-                        e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
-                      }}
-                    >
-                      <IconTrash size={16} />
-                    </ActionIcon>
-                  </Tooltip>
-                )}
-              </Table.Td>
-            </Table.Tr>
-          ))}
-        </Table.Tbody>
-      </Table>
-    </Box>
+    <EMRTable
+      columns={columns}
+      data={services}
+      loading={loading}
+      loadingConfig={{ rows: 5 }}
+      getRowId={(service) => service.id}
+      sortField={sortField}
+      sortDirection={sortOrder as SortDirection}
+      onSort={onSort ? handleSort : undefined}
+      stickyHeader
+      minWidth={1200}
+      emptyState={{
+        icon: IconFolder,
+        title: t('nomenclature.medical1.empty.noServices'),
+        description: t('nomenclature.medical1.empty.tryFilters'),
+      }}
+      actions={(service) => {
+        const primaryAction = onOpenRegisteredServices
+          ? {
+              icon: IconFolder,
+              label: t('nomenclature.medical1.actions.registeredServices'),
+              color: 'blue' as const,
+              onClick: () => onOpenRegisteredServices(service),
+            }
+          : onEdit
+          ? {
+              icon: IconEdit,
+              label: t('nomenclature.medical1.actions.edit'),
+              onClick: () => onEdit(service),
+            }
+          : undefined;
+
+        const secondaryActions = [];
+
+        // If primary is registered services, add edit to secondary
+        if (onOpenRegisteredServices && onEdit) {
+          secondaryActions.push({
+            icon: IconEdit,
+            label: t('nomenclature.medical1.actions.edit'),
+            onClick: () => onEdit(service),
+          });
+        }
+
+        if (onDelete) {
+          secondaryActions.push({
+            icon: IconTrash,
+            label: t('nomenclature.medical1.actions.delete'),
+            color: 'red' as const,
+            onClick: () => onDelete(service),
+          });
+        }
+
+        return {
+          primary: primaryAction,
+          secondary: secondaryActions,
+        };
+      }}
+      ariaLabel={t('nomenclature.medical1.table.ariaLabel')}
+    />
   );
 }

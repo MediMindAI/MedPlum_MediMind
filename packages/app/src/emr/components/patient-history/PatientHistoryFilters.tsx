@@ -4,15 +4,13 @@
 import {
   Stack,
   Group,
-  TextInput,
   Paper,
-  Select,
-  Checkbox,
   Box,
   Text,
   Collapse,
   Button,
 } from '@mantine/core';
+import { EMRTextInput, EMRSelect, EMRCheckbox } from '../shared/EMRFormFields';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSearch, IconX, IconFilter, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import type { JSX } from 'react';
@@ -197,31 +195,15 @@ export function PatientHistoryFilters({
             <Button
               variant="subtle"
               color="white"
-              size="sm"
               leftSection={<IconX size={16} />}
               onClick={handleClearAll}
-              styles={{
-                root: {
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  },
-                },
-              }}
             >
               {t('patientHistory.filter.clearAll')}
             </Button>
             <Button
               variant="white"
-              size="sm"
               leftSection={<IconSearch size={16} />}
               onClick={handleSearch}
-              styles={{
-                root: {
-                  color: 'var(--emr-primary, #1a365d)',
-                  fontWeight: 600,
-                },
-              }}
             >
               {t('patientHistory.filter.searchButton')}
             </Button>
@@ -239,7 +221,7 @@ export function PatientHistoryFilters({
           </Text>
           <Group wrap="wrap" grow>
             <InsuranceSelect value={localInsurance} onChange={(value) => setLocalInsurance(value || '0')} />
-            <Select
+            <EMRSelect
               label={t('patientHistory.filter.department')}
               placeholder={t('patientHistory.filter.selectDepartment')}
               data={departmentOptions}
@@ -247,14 +229,6 @@ export function PatientHistoryFilters({
               onChange={(value) => setLocalDepartment(value || '')}
               searchable
               clearable
-              styles={{
-                input: {
-                  '&:focus': {
-                    borderColor: 'var(--emr-accent, #63b3ed)',
-                    boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.3)',
-                  },
-                },
-              }}
             />
           </Group>
         </Box>
@@ -265,48 +239,24 @@ export function PatientHistoryFilters({
             {t('patientHistory.filter.sectionPatient')}
           </Text>
           <Group wrap="wrap" grow>
-            <TextInput
+            <EMRTextInput
               label={t('patientHistory.filter.searchPersonalId')}
               placeholder={t('patientHistory.filter.searchPersonalIdPlaceholder')}
               value={localPersonalId}
-              onChange={(e) => setLocalPersonalId(e.currentTarget.value)}
+              onChange={setLocalPersonalId}
               maxLength={11}
-              styles={{
-                input: {
-                  '&:focus': {
-                    borderColor: 'var(--emr-accent, #63b3ed)',
-                    boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.3)',
-                  },
-                },
-              }}
             />
-            <TextInput
+            <EMRTextInput
               label={t('patientHistory.filter.searchFirstName')}
               placeholder={t('patientHistory.filter.searchFirstNamePlaceholder')}
               value={localFirstName}
-              onChange={(e) => setLocalFirstName(e.currentTarget.value)}
-              styles={{
-                input: {
-                  '&:focus': {
-                    borderColor: 'var(--emr-accent, #63b3ed)',
-                    boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.3)',
-                  },
-                },
-              }}
+              onChange={setLocalFirstName}
             />
-            <TextInput
+            <EMRTextInput
               label={t('patientHistory.filter.searchLastName')}
               placeholder={t('patientHistory.filter.searchLastNamePlaceholder')}
               value={localLastName}
-              onChange={(e) => setLocalLastName(e.currentTarget.value)}
-              styles={{
-                input: {
-                  '&:focus': {
-                    borderColor: 'var(--emr-accent, #63b3ed)',
-                    boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.3)',
-                  },
-                },
-              }}
+              onChange={setLocalLastName}
             />
           </Group>
         </Box>
@@ -331,19 +281,11 @@ export function PatientHistoryFilters({
               onChange={(date) => setLocalDateTo(date)}
               maxDate={new Date()}
             />
-            <TextInput
+            <EMRTextInput
               label={t('patientHistory.filter.searchRegistrationNumber')}
               placeholder={t('patientHistory.filter.searchRegistrationNumberPlaceholder')}
               value={localRegistrationNumber}
-              onChange={(e) => setLocalRegistrationNumber(e.currentTarget.value)}
-              styles={{
-                input: {
-                  '&:focus': {
-                    borderColor: 'var(--emr-accent, #63b3ed)',
-                    boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.3)',
-                  },
-                },
-              }}
+              onChange={setLocalRegistrationNumber}
             />
           </Group>
         </Box>
@@ -391,7 +333,7 @@ export function PatientHistoryFilters({
               marginTop: '8px',
             }}
           >
-            <Text size="sm" fw={600} c="var(--emr-text-secondary, #6b7280)" mb="md">
+            <Text fw={600} c="var(--emr-text-secondary, #6b7280)" mb="md">
               {t('patientHistory.filter.sectionVisitType')}
             </Text>
             <Stack gap="lg">
@@ -405,110 +347,41 @@ export function PatientHistoryFilters({
                   transition: 'all 0.2s ease',
                 }}
               >
-                <Checkbox
+                <EMRCheckbox
                   label={t('patientHistory.filter.emergencyStationary')}
                   checked={emergencyStationary}
-                  onChange={(e) => handleEmergencyStationaryChange(e.currentTarget.checked)}
-                  styles={{
-                    label: {
-                      fontWeight: 600,
-                      fontSize: '14px',
-                      color: 'var(--emr-text-primary, #1f2937)',
-                    },
-                    input: {
-                      cursor: 'pointer',
-                      '&:checked': {
-                        backgroundColor: 'var(--emr-secondary, #2b6cb0)',
-                        borderColor: 'var(--emr-secondary, #2b6cb0)',
-                      },
-                    },
-                  }}
+                  onChange={handleEmergencyStationaryChange}
                 />
                 <Group ml="lg" mt="sm" gap="lg" wrap="wrap">
-                  <Checkbox
+                  <EMRCheckbox
                     label={t('patientHistory.filter.selfAdmission')}
                     checked={selfAdmission}
-                    onChange={(e) => setSelfAdmission(e.currentTarget.checked)}
+                    onChange={setSelfAdmission}
                     disabled={!emergencyStationary}
-                    size="sm"
-                    styles={{
-                      label: {
-                        color: emergencyStationary ? 'var(--emr-text-secondary, #6b7280)' : 'var(--emr-gray-400, #9ca3af)',
-                        fontSize: '13px',
-                      },
-                      input: {
-                        cursor: emergencyStationary ? 'pointer' : 'not-allowed',
-                        opacity: emergencyStationary ? 1 : 0.5,
-                      },
-                    }}
                   />
-                  <Checkbox
+                  <EMRCheckbox
                     label={t('patientHistory.filter.ambulanceAdmission')}
                     checked={ambulanceAdmission}
-                    onChange={(e) => setAmbulanceAdmission(e.currentTarget.checked)}
+                    onChange={setAmbulanceAdmission}
                     disabled={!emergencyStationary}
-                    size="sm"
-                    styles={{
-                      label: {
-                        color: emergencyStationary ? 'var(--emr-text-secondary, #6b7280)' : 'var(--emr-gray-400, #9ca3af)',
-                        fontSize: '13px',
-                      },
-                      input: {
-                        cursor: emergencyStationary ? 'pointer' : 'not-allowed',
-                        opacity: emergencyStationary ? 1 : 0.5,
-                      },
-                    }}
                   />
-                  <Checkbox
+                  <EMRCheckbox
                     label={t('patientHistory.filter.unspecified')}
                     checked={unspecified}
-                    onChange={(e) => setUnspecified(e.currentTarget.checked)}
+                    onChange={setUnspecified}
                     disabled={!emergencyStationary}
-                    size="sm"
-                    styles={{
-                      label: {
-                        color: emergencyStationary ? 'var(--emr-text-secondary, #6b7280)' : 'var(--emr-gray-400, #9ca3af)',
-                        fontSize: '13px',
-                      },
-                      input: {
-                        cursor: emergencyStationary ? 'pointer' : 'not-allowed',
-                        opacity: emergencyStationary ? 1 : 0.5,
-                      },
-                    }}
                   />
-                  <Checkbox
+                  <EMRCheckbox
                     label={t('patientHistory.filter.discharged')}
                     checked={emergencyDischarged}
-                    onChange={(e) => setEmergencyDischarged(e.currentTarget.checked)}
+                    onChange={setEmergencyDischarged}
                     disabled={!emergencyStationary}
-                    size="sm"
-                    styles={{
-                      label: {
-                        color: emergencyStationary ? 'var(--emr-text-secondary, #6b7280)' : 'var(--emr-gray-400, #9ca3af)',
-                        fontSize: '13px',
-                      },
-                      input: {
-                        cursor: emergencyStationary ? 'pointer' : 'not-allowed',
-                        opacity: emergencyStationary ? 1 : 0.5,
-                      },
-                    }}
                   />
-                  <Checkbox
+                  <EMRCheckbox
                     label={t('patientHistory.filter.notDischarged')}
                     checked={emergencyNotDischarged}
-                    onChange={(e) => setEmergencyNotDischarged(e.currentTarget.checked)}
+                    onChange={setEmergencyNotDischarged}
                     disabled={!emergencyStationary}
-                    size="sm"
-                    styles={{
-                      label: {
-                        color: emergencyStationary ? 'var(--emr-text-secondary, #6b7280)' : 'var(--emr-gray-400, #9ca3af)',
-                        fontSize: '13px',
-                      },
-                      input: {
-                        cursor: emergencyStationary ? 'pointer' : 'not-allowed',
-                        opacity: emergencyStationary ? 1 : 0.5,
-                      },
-                    }}
                   />
                 </Group>
               </Box>
@@ -523,59 +396,23 @@ export function PatientHistoryFilters({
                   transition: 'all 0.2s ease',
                 }}
               >
-                <Checkbox
+                <EMRCheckbox
                   label={t('patientHistory.filter.plannedStationary')}
                   checked={plannedStationary}
-                  onChange={(e) => handlePlannedStationaryChange(e.currentTarget.checked)}
-                  styles={{
-                    label: {
-                      fontWeight: 600,
-                      fontSize: '14px',
-                      color: 'var(--emr-text-primary, #1f2937)',
-                    },
-                    input: {
-                      cursor: 'pointer',
-                      '&:checked': {
-                        backgroundColor: 'var(--emr-secondary, #2b6cb0)',
-                        borderColor: 'var(--emr-secondary, #2b6cb0)',
-                      },
-                    },
-                  }}
+                  onChange={handlePlannedStationaryChange}
                 />
                 <Group ml="lg" mt="sm" gap="lg" wrap="wrap">
-                  <Checkbox
+                  <EMRCheckbox
                     label={t('patientHistory.filter.discharged')}
                     checked={plannedDischarged}
-                    onChange={(e) => setPlannedDischarged(e.currentTarget.checked)}
+                    onChange={setPlannedDischarged}
                     disabled={!plannedStationary}
-                    size="sm"
-                    styles={{
-                      label: {
-                        color: plannedStationary ? 'var(--emr-text-secondary, #6b7280)' : 'var(--emr-gray-400, #9ca3af)',
-                        fontSize: '13px',
-                      },
-                      input: {
-                        cursor: plannedStationary ? 'pointer' : 'not-allowed',
-                        opacity: plannedStationary ? 1 : 0.5,
-                      },
-                    }}
                   />
-                  <Checkbox
+                  <EMRCheckbox
                     label={t('patientHistory.filter.notDischarged')}
                     checked={plannedNotDischarged}
-                    onChange={(e) => setPlannedNotDischarged(e.currentTarget.checked)}
+                    onChange={setPlannedNotDischarged}
                     disabled={!plannedStationary}
-                    size="sm"
-                    styles={{
-                      label: {
-                        color: plannedStationary ? 'var(--emr-text-secondary, #6b7280)' : 'var(--emr-gray-400, #9ca3af)',
-                        fontSize: '13px',
-                      },
-                      input: {
-                        cursor: plannedStationary ? 'pointer' : 'not-allowed',
-                        opacity: plannedStationary ? 1 : 0.5,
-                      },
-                    }}
                   />
                 </Group>
               </Box>
@@ -590,24 +427,10 @@ export function PatientHistoryFilters({
                   transition: 'all 0.2s ease',
                 }}
               >
-                <Checkbox
+                <EMRCheckbox
                   label={t('patientHistory.filter.ambulatory')}
                   checked={ambulatory}
-                  onChange={(e) => setAmbulatory(e.currentTarget.checked)}
-                  styles={{
-                    label: {
-                      fontWeight: 600,
-                      fontSize: '14px',
-                      color: 'var(--emr-text-primary, #1f2937)',
-                    },
-                    input: {
-                      cursor: 'pointer',
-                      '&:checked': {
-                        backgroundColor: 'var(--emr-secondary, #2b6cb0)',
-                        borderColor: 'var(--emr-secondary, #2b6cb0)',
-                      },
-                    },
-                  }}
+                  onChange={setAmbulatory}
                 />
               </Box>
             </Stack>

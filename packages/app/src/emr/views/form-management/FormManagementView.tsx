@@ -1,11 +1,13 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container, Group, Button, Title, Text, Stack, SegmentedControl, Switch } from '@mantine/core';
-import { IconPlus, IconTable, IconLayoutGrid } from '@tabler/icons-react';
-import { useState, useEffect, useCallback } from 'react';
+import { Box, Group, Button, Title, Text, Stack, SegmentedControl, Paper, SimpleGrid, ThemeIcon } from '@mantine/core';
+import { EMRSwitch } from '../../components/shared/EMRFormFields';
+import { IconPlus, IconTable, IconLayoutGrid, IconFileImport, IconForms, IconFileCheck, IconFilePencil, IconArchive } from '@tabler/icons-react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMedplum } from '@medplum/react-hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import type { Questionnaire } from '@medplum/fhirtypes';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -22,6 +24,7 @@ import {
   getVersionHistory,
   type VersionHistoryEntry,
 } from '../../services/formBuilderService';
+import { seedForm100, form100Exists } from '../../services/form100Service';
 
 /**
  * FormManagementView Component
@@ -40,6 +43,8 @@ export function FormManagementView(): JSX.Element {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const medplum = useMedplum();
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isTablet = useMediaQuery('(max-width: 1024px)');
 
   // State
   const [questionnaires, setQuestionnaires] = useState<Questionnaire[]>([]);
@@ -57,6 +62,10 @@ export function FormManagementView(): JSX.Element {
   const [historyTarget, setHistoryTarget] = useState<{ id: string; title: string } | null>(null);
   const [historyEntries, setHistoryEntries] = useState<VersionHistoryEntry[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+
+  // System template seeding state
+  const [seedingTemplates, setSeedingTemplates] = useState(false);
+  const [hasForm100, setHasForm100] = useState(false);
 
   // Fetch questionnaires
   const fetchQuestionnaires = useCallback(async () => {
@@ -81,6 +90,48 @@ export function FormManagementView(): JSX.Element {
   useEffect(() => {
     fetchQuestionnaires();
   }, [fetchQuestionnaires]);
+
+  // Check if Form 100 exists
+  useEffect(() => {
+    const checkForm100 = async () => {
+      const exists = await form100Exists(medplum);
+      setHasForm100(exists);
+    };
+    checkForm100();
+  }, [medplum, questionnaires]);
+
+  // Compute stats for display
+  const stats = useMemo(() => {
+    const total = questionnaires.length;
+    const active = questionnaires.filter((q) => q.status === 'active').length;
+    const draft = questionnaires.filter((q) => q.status === 'draft').length;
+    const archived = questionnaires.filter((q) => q.status === 'retired').length;
+    return { total, active, draft, archived };
+  }, [questionnaires]);
+
+  // Handle seed system templates
+  const handleSeedSystemTemplates = async (): Promise<void> => {
+    setSeedingTemplates(true);
+    try {
+      await seedForm100(medplum);
+      notifications.show({
+        title: t('form100.systemTemplate'),
+        message: 'Form 100 (ფორმა № IV-100/ა) created successfully',
+        color: 'green',
+      });
+      setHasForm100(true);
+      await fetchQuestionnaires();
+    } catch (error) {
+      console.error('Error seeding system templates:', error);
+      notifications.show({
+        title: t('formUI.messages.error'),
+        message: error instanceof Error ? error.message : 'Failed to create system templates',
+        color: 'red',
+      });
+    } finally {
+      setSeedingTemplates(false);
+    }
+  };
 
   // Handle edit
   const handleEdit = (id: string): void => {
@@ -203,106 +254,341 @@ export function FormManagementView(): JSX.Element {
       style={{
         minHeight: 'calc(100vh - var(--emr-topnav-height) - var(--emr-mainmenu-height))',
         backgroundColor: 'var(--emr-gray-50)',
-        padding: 'var(--mantine-spacing-md)',
       }}
       data-testid="form-management-view"
     >
-      <Container size="xl">
-        <Stack gap="lg">
-          {/* Header */}
-          <Group justify="space-between" align="flex-start">
-            <Stack gap={4}>
-              <Title order={2}>{t('formManagement.title')}</Title>
-              <Text c="dimmed">{t('formManagement.subtitle')}</Text>
-            </Stack>
+      {/* Hero Header Section */}
+      <Box
+        style={{
+          background: 'var(--emr-gradient-secondary)',
+          padding: 'var(--mantine-spacing-xl) var(--mantine-spacing-xl)',
+          marginBottom: 'var(--mantine-spacing-lg)',
+        }}
+      >
+        <Box style={{ maxWidth: '100%' }}>
+          <Group justify="space-between" align="center" wrap="wrap" gap="md">
+            <Group gap="lg">
+              <ThemeIcon
+                size={56}
+                radius="md"
+                variant="white"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                  color: 'white',
+                }}
+              >
+                <IconForms size={32} stroke={1.5} />
+              </ThemeIcon>
+              <Stack gap={2}>
+                <Title order={2} style={{ color: 'white', fontWeight: 600 }}>
+                  {t('formManagement.title')}
+                </Title>
+                <Text style={{ color: 'rgba(255, 255, 255, 0.85)' }} size="sm">
+                  {t('formManagement.subtitle')}
+                </Text>
+              </Stack>
+            </Group>
 
-            <Group gap="md">
-              {/* View mode toggle */}
-              <SegmentedControl
-                value={viewMode}
-                onChange={(value) => setViewMode(value as 'table' | 'cards')}
-                data={[
-                  {
-                    value: 'table',
-                    label: (
-                      <Group gap="xs">
-                        <IconTable size={16} />
-                        <Text size="sm">{t('formManagement.viewMode.table')}</Text>
-                      </Group>
-                    ),
-                  },
-                  {
-                    value: 'cards',
-                    label: (
-                      <Group gap="xs">
-                        <IconLayoutGrid size={16} />
-                        <Text size="sm">{t('formManagement.viewMode.cards')}</Text>
-                      </Group>
-                    ),
-                  },
-                ]}
-                data-testid="view-mode-toggle"
-              />
-
-              {/* Show archived toggle */}
-              <Switch
-                label={showArchived ? t('formManagement.hideArchived') : t('formManagement.showArchived')}
-                checked={showArchived}
-                onChange={(e) => setShowArchived(e.currentTarget.checked)}
-                data-testid="show-archived-toggle"
-              />
+            <Group gap="sm">
+              {/* Seed system templates button (only show if Form 100 doesn't exist) */}
+              {!hasForm100 && (
+                <Button
+                  leftSection={<IconFileImport size={18} />}
+                  variant="white"
+                  color="dark"
+                  onClick={handleSeedSystemTemplates}
+                  loading={seedingTemplates}
+                  data-testid="seed-templates-btn"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    color: 'var(--emr-primary)',
+                  }}
+                >
+                  {t('form100.systemTemplate')} (100/ა)
+                </Button>
+              )}
 
               {/* Create new button */}
               <Button
                 leftSection={<IconPlus size={18} />}
-                variant="gradient"
-                gradient={{ from: 'var(--emr-primary)', to: 'var(--emr-secondary)' }}
+                variant="white"
+                size="md"
                 onClick={handleCreateNew}
                 data-testid="create-new-btn"
+                style={{
+                  backgroundColor: 'white',
+                  color: 'var(--emr-primary)',
+                  fontWeight: 600,
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                }}
               >
                 {t('formManagement.createNew')}
               </Button>
             </Group>
           </Group>
+        </Box>
+      </Box>
+
+      <Box style={{ padding: '0 var(--mantine-spacing-xl)', paddingBottom: 'var(--mantine-spacing-xl)' }}>
+        <Stack gap="lg">
+          {/* Stats Cards - Using consistent blue theme colors */}
+          <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
+            {/* Total Forms Card */}
+            <Paper
+              p="md"
+              radius="md"
+              style={{
+                border: '1px solid var(--emr-gray-200)',
+                backgroundColor: 'var(--emr-light-accent)',
+              }}
+            >
+              <Group gap="sm">
+                <ThemeIcon
+                  size={isMobile ? 36 : 40}
+                  radius="md"
+                  variant="light"
+                  style={{ backgroundColor: 'var(--emr-light-accent)', color: 'var(--emr-primary)' }}
+                >
+                  <IconForms size={isMobile ? 18 : 22} />
+                </ThemeIcon>
+                <Stack gap={0}>
+                  <Text size={isMobile ? 'lg' : 'xl'} fw={700} style={{ color: 'var(--emr-primary)' }}>
+                    {stats.total}
+                  </Text>
+                  <Text size="xs" c="dimmed" tt="uppercase" fw={500}>
+                    {t('formManagement.stats.total')}
+                  </Text>
+                </Stack>
+              </Group>
+            </Paper>
+
+            {/* Active Forms Card */}
+            <Paper
+              p="md"
+              radius="md"
+              style={{
+                border: '1px solid var(--emr-gray-200)',
+                backgroundColor: 'var(--emr-light-accent)',
+              }}
+            >
+              <Group gap="sm">
+                <ThemeIcon
+                  size={isMobile ? 36 : 40}
+                  radius="md"
+                  variant="light"
+                  style={{ backgroundColor: 'var(--emr-light-accent)', color: 'var(--emr-secondary)' }}
+                >
+                  <IconFileCheck size={isMobile ? 18 : 22} />
+                </ThemeIcon>
+                <Stack gap={0}>
+                  <Text size={isMobile ? 'lg' : 'xl'} fw={700} style={{ color: 'var(--emr-secondary)' }}>
+                    {stats.active}
+                  </Text>
+                  <Text size="xs" c="dimmed" tt="uppercase" fw={500}>
+                    {t('formManagement.status.active')}
+                  </Text>
+                </Stack>
+              </Group>
+            </Paper>
+
+            {/* Draft Forms Card */}
+            <Paper
+              p="md"
+              radius="md"
+              style={{
+                border: '1px solid var(--emr-gray-200)',
+                backgroundColor: 'var(--emr-light-accent)',
+              }}
+            >
+              <Group gap="sm">
+                <ThemeIcon
+                  size={isMobile ? 36 : 40}
+                  radius="md"
+                  variant="light"
+                  style={{ backgroundColor: 'var(--emr-light-accent)', color: 'var(--emr-accent)' }}
+                >
+                  <IconFilePencil size={isMobile ? 18 : 22} />
+                </ThemeIcon>
+                <Stack gap={0}>
+                  <Text size={isMobile ? 'lg' : 'xl'} fw={700} style={{ color: 'var(--emr-accent)' }}>
+                    {stats.draft}
+                  </Text>
+                  <Text size="xs" c="dimmed" tt="uppercase" fw={500}>
+                    {t('formManagement.status.draft')}
+                  </Text>
+                </Stack>
+              </Group>
+            </Paper>
+
+            {/* Archived Forms Card */}
+            <Paper
+              p="md"
+              radius="md"
+              style={{
+                border: '1px solid var(--emr-gray-200)',
+                backgroundColor: 'var(--emr-gray-100)',
+              }}
+            >
+              <Group gap="sm">
+                <ThemeIcon
+                  size={isMobile ? 36 : 40}
+                  radius="md"
+                  variant="light"
+                  style={{ backgroundColor: 'var(--emr-gray-100)', color: 'var(--emr-gray-500)' }}
+                >
+                  <IconArchive size={isMobile ? 18 : 22} />
+                </ThemeIcon>
+                <Stack gap={0}>
+                  <Text size={isMobile ? 'lg' : 'xl'} fw={700} style={{ color: 'var(--emr-gray-500)' }}>
+                    {stats.archived}
+                  </Text>
+                  <Text size="xs" c="dimmed" tt="uppercase" fw={500}>
+                    {t('formManagement.status.archived')}
+                  </Text>
+                </Stack>
+              </Group>
+            </Paper>
+          </SimpleGrid>
+
+          {/* Controls Section */}
+          <Paper
+            p={isMobile ? 'md' : 'lg'}
+            radius="md"
+            style={{
+              border: '1px solid var(--emr-gray-200)',
+              backgroundColor: 'white',
+              boxShadow: 'var(--emr-shadow-sm)',
+            }}
+          >
+            <Stack gap="md">
+              {/* View mode toggle with label - stack on mobile */}
+              <Group justify={isMobile ? 'center' : 'space-between'} wrap="wrap" gap="md">
+                <Group gap="md" style={{ flexWrap: 'wrap' }}>
+                  {!isMobile && (
+                    <Text size="sm" fw={500} c="var(--emr-gray-600)">
+                      {t('formManagement.viewMode.label')}:
+                    </Text>
+                  )}
+                  <SegmentedControl
+                    value={viewMode}
+                    onChange={(value) => setViewMode(value as 'table' | 'cards')}
+                    fullWidth={isMobile}
+                    data={[
+                      {
+                        value: 'table',
+                        label: (
+                          <Group gap={6} wrap="nowrap" justify="center">
+                            <IconTable size={isMobile ? 16 : 18} />
+                            <Text size={isMobile ? 'xs' : 'sm'} fw={500}>{t('formManagement.viewMode.table')}</Text>
+                          </Group>
+                        ),
+                      },
+                      {
+                        value: 'cards',
+                        label: (
+                          <Group gap={6} wrap="nowrap" justify="center">
+                            <IconLayoutGrid size={isMobile ? 16 : 18} />
+                            <Text size={isMobile ? 'xs' : 'sm'} fw={500}>{t('formManagement.viewMode.cards')}</Text>
+                          </Group>
+                        ),
+                      },
+                    ]}
+                    data-testid="view-mode-toggle"
+                    size={isMobile ? 'sm' : 'md'}
+                    styles={{
+                      root: {
+                        backgroundColor: 'var(--emr-gray-50)',
+                        border: '1px solid var(--emr-gray-200)',
+                        padding: 4,
+                        minWidth: isMobile ? '100%' : 'auto',
+                      },
+                      indicator: {
+                        background: 'var(--emr-gradient-secondary)',
+                        boxShadow: 'var(--emr-shadow-sm)',
+                      },
+                      label: {
+                        padding: isMobile ? '8px 12px' : '8px 16px',
+                        fontWeight: 500,
+                        '&[dataActive]': {
+                          color: 'white',
+                        },
+                      },
+                    }}
+                  />
+                </Group>
+
+                {/* Show archived toggle with better styling */}
+                <Group
+                  gap="sm"
+                  justify={isMobile ? 'center' : 'flex-start'}
+                  style={{
+                    padding: isMobile ? '10px 12px' : '8px 16px',
+                    backgroundColor: 'var(--emr-gray-50)',
+                    borderRadius: 'var(--emr-border-radius)',
+                    border: '1px solid var(--emr-gray-200)',
+                    width: isMobile ? '100%' : 'auto',
+                  }}
+                >
+                  <IconArchive size={isMobile ? 16 : 18} style={{ color: 'var(--emr-gray-500)' }} />
+                  <EMRSwitch
+                    label={showArchived ? t('formManagement.hideArchived') : t('formManagement.showArchived')}
+                    checked={showArchived}
+                    onChange={setShowArchived}
+                    data-testid="show-archived-toggle"
+                  />
+                </Group>
+              </Group>
+            </Stack>
+          </Paper>
 
           {/* Content */}
-          {viewMode === 'table' ? (
-            <FormTemplateList
-              questionnaires={questionnaires}
-              loading={loading}
-              onEdit={handleEdit}
-              onClone={handleClone}
-              onArchive={handleArchive}
-              onRestore={handleRestore}
-              onViewHistory={handleViewHistory}
-              onRowClick={handleItemClick}
-              showArchived={showArchived}
-            />
-          ) : (
-            <Box
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                gap: 'var(--mantine-spacing-md)',
-              }}
-              data-testid="cards-container"
-            >
-              {questionnaires.map((q) => (
-                <FormTemplateCard
-                  key={q.id}
-                  questionnaire={q}
-                  onEdit={handleEdit}
-                  onClone={handleClone}
-                  onArchive={handleArchive}
-                  onRestore={handleRestore}
-                  onViewHistory={handleViewHistory}
-                  onClick={handleItemClick}
-                />
-              ))}
-            </Box>
-          )}
+          <Paper
+            p="lg"
+            radius="md"
+            style={{
+              border: '1px solid var(--emr-gray-200)',
+              backgroundColor: 'white',
+              boxShadow: 'var(--emr-shadow-sm)',
+            }}
+          >
+            {viewMode === 'table' ? (
+              <FormTemplateList
+                questionnaires={questionnaires}
+                loading={loading}
+                onEdit={handleEdit}
+                onClone={handleClone}
+                onArchive={handleArchive}
+                onRestore={handleRestore}
+                onViewHistory={handleViewHistory}
+                onRowClick={handleItemClick}
+                showArchived={showArchived}
+              />
+            ) : (
+              <Box
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                  gap: 'var(--mantine-spacing-md)',
+                }}
+                data-testid="cards-container"
+              >
+                {questionnaires.map((q) => (
+                  <FormTemplateCard
+                    key={q.id}
+                    questionnaire={q}
+                    onEdit={handleEdit}
+                    onClone={handleClone}
+                    onArchive={handleArchive}
+                    onRestore={handleRestore}
+                    onViewHistory={handleViewHistory}
+                    onClick={handleItemClick}
+                  />
+                ))}
+              </Box>
+            )}
+          </Paper>
         </Stack>
-      </Container>
+      </Box>
 
       {/* Clone Modal */}
       <FormCloneModal

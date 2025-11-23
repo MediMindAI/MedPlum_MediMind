@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Select } from '@mantine/core';
 import type { JSX } from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import type { InsuranceOption } from '../../types/patient-history';
+import { EMRSelect } from '../shared/EMRFormFields';
 
 // Insurance companies from Georgian healthcare system (58 total)
 const INSURANCE_COMPANIES = [
@@ -463,7 +463,7 @@ export function InsuranceSelect({
   }, [lang]);
 
   return (
-    <Select
+    <EMRSelect
       label={label || t('patientHistory.filter.insuranceCompany')}
       placeholder={placeholder || t('patientHistory.filter.selectInsurance')}
       value={value}

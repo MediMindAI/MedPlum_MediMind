@@ -1,14 +1,15 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Table, ActionIcon, Text, Skeleton } from '@mantine/core';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
-import type { JSX } from 'react';
+import { Text } from '@mantine/core';
+import { IconEdit, IconTrash, IconHistory } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
 import type { VisitTableRow } from '../../types/patient-history';
+import { EMRTable } from '../shared/EMRTable';
+import type { EMRTableColumn, SortDirection } from '../shared/EMRTable';
 
-const DEBT_HIGHLIGHT_COLOR = 'rgba(0, 255, 0, 0.2)'; // Green background for debt > 0
+const DEBT_HIGHLIGHT_COLOR = 'rgba(16, 185, 129, 0.15)'; // Green background for debt > 0
 
 interface PatientHistoryTableProps {
   visits: VisitTableRow[];
@@ -24,17 +25,7 @@ interface PatientHistoryTableProps {
 
 /**
  * Patient visit history table with 10 columns
- * Features: clickable rows, financial highlighting, sortable date column, edit/delete actions
- * @param root0
- * @param root0.visits
- * @param root0.loading
- * @param root0.onEdit
- * @param root0.onDelete
- * @param root0.onSort
- * @param root0.sortField
- * @param root0.sortDirection
- * @param root0.onRowClick
- * @param root0.selectedPatientId
+ * Now using EMRTable component for consistent Apple-inspired styling
  */
 export function PatientHistoryTable({
   visits,
@@ -46,22 +37,16 @@ export function PatientHistoryTable({
   sortDirection,
   onRowClick,
   selectedPatientId,
-}: PatientHistoryTableProps): JSX.Element {
+}: PatientHistoryTableProps): React.JSX.Element {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  /**
-   * Format currency value to 2 decimal places
-   * @param value
-   */
+  // Format currency value to 2 decimal places
   const formatCurrency = (value: number): string => {
     return value.toFixed(2);
   };
 
-  /**
-   * Format date/time for display
-   * @param dateStr
-   */
+  // Format date/time for display
   const formatDateTime = (dateStr: string): string => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('ka-GE', {
@@ -73,152 +58,140 @@ export function PatientHistoryTable({
     });
   };
 
-  /**
-   * Format registration number (preserve "a-" prefix for ambulatory)
-   * @param regNum
-   */
-  const formatRegistrationNumber = (regNum: string): string => {
-    return regNum; // Already formatted in FHIR mapper
-  };
-
-  /**
-   * Handle row click for navigation or custom handler
-   * @param visitId
-   */
-  const handleRowClick = (visitId: string) => {
+  // Handle row click for navigation or custom handler
+  const handleRowClick = (visit: VisitTableRow) => {
     if (onRowClick) {
-      onRowClick(visitId);
+      onRowClick(visit.id);
     } else {
-      navigate(`/emr/patient-history/${visitId}`);
+      navigate(`/emr/patient-history/${visit.id}`);
     }
   };
 
-  /**
-   * Loading skeleton
-   */
-  if (loading) {
-    return (
-      <Table>
-        <Table.Thead style={{ background: 'var(--emr-gradient-submenu)' }}>
-          <Table.Tr>
-            <Table.Th>{t('patientHistory.table.column.personalId')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.column.firstName')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.column.lastName')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.column.date')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.column.registrationNumber')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.column.total')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.column.discount')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.column.debt')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.column.payment')}</Table.Th>
-            <Table.Th>{t('patientHistory.table.column.actions')}</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {[...Array(5)].map((_, i) => (
-            <Table.Tr key={i}>
-              {[...Array(10)].map((_, j) => (
-                <Table.Td key={j}>
-                  <Skeleton height={20} />
-                </Table.Td>
-              ))}
-            </Table.Tr>
-          ))}
-        </Table.Tbody>
-      </Table>
-    );
-  }
+  // Handle sort - convert EMRTable format to existing API
+  const handleSort = (field: string, _direction: SortDirection) => {
+    onSort(field);
+  };
 
-  /**
-   * Empty state
-   */
-  if (visits.length === 0) {
-    return (
-      <Text ta="center" c="dimmed" py="xl">
-        {t('patientHistory.table.noVisits')}
-      </Text>
-    );
-  }
+  // Define columns
+  const columns: EMRTableColumn<VisitTableRow>[] = [
+    {
+      key: 'personalId',
+      title: t('patientHistory.table.column.personalId'),
+      width: 120,
+    },
+    {
+      key: 'firstName',
+      title: t('patientHistory.table.column.firstName'),
+    },
+    {
+      key: 'lastName',
+      title: t('patientHistory.table.column.lastName'),
+    },
+    {
+      key: 'date',
+      title: t('patientHistory.table.column.date'),
+      sortable: true,
+      width: 160,
+      render: (visit) => (
+        <div style={{ whiteSpace: 'pre-line', lineHeight: 1.4 }}>
+          {formatDateTime(visit.date)}
+          {visit.endDate && (
+            <>
+              {'\n'}
+              <Text size="xs" c="dimmed">
+                {formatDateTime(visit.endDate)}
+              </Text>
+            </>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'registrationNumber',
+      title: t('patientHistory.table.column.registrationNumber'),
+      width: 100,
+    },
+    {
+      key: 'total',
+      title: t('patientHistory.table.column.total'),
+      align: 'right',
+      width: 100,
+      render: (visit) => formatCurrency(visit.total),
+    },
+    {
+      key: 'discountPercent',
+      title: t('patientHistory.table.column.discount'),
+      align: 'center',
+      width: 60,
+      render: (visit) => `${visit.discountPercent}%`,
+    },
+    {
+      key: 'debt',
+      title: t('patientHistory.table.column.debt'),
+      align: 'right',
+      width: 100,
+      render: (visit) => (
+        <span
+          style={{
+            fontWeight: visit.debt > 0 ? 600 : 400,
+            color: visit.debt > 0 ? 'var(--emr-stat-success)' : undefined,
+          }}
+        >
+          {formatCurrency(visit.debt)}
+        </span>
+      ),
+    },
+    {
+      key: 'payment',
+      title: t('patientHistory.table.column.payment'),
+      align: 'right',
+      width: 100,
+      render: (visit) => formatCurrency(visit.payment),
+    },
+  ];
 
-  /**
-   * Main table
-   */
   return (
-    <Table highlightOnHover>
-      <Table.Thead style={{ background: 'var(--emr-gradient-submenu)' }}>
-        <Table.Tr>
-          <Table.Th>{t('patientHistory.table.column.personalId')}</Table.Th>
-          <Table.Th>{t('patientHistory.table.column.firstName')}</Table.Th>
-          <Table.Th>{t('patientHistory.table.column.lastName')}</Table.Th>
-          <Table.Th
-            onClick={() => onSort('date')}
-            style={{ cursor: 'pointer', userSelect: 'none' }}
-          >
-            {t('patientHistory.table.column.date')} {sortField === 'date' && (sortDirection === 'asc' ? '↑' : '↓')}
-          </Table.Th>
-          <Table.Th>{t('patientHistory.table.column.registrationNumber')}</Table.Th>
-          <Table.Th style={{ textAlign: 'right' }}>{t('patientHistory.table.column.total')}</Table.Th>
-          <Table.Th style={{ textAlign: 'center' }}>{t('patientHistory.table.column.discount')}</Table.Th>
-          <Table.Th style={{ textAlign: 'right' }}>{t('patientHistory.table.column.debt')}</Table.Th>
-          <Table.Th style={{ textAlign: 'right' }}>{t('patientHistory.table.column.payment')}</Table.Th>
-          <Table.Th>{t('patientHistory.table.column.actions')}</Table.Th>
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>
-        {visits.map((visit) => {
-          const hasDebt = visit.debt > 0;
-          const isSelected = selectedPatientId === visit.id;
-
-          return (
-            <Table.Tr
-              key={visit.id}
-              onClick={() => handleRowClick(visit.id)}
-              style={{
-                cursor: 'pointer',
-                backgroundColor: isSelected ? 'rgba(23, 162, 184, 0.15)' : undefined,
-                borderLeft: isSelected ? '3px solid #17a2b8' : undefined,
-              }}
-            >
-              <Table.Td>{visit.personalId}</Table.Td>
-              <Table.Td>{visit.firstName}</Table.Td>
-              <Table.Td>{visit.lastName}</Table.Td>
-              <Table.Td style={{ whiteSpace: 'pre-line' }}>
-                {formatDateTime(visit.date)}
-                {visit.endDate && `\n${formatDateTime(visit.endDate)}`}
-              </Table.Td>
-              <Table.Td>{formatRegistrationNumber(visit.registrationNumber)}</Table.Td>
-              <Table.Td style={{ textAlign: 'right' }}>{formatCurrency(visit.total)}</Table.Td>
-              <Table.Td style={{ textAlign: 'center' }}>{visit.discountPercent}%</Table.Td>
-              <Table.Td
-                style={{
-                  textAlign: 'right',
-                  backgroundColor: hasDebt ? DEBT_HIGHLIGHT_COLOR : 'transparent',
-                  fontWeight: hasDebt ? 600 : 400,
-                }}
-              >
-                {formatCurrency(visit.debt)}
-              </Table.Td>
-              <Table.Td style={{ textAlign: 'right' }}>{formatCurrency(visit.payment)}</Table.Td>
-              <Table.Td onClick={(e) => e.stopPropagation()}>
-                <ActionIcon
-                  onClick={() => onEdit(visit.id)}
-                  variant="subtle"
-                  color="blue"
-                >
-                  <IconEdit size={16} />
-                </ActionIcon>
-                <ActionIcon
-                  onClick={() => onDelete(visit.id)}
-                  variant="subtle"
-                  color="red"
-                  ml="xs"
-                >
-                  <IconTrash size={16} />
-                </ActionIcon>
-              </Table.Td>
-            </Table.Tr>
-          );
-        })}
-      </Table.Tbody>
-    </Table>
+    <EMRTable
+      columns={columns}
+      data={visits}
+      loading={loading}
+      loadingConfig={{ rows: 5 }}
+      getRowId={(visit) => visit.id}
+      onRowClick={handleRowClick}
+      sortField={sortField || undefined}
+      sortDirection={sortDirection as SortDirection}
+      onSort={handleSort}
+      stickyHeader
+      striped
+      minWidth={900}
+      highlightRow={(visit) =>
+        selectedPatientId === visit.id
+          ? 'var(--emr-table-row-selected)'
+          : visit.debt > 0
+          ? DEBT_HIGHLIGHT_COLOR
+          : false
+      }
+      emptyState={{
+        icon: IconHistory,
+        title: t('patientHistory.table.noVisits'),
+        description: t('patientHistory.table.noVisitsDescription'),
+      }}
+      actions={(visit) => ({
+        primary: {
+          icon: IconEdit,
+          label: t('common.edit'),
+          onClick: () => onEdit(visit.id),
+        },
+        secondary: [
+          {
+            icon: IconTrash,
+            label: t('common.delete'),
+            color: 'red',
+            onClick: () => onDelete(visit.id),
+          },
+        ],
+      })}
+      ariaLabel={t('patientHistory.table.ariaLabel')}
+    />
   );
 }

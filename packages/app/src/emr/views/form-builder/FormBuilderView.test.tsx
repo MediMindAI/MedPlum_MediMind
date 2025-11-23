@@ -33,6 +33,22 @@ describe('FormBuilderView (T031-T032)', () => {
     );
   };
 
+  /**
+   * Helper to get header buttons by position
+   * Header order: [BackButton, UndoButton, RedoButton] + ... + [SaveButton]
+   * Save button has text, others are icon-only
+   */
+  const getHeaderButtons = () => {
+    const container = screen.getByTestId('form-builder-view');
+    const buttons = container.querySelectorAll('button');
+    return {
+      backButton: buttons[0] as HTMLButtonElement,
+      undoButton: buttons[1] as HTMLButtonElement,
+      redoButton: buttons[2] as HTMLButtonElement,
+      saveButton: screen.getByText('შენახვა').closest('button') as HTMLButtonElement, // Save has text
+    };
+  };
+
   beforeEach(() => {
     medplum = new MockClient();
     localStorage.clear();
@@ -44,16 +60,15 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should render form builder view with all elements', () => {
       renderWithProviders(<FormBuilderView />);
 
-      // Header elements
-      expect(screen.getByText('გამორთვა')).toBeInTheDocument(); // Cancel button (Georgian)
-      expect(screen.getByText('Undo')).toBeInTheDocument();
-      expect(screen.getByText('Redo')).toBeInTheDocument();
-      expect(screen.getByText('Draft')).toBeInTheDocument(); // Status badge
+      // Header elements - icon buttons no longer have text, check for buttons exist
+      const buttons = screen.getAllByRole('button');
+      expect(buttons.length).toBeGreaterThan(0); // Back, Undo, Redo, Save buttons exist
+      expect(screen.getByText('draft')).toBeInTheDocument(); // Status badge (lowercase with CSS text-transform)
       expect(screen.getByText('შენახვა')).toBeInTheDocument(); // Save button (Georgian)
 
       // Form inputs - use placeholder text since labels might not be rendered
-      expect(screen.getByPlaceholderText('Enter form title...')).toBeInTheDocument();
-      expect(screen.getByPlaceholderText('Enter form description (optional)...')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...')).toBeInTheDocument();
+      expect(screen.getByPlaceholderText('შეიყვანეთ ფორმის აღწერა (არასავალდებულო)...')).toBeInTheDocument();
 
       // Form builder layout
       expect(screen.getByTestId('form-builder-layout')).toBeInTheDocument();
@@ -62,8 +77,7 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should render undo/redo buttons in disabled state initially', () => {
       renderWithProviders(<FormBuilderView />);
 
-      const undoButton = screen.getByTitle('Undo (Ctrl+Z)');
-      const redoButton = screen.getByTitle('Redo (Ctrl+Shift+Z)');
+      const { undoButton, redoButton } = getHeaderButtons();
 
       expect(undoButton).toBeDisabled();
       expect(redoButton).toBeDisabled();
@@ -74,7 +88,7 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should update form title', () => {
       renderWithProviders(<FormBuilderView />);
 
-      const titleInput = screen.getByPlaceholderText('Enter form title...') as HTMLInputElement;
+      const titleInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...') as HTMLInputElement;
 
       fireEvent.change(titleInput, { target: { value: 'Consent Form' } });
 
@@ -84,7 +98,7 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should update form description', () => {
       renderWithProviders(<FormBuilderView />);
 
-      const descriptionInput = screen.getByPlaceholderText('Enter form description (optional)...') as HTMLTextAreaElement;
+      const descriptionInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის აღწერა (არასავალდებულო)...') as HTMLInputElement;
 
       fireEvent.change(descriptionInput, { target: { value: 'Patient consent form' } });
 
@@ -93,32 +107,49 @@ describe('FormBuilderView (T031-T032)', () => {
   });
 
   describe('Save Functionality', () => {
-    it('should show success notification on successful save', async () => {
+    it('should show error notification when saving without title', async () => {
       renderWithProviders(<FormBuilderView />);
 
-      const saveButton = screen.getByTitle('Save (Ctrl+S)');
+      const { saveButton } = getHeaderButtons();
 
       fireEvent.click(saveButton);
 
       await waitFor(() => {
+        // Check that validation error notification appears
+        expect(screen.getByText(/titleRequired/i)).toBeInTheDocument();
+      });
+    });
+
+    it('should show success notification on successful save with title', async () => {
+      renderWithProviders(<FormBuilderView />);
+
+      // First set a title
+      const titleInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...') as HTMLInputElement;
+      fireEvent.change(titleInput, { target: { value: 'Test Form' } });
+
+      const { saveButton } = getHeaderButtons();
+      fireEvent.click(saveButton);
+
+      await waitFor(() => {
         // Check that success notification appears
-        // Note: Actual notification text depends on translation implementation
-        expect(screen.getByText(/ოპერაცია წარმატებით შესრულდა|ფორმა შეტყობინების ბრუნდება/i)).toBeInTheDocument();
+        expect(screen.getByText(/ოპერაცია წარმატებით შესრულდა|formSaved/i)).toBeInTheDocument();
       });
     });
 
     it('should handle save keyboard shortcut (Ctrl+S)', async () => {
       renderWithProviders(<FormBuilderView />);
 
-      const container = screen.getByPlaceholderText('Enter form title...').closest('div')?.parentElement?.parentElement;
+      // First set a title
+      const titleInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...') as HTMLInputElement;
+      fireEvent.change(titleInput, { target: { value: 'Test Form' } });
 
-      if (container) {
-        fireEvent.keyDown(container, { key: 's', ctrlKey: true });
-      }
+      const container = screen.getByTestId('form-builder-view');
+
+      fireEvent.keyDown(container, { key: 's', ctrlKey: true });
 
       await waitFor(() => {
         // Notification should appear
-        expect(screen.getByText(/ოპერაცია წარმატებით შესრულდა|ფორმა შეტყობინების ბრუნდება/i)).toBeInTheDocument();
+        expect(screen.getByText(/ოპერაცია წარმატებით შესრულდა|formSaved/i)).toBeInTheDocument();
       });
     });
 
@@ -127,7 +158,7 @@ describe('FormBuilderView (T031-T032)', () => {
     it.skip('should handle save keyboard shortcut (Cmd+S on Mac)', async () => {
       renderWithProviders(<FormBuilderView />);
 
-      const container = screen.getByPlaceholderText('Enter form title...').closest('div')?.parentElement?.parentElement;
+      const container = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...').closest('div')?.parentElement?.parentElement;
 
       if (container) {
         fireEvent.keyDown(container, { key: 's', metaKey: true });
@@ -148,10 +179,10 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should enable undo button after making changes', () => {
       renderWithProviders(<FormBuilderView />);
 
-      const undoButton = screen.getByTitle('Undo (Ctrl+Z)');
+      const { undoButton } = getHeaderButtons();
       expect(undoButton).toBeDisabled();
 
-      const titleInput = screen.getByPlaceholderText('Enter form title...') as HTMLInputElement;
+      const titleInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...') as HTMLInputElement;
       fireEvent.change(titleInput, { target: { value: 'New Form' } });
 
       // After change, undo should be enabled
@@ -161,9 +192,8 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should enable redo button after undo', () => {
       renderWithProviders(<FormBuilderView />);
 
-      const titleInput = screen.getByPlaceholderText('Enter form title...') as HTMLInputElement;
-      const undoButton = screen.getByTitle('Undo (Ctrl+Z)');
-      const redoButton = screen.getByTitle('Redo (Ctrl+Shift+Z)');
+      const titleInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...') as HTMLInputElement;
+      const { undoButton, redoButton } = getHeaderButtons();
 
       // Make a change
       fireEvent.change(titleInput, { target: { value: 'New Form' } });
@@ -178,8 +208,8 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should handle undo keyboard shortcut (Ctrl+Z)', () => {
       renderWithProviders(<FormBuilderView />);
 
-      const container = screen.getByPlaceholderText('Enter form title...').closest('div')?.parentElement?.parentElement;
-      const titleInput = screen.getByPlaceholderText('Enter form title...') as HTMLInputElement;
+      const container = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...').closest('div')?.parentElement?.parentElement;
+      const titleInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...') as HTMLInputElement;
 
       // Make a change
       fireEvent.change(titleInput, { target: { value: 'New Form' } });
@@ -197,8 +227,8 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should handle redo keyboard shortcut (Ctrl+Shift+Z)', () => {
       renderWithProviders(<FormBuilderView />);
 
-      const container = screen.getByPlaceholderText('Enter form title...').closest('div')?.parentElement?.parentElement;
-      const titleInput = screen.getByPlaceholderText('Enter form title...') as HTMLInputElement;
+      const container = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...').closest('div')?.parentElement?.parentElement;
+      const titleInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...') as HTMLInputElement;
 
       // Make a change
       fireEvent.change(titleInput, { target: { value: 'New Form' } });
@@ -221,28 +251,29 @@ describe('FormBuilderView (T031-T032)', () => {
   });
 
   describe('Navigation', () => {
-    it('should navigate back without confirmation when no changes', () => {
+    it('should navigate back without confirmation when no changes', async () => {
       renderWithProviders(<FormBuilderView />);
 
-      const backButton = screen.getByText('გამორთვა'); // Cancel button (Georgian)
-
+      const { backButton } = getHeaderButtons();
       fireEvent.click(backButton);
 
       // Should navigate to forms list
-      expect(screen.getByText('Forms List')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Forms List')).toBeInTheDocument();
+      });
     });
 
-    it('should show confirmation dialog when navigating back with unsaved changes', () => {
+    it('should show confirmation dialog when navigating back with unsaved changes', async () => {
       // Mock window.confirm
       const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
 
       renderWithProviders(<FormBuilderView />);
 
       // Make a change
-      const titleInput = screen.getByPlaceholderText('Enter form title...') as HTMLInputElement;
+      const titleInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...') as HTMLInputElement;
       fireEvent.change(titleInput, { target: { value: 'New Form' } });
 
-      const backButton = screen.getByText('გამორთვა'); // Cancel button (Georgian)
+      const { backButton } = getHeaderButtons();
       fireEvent.click(backButton);
 
       // Confirm should be called
@@ -254,21 +285,23 @@ describe('FormBuilderView (T031-T032)', () => {
       confirmSpy.mockRestore();
     });
 
-    it('should navigate back after confirmation when user confirms', () => {
+    it('should navigate back after confirmation when user confirms', async () => {
       // Mock window.confirm to return true
       const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
 
       renderWithProviders(<FormBuilderView />);
 
       // Make a change
-      const titleInput = screen.getByPlaceholderText('Enter form title...') as HTMLInputElement;
+      const titleInput = screen.getByPlaceholderText('შეიყვანეთ ფორმის სათაური...') as HTMLInputElement;
       fireEvent.change(titleInput, { target: { value: 'New Form' } });
 
-      const backButton = screen.getByText('გამორთვა'); // Cancel button (Georgian)
+      const { backButton } = getHeaderButtons();
       fireEvent.click(backButton);
 
       // Should navigate (user clicked OK)
-      expect(screen.getByText('Forms List')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Forms List')).toBeInTheDocument();
+      });
 
       confirmSpy.mockRestore();
     });
@@ -278,19 +311,17 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should display draft status badge', () => {
       renderWithProviders(<FormBuilderView />);
 
-      expect(screen.getByText('Draft')).toBeInTheDocument();
+      // Status badge displays status with uppercase styling via CSS
+      expect(screen.getByText('draft')).toBeInTheDocument();
     });
   });
 
-  describe('Debug Info', () => {
-    it('should display field count and selection status', () => {
+  describe('Field Count Display', () => {
+    it('should display field count in header subtitle', () => {
       renderWithProviders(<FormBuilderView />);
 
-      // Initial state
-      expect(screen.getByText(/Fields: 0/)).toBeInTheDocument();
-      expect(screen.getByText(/Selected: None/)).toBeInTheDocument();
-      expect(screen.getByText(/Can Undo: No/)).toBeInTheDocument();
-      expect(screen.getByText(/Can Redo: No/)).toBeInTheDocument();
+      // Field count is now shown in the header subtitle area
+      expect(screen.getByText('0 fields')).toBeInTheDocument();
     });
   });
 
@@ -298,7 +329,7 @@ describe('FormBuilderView (T031-T032)', () => {
     it('should prevent default browser save dialog on Ctrl+S', () => {
       renderWithProviders(<FormBuilderView />);
 
-      const container = screen.getByPlaceholderText('Enter form title...').closest('div')?.parentElement?.parentElement;
+      const container = screen.getByTestId('form-builder-view');
 
       const event = new KeyboardEvent('keydown', {
         key: 's',
@@ -309,9 +340,7 @@ describe('FormBuilderView (T031-T032)', () => {
 
       const preventDefaultSpy = jest.spyOn(event, 'preventDefault');
 
-      if (container) {
-        container.dispatchEvent(event);
-      }
+      container.dispatchEvent(event);
 
       expect(preventDefaultSpy).toHaveBeenCalled();
     });

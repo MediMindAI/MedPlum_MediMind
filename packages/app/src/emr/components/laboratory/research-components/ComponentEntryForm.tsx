@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
-import { TextInput, Select, Button, Box, Grid } from '@mantine/core';
+import { Button, Box, Grid } from '@mantine/core';
+import { EMRTextInput, EMRSelect } from '../../shared/EMRFormFields';
 import { IconPlus } from '@tabler/icons-react';
 import { useTranslation } from '../../../hooks/useTranslation';
 import type { ResearchComponentFormValues } from '../../../types/laboratory';
@@ -81,44 +82,43 @@ export function ComponentEntryForm({ onSubmit, loading = false }: ComponentEntry
     >
       <Grid gutter="sm" align="flex-end">
         <Grid.Col span={{ base: 12, sm: 6, md: 1.5 }}>
-          <TextInput
+          <EMRTextInput
             placeholder={t('laboratory.components.fields.code')}
             value={code}
-            onChange={(e) => setCode(e.target.value)}
+            onChange={setCode}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           />
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 6, md: 1.5 }}>
-          <TextInput
+          <EMRTextInput
             placeholder={t('laboratory.components.fields.gisCode')}
             value={gisCode}
-            onChange={(e) => setGisCode(e.target.value)}
+            onChange={setGisCode}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           />
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 12, md: 2.5 }}>
-          <TextInput
+          <EMRTextInput
             placeholder={t('laboratory.components.fields.name')}
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={setName}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             required
           />
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 6, md: 2 }}>
-          <Select
+          <EMRSelect
             data={serviceTypeOptions}
             value={type}
             onChange={(value) => setType(value || 'internal')}
-            allowDeselect={false}
           />
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 6, md: 2 }}>
-          <Select
+          <EMRSelect
             data={unitOptions}
             value={unit}
             onChange={(value) => setUnit(value || '')}
@@ -129,10 +129,10 @@ export function ComponentEntryForm({ onSubmit, loading = false }: ComponentEntry
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 9, md: 1.5 }}>
-          <TextInput
+          <EMRTextInput
             placeholder={t('laboratory.components.fields.department')}
             value={department}
-            onChange={(e) => setDepartment(e.target.value)}
+            onChange={setDepartment}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           />
         </Grid.Col>

@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Paper, Text, Stack, Group, Select, Checkbox, Button, Table, Textarea } from '@mantine/core';
+import { Paper, Text, Stack, Group, Button, Table } from '@mantine/core';
+import { EMRSelect, EMRCheckbox, EMRTextarea } from '../../shared/EMRFormFields';
 import { IconPlus, IconPencil, IconTrash } from '@tabler/icons-react';
 import type { ActivityDefinition } from '@medplum/fhirtypes';
 import type { JSX } from 'react';
@@ -54,25 +55,25 @@ export function MedicalTab({ service, onSave }: MedicalTabProps): JSX.Element {
 
         {/* Sample Filter Fields */}
         <Group grow mb="md">
-          <Select
+          <EMRSelect
             placeholder={t('registeredServices.medical.samples.filter1')}
             data={[
               // TODO: Load sample criteria options
             ]}
           />
-          <Select
+          <EMRSelect
             placeholder={t('registeredServices.medical.samples.filter2')}
             data={[
               // TODO: Load sample criteria options
             ]}
           />
-          <Select
+          <EMRSelect
             placeholder={t('registeredServices.medical.samples.filter3')}
             data={[
               // TODO: Load sample criteria options
             ]}
           />
-          <Select
+          <EMRSelect
             placeholder={t('registeredServices.medical.samples.filter4')}
             data={[
               // TODO: Load sample criteria options
@@ -128,7 +129,7 @@ export function MedicalTab({ service, onSave }: MedicalTabProps): JSX.Element {
 
         {/* Component Selection */}
         <Group grow mb="md">
-          <Select
+          <EMRSelect
             placeholder={t('registeredServices.medical.components.select')}
             data={[
               // TODO: Load research components (ObservationDefinition)
@@ -181,35 +182,26 @@ export function MedicalTab({ service, onSave }: MedicalTabProps): JSX.Element {
 
         <Stack gap="md">
           {/* Checkbox 1: Order Copying */}
-          <Checkbox
+          <EMRCheckbox
             label={t('registeredServices.medical.otherParameters.orderCopying')}
             defaultChecked
-            styles={{
-              label: { cursor: 'pointer' },
-            }}
           />
 
           {/* Checkbox 2: Hide in Research */}
           <Group grow>
-            <Checkbox
+            <EMRCheckbox
               label={t('registeredServices.medical.otherParameters.hideInResearch')}
-              styles={{
-                label: { cursor: 'pointer' },
-              }}
             />
 
             {/* Checkbox 3: LIS Integration with conditional dropdown */}
             <Group>
-              <Checkbox
+              <EMRCheckbox
                 label={t('registeredServices.medical.otherParameters.lisIntegration')}
                 checked={lisIntegrationEnabled}
-                onChange={(event) => setLisIntegrationEnabled(event.currentTarget.checked)}
-                styles={{
-                  label: { cursor: 'pointer' },
-                }}
+                onChange={setLisIntegrationEnabled}
               />
               {lisIntegrationEnabled && (
-                <Select
+                <EMRSelect
                   placeholder={t('registeredServices.medical.otherParameters.lisProvider')}
                   data={[
                     { value: 'limbach', label: 'ლიმბახი (Limbach)' },
@@ -222,7 +214,7 @@ export function MedicalTab({ service, onSave }: MedicalTabProps): JSX.Element {
           </Group>
 
           {/* Laboratory Form Description */}
-          <Textarea
+          <EMRTextarea
             label={t('registeredServices.medical.otherParameters.labFormDescription')}
             placeholder={t('registeredServices.medical.otherParameters.labFormPlaceholder')}
             minRows={4}

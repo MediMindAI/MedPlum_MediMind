@@ -5,19 +5,16 @@ import {
   ActionIcon,
   Box,
   Button,
-  Checkbox,
   Group,
-  NumberInput,
   Paper,
-  Select,
   SimpleGrid,
   Stack,
   Table,
   Text,
-  TextInput,
   Tooltip,
 } from '@mantine/core';
 import { DateTimePicker } from '@mantine/dates';
+import { EMRTextInput, EMRSelect, EMRNumberInput, EMRCheckbox } from '../shared/EMRFormFields';
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -184,7 +181,6 @@ export function PatientHistorySidebar({
         <SimpleGrid cols={2} spacing="xs">
           <Button
             leftSection={<IconCurrencyLari size={16} />}
-            size="xs"
             onClick={handlePayment}
             disabled={!selectedPatient}
             styles={{
@@ -203,7 +199,6 @@ export function PatientHistorySidebar({
           </Button>
           <Button
             leftSection={<IconLogout size={16} />}
-            size="xs"
             onClick={handleCheckout}
             disabled={!selectedPatient}
             styles={{
@@ -222,7 +217,6 @@ export function PatientHistorySidebar({
           </Button>
           <Button
             leftSection={<IconTransfer size={16} />}
-            size="xs"
             onClick={handleTransfer}
             disabled={!selectedPatient}
             styles={{
@@ -241,7 +235,6 @@ export function PatientHistorySidebar({
           </Button>
           <Button
             leftSection={<IconFileInvoice size={16} />}
-            size="xs"
             onClick={handleInvoice}
             disabled={!selectedPatient}
             styles={{
@@ -263,52 +256,22 @@ export function PatientHistorySidebar({
         <SimpleGrid cols={3} spacing="xs">
           <Button
             variant="outline"
-            size="xs"
             onClick={handleCalculation}
             disabled={!selectedPatient}
-            styles={{
-              root: {
-                borderColor: 'var(--emr-secondary, #2b6cb0)',
-                color: 'var(--emr-secondary, #2b6cb0)',
-                '&:hover': {
-                  backgroundColor: 'var(--emr-light-accent, #bee3f8)',
-                },
-              },
-            }}
           >
             {t('sidebar.calculation')}
           </Button>
           <Button
             variant="outline"
-            size="xs"
             onClick={handleAnalyses}
             disabled={!selectedPatient}
-            styles={{
-              root: {
-                borderColor: 'var(--emr-secondary, #2b6cb0)',
-                color: 'var(--emr-secondary, #2b6cb0)',
-                '&:hover': {
-                  backgroundColor: 'var(--emr-light-accent, #bee3f8)',
-                },
-              },
-            }}
           >
             {t('sidebar.analyses')}
           </Button>
           <Button
             variant="outline"
-            size="xs"
             onClick={handleSalaries}
             disabled={!selectedPatient}
-            styles={{
-              root: {
-                borderColor: 'var(--emr-secondary, #2b6cb0)',
-                color: 'var(--emr-secondary, #2b6cb0)',
-                '&:hover': {
-                  backgroundColor: 'var(--emr-light-accent, #bee3f8)',
-                },
-              },
-            }}
           >
             {t('sidebar.salaries')}
           </Button>
@@ -331,7 +294,7 @@ export function PatientHistorySidebar({
         </Box>
 
         {/* Insurance Company Dropdown */}
-        <Select
+        <EMRSelect
           label={t('sidebar.insuranceCompany')}
           placeholder={t('sidebar.selectInsurance')}
           data={insuranceOptions}
@@ -339,15 +302,6 @@ export function PatientHistorySidebar({
           onChange={(value) => setSelectedInsurance(value || '0')}
           searchable
           disabled={!selectedPatient}
-          size="xs"
-          styles={{
-            input: {
-              '&:focus': {
-                borderColor: 'var(--emr-accent, #63b3ed)',
-                boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.3)',
-              },
-            },
-          }}
         />
 
         {/* Service Entry Section */}
@@ -362,53 +316,26 @@ export function PatientHistorySidebar({
               value={serviceDate}
               onChange={(value) => setServiceDate(value as Date | null)}
               disabled={!selectedPatient}
-              size="xs"
               clearable={false}
-              styles={{
-                input: {
-                  '&:focus': {
-                    borderColor: 'var(--emr-accent, #63b3ed)',
-                    boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.3)',
-                  },
-                },
-              }}
             />
 
-            <TextInput
+            <EMRTextInput
               label={t('sidebar.serviceName')}
               placeholder={t('sidebar.searchService')}
               value={serviceName}
-              onChange={(e) => setServiceName(e.currentTarget.value)}
+              onChange={setServiceName}
               disabled={!selectedPatient}
-              size="xs"
-              styles={{
-                input: {
-                  '&:focus': {
-                    borderColor: 'var(--emr-accent, #63b3ed)',
-                    boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.3)',
-                  },
-                },
-              }}
             />
 
             <Group gap="xs" align="flex-end">
-              <NumberInput
+              <EMRNumberInput
                 label={t('sidebar.quantity')}
                 value={serviceQuantity}
                 onChange={setServiceQuantity}
                 min={1}
                 max={999}
                 disabled={!selectedPatient}
-                size="xs"
                 style={{ flex: 1 }}
-                styles={{
-                  input: {
-                    '&:focus': {
-                      borderColor: 'var(--emr-accent, #63b3ed)',
-                      boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.3)',
-                    },
-                  },
-                }}
               />
               <Tooltip label={t('sidebar.addServiceButton')}>
                 <ActionIcon
@@ -425,20 +352,11 @@ export function PatientHistorySidebar({
               </Tooltip>
             </Group>
 
-            <Checkbox
+            <EMRCheckbox
               label={t('sidebar.policyCheck')}
               checked={policyCheck}
-              onChange={(e) => setPolicyCheck(e.currentTarget.checked)}
+              onChange={setPolicyCheck}
               disabled={!selectedPatient}
-              size="xs"
-              styles={{
-                input: {
-                  '&:checked': {
-                    backgroundColor: 'var(--emr-secondary, #2b6cb0)',
-                    borderColor: 'var(--emr-secondary, #2b6cb0)',
-                  },
-                },
-              }}
             />
           </Stack>
         </Box>
@@ -469,7 +387,6 @@ export function PatientHistorySidebar({
                         <ActionIcon
                           variant="subtle"
                           color="red"
-                          size="xs"
                           onClick={() => handleRemoveService(service.id)}
                         >
                           <IconX size={12} />

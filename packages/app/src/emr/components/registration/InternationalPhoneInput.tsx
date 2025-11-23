@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Group, Select, TextInput } from '@mantine/core';
-import type { ReactNode} from 'react';
+import { Box } from '@mantine/core';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
+import { EMRSelect, EMRTextInput, EMRFormRow } from '../shared/EMRFormFields';
 
 interface InternationalPhoneInputProps {
   value: string;
@@ -14,23 +15,24 @@ interface InternationalPhoneInputProps {
 }
 
 const countries = [
-  { value: '+995', label: '🇬🇪 +995 (Georgia)', flag: '🇬🇪' },
-  { value: '+1', label: '🇺🇸 +1 (USA)', flag: '🇺🇸' },
-  { value: '+44', label: '🇬🇧 +44 (UK)', flag: '🇬🇧' },
-  { value: '+7', label: '🇷🇺 +7 (Russia)', flag: '🇷🇺' },
-  { value: '+49', label: '🇩🇪 +49 (Germany)', flag: '🇩🇪' },
-  { value: '+33', label: '🇫🇷 +33 (France)', flag: '🇫🇷' },
+  { value: '+995', label: '🇬🇪 +995 (Georgia)' },
+  { value: '+1', label: '🇺🇸 +1 (USA)' },
+  { value: '+44', label: '🇬🇧 +44 (UK)' },
+  { value: '+7', label: '🇷🇺 +7 (Russia)' },
+  { value: '+49', label: '🇩🇪 +49 (Germany)' },
+  { value: '+33', label: '🇫🇷 +33 (France)' },
+  { value: '+34', label: '🇪🇸 +34 (Spain)' },
+  { value: '+39', label: '🇮🇹 +39 (Italy)' },
+  { value: '+90', label: '🇹🇷 +90 (Turkey)' },
+  { value: '+380', label: '🇺🇦 +380 (Ukraine)' },
+  { value: '+374', label: '🇦🇲 +374 (Armenia)' },
+  { value: '+994', label: '🇦🇿 +994 (Azerbaijan)' },
 ];
 
 /**
  * International phone input with country code selector
+ * Uses EMRFormFields for consistent styling
  * Defaults to Georgia (+995)
- * @param root0
- * @param root0.value
- * @param root0.onChange
- * @param root0.label
- * @param root0.error
- * @param root0.required
  */
 export function InternationalPhoneInput({
   value,
@@ -54,9 +56,10 @@ export function InternationalPhoneInput({
   const [countryCode, setCountryCode] = useState(getInitialCountryCode());
   const [phoneNumber, setPhoneNumber] = useState(getPhoneNumber());
 
-  const handleCountryChange = (newCode: string) => {
-    setCountryCode(newCode);
-    onChange(`${newCode}${phoneNumber}`);
+  const handleCountryChange = (newCode: string | null) => {
+    const code = newCode || '+995';
+    setCountryCode(code);
+    onChange(`${code}${phoneNumber}`);
   };
 
   const handlePhoneChange = (newPhone: string) => {
@@ -67,25 +70,28 @@ export function InternationalPhoneInput({
   };
 
   return (
-    <div>
-      <Group align="flex-end" gap="xs">
-        <Select
-          label={label}
-          data={countries}
-          value={countryCode}
-          onChange={(val) => handleCountryChange(val || '+995')}
-          style={{ width: '180px' }}
-          searchable
-          required={required}
-        />
-        <TextInput
-          placeholder="500050610"
-          value={phoneNumber}
-          onChange={(e) => handlePhoneChange(e.target.value)}
-          error={error}
-          style={{ flex: 1 }}
-        />
-      </Group>
-    </div>
+    <Box style={{ width: '100%' }}>
+      <EMRFormRow gap="sm" align="end">
+        <Box style={{ width: '180px', flexShrink: 0 }}>
+          <EMRSelect
+            label={label}
+            data={countries}
+            value={countryCode}
+            onChange={handleCountryChange}
+            searchable
+            required={required}
+          />
+        </Box>
+        <Box style={{ flex: 1 }}>
+          <EMRTextInput
+            label=" "
+            placeholder="500050610"
+            value={phoneNumber}
+            onChange={handlePhoneChange}
+            error={error as string}
+          />
+        </Box>
+      </EMRFormRow>
+    </Box>
   );
 }

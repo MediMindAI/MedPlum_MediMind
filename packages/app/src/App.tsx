@@ -46,7 +46,7 @@ export function App(): JSX.Element {
   // For non-EMR routes, render with AppShell and logo with search enabled
   return (
     <AppShell
-      logo={isEMRRoute ? <MediMindLogo size={32} /> : <Logo size={24} />}
+      logo={isEMRRoute ? <MediMindLogo size={22} /> : <Logo size={18} />}
       pathname={location.pathname}
       searchParams={searchParams}
       version={MEDPLUM_VERSION}

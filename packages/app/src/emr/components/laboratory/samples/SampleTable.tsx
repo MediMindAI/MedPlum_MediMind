@@ -2,10 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
-import { Table, ActionIcon, TextInput, Button, Box, Text } from '@mantine/core';
-import { IconPencil, IconTrash, IconCheck, IconX } from '@tabler/icons-react';
+import { Text } from '@mantine/core';
+import { EMRTextInput } from '../../shared/EMRFormFields';
+import { IconEdit, IconTrash, IconFolder, IconCheck, IconX } from '@tabler/icons-react';
 import type { SpecimenDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
+import { EMRTable } from '../../shared/EMRTable';
+import type { EMRTableColumn } from '../../shared/EMRTable';
 
 interface SampleTableProps {
   /** Array of sample types to display */
@@ -18,27 +21,28 @@ interface SampleTableProps {
   loading?: boolean;
 }
 
+// Extended type for table data
+interface SampleRow extends SpecimenDefinition {
+  id: string;
+}
+
 /**
  * SampleTable Component
- * @param root0
- * @param root0.samples
- * @param root0.onEdit
- * @param root0.onDelete
- * @param root0.loading
+ * Supports inline editing with EMRTable for consistent styling
  */
-export function SampleTable({ samples, onEdit, onDelete, loading }: SampleTableProps): JSX.Element {
+export function SampleTable({ samples, onEdit, onDelete, loading }: SampleTableProps): React.JSX.Element {
   const { t } = useTranslation();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
 
   const handleEditStart = (sample: SpecimenDefinition): void => {
-    if (!sample.id) {return;}
+    if (!sample.id) return;
     setEditingId(sample.id);
     setEditValue(sample.typeCollected?.text || '');
   };
 
   const handleEditSave = async (id: string): Promise<void> => {
-    if (!editValue.trim()) {return;}
+    if (!editValue.trim()) return;
     await onEdit(id, editValue);
     setEditingId(null);
     setEditValue('');
@@ -49,113 +53,89 @@ export function SampleTable({ samples, onEdit, onDelete, loading }: SampleTableP
     setEditValue('');
   };
 
-  if (loading) {
-    return (
-      <Box p="md">
-        <Text c="dimmed">{t('laboratory.samples.table.noData')}</Text>
-      </Box>
-    );
-  }
+  // Filter to ensure all samples have IDs
+  const validSamples = samples.filter((s): s is SampleRow => !!s.id);
 
-  if (samples.length === 0) {
-    return (
-      <Box p="md" style={{ textAlign: 'center' }}>
-        <Text c="dimmed">{t('laboratory.samples.table.noData')}</Text>
-      </Box>
-    );
-  }
+  // Define columns with inline editing support
+  const columns: EMRTableColumn<SampleRow>[] = [
+    {
+      key: 'name',
+      title: t('laboratory.samples.field.name'),
+      minWidth: 300,
+      render: (sample) => {
+        const isEditing = editingId === sample.id;
+
+        if (isEditing) {
+          return (
+            <EMRTextInput
+              value={editValue}
+              onChange={(value) => setEditValue(value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && sample.id) {
+                  handleEditSave(sample.id);
+                } else if (e.key === 'Escape') {
+                  handleEditCancel();
+                }
+              }}
+              autoFocus
+            />
+          );
+        }
+
+        return (
+          <Text fw={500} size="sm">
+            {sample.typeCollected?.text}
+          </Text>
+        );
+      },
+    },
+  ];
+
+  // Custom actions based on editing state
+  const getActions = (sample: SampleRow) => {
+    const isEditing = editingId === sample.id;
+
+    if (isEditing) {
+      return {
+        primary: {
+          icon: IconCheck,
+          label: t('laboratory.action.save'),
+          color: 'green' as const,
+          onClick: () => handleEditSave(sample.id),
+        },
+        secondary: [
+          {
+            icon: IconX,
+            label: t('laboratory.action.cancel'),
+            color: 'red' as const,
+            onClick: handleEditCancel,
+          },
+        ],
+      };
+    }
+
+    return {
+      primary: { icon: IconEdit, label: t('laboratory.action.edit'), onClick: () => handleEditStart(sample) },
+      secondary: [
+        { icon: IconTrash, label: t('laboratory.action.delete'), color: 'red' as const, onClick: () => onDelete(sample.id) },
+      ],
+    };
+  };
 
   return (
-    <Table
+    <EMRTable
+      columns={columns}
+      data={validSamples}
+      loading={loading}
+      loadingConfig={{ rows: 5 }}
+      getRowId={(sample) => sample.id}
       striped
-      highlightOnHover
-      style={{
-        tableLayout: 'fixed',
+      emptyState={{
+        icon: IconFolder,
+        title: t('laboratory.samples.table.noData'),
       }}
-    >
-      <thead
-        style={{
-          background: 'var(--emr-gradient-submenu)',
-          color: '#ffffff',
-        }}
-      >
-        <tr>
-          <th style={{ width: '85%', padding: '12px' }}>{t('laboratory.samples.field.name')}</th>
-          <th style={{ width: '15%', padding: '12px', textAlign: 'center' }}>
-            {t('laboratory.action.edit')} / {t('laboratory.action.delete')}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {samples.map((sample) => {
-          const isEditing = editingId === sample.id;
-
-          return (
-            <tr key={sample.id}>
-              <td style={{ padding: '8px' }}>
-                {isEditing ? (
-                  <TextInput
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && sample.id) {
-                        handleEditSave(sample.id);
-                      } else if (e.key === 'Escape') {
-                        handleEditCancel();
-                      }
-                    }}
-                    autoFocus
-                    size="sm"
-                  />
-                ) : (
-                  <Text size="sm">{sample.typeCollected?.text}</Text>
-                )}
-              </td>
-              <td style={{ padding: '8px', textAlign: 'center' }}>
-                {isEditing ? (
-                  <Box style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                    <ActionIcon
-                      color="green"
-                      onClick={() => sample.id && handleEditSave(sample.id)}
-                      title={t('laboratory.action.save')}
-                      size="sm"
-                    >
-                      <IconCheck size={16} />
-                    </ActionIcon>
-                    <ActionIcon
-                      color="red"
-                      onClick={handleEditCancel}
-                      title={t('laboratory.action.cancel')}
-                      size="sm"
-                    >
-                      <IconX size={16} />
-                    </ActionIcon>
-                  </Box>
-                ) : (
-                  <Box style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                    <ActionIcon
-                      color="blue"
-                      onClick={() => handleEditStart(sample)}
-                      title={t('laboratory.action.edit')}
-                      size="sm"
-                    >
-                      <IconPencil size={16} />
-                    </ActionIcon>
-                    <ActionIcon
-                      color="red"
-                      onClick={() => sample.id && onDelete(sample.id)}
-                      title={t('laboratory.action.delete')}
-                      size="sm"
-                    >
-                      <IconTrash size={16} />
-                    </ActionIcon>
-                  </Box>
-                )}
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </Table>
+      actions={getActions}
+      ariaLabel="Samples table"
+    />
   );
 }

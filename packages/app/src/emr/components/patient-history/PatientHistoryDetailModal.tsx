@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Modal, Text, Box, Grid, TextInput, Select, Textarea, Group, Button, NumberInput, Badge, Paper, ActionIcon, Switch, ThemeIcon, Tooltip } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { Modal, Text, Box, Grid, Group, Button, Badge, Paper, ActionIcon, ThemeIcon, Tooltip } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from '../../hooks/useTranslation';
+import { EMRTextInput, EMRSelect, EMRTextarea, EMRNumberInput, EMRSwitch, EMRDatePicker } from '../shared/EMRFormFields';
 import type { Encounter, Patient } from '@medplum/fhirtypes';
 import { useMedplum } from '@medplum/react-hooks';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
@@ -573,125 +573,60 @@ export function PatientHistoryDetailModal({
 
           <Grid gutter="lg" ml="md">
             <Grid.Col span={2}>
-              <TextInput
+              <EMRTextInput
                 label="თარიღი*"
                 value={form.values.visitDate ? form.values.visitDate.toLocaleDateString('en-GB') + ' ' + form.values.visitTime : ''}
                 onChange={() => {}}
                 leftSection={<IconClock size={16} color="#6b7280" />}
-                styles={{
-                  input: {
-                    backgroundColor: '#f3f4f6',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    transition: 'all 0.2s ease',
-                    '&:focus': {
-                      borderColor: '#63b3ed',
-                      boxShadow: '0 0 0 3px rgba(99, 179, 237, 0.2)',
-                    },
-                  },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
                 readOnly
               />
             </Grid.Col>
             <Grid.Col span={3}>
-              <Select
+              <EMRSelect
                 label="შემოსვლის ტიპი*"
                 data={admissionTypeOptions}
                 {...form.getInputProps('admissionType')}
                 searchable
-                comboboxProps={{ withinPortal: false }}
                 leftSection={<IconBuilding size={16} color="#6b7280" />}
-                styles={{
-                  input: {
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    transition: 'all 0.2s ease',
-                  },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
             <Grid.Col span={2}>
-              <TextInput
+              <EMRTextInput
                 label="სტაც. ნომერი"
                 {...form.getInputProps('stationaryNumber')}
                 leftSection={<IconFileText size={16} color="#6b7280" />}
-                styles={{
-                  input: {
-                    backgroundColor: '#f3f4f6',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                  },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
                 readOnly
               />
             </Grid.Col>
             <Grid.Col span={3}>
-              <Textarea
+              <EMRTextarea
                 label="კომენტარი"
                 {...form.getInputProps('comment')}
                 minRows={2}
-                styles={{
-                  input: {
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    transition: 'all 0.2s ease',
-                  },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
             <Grid.Col span={2}>
-              <Select
+              <EMRSelect
                 label="ტიპი"
                 data={patientTypeOptions}
                 {...form.getInputProps('patientType')}
-                comboboxProps={{ withinPortal: false }}
-                styles={{
-                  input: {
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    transition: 'all 0.2s ease',
-                  },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
           </Grid>
           <Grid gutter="lg" mt="md" ml="md">
             <Grid.Col span={4}>
-              <Select
+              <EMRSelect
                 label="მომართვის ტიპი"
                 data={referralTypeOptions}
                 {...form.getInputProps('referralType')}
-                comboboxProps={{ withinPortal: false }}
-                styles={{
-                  input: {
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    transition: 'all 0.2s ease',
-                  },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
             <Grid.Col span={4}>
-              <Select
+              <EMRSelect
                 label="მომყვანი"
                 data={ambulanceOptions}
                 {...form.getInputProps('ambulanceService')}
                 searchable
-                comboboxProps={{ withinPortal: false }}
-                styles={{
-                  input: {
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    transition: 'all 0.2s ease',
-                  },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
           </Grid>
@@ -741,96 +676,63 @@ export function PatientHistoryDetailModal({
 
           <Grid gutter="lg" ml="md">
             <Grid.Col span={2}>
-              <Select
+              <EMRSelect
                 label="რეგიონი"
                 data={regionOptions}
                 {...form.getInputProps('region')}
                 searchable
-                comboboxProps={{ withinPortal: false }}
                 leftSection={<IconMapPin size={16} color="#6b7280" />}
                 onChange={(value) => {
                   form.setFieldValue('region', value || '');
                   form.setFieldValue('district', '');
                 }}
-                styles={{
-                  input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
             <Grid.Col span={2}>
-              <Select
+              <EMRSelect
                 label="რაიონი"
                 data={districtOptions}
                 {...form.getInputProps('district')}
                 searchable
-                comboboxProps={{ withinPortal: false }}
                 disabled={!form.values.region}
-                styles={{
-                  input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
             <Grid.Col span={2}>
-              <TextInput
+              <EMRTextInput
                 label="ქალაქი"
                 {...form.getInputProps('city')}
-                styles={{
-                  input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
             <Grid.Col span={3}>
-              <TextInput
+              <EMRTextInput
                 label="ფაქტიური მისამართი"
                 {...form.getInputProps('actualAddress')}
                 leftSection={<IconHome size={16} color="#6b7280" />}
-                styles={{
-                  input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
             <Grid.Col span={3}>
-              <Select
+              <EMRSelect
                 label="განათლება"
                 data={educationOptions}
                 {...form.getInputProps('education')}
-                comboboxProps={{ withinPortal: false }}
                 leftSection={<IconSchool size={16} color="#6b7280" />}
-                styles={{
-                  input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
           </Grid>
           <Grid gutter="lg" mt="md" ml="md">
             <Grid.Col span={4}>
-              <Select
+              <EMRSelect
                 label="ოჯახური მდგომარეობა"
                 data={familyStatusOptions}
                 {...form.getInputProps('familyStatus')}
-                comboboxProps={{ withinPortal: false }}
-                styles={{
-                  input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
             <Grid.Col span={4}>
-              <Select
+              <EMRSelect
                 label="დასაქმება"
                 data={employmentOptions}
                 {...form.getInputProps('employment')}
-                comboboxProps={{ withinPortal: false }}
                 leftSection={<IconBriefcase size={16} color="#6b7280" />}
-                styles={{
-                  input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                  label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                }}
               />
             </Grid.Col>
           </Grid>
@@ -878,15 +780,10 @@ export function PatientHistoryDetailModal({
                 სადაზღვევო პოლისები
               </Badge>
             </Group>
-            <Switch
+            <EMRSwitch
               checked={form.values.insuranceEnabled}
-              onChange={(event) => form.setFieldValue('insuranceEnabled', event.currentTarget.checked)}
-              color="blue"
-              size="lg"
+              onChange={(checked) => form.setFieldValue('insuranceEnabled', checked)}
               label={form.values.insuranceEnabled ? 'აქტიური' : 'გამორთული'}
-              styles={{
-                label: { fontWeight: 500, color: '#374151' },
-              }}
             />
           </Group>
 
@@ -900,31 +797,29 @@ export function PatientHistoryDetailModal({
                 </Group>
               <Grid gutter="md">
                 <Grid.Col span={3}>
-                  <Select
+                  <EMRSelect
                     label="კომპანია"
                     data={insuranceCompanyOptions}
                     {...form.getInputProps('insuranceCompany1')}
                     searchable
-                    comboboxProps={{ withinPortal: false }}
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <Select
+                  <EMRSelect
                     label="ტიპი"
                     data={insuranceTypeOptions}
                     {...form.getInputProps('insuranceType1')}
                     searchable
-                    comboboxProps={{ withinPortal: false }}
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <TextInput
+                  <EMRTextInput
                     label="პოლისის #"
                     {...form.getInputProps('policyNumber1')}
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <TextInput
+                  <EMRTextInput
                     label="მიმართვის #"
                     {...form.getInputProps('referralNumber1')}
                   />
@@ -932,23 +827,19 @@ export function PatientHistoryDetailModal({
               </Grid>
               <Grid gutter="md" mt="sm">
                 <Grid.Col span={3}>
-                  <DateInput
+                  <EMRDatePicker
                     label="გაცემის თარიღი"
                     {...form.getInputProps('issueDate1')}
-                    valueFormat="YYYY-MM-DD"
-                    clearable
                   />
                 </Grid.Col>
                 <Grid.Col span={3}>
-                  <DateInput
+                  <EMRDatePicker
                     label="მოქმედების ვადა"
                     {...form.getInputProps('validityDate1')}
-                    valueFormat="YYYY-MM-DD"
-                    clearable
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <NumberInput
+                  <EMRNumberInput
                     label="თანაგადახდის %"
                     {...form.getInputProps('copayPercent1')}
                     min={0}
@@ -966,31 +857,29 @@ export function PatientHistoryDetailModal({
                 </Group>
               <Grid gutter="md">
                 <Grid.Col span={3}>
-                  <Select
+                  <EMRSelect
                     label="კომპანია"
                     data={insuranceCompanyOptions}
                     {...form.getInputProps('insuranceCompany2')}
                     searchable
-                    comboboxProps={{ withinPortal: false }}
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <Select
+                  <EMRSelect
                     label="ტიპი"
                     data={insuranceTypeOptions}
                     {...form.getInputProps('insuranceType2')}
                     searchable
-                    comboboxProps={{ withinPortal: false }}
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <TextInput
+                  <EMRTextInput
                     label="პოლისის #"
                     {...form.getInputProps('policyNumber2')}
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <TextInput
+                  <EMRTextInput
                     label="მიმართვის #"
                     {...form.getInputProps('referralNumber2')}
                   />
@@ -998,23 +887,19 @@ export function PatientHistoryDetailModal({
               </Grid>
               <Grid gutter="md" mt="sm">
                 <Grid.Col span={3}>
-                  <DateInput
+                  <EMRDatePicker
                     label="გაცემის თარიღი"
                     {...form.getInputProps('issueDate2')}
-                    valueFormat="YYYY-MM-DD"
-                    clearable
                   />
                 </Grid.Col>
                 <Grid.Col span={3}>
-                  <DateInput
+                  <EMRDatePicker
                     label="მოქმედების ვადა"
                     {...form.getInputProps('validityDate2')}
-                    valueFormat="YYYY-MM-DD"
-                    clearable
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <NumberInput
+                  <EMRNumberInput
                     label="თანაგადახდის %"
                     {...form.getInputProps('copayPercent2')}
                     min={0}
@@ -1032,31 +917,29 @@ export function PatientHistoryDetailModal({
                 </Group>
               <Grid gutter="md">
                 <Grid.Col span={3}>
-                  <Select
+                  <EMRSelect
                     label="კომპანია"
                     data={insuranceCompanyOptions}
                     {...form.getInputProps('insuranceCompany3')}
                     searchable
-                    comboboxProps={{ withinPortal: false }}
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <Select
+                  <EMRSelect
                     label="ტიპი"
                     data={insuranceTypeOptions}
                     {...form.getInputProps('insuranceType3')}
                     searchable
-                    comboboxProps={{ withinPortal: false }}
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <TextInput
+                  <EMRTextInput
                     label="პოლისის #"
                     {...form.getInputProps('policyNumber3')}
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <TextInput
+                  <EMRTextInput
                     label="მიმართვის #"
                     {...form.getInputProps('referralNumber3')}
                   />
@@ -1064,23 +947,19 @@ export function PatientHistoryDetailModal({
               </Grid>
               <Grid gutter="md" mt="sm">
                 <Grid.Col span={3}>
-                  <DateInput
+                  <EMRDatePicker
                     label="გაცემის თარიღი"
                     {...form.getInputProps('issueDate3')}
-                    valueFormat="YYYY-MM-DD"
-                    clearable
                   />
                 </Grid.Col>
                 <Grid.Col span={3}>
-                  <DateInput
+                  <EMRDatePicker
                     label="მოქმედების ვადა"
                     {...form.getInputProps('validityDate3')}
-                    valueFormat="YYYY-MM-DD"
-                    clearable
                   />
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <NumberInput
+                  <EMRNumberInput
                     label="თანაგადახდის %"
                     {...form.getInputProps('copayPercent3')}
                     min={0}
@@ -1138,89 +1017,55 @@ export function PatientHistoryDetailModal({
           <Box ml="md">
             {/* Toggle Switches */}
             <Group gap="xl" mb="lg">
-              <Switch
+              <EMRSwitch
                 checked={form.values.directDeposit}
-                onChange={(event) => form.setFieldValue('directDeposit', event.currentTarget.checked)}
+                onChange={(checked) => form.setFieldValue('directDeposit', checked)}
                 label="პირდაპირი ჩარიცხვა"
-                color="blue"
-                size="md"
-                styles={{ label: { fontWeight: 500, color: '#374151' } }}
               />
-              <Switch
+              <EMRSwitch
                 checked={form.values.virtualAdvance}
-                onChange={(event) => form.setFieldValue('virtualAdvance', event.currentTarget.checked)}
+                onChange={(checked) => form.setFieldValue('virtualAdvance', checked)}
                 label="ვირტუალურ ავანსად დაკვება"
-                color="blue"
-                size="md"
-                styles={{ label: { fontWeight: 500, color: '#374151' } }}
               />
             </Group>
 
             {/* Main Fields */}
             <Grid gutter="lg">
               <Grid.Col span={2}>
-                <TextInput
+                <EMRTextInput
                   label="დონორი"
                   {...form.getInputProps('guaranteeDonor')}
-                  styles={{
-                    input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                    label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                  }}
                 />
               </Grid.Col>
               <Grid.Col span={2}>
-                <TextInput
+                <EMRTextInput
                   label="თანხა"
                   {...form.getInputProps('guaranteeAmount')}
                   leftSection={<Text size="sm" c="#6b7280">₾</Text>}
-                  styles={{
-                    input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                    label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                  }}
                 />
               </Grid.Col>
               <Grid.Col span={2}>
-                <DateInput
+                <EMRDatePicker
                   label="თარიღი"
                   {...form.getInputProps('guaranteeDate')}
-                  valueFormat="YYYY-MM-DD"
-                  clearable
-                  styles={{
-                    input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                    label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                  }}
                 />
               </Grid.Col>
               <Grid.Col span={2}>
-                <DateInput
+                <EMRDatePicker
                   label="ვადა"
                   {...form.getInputProps('guaranteePeriod')}
-                  valueFormat="YYYY-MM-DD"
-                  clearable
-                  styles={{
-                    input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                    label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                  }}
                 />
               </Grid.Col>
               <Grid.Col span={2}>
-                <TextInput
+                <EMRTextInput
                   label="ნომერი"
                   {...form.getInputProps('guaranteeNumber')}
-                  styles={{
-                    input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                    label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                  }}
                 />
               </Grid.Col>
               <Grid.Col span={2}>
-                <TextInput
+                <EMRTextInput
                   label="კომენტარი"
                   {...form.getInputProps('guaranteeComment')}
-                  styles={{
-                    input: { border: '1px solid #e5e7eb', borderRadius: '8px' },
-                    label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                  }}
                 />
               </Grid.Col>
             </Grid>
@@ -1228,13 +1073,9 @@ export function PatientHistoryDetailModal({
             {/* Case Number */}
             <Grid gutter="lg" mt="lg">
               <Grid.Col span={4}>
-                <TextInput
+                <EMRTextInput
                   label="შემთხვევის #"
                   {...form.getInputProps('caseNumber')}
-                  styles={{
-                    input: { backgroundColor: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '8px' },
-                    label: { fontWeight: 600, color: '#374151', marginBottom: '6px' },
-                  }}
                 />
               </Grid.Col>
             </Grid>

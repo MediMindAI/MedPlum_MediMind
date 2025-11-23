@@ -1,9 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Select } from '@mantine/core';
 import { useTranslation } from '../../hooks/useTranslation';
-import type { Language } from '../../hooks/useTranslation';
+import { EMRSelect } from '../shared/EMRFormFields';
 
 interface CitizenshipSelectProps {
   value: string;
@@ -314,7 +313,7 @@ export function CitizenshipSelect({ value, onChange, label, error, required }: C
   };
 
   return (
-    <Select
+    <EMRSelect
       label={label || t('registration.field.citizenship')}
       placeholder={t('registration.patient.citizenship.placeholder') || 'აირჩიეთ მოქალაქეობა'}
       data={getLocalizedCountries()}

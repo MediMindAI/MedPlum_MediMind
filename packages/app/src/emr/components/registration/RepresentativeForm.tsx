@@ -1,13 +1,14 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Grid, TextInput } from '@mantine/core';
+import { Grid } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useTranslation } from '../../hooks/useTranslation';
 import { validateGeorgianPersonalId } from '../../services/validators';
 import { RelationshipSelect } from './RelationshipSelect';
 import { InternationalPhoneInput } from './InternationalPhoneInput';
 import { CollapsibleSection } from './CollapsibleSection';
+import { EMRTextInput } from '../shared/EMRFormFields';
 
 export interface RepresentativeFormValues {
   firstName: string;
@@ -110,7 +111,7 @@ export function RepresentativeForm({ onSubmit, initialValues }: RepresentativeFo
         <Grid gutter="md">
           {/* First Name */}
           <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('registration.field.firstName')}
               placeholder={t('registration.placeholder.enterFirstName')}
               required
@@ -120,7 +121,7 @@ export function RepresentativeForm({ onSubmit, initialValues }: RepresentativeFo
 
           {/* Last Name */}
           <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('registration.field.lastName')}
               placeholder={t('registration.placeholder.enterLastName')}
               required
@@ -130,7 +131,7 @@ export function RepresentativeForm({ onSubmit, initialValues }: RepresentativeFo
 
           {/* Father's Name (Optional) */}
           <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('registration.field.fatherName')}
               placeholder={t('registration.placeholder.fatherName')}
               {...form.getInputProps('fatherName')}
@@ -139,7 +140,7 @@ export function RepresentativeForm({ onSubmit, initialValues }: RepresentativeFo
 
           {/* Personal ID (Optional) */}
           <Grid.Col span={{ base: 12, sm: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('registration.field.personalId')}
               placeholder={t('registration.placeholder.enterPersonalId')}
               {...form.getInputProps('personalId')}

@@ -28,31 +28,33 @@ export function TopNavBar() {
   return (
     <Box
       style={{
-        height: '40px',
+        height: '20px',
         backgroundColor: '#e9ecef',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 1rem',
+        padding: '0 0.5rem',
         borderBottom: '1px solid #dee2e6',
       }}
     >
       {/* Left side - Dashboard button and Language selector */}
-      <Box style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+      <Box style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
         <Button
-          leftSection={<IconDashboard size={18} />}
-          size="xs"
+          leftSection={<IconDashboard size={10} />}
+          size="compact-xs"
           variant="light"
           onClick={() => navigate('/')}
           style={{
             background: 'var(--emr-gradient-primary)',
             color: 'white',
-            height: '32px',
+            height: '16px',
+            fontSize: '9px',
+            padding: '0 6px',
           }}
         >
           {t('topnav.dashboard')}
         </Button>
-        <LanguageSelector />
+        <LanguageSelector compact />
       </Box>
 
       {/* Right side - User menu */}
@@ -62,15 +64,15 @@ export function TopNavBar() {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.25rem 0.5rem',
-              borderRadius: '4px',
+              gap: '0.25rem',
+              padding: '0.1rem 0.25rem',
+              borderRadius: '2px',
               cursor: 'pointer',
             }}
           >
-            <IconUser size={18} />
-            <Text size="sm">{userName}</Text>
-            <IconChevronDown size={14} />
+            <IconUser size={10} />
+            <Text size="xs" style={{ fontSize: '9px' }}>{userName}</Text>
+            <IconChevronDown size={8} />
           </UnstyledButton>
         </Menu.Target>
 

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Paper, Text, Stack, Group, Select, NumberInput, Button, ActionIcon, Table, Grid, Title } from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
+import { Paper, Text, Stack, Group, Button, ActionIcon, Table, Grid, Title } from '@mantine/core';
+import { EMRSelect, EMRNumberInput, EMRDatePicker } from '../../shared/EMRFormFields';
 import { IconPlus, IconEdit, IconTrash } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import type { ActivityDefinition } from '@medplum/fhirtypes';
@@ -545,7 +545,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             : t('registeredServices.financial.addPrice')}
         </Text>
         <Group grow>
-          <Select
+          <EMRSelect
             label={t('registeredServices.financial.priceType')}
             placeholder={t('registeredServices.financial.selectInsurance')}
             data={priceTypeOptions}
@@ -555,7 +555,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             clearable
             required
           />
-          <Select
+          <EMRSelect
             label={t('registeredServices.financial.currency')}
             value="GEL"
             data={[{ value: 'GEL', label: 'GEL' }]}
@@ -563,23 +563,20 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
           />
         </Group>
         <Group grow mt="md">
-          <DatePickerInput
+          <EMRDatePicker
             label={t('registeredServices.financial.effectiveDate')}
             placeholder="აირჩიეთ თარიღი"
-            valueFormat="DD/MM/YYYY"
             value={effectiveDate}
             onChange={setEffectiveDate}
-            clearable
             required
           />
-          <NumberInput
+          <EMRNumberInput
             label={t('registeredServices.financial.price')}
             placeholder="0.00"
             value={priceAmount}
             onChange={setPriceAmount}
             min={0}
             decimalScale={2}
-            fixedDecimalScale
             required
           />
         </Group>
@@ -695,7 +692,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
         </Paper>
 
         <Group align="flex-end" gap="md">
-          <Select
+          <EMRSelect
             label="კატეგორია"
             placeholder="აირჩიეთ კატეგორია"
             data={expenseCategoriesData}
@@ -731,7 +728,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
         <Grid gutter="md">
           {/* Row 1 */}
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="დამრგვალება"
               placeholder="აირჩიეთ დამრგვალება"
               data={roundingTypesData}
@@ -741,7 +738,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="ერთეული"
               placeholder="აირჩიეთ ერთეული"
               data={serviceUnitsData}
@@ -754,7 +751,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
           {/* Row 2 */}
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="დაზღვევის ტიპი"
               placeholder="აირჩიეთ დაზღვევის ტიპი"
               data={insuranceBenefitTypesData}
@@ -765,7 +762,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="კონსულტაციის ტიპი"
               placeholder="აირჩიეთ კონსულტაციის ტიპი"
               data={consultationTypesData}
@@ -778,7 +775,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
           {/* Row 3 */}
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="Care level"
               placeholder="აირჩიეთ care level"
               data={careLevelsData}
@@ -788,7 +785,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="დამალვა/გამოჩენა პაციენტის ისტორიაში"
               placeholder="აირჩიეთ სტატუსი"
               data={activePassiveTypesData}
@@ -800,7 +797,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
           {/* Row 4 */}
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="კალკულაციის ტიპი"
               placeholder="აირჩიეთ კალკულაციის ტიპი"
               data={calculationTypesData}
@@ -810,7 +807,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="გადახდაში/კალკულაციაში გამოჩნდეს"
               placeholder="აირჩიეთ ხილვადობა"
               data={paymentVisibilityTypesData}
@@ -822,7 +819,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
           {/* Row 5 */}
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="კალკულაციის დათვლა"
               placeholder="აირჩიეთ დათვლის ტიპი"
               data={calculationCountingTypesData}
@@ -832,7 +829,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="გადახდის ტიპი"
               placeholder="აირჩიეთ გადახდის ტიპი"
               data={paymentTypesData}
@@ -862,7 +859,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
         <Grid>
           <Grid.Col span={{ base: 12, md: 8 }}>
-            <Select
+            <EMRSelect
               label="მასალა"
               placeholder="აირჩიეთ მასალა"
               data={[]} // TODO: Load from nomenclature materials
@@ -871,7 +868,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 2 }}>
-            <NumberInput
+            <EMRNumberInput
               label="რაოდენობა"
               placeholder="0"
               min={0}
@@ -917,7 +914,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
         <Grid>
           <Grid.Col span={{ base: 12, md: 8 }}>
-            <Select
+            <EMRSelect
               label="მედიკამენტი/საგანი"
               placeholder="აირჩიეთ მედიკამენტი ან საგანი"
               data={[]} // TODO: Load from nomenclature medications/items
@@ -926,7 +923,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 2 }}>
-            <NumberInput
+            <EMRNumberInput
               label="რაოდენობა"
               placeholder="0"
               min={0}
@@ -972,7 +969,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="კონსულტაციის ტიპი"
               placeholder="აირჩიეთ კონსულტაციის ტიპი"
               data={consultationTypesData}
@@ -983,7 +980,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="პირველადი ჯანდაცვის სერვისი"
               placeholder="აირჩიეთ სერვისი"
               data={primaryHealthcareServicesData}
@@ -994,7 +991,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="სერვისის ჯგუფი"
               placeholder="აირჩიეთ ჯგუფი"
               data={financialServiceGroupsData}
@@ -1005,7 +1002,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="ფასის ტიპი"
               placeholder="აირჩიეთ ფასის ტიპი"
               data={priceTypesData}
@@ -1035,21 +1032,19 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <DatePickerInput
+            <EMRDatePicker
               label="დაწყების თარიღი"
               placeholder="აირჩიეთ თარიღი"
               value={dateRange.startDate}
               onChange={(date) => setDateRange({ ...dateRange, startDate: date })}
-              clearable
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <DatePickerInput
+            <EMRDatePicker
               label="დასრულების თარიღი"
               placeholder="აირჩიეთ თარიღი"
               value={dateRange.endDate}
               onChange={(date) => setDateRange({ ...dateRange, endDate: date })}
-              clearable
             />
           </Grid.Col>
         </Grid>
@@ -1072,7 +1067,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
         <Grid>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="მომსახურების დონე"
               placeholder="აირჩიეთ დონე"
               data={careLevelsData}
@@ -1083,7 +1078,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="აქტიური/პასიური"
               placeholder="აირჩიეთ ტიპი"
               data={activePassiveTypesData}
@@ -1094,7 +1089,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="ლაბორატორიული შესრულება"
               placeholder="აირჩიეთ შესრულების ტიპი"
               data={labExecutionTypesData}
@@ -1105,7 +1100,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="სისხლის კომპონენტი"
               placeholder="აირჩიეთ კომპონენტი"
               data={bloodComponentsData}
@@ -1116,7 +1111,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label="პასუხის მოლოდინი"
               placeholder="აირჩიეთ მოლოდინის ტიპი"
               data={waitForAnswerTypesData}
@@ -1127,7 +1122,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput
+            <EMRNumberInput
               label="სტანდარტული მნიშვნელობა"
               placeholder="0"
               min={0}
@@ -1138,7 +1133,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput
+            <EMRNumberInput
               label="ქულები"
               placeholder="0"
               min={0}
@@ -1148,7 +1143,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput
+            <EMRNumberInput
               label="დღეები"
               placeholder="0"
               min={0}
@@ -1177,7 +1172,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
 
         <Grid>
           <Grid.Col span={{ base: 12, md: 4 }}>
-            <NumberInput
+            <EMRNumberInput
               label="მინიმალური რაოდენობა"
               placeholder="0"
               min={0}
@@ -1187,7 +1182,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 4 }}>
-            <NumberInput
+            <EMRNumberInput
               label="მაქსიმალური რაოდენობა"
               placeholder="0"
               min={0}
@@ -1197,7 +1192,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 4 }}>
-            <NumberInput
+            <EMRNumberInput
               label="პროცენტი"
               placeholder="0"
               min={0}
@@ -1210,7 +1205,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput
+            <EMRNumberInput
               label="ლიმიტი"
               placeholder="0"
               min={0}
@@ -1220,7 +1215,7 @@ export function FinancialTab({ service, onSave }: FinancialTabProps): JSX.Elemen
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput
+            <EMRNumberInput
               label="პრიორიტეტი"
               placeholder="0"
               min={0}

@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useState } from 'react';
-import { Box, TextInput, Button, Group, NumberInput, ColorInput } from '@mantine/core';
+import { Box, Button, Group, ColorInput } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useTranslation } from '../../../hooks/useTranslation';
 import type { SyringeFormValues } from '../../../types/laboratory';
+import { EMRTextInput, EMRNumberInput } from '../../shared/EMRFormFields';
 
 interface SyringeEntryFormProps {
   /** Callback when form is submitted */
@@ -59,14 +60,13 @@ export function SyringeEntryForm({ onSubmit, loading }: SyringeEntryFormProps): 
       }}
     >
       <Group align="flex-end" gap="sm">
-        <TextInput
+        <EMRTextInput
           label={t('laboratory.syringes.field.name')}
           placeholder={t('laboratory.syringes.field.name')}
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={setName}
           required
           style={{ flex: 2 }}
-          size="md"
         />
         <ColorInput
           label={t('laboratory.syringes.field.color')}
@@ -78,7 +78,7 @@ export function SyringeEntryForm({ onSubmit, loading }: SyringeEntryFormProps): 
           size="md"
           format="hex"
         />
-        <NumberInput
+        <EMRNumberInput
           label={t('laboratory.syringes.field.volume')}
           placeholder={t('laboratory.syringes.field.volume')}
           value={volume}
@@ -87,7 +87,6 @@ export function SyringeEntryForm({ onSubmit, loading }: SyringeEntryFormProps): 
           max={1000}
           decimalScale={2}
           style={{ flex: 1 }}
-          size="md"
         />
         <Button
           type="submit"

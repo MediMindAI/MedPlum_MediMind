@@ -38,6 +38,7 @@
   --emr-error-bg: #fff3f3; /* Error message background */
   --emr-error-text: #c92a2a; /* Error message text */
 
+
   /* ==================== COLLAPSIBLE SECTION COLORS ==================== */
   /* Color-coded accents for different collapsible section types */
   --emr-section-personal: #2b6cb0; /* Blue accent for personal information sections */
@@ -61,10 +62,32 @@
   /* Light blue gradient - used for sub-menu horizontal tabs (changed from turquoise) */
   --emr-gradient-submenu: linear-gradient(90deg, #2b6cb0 0%, #3182ce 50%, #63b3ed 100%);
 
+  /* ==================== TYPOGRAPHY SCALE ==================== */
+  /* Standardized font sizes - change --emr-font-base to adjust all text proportionally */
+  --emr-font-xs: 11px;      /* Small labels, badges, timestamps */
+  --emr-font-sm: 12px;      /* Secondary text, captions */
+  --emr-font-base: 13px;    /* Main content: tables, forms, navigation, buttons */
+  --emr-font-md: 14px;      /* Emphasized text, form labels */
+  --emr-font-lg: 16px;      /* Section headers, card titles */
+  --emr-font-xl: 18px;      /* Page titles */
+  --emr-font-2xl: 20px;     /* Major headings */
+  --emr-font-3xl: 24px;     /* Hero text */
+
+  /* Line heights */
+  --emr-line-height-tight: 1.25;
+  --emr-line-height-base: 1.5;
+  --emr-line-height-relaxed: 1.75;
+
+  /* Font weights */
+  --emr-font-normal: 400;
+  --emr-font-medium: 500;
+  --emr-font-semibold: 600;
+  --emr-font-bold: 700;
+
   /* ==================== LAYOUT DIMENSIONS ==================== */
-  --emr-topnav-height: 40px;
-  --emr-mainmenu-height: 50px;
-  --emr-submenu-height: 45px;
+  --emr-topnav-height: 28px;
+  --emr-mainmenu-height: 35px;
+  --emr-submenu-height: 30px;
   --emr-content-padding: 24px;
 
   /* ==================== SHADOWS ==================== */
@@ -103,12 +126,59 @@
   --emr-border-radius: 6px;
   --emr-border-radius-sm: 4px;
   --emr-border-radius-lg: 8px;
+  --emr-border-radius-xl: 12px;
+  --emr-border-radius-2xl: 16px;
   --emr-border-color: #e5e7eb;
 
   /* ==================== TRANSITIONS ==================== */
   --emr-transition-fast: 0.15s ease;
   --emr-transition-base: 0.2s ease;
   --emr-transition-slow: 0.3s ease;
+  --emr-transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ==================== MODERN FORM BUILDER DESIGN TOKENS ==================== */
+  /* Side Panel Enhancement Variables */
+  --emr-panel-width-palette: 280px;
+  --emr-panel-padding: 20px;
+  --emr-palette-item-gap: 12px;
+  --emr-palette-icon-size: 42px;
+
+  /* Enhanced shadows for side panels */
+  --emr-shadow-panel: 2px 0 12px rgba(0, 0, 0, 0.04);
+  --emr-shadow-panel-item: 0 1px 4px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
+  --emr-shadow-panel-item-hover: 0 4px 12px rgba(43, 108, 176, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+
+  /* Glassmorphism effects */
+  --emr-glass-bg: rgba(255, 255, 255, 0.85);
+  --emr-glass-bg-light: rgba(255, 255, 255, 0.6);
+  --emr-glass-border: rgba(255, 255, 255, 0.3);
+  --emr-glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  --emr-backdrop-blur: blur(10px);
+  --emr-backdrop-blur-lg: blur(20px);
+
+  /* Modern soft shadows */
+  --emr-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --emr-shadow-soft-md: 0 4px 12px rgba(0, 0, 0, 0.05), 0 8px 24px rgba(0, 0, 0, 0.05);
+  --emr-shadow-soft-lg: 0 8px 24px rgba(0, 0, 0, 0.06), 0 16px 48px rgba(0, 0, 0, 0.06);
+  --emr-shadow-glow: 0 0 20px rgba(99, 179, 237, 0.3);
+  --emr-shadow-glow-primary: 0 0 24px rgba(43, 108, 176, 0.25);
+
+  /* Modern accent gradients */
+  --emr-gradient-soft: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  --emr-gradient-canvas: linear-gradient(180deg, #fafbfc 0%, #f4f6f8 100%);
+  --emr-gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --emr-gradient-header-modern: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%);
+  --emr-gradient-accent-glow: linear-gradient(135deg, rgba(99, 179, 237, 0.1) 0%, rgba(43, 108, 176, 0.05) 100%);
+
+  /* Modern selection states */
+  --emr-selected-bg: rgba(43, 108, 176, 0.08);
+  --emr-selected-border: #2b6cb0;
+  --emr-hover-bg: rgba(43, 108, 176, 0.04);
+  --emr-focus-ring: 0 0 0 3px rgba(43, 108, 176, 0.15);
+
+  /* Scale transforms */
+  --emr-scale-hover: 1.02;
+  --emr-scale-active: 0.98;
 
   /* ==================== SPACING ==================== */
   --emr-spacing-xs: 4px;
@@ -125,10 +195,111 @@
   --emr-z-action-buttons: 997;
   --emr-z-dropdown: 1001;
 
+  /* ==================== EMR TABLE TOKENS ==================== */
+  /* Light/Minimal Apple-inspired table design */
+  --emr-table-header-bg: #f8f9fa;
+  --emr-table-header-text: #374151;
+  --emr-table-header-border: #e5e7eb;
+  --emr-table-header-font-weight: 600;
+  --emr-table-row-bg: #ffffff;
+  --emr-table-row-stripe: #fafbfc;
+  --emr-table-row-hover: rgba(59, 130, 246, 0.04);
+  --emr-table-row-selected: rgba(59, 130, 246, 0.08);
+  --emr-table-row-highlight: rgba(16, 185, 129, 0.12);
+  --emr-table-border: #e5e7eb;
+  --emr-table-border-radius: 8px;
+  --emr-table-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --emr-table-cell-padding: 12px 16px;
+  --emr-table-cell-padding-compact: 8px 12px;
+  --emr-table-selected-border: #3b82f6;
+  --emr-table-sort-icon-active: #3b82f6;
+  --emr-table-sort-icon-inactive: #9ca3af;
+  --emr-table-action-hover: rgba(59, 130, 246, 0.1);
+  --emr-table-checkbox-color: #3b82f6;
+
   /* ==================== RESPONSIVE BREAKPOINTS ==================== */
   --emr-mobile-breakpoint: 768px;
   --emr-tablet-breakpoint: 1024px;
   --emr-desktop-breakpoint: 1440px;
+
+  /* ==================== FORM INPUT DESIGN TOKENS ==================== */
+  /* Standardized form input styling for consistent UI across all forms */
+  /* ENHANCED: More visually distinct styling for production-ready forms */
+
+  /* Input Heights (touch-friendly) */
+  --emr-input-height-sm: 38px;
+  --emr-input-height-md: 44px;
+  --emr-input-height-lg: 50px;
+
+  /* Input Colors - ENHANCED with subtle gradient background */
+  --emr-input-bg: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+  --emr-input-bg-solid: #ffffff;
+  --emr-input-bg-disabled: #f3f4f6;
+  --emr-input-bg-focus: #ffffff;
+  --emr-input-border: #c7d2e0;
+  --emr-input-border-hover: #3182ce;
+  --emr-input-border-focus: #2b6cb0;
+  --emr-input-text: #1a202c;
+  --emr-input-text-disabled: #a0aec0;
+  --emr-input-placeholder: #a0aec0;
+
+  /* Input Shadow - ENHANCED for depth */
+  --emr-input-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --emr-input-shadow-hover: 0 4px 12px rgba(49, 130, 206, 0.15);
+  --emr-input-shadow-focus: 0 0 0 3px rgba(49, 130, 206, 0.25), 0 4px 12px rgba(49, 130, 206, 0.1);
+
+  /* Input Validation States - ENHANCED with stronger colors */
+  --emr-input-error-border: #e53e3e;
+  --emr-input-error-bg: #fff5f5;
+  --emr-input-error-text: #c53030;
+  --emr-input-error-glow: 0 0 0 3px rgba(229, 62, 62, 0.2), 0 4px 12px rgba(229, 62, 62, 0.1);
+
+  --emr-input-success-border: #38a169;
+  --emr-input-success-bg: #f0fff4;
+  --emr-input-success-text: #276749;
+  --emr-input-success-glow: 0 0 0 3px rgba(56, 161, 105, 0.2), 0 4px 12px rgba(56, 161, 105, 0.1);
+
+  --emr-input-warning-border: #dd6b20;
+  --emr-input-warning-bg: #fffaf0;
+  --emr-input-warning-text: #c05621;
+  --emr-input-warning-glow: 0 0 0 3px rgba(221, 107, 32, 0.2), 0 4px 12px rgba(221, 107, 32, 0.1);
+
+  /* Input Focus Ring - ENHANCED with stronger visibility */
+  --emr-input-focus-ring: 0 0 0 3px rgba(49, 130, 206, 0.3);
+  --emr-input-focus-ring-primary: 0 0 0 4px rgba(43, 108, 176, 0.25);
+
+  /* Input Label - ENHANCED with better contrast */
+  --emr-input-label-color: #2d3748;
+  --emr-input-label-size: 13px;
+  --emr-input-label-weight: 600;
+  --emr-input-label-spacing: 8px;
+
+  /* Input Help Text */
+  --emr-input-help-color: #718096;
+  --emr-input-help-size: 12px;
+
+  /* Required Indicator - Red asterisk */
+  --emr-input-required-color: #e53e3e;
+
+  /* Input Dimensions - ENHANCED with more padding */
+  --emr-input-padding-x: 14px;
+  --emr-input-padding-y: 12px;
+  --emr-input-border-radius: 10px;
+  --emr-input-font-size: 14px;
+  --emr-input-border-width: 1.5px;
+
+  /* Input Icons */
+  --emr-input-icon-size: 18px;
+  --emr-input-icon-color: #718096;
+  --emr-input-icon-color-focus: #2b6cb0;
+
+  /* Input Transitions - Smooth animations */
+  --emr-input-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Input Accent Colors - For left border accent */
+  --emr-input-accent-default: transparent;
+  --emr-input-accent-focus: #3182ce;
+  --emr-input-accent-filled: #38a169;
 }
 
 /* ==================== FONT FAMILIES ==================== */
@@ -147,6 +318,108 @@ body {
     'Apple Color Emoji',
     'Segoe UI Emoji',
     'Segoe UI Symbol';
+  font-size: var(--emr-font-base);
+}
+
+/* ==================== GLOBAL EMR TEXT SIZING ==================== */
+/* Apply standardized font sizes to all EMR content */
+
+/* Form inputs, textareas, selects */
+.mantine-TextInput-input,
+.mantine-Textarea-input,
+.mantine-Select-input,
+.mantine-NumberInput-input,
+.mantine-DateInput-input,
+.mantine-DatePickerInput-input,
+.mantine-MultiSelect-input,
+.mantine-PasswordInput-input,
+.mantine-Autocomplete-input,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea,
+select {
+  font-size: var(--emr-font-base) !important;
+}
+
+/* Form labels */
+.mantine-InputWrapper-label,
+.mantine-TextInput-label,
+.mantine-Select-label,
+.mantine-NumberInput-label,
+.mantine-Textarea-label,
+.mantine-Checkbox-label,
+.mantine-Radio-label,
+.mantine-Switch-label,
+label {
+  font-size: var(--emr-font-base) !important;
+}
+
+/* Buttons */
+.mantine-Button-root,
+.mantine-ActionIcon-root,
+.mantine-UnstyledButton-root,
+button {
+  font-size: var(--emr-font-base);
+}
+
+/* Table cells and headers */
+.mantine-Table-th,
+.mantine-Table-td,
+th, td {
+  font-size: var(--emr-font-base) !important;
+}
+
+/* Text elements */
+.mantine-Text-root,
+p, span, div {
+  font-size: inherit;
+}
+
+/* Placeholders */
+::placeholder {
+  font-size: var(--emr-font-base) !important;
+}
+
+/* Badges and tags */
+.mantine-Badge-root {
+  font-size: var(--emr-font-sm) !important;
+}
+
+/* Menu items and dropdowns */
+.mantine-Menu-item,
+.mantine-Select-option {
+  font-size: var(--emr-font-base) !important;
+}
+
+/* Tabs */
+.mantine-Tabs-tab {
+  font-size: var(--emr-font-base) !important;
+}
+
+/* Cards and Paper */
+.mantine-Card-root,
+.mantine-Paper-root {
+  font-size: var(--emr-font-base);
+}
+
+/* Section headers */
+h1, .mantine-Title-root[data-order="1"] {
+  font-size: var(--emr-font-2xl) !important;
+}
+
+h2, .mantine-Title-root[data-order="2"] {
+  font-size: var(--emr-font-xl) !important;
+}
+
+h3, .mantine-Title-root[data-order="3"] {
+  font-size: var(--emr-font-lg) !important;
+}
+
+h4, h5, h6 {
+  font-size: var(--emr-font-md) !important;
 }
 
 /* ==================== UTILITY CLASSES ==================== */
@@ -183,6 +456,111 @@ body {
 
 .emr-shadow-xl {
   box-shadow: var(--emr-shadow-xl);
+}
+
+/* ==================== FORM BUILDER UTILITY CLASSES ==================== */
+/* Panel header - consistent subtle style for FieldPalette and FormCanvas */
+.emr-panel-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--emr-gray-200);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.emr-panel-title {
+  color: var(--emr-gray-600);
+  font-size: var(--emr-font-xs);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Field item cards with hover/selected states */
+.emr-field-item {
+  padding: 12px 14px;
+  background: white;
+  border: 1px solid var(--emr-gray-200);
+  border-radius: var(--emr-border-radius);
+  cursor: pointer;
+  transition: var(--emr-transition-smooth);
+}
+
+.emr-field-item:hover {
+  border-color: #93c5fd;
+  transform: translateX(2px);
+  box-shadow: var(--emr-shadow-soft);
+}
+
+.emr-field-item.selected {
+  border-color: #3b82f6;
+  border-width: 2px;
+  background: var(--emr-selected-bg);
+  box-shadow: var(--emr-shadow-glow);
+}
+
+/* Drop zone styling */
+.emr-drop-zone {
+  min-height: 400px;
+  border: 2px dashed var(--emr-gray-300);
+  border-radius: var(--emr-border-radius-xl);
+  background: var(--emr-gradient-canvas);
+  transition: var(--emr-transition-smooth);
+}
+
+.emr-drop-zone.active {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%);
+  animation: dropPulse 1s ease-in-out infinite;
+}
+
+/* Empty state container */
+.emr-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  text-align: center;
+}
+
+.emr-empty-state-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  background: var(--emr-gradient-accent-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  border: 2px dashed var(--emr-gray-300);
+}
+
+/* Form Builder specific animations */
+@keyframes dropPulse {
+  0%, 100% {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%);
+  }
+  50% {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.15) 100%);
+  }
+}
+
+@keyframes emptyStatePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+}
+
+/* Form Builder specific tokens */
+:root {
+  --emr-builder-panel-width-palette: 240px;
+  --emr-builder-panel-width-properties: 320px;
+  --emr-builder-header-height: 64px;
+  --emr-builder-metadata-height: 100px;
 }
 
 /* ==================== FOCUS STATES ==================== */

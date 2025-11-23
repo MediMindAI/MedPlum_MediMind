@@ -271,15 +271,14 @@ export function ResponsiveForm() {
 ### Overview
 The EMR UI Layout provides a modern **4-row horizontal navigation system** with multilingual (Georgian/English/Russian) support for healthcare workflows. The layout completely removes the Medplum AppShell on EMR routes, implementing a custom navigation hierarchy. Located in `packages/app/src/emr/`.
 
-### Recent Updates (Updated: 2025-11-12)
+### Recent Updates (Updated: 2025-11-22)
 
-**Major Restructuring Complete:**
-- ✅ Transformed from sidebar-based layout to **4-row horizontal navigation**
-- ✅ Medplum AppShell conditionally hidden on `/emr` routes (App.tsx updated)
+**Major Features:**
+- ✅ **4-row horizontal navigation** system with turquoise gradient sub-menu tabs
+- ✅ **7 main menu items**: Registration, Patient History, Nomenclature, Administration, Forward, Forms, Reports
+- ✅ **Forms menu** with sub-items: Builder, Fill, Search, Manage
 - ✅ Global theme system with CSS custom properties (`styles/theme.css`)
-- ✅ New **turquoise gradient horizontal sub-menu tabs** (Row 3 - CRITICAL component)
 - ✅ Blue gradient active states for main menu items
-- ✅ **187 tests passing** across all EMR components
 
 ### 4-Row Layout Architecture
 
@@ -299,7 +298,7 @@ The EMR UI Layout provides a modern **4-row horizontal navigation system** with 
 
 #### Core Navigation Components
 - **TopNavBar** (Row 1): Gray navigation bar with 5 nav items and user menu dropdown (20 tests passing)
-- **EMRMainMenu** (Row 2 left): Horizontal main menu with 6 items - blue gradient active states (21 tests passing)
+- **EMRMainMenu** (Row 2 left): Horizontal main menu with 7 items - blue gradient active states
 - **HorizontalSubMenu** (Row 3): **CRITICAL** - Turquoise gradient horizontal tabs with white 3px bottom border for active tab (35 tests passing)
 - **LanguageSelector** (Row 2 right): Language switcher (ka/en/ru) with blue accent active state (19 tests passing)
 - **ActionButtons**: Floating action buttons positioned top-right with blue gradient backgrounds (24 tests passing)
@@ -1760,6 +1759,148 @@ npm test -- role-management  # Run all role management tests
 - Audit trail preserved for deleted roles (role name in logs)
 - Deactivation recommended over deletion for roles with history
 
+## FHIR Form Builder System
+
+### Overview
+
+The FHIR Form Builder System provides a drag-and-drop interface for creating, managing, and rendering FHIR Questionnaire resources. Forms can be filled by patients or staff, with responses stored as QuestionnaireResponse resources.
+
+**Status**: ✅ **PRODUCTION READY**
+**Routes**: `/emr/forms/*`
+**FHIR Resources**: Questionnaire, QuestionnaireResponse
+
+### File Structure
+
+```
+packages/app/src/emr/
+├── views/
+│   ├── form-builder/
+│   │   ├── FormBuilderView.tsx          # Main builder page at /emr/forms/builder
+│   │   └── FormEditView.tsx             # Edit existing form at /emr/forms/edit/:id
+│   ├── form-management/
+│   │   ├── FormManagementView.tsx       # Form list/management at /emr/forms
+│   │   └── FormSearchView.tsx           # Search forms at /emr/forms/search
+│   └── form-filler/
+│       ├── FormFillerView.tsx           # Fill form at /emr/forms/fill/:id
+│       └── FormViewerView.tsx           # View submitted form
+├── components/
+│   ├── form-builder/
+│   │   ├── FormBuilderLayout.tsx        # Three-panel layout (palette, canvas, properties)
+│   │   ├── FieldPalette.tsx             # Draggable field types
+│   │   ├── FormCanvas.tsx               # Drop zone for fields
+│   │   ├── PropertiesPanel.tsx          # Field configuration panel
+│   │   ├── FieldConfigEditor.tsx        # Individual field editor
+│   │   ├── FormPreview.tsx              # Live preview of form
+│   │   └── PatientBindingSelector.tsx   # Bind fields to Patient data
+│   ├── form-management/
+│   │   ├── FormTemplateList.tsx         # Grid of form cards
+│   │   ├── FormTemplateCard.tsx         # Individual form card
+│   │   ├── FormCloneModal.tsx           # Clone form dialog
+│   │   └── FormVersionHistory.tsx       # Version history panel
+│   └── form-analytics/
+│       ├── FormAnalyticsDashboard.tsx   # Usage statistics
+│       └── FormCompletionChart.tsx      # Completion rate chart
+├── services/
+│   ├── formBuilderService.ts            # Questionnaire CRUD
+│   ├── formRendererService.ts           # Form rendering logic
+│   ├── formValidationService.ts         # Field validation
+│   └── formAnalyticsService.ts          # Usage analytics
+├── hooks/
+│   ├── useFormBuilder.ts                # Builder state management
+│   └── useFormAnalytics.ts              # Analytics data fetching
+└── types/
+    ├── form-builder.ts                  # FormTemplate, FieldConfig interfaces
+    ├── form-renderer.ts                 # Rendering types
+    └── form-validation.ts               # Validation types
+```
+
+### Routing
+
+```typescript
+/emr/forms                    // Form management (list all forms)
+/emr/forms/builder            // Create new form
+/emr/forms/edit/:id           // Edit existing form
+/emr/forms/fill/:id           // Fill out a form
+/emr/forms/search             // Search forms
+```
+
+### Key Features
+
+- **Drag-and-Drop Builder**: 16 field types (text, date, choice, signature, etc.)
+- **Patient Data Binding**: Auto-populate fields from Patient resource
+- **Live Preview**: See form as users will see it
+- **Version History**: Track form changes over time
+- **Form Cloning**: Duplicate forms for variations
+- **Validation**: Required fields, regex patterns, min/max values
+- **Analytics**: Completion rates, usage statistics
+- **Multilingual**: Full ka/en/ru support
+
+### Field Types
+
+```typescript
+type FieldType =
+  | 'text'           // Short text
+  | 'textarea'       // Long text
+  | 'date'           // Date picker
+  | 'datetime'       // Date + time
+  | 'time'           // Time only
+  | 'integer'        // Whole numbers
+  | 'decimal'        // Decimal numbers
+  | 'boolean'        // Checkbox
+  | 'choice'         // Single select
+  | 'open-choice'    // Select + custom
+  | 'radio'          // Radio buttons
+  | 'checkbox-group' // Multiple checkboxes
+  | 'signature'      // Digital signature
+  | 'attachment'     // File upload
+  | 'display'        // Text only
+  | 'group';         // Field group
+```
+
+### Common Patterns
+
+#### Creating a Form
+```typescript
+import { createQuestionnaire } from '@/emr/services/formBuilderService';
+
+const template: FormTemplate = {
+  title: 'Patient Intake Form',
+  status: 'draft',
+  fields: [
+    { id: '1', linkId: 'name', type: 'text', label: 'Full Name', required: true },
+    { id: '2', linkId: 'dob', type: 'date', label: 'Date of Birth' },
+  ],
+};
+
+const questionnaire = await createQuestionnaire(medplum, template);
+```
+
+#### Using the Builder Hook
+```typescript
+import { useFormBuilder } from '@/emr/hooks/useFormBuilder';
+
+const { state, actions, canUndo, canRedo, undo, redo, save } = useFormBuilder();
+
+// Add field
+actions.addField({ type: 'text', label: 'New Field' });
+
+// Undo/Redo
+if (canUndo) undo();
+if (canRedo) redo();
+
+// Save
+await save(medplum);
+```
+
+### Testing
+
+```bash
+cd packages/app
+npm test -- form-builder      # Builder tests
+npm test -- form-management   # Management tests
+npm test -- FormFillerView    # Filler tests
+```
+
 ## Documentation References
 
 - EMR UI Layout Spec: `specs/003-emr-ui-layout/spec.md`
@@ -1774,8 +1915,12 @@ npm test -- role-management  # Run all role management tests
 - Contributing Guide: https://medplum.com/docs/contributing
 
 ## Active Technologies
-- TypeScript 5.x (strict mode enabled per constitution) (006-role-permission-management)
-- PostgreSQL (Medplum server) storing FHIR AccessPolicy resources (006-role-permission-management)
+- TypeScript 5.x (strict mode enabled)
+- React 19 with Mantine UI
+- PostgreSQL (Medplum server) storing FHIR resources
+- Vite for app bundling
 
-## Recent Changes
-- 006-role-permission-management: Added TypeScript 5.x (strict mode enabled per constitution)
+## Recent Changes (2025-11-22)
+- Added FHIR Form Builder System with drag-and-drop form creation, management, and filling
+- Forms menu added to main navigation with builder, fill, search, and manage sub-items
+- Form analytics dashboard for tracking form usage and completion rates

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Select } from '@mantine/core';
+import { EMRSelect } from '../shared/EMRFormFields';
 import type { JSX } from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -29,6 +29,7 @@ interface ServiceSubgroupSelectProps {
   clearable?: boolean;
   searchable?: boolean;
   error?: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 /**
@@ -70,6 +71,7 @@ export function ServiceSubgroupSelect({
   clearable = true,
   searchable = true,
   error,
+  size = 'md',
 }: ServiceSubgroupSelectProps): JSX.Element {
   const { t, lang } = useTranslation();
   const [options, setOptions] = useState<ServiceSubgroupOption[]>([]);
@@ -85,7 +87,7 @@ export function ServiceSubgroupSelect({
   }, [lang]);
 
   return (
-    <Select
+    <EMRSelect
       label={label || t('nomenclature.field.serviceSubgroup')}
       placeholder={placeholder || t('nomenclature.placeholder.selectSubgroup')}
       value={value}

@@ -25,8 +25,8 @@ body,
 
 /* Style the header content */
 [class*='AppShell-header'] > div {
-  height: 80px !important;
-  padding: 0 24px !important;
+  height: 50px !important;
+  padding: 0 16px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
@@ -131,7 +131,7 @@ body,
 [class*='AppShell-main'] {
   padding: 0 !important;
   margin: 0 !important;
-  padding-top: 12px !important; /* Reduced padding (15% of 80px) */
+  padding-top: 0 !important;
 }
 
 /* Remove any spacing from the AppShell root */
@@ -141,5 +141,5 @@ body,
 
 /* Ensure header is fixed at top */
 [class*='AppShell-header'] {
-  height: 80px !important;
+  height: 50px !important;
 }

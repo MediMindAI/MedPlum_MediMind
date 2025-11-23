@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Select } from '@mantine/core';
+import { EMRSelect } from '../shared/EMRFormFields';
 import type { JSX } from 'react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -20,6 +20,7 @@ interface ServiceTypeSelectProps {
   required?: boolean;
   error?: string;
   disabled?: boolean;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 /**
@@ -57,6 +58,7 @@ export default function ServiceTypeSelect({
   required = false,
   disabled = false,
   error,
+  size = 'md',
 }: ServiceTypeSelectProps): JSX.Element {
   const { t, lang } = useTranslation();
   const [options, setOptions] = useState<ServiceTypeOption[]>([]);
@@ -71,21 +73,18 @@ export default function ServiceTypeSelect({
   }, [lang]);
 
   return (
-    <Select
+    <EMRSelect
       label={label || t('nomenclature.field.serviceType')}
       placeholder={placeholder || t('nomenclature.serviceType.placeholder')}
       value={value}
       onChange={onChange}
       data={options}
       required={required}
-      withAsterisk={required}
       disabled={disabled}
       searchable
       clearable
       error={error}
       nothingFoundMessage={t('nomenclature.serviceType.noResults') || 'ვერ მოიძებნა'}
-      size="md"
-      styles={{ input: { minHeight: '44px' } }}
     />
   );
 }

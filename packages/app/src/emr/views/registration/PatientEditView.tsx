@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Paper, Text, Stack, Button, Grid, Select, TextInput, Loader } from '@mantine/core';
+import { Paper, Text, Stack, Button, Grid, Loader } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMedplum } from '@medplum/react-hooks';
@@ -11,7 +11,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { notifications } from '@mantine/notifications';
 import { InternationalPhoneInput } from '../../components/registration/InternationalPhoneInput';
 import { validateGeorgianPersonalId, validateEmail } from '../../services/validators';
-import { EMRDatePicker } from '../../components/common/EMRDatePicker';
+import { EMRTextInput, EMRSelect, EMRDatePicker } from '../../components/shared/EMRFormFields';
 
 interface PatientFormValues {
   personalId: string;
@@ -266,14 +266,14 @@ export function PatientEditView(): JSX.Element {
           <Stack gap="md">
             <Grid>
               <Grid.Col span={6}>
-                <TextInput
+                <EMRTextInput
                   label={t('registration.field.personalId')}
                   placeholder="01234567891"
                   {...form.getInputProps('personalId')}
                 />
               </Grid.Col>
               <Grid.Col span={6}>
-                <Select
+                <EMRSelect
                   label={t('registration.field.gender')}
                   placeholder={t('registration.field.selectGender') || 'Select gender'}
                   data={[
@@ -289,7 +289,7 @@ export function PatientEditView(): JSX.Element {
 
             <Grid>
               <Grid.Col span={4}>
-                <TextInput
+                <EMRTextInput
                   label={t('registration.field.firstName')}
                   placeholder="სახელი"
                   {...form.getInputProps('firstName')}
@@ -297,7 +297,7 @@ export function PatientEditView(): JSX.Element {
                 />
               </Grid.Col>
               <Grid.Col span={4}>
-                <TextInput
+                <EMRTextInput
                   label={t('registration.field.lastName')}
                   placeholder="გვარი"
                   {...form.getInputProps('lastName')}
@@ -305,7 +305,7 @@ export function PatientEditView(): JSX.Element {
                 />
               </Grid.Col>
               <Grid.Col span={4}>
-                <TextInput
+                <EMRTextInput
                   label={t('registration.field.fatherName')}
                   placeholder="მამის სახელი"
                   {...form.getInputProps('fatherName')}
@@ -323,7 +323,7 @@ export function PatientEditView(): JSX.Element {
                 />
               </Grid.Col>
               <Grid.Col span={6}>
-                <Select
+                <EMRSelect
                   label={t('registration.field.citizenship')}
                   placeholder={t('registration.field.selectCitizenship') || 'Select citizenship'}
                   data={[
@@ -350,7 +350,7 @@ export function PatientEditView(): JSX.Element {
                 />
               </Grid.Col>
               <Grid.Col span={6}>
-                <TextInput
+                <EMRTextInput
                   label={t('registration.field.email')}
                   type="email"
                   placeholder="email@example.com"
@@ -359,7 +359,7 @@ export function PatientEditView(): JSX.Element {
               </Grid.Col>
             </Grid>
 
-            <TextInput
+            <EMRTextInput
               label={t('registration.field.address')}
               placeholder={t('registration.field.addressPlaceholder') || 'Full address'}
               {...form.getInputProps('address')}

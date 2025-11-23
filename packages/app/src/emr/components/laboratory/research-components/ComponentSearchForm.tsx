@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import { TextInput, Select, Box, ActionIcon, Grid } from '@mantine/core';
+import { Box, ActionIcon, Grid } from '@mantine/core';
+import { EMRTextInput, EMRSelect } from '../../shared/EMRFormFields';
 import { IconSearch, IconRefresh } from '@tabler/icons-react';
 import { useTranslation } from '../../../hooks/useTranslation';
 import type { ComponentSearchFilters } from '../../../types/laboratory';
@@ -71,35 +72,35 @@ export function ComponentSearchForm({
       <Grid gutter="sm" align="flex-end">
         {/* Row 1: Code, GIS Code, Parameter Name */}
         <Grid.Col span={{ base: 12, sm: 6, md: 2 }}>
-          <TextInput
+          <EMRTextInput
             placeholder={t('laboratory.components.fields.code')}
             value={filters.code || ''}
-            onChange={(e) => onFiltersChange({ ...filters, code: e.target.value })}
+            onChange={(value) => onFiltersChange({ ...filters, code: value })}
             onKeyDown={(e) => e.key === 'Enter' && onSearch()}
           />
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 6, md: 2 }}>
-          <TextInput
+          <EMRTextInput
             placeholder={t('laboratory.components.fields.gisCode')}
             value={filters.gisCode || ''}
-            onChange={(e) => onFiltersChange({ ...filters, gisCode: e.target.value })}
+            onChange={(value) => onFiltersChange({ ...filters, gisCode: value })}
             onKeyDown={(e) => e.key === 'Enter' && onSearch()}
           />
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 12, md: 3 }}>
-          <TextInput
+          <EMRTextInput
             placeholder={t('laboratory.components.filters.parameterSearch')}
             value={filters.parameterName || ''}
-            onChange={(e) => onFiltersChange({ ...filters, parameterName: e.target.value })}
+            onChange={(value) => onFiltersChange({ ...filters, parameterName: value })}
             onKeyDown={(e) => e.key === 'Enter' && onSearch()}
           />
         </Grid.Col>
 
         {/* Row 2: Status, Type, Unit, Actions */}
         <Grid.Col span={{ base: 12, sm: 6, md: 2 }}>
-          <Select
+          <EMRSelect
             data={statusOptions}
             value={filters.status || 'active'}
             onChange={(value) => onFiltersChange({ ...filters, status: (value as 'active' | 'retired') || 'active' })}
@@ -108,7 +109,7 @@ export function ComponentSearchForm({
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 6, md: 2 }}>
-          <Select
+          <EMRSelect
             data={serviceTypeOptions}
             value={filters.type || ''}
             onChange={(value) => onFiltersChange({ ...filters, type: value || undefined })}
@@ -119,7 +120,7 @@ export function ComponentSearchForm({
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, sm: 9, md: 2 }}>
-          <Select
+          <EMRSelect
             data={unitOptions}
             value={filters.unit || ''}
             onChange={(value) => onFiltersChange({ ...filters, unit: value || undefined })}

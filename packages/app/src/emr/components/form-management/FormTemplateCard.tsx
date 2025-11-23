@@ -111,32 +111,44 @@ export function FormTemplateCard({
   return (
     <Card
       shadow="sm"
-      padding="lg"
+      padding={0}
       radius="md"
       withBorder
       onClick={handleCardClick}
       style={{
         cursor: onClick ? 'pointer' : 'default',
         opacity: isArchived ? 0.7 : 1,
-        transition: 'transform 0.2s, box-shadow 0.2s',
+        transition: 'var(--emr-transition-base)',
+        border: '1px solid var(--emr-gray-200)',
+        overflow: 'hidden',
       }}
       onMouseEnter={(e) => {
         if (onClick) {
-          e.currentTarget.style.transform = 'translateY(-2px)';
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+          e.currentTarget.style.transform = 'translateY(-4px)';
+          e.currentTarget.style.boxShadow = 'var(--emr-shadow-lg)';
+          e.currentTarget.style.borderColor = 'var(--emr-accent)';
         }
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = '';
+        e.currentTarget.style.borderColor = 'var(--emr-gray-200)';
       }}
       data-testid={`form-card-${id}`}
     >
-      <Stack gap="sm">
+      {/* Top accent bar with gradient */}
+      <div
+        style={{
+          height: 4,
+          background: 'var(--emr-gradient-secondary)',
+        }}
+      />
+
+      <Stack gap="sm" p="lg">
         {/* Header with title and badges */}
         <Group justify="space-between" align="flex-start">
           <Stack gap={4} style={{ flex: 1 }}>
-            <Text fw={600} size="lg" lineClamp={1}>
+            <Text fw={600} size="lg" lineClamp={1} c="var(--emr-text-primary)">
               {title}
             </Text>
             {description && (
@@ -145,83 +157,113 @@ export function FormTemplateCard({
               </Text>
             )}
           </Stack>
-          <Group gap="xs">
-            <Badge variant="light" color="cyan" size="sm">
-              v{version}
-            </Badge>
-            <Badge color={getStatusColor(status)} size="sm">
-              {getStatusLabel(status)}
-            </Badge>
-          </Group>
         </Group>
 
+        {/* Badges row */}
+        <Group gap="xs">
+          <Badge variant="light" color="blue" size="sm" radius="sm" style={{ fontWeight: 500 }}>
+            v{version}
+          </Badge>
+          <Badge color={getStatusColor(status)} size="sm" radius="sm">
+            {getStatusLabel(status)}
+          </Badge>
+        </Group>
+
+        {/* Divider */}
+        <div style={{ borderTop: '1px solid var(--emr-gray-200)', margin: '4px 0' }} />
+
         {/* Footer with date and actions */}
-        <Group justify="space-between" align="center" mt="xs">
+        <Group justify="space-between" align="center">
           <Text size="xs" c="dimmed">
             {t('formManagement.lastModified')}: {formatDate(lastModified)}
           </Text>
 
           <Group gap="xs" onClick={(e) => e.stopPropagation()}>
             {onEdit && (
-              <Tooltip label={t('formManagement.actions.edit')}>
+              <Tooltip label={t('formManagement.actions.edit')} withArrow>
                 <ActionIcon
-                  variant="subtle"
-                  color="blue"
+                  variant="light"
+                  size="md"
                   onClick={() => onEdit(id)}
                   data-testid={`edit-btn-${id}`}
+                  style={{
+                    transition: 'var(--emr-transition-fast)',
+                    backgroundColor: 'var(--emr-light-accent)',
+                    color: 'var(--emr-primary)',
+                  }}
                 >
-                  <IconEdit size={18} />
+                  <IconEdit size={16} />
                 </ActionIcon>
               </Tooltip>
             )}
 
             {onClone && (
-              <Tooltip label={t('formManagement.actions.clone')}>
+              <Tooltip label={t('formManagement.actions.clone')} withArrow>
                 <ActionIcon
-                  variant="subtle"
-                  color="teal"
+                  variant="light"
+                  size="md"
                   onClick={() => onClone(id)}
                   data-testid={`clone-btn-${id}`}
+                  style={{
+                    transition: 'var(--emr-transition-fast)',
+                    backgroundColor: 'var(--emr-light-accent)',
+                    color: 'var(--emr-secondary)',
+                  }}
                 >
-                  <IconCopy size={18} />
+                  <IconCopy size={16} />
                 </ActionIcon>
               </Tooltip>
             )}
 
             {onViewHistory && (
-              <Tooltip label={t('formManagement.actions.viewHistory')}>
+              <Tooltip label={t('formManagement.actions.viewHistory')} withArrow>
                 <ActionIcon
-                  variant="subtle"
-                  color="violet"
+                  variant="light"
+                  size="md"
                   onClick={() => onViewHistory(id)}
                   data-testid={`history-btn-${id}`}
+                  style={{
+                    transition: 'var(--emr-transition-fast)',
+                    backgroundColor: 'var(--emr-light-accent)',
+                    color: 'var(--emr-accent)',
+                  }}
                 >
-                  <IconHistory size={18} />
+                  <IconHistory size={16} />
                 </ActionIcon>
               </Tooltip>
             )}
 
             {isArchived && onRestore ? (
-              <Tooltip label={t('formManagement.actions.restore')}>
+              <Tooltip label={t('formManagement.actions.restore')} withArrow>
                 <ActionIcon
-                  variant="subtle"
-                  color="green"
+                  variant="light"
+                  size="md"
                   onClick={() => onRestore(id)}
                   data-testid={`restore-btn-${id}`}
+                  style={{
+                    transition: 'var(--emr-transition-fast)',
+                    backgroundColor: 'var(--emr-light-accent)',
+                    color: 'var(--emr-secondary)',
+                  }}
                 >
-                  <IconArchiveOff size={18} />
+                  <IconArchiveOff size={16} />
                 </ActionIcon>
               </Tooltip>
             ) : (
               onArchive && (
-                <Tooltip label={t('formManagement.actions.archive')}>
+                <Tooltip label={t('formManagement.actions.archive')} withArrow>
                   <ActionIcon
-                    variant="subtle"
-                    color="orange"
+                    variant="light"
+                    size="md"
                     onClick={() => onArchive(id)}
                     data-testid={`archive-btn-${id}`}
+                    style={{
+                      transition: 'var(--emr-transition-fast)',
+                      backgroundColor: 'var(--emr-gray-100)',
+                      color: 'var(--emr-gray-500)',
+                    }}
                   >
-                    <IconArchive size={18} />
+                    <IconArchive size={16} />
                   </ActionIcon>
                 </Tooltip>
               )

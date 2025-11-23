@@ -29,9 +29,9 @@ export function Header(props: HeaderProps): JSX.Element {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   return (
-    <MantineAppShell.Header p={8} style={{ zIndex: 101 }}>
+    <MantineAppShell.Header p={6} style={{ zIndex: 101 }}>
       <Group justify="space-between">
-        <Group gap="xs">
+        <Group gap={6}>
           <UnstyledButton className={classes.logoButton} onClick={props.navbarToggle}>
             {props.logo}
           </UnstyledButton>
@@ -39,24 +39,31 @@ export function Header(props: HeaderProps): JSX.Element {
             <HeaderSearchInput pathname={props.pathname} searchParams={props.searchParams} />
           )}
         </Group>
-        <Group gap="lg" pr="sm">
+        <Group gap="md" pr={6}>
           {props.headerActions}
           {props.notifications}
           <Menu
-            width={260}
+            width={300}
             shadow="xl"
             position="bottom-end"
-            transitionProps={{ transition: 'pop-top-right' }}
+            transitionProps={{ transition: 'pop-top-right', duration: 150 }}
             opened={userMenuOpened}
             onClose={() => setUserMenuOpened(false)}
+            styles={{
+              dropdown: {
+                padding: 0,
+                borderRadius: '8px',
+                border: '1px solid #e5e7eb',
+              },
+            }}
           >
             <Menu.Target>
               <UnstyledButton
                 className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                 onClick={() => setUserMenuOpened((o) => !o)}
               >
-                <Group gap={7}>
-                  <ResourceAvatar value={profile} radius="xl" size={24} />
+                <Group gap={5}>
+                  <ResourceAvatar value={profile} radius="xl" size={20} />
                   <Text size="sm" className={classes.userName}>
                     {formatHumanName(profile?.name?.[0] as HumanName)}
                   </Text>

@@ -14,7 +14,6 @@ import {
   ColorInput,
   Slider,
   Box,
-  Divider,
   Accordion,
   Button,
   ActionIcon,
@@ -23,7 +22,7 @@ import {
   Badge,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import { IconPlus, IconTrash, IconLink } from '@tabler/icons-react';
+import { IconPlus, IconTrash, IconLink, IconShieldCheck, IconPalette } from '@tabler/icons-react';
 import type { FieldConfig, FieldStyling, ValidationConfig, ConditionalLogic, Condition, ConditionOperator } from '../../types/form-builder';
 
 /**
@@ -50,11 +49,88 @@ const OPERATOR_OPTIONS: { value: ConditionOperator; label: string }[] = [
 ];
 
 /**
- * Touch-friendly input styles (44px minimum height)
+ * Enhanced touch-friendly input styles with modern design
  */
 const touchFriendlyStyles = {
   input: {
     minHeight: '44px',
+    border: '2px solid var(--emr-gray-200)',
+    borderRadius: '10px',
+    fontSize: '14px',
+    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+    '&:focus': {
+      borderColor: 'var(--emr-secondary)',
+      boxShadow: 'var(--emr-focus-ring)',
+    },
+    '&:hover:not(:focus)': {
+      borderColor: 'var(--emr-gray-300)',
+    },
+  },
+  label: {
+    fontSize: '13px',
+    fontWeight: 500,
+    color: 'var(--emr-gray-700)',
+    marginBottom: '6px',
+  },
+};
+
+/**
+ * Enhanced checkbox styles
+ */
+const enhancedCheckboxStyles = {
+  input: {
+    minWidth: '22px',
+    minHeight: '22px',
+    borderRadius: '6px',
+    border: '2px solid var(--emr-gray-300)',
+    cursor: 'pointer',
+    '&:checked': {
+      background: 'var(--emr-gradient-primary)',
+      borderColor: 'var(--emr-secondary)',
+    },
+  },
+  label: {
+    fontSize: '14px',
+    fontWeight: 500,
+    color: 'var(--emr-gray-700)',
+    cursor: 'pointer',
+  },
+};
+
+/**
+ * Enhanced accordion styles
+ */
+const accordionStyles = {
+  item: {
+    border: '1.5px solid var(--emr-gray-200)',
+    borderRadius: '12px',
+    marginBottom: '12px',
+    background: 'linear-gradient(135deg, #ffffff 0%, #fafbfc 100%)',
+    overflow: 'hidden',
+    boxShadow: 'var(--emr-shadow-panel-item)',
+    transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+    '&[data-active]': {
+      borderColor: 'var(--emr-accent)',
+      boxShadow: 'var(--emr-shadow-panel-item-hover)',
+    },
+  },
+  control: {
+    padding: '14px 16px',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%)',
+    },
+  },
+  label: {
+    fontWeight: 600,
+    fontSize: '14px',
+    color: 'var(--emr-gray-700)',
+  },
+  panel: {
+    padding: '16px',
+    background: 'var(--emr-gray-50)',
+  },
+  chevron: {
+    color: 'var(--emr-secondary)',
   },
 };
 
@@ -121,61 +197,100 @@ export function FieldConfigEditor({ field, onChange, allFields = [] }: FieldConf
 
   return (
     <Stack gap="md">
-      {/* Basic Properties */}
-      <TextInput
-        label="Field Label"
-        placeholder="Enter field label"
-        required
-        size="md"
-        styles={touchFriendlyStyles}
-        value={form.values.label || ''}
-        onChange={(e) => handleUpdate({ label: e.currentTarget.value })}
-      />
+      {/* Basic Properties Card */}
+      <Box
+        style={{
+          padding: '16px',
+          background: 'linear-gradient(135deg, #ffffff 0%, #fafbfc 100%)',
+          border: '1.5px solid var(--emr-gray-200)',
+          borderRadius: '12px',
+          boxShadow: 'var(--emr-shadow-panel-item)',
+        }}
+      >
+        <Stack gap="md">
+          <TextInput
+            label="Field Label"
+            placeholder="Enter field label"
+            required
+            size="md"
+            radius="md"
+            styles={touchFriendlyStyles}
+            value={form.values.label || ''}
+            onChange={(e) => handleUpdate({ label: e.currentTarget.value })}
+          />
 
-      <Textarea
-        label="Help Text"
-        placeholder="Enter help text (optional)"
-        minRows={2}
-        size="md"
-        styles={touchFriendlyStyles}
-        value={form.values.text || ''}
-        onChange={(e) => handleUpdate({ text: e.currentTarget.value })}
-      />
+          <Textarea
+            label="Help Text"
+            placeholder="Enter help text (optional)"
+            minRows={2}
+            size="md"
+            radius="md"
+            styles={touchFriendlyStyles}
+            value={form.values.text || ''}
+            onChange={(e) => handleUpdate({ text: e.currentTarget.value })}
+          />
 
-      <Checkbox
-        label="Required Field"
-        size="md"
-        styles={{ input: { minWidth: '22px', minHeight: '22px' } }}
-        checked={form.values.required || false}
-        onChange={(e) => handleUpdate({ required: e.currentTarget.checked })}
-      />
+          {/* Checkbox Group Card */}
+          <Box
+            style={{
+              padding: '12px 14px',
+              background: 'var(--emr-gray-50)',
+              borderRadius: '10px',
+              border: '1px solid var(--emr-gray-200)',
+            }}
+          >
+            <Stack gap="sm">
+              <Checkbox
+                label="Required Field"
+                size="md"
+                styles={enhancedCheckboxStyles}
+                checked={form.values.required || false}
+                onChange={(e) => handleUpdate({ required: e.currentTarget.checked })}
+              />
 
-      <Checkbox
-        label="Read Only"
-        size="md"
-        styles={{ input: { minWidth: '22px', minHeight: '22px' } }}
-        checked={form.values.readOnly || false}
-        onChange={(e) => handleUpdate({ readOnly: e.currentTarget.checked })}
-      />
+              <Checkbox
+                label="Read Only"
+                size="md"
+                styles={enhancedCheckboxStyles}
+                checked={form.values.readOnly || false}
+                onChange={(e) => handleUpdate({ readOnly: e.currentTarget.checked })}
+              />
 
-      <Checkbox
-        label="Allow Multiple Values"
-        size="md"
-        styles={{ input: { minWidth: '22px', minHeight: '22px' } }}
-        checked={form.values.repeats || false}
-        onChange={(e) => handleUpdate({ repeats: e.currentTarget.checked })}
-      />
-
-      <Divider my="sm" />
+              <Checkbox
+                label="Allow Multiple Values"
+                size="md"
+                styles={enhancedCheckboxStyles}
+                checked={form.values.repeats || false}
+                onChange={(e) => handleUpdate({ repeats: e.currentTarget.checked })}
+              />
+            </Stack>
+          </Box>
+        </Stack>
+      </Box>
 
       {/* Accordion for organized sections */}
-      <Accordion defaultValue="validation" variant="separated">
+      <Accordion defaultValue="validation" variant="separated" styles={accordionStyles}>
         {/* Validation Configuration */}
         <Accordion.Item value="validation">
           <Accordion.Control>
-            <Text size="sm" fw={600}>
-              Validation Rules
-            </Text>
+            <Group gap="sm">
+              <Box
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '6px',
+                  background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <IconShieldCheck size={16} style={{ color: '#10b981' }} />
+              </Box>
+              <Text size="sm" fw={600}>
+                Validation Rules
+              </Text>
+            </Group>
           </Accordion.Control>
           <Accordion.Panel>
             <Stack gap="md">
@@ -352,9 +467,24 @@ export function FieldConfigEditor({ field, onChange, allFields = [] }: FieldConf
         {/* Styling Configuration */}
         <Accordion.Item value="styling">
           <Accordion.Control>
-            <Text size="sm" fw={600}>
-              Field Styling
-            </Text>
+            <Group gap="sm">
+              <Box
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: '6px',
+                  background: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <IconPalette size={16} style={{ color: '#8b5cf6' }} />
+              </Box>
+              <Text size="sm" fw={600}>
+                Field Styling
+              </Text>
+            </Group>
           </Accordion.Control>
           <Accordion.Panel>
             <Stack gap="md">

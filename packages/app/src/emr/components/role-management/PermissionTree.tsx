@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 import { useState, useMemo } from 'react';
-import { Checkbox, Stack, Text, Group, Collapse, ActionIcon, Box } from '@mantine/core';
+import { Stack, Text, Group, Collapse, ActionIcon, Box } from '@mantine/core';
+import { EMRCheckbox } from '../shared/EMRFormFields';
 import { IconChevronDown, IconChevronRight } from '@tabler/icons-react';
 import type { PermissionCategory } from '../../types/role-management';
 import { resolvePermissionDependencies } from '../../services/permissionService';
@@ -105,7 +106,7 @@ export function PermissionTree({ selectedPermissions, onChange, disabled }: Perm
                 {isExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
               </ActionIcon>
 
-              <Checkbox
+              <EMRCheckbox
                 checked={isChecked}
                 indeterminate={isIndeterminate}
                 onChange={(e) => handleCategoryToggle(category, e.currentTarget.checked)}
@@ -124,7 +125,7 @@ export function PermissionTree({ selectedPermissions, onChange, disabled }: Perm
             <Collapse in={isExpanded}>
               <Stack gap="xs" ml="xl">
                 {category.permissions.map((permission) => (
-                  <Checkbox
+                  <EMRCheckbox
                     key={permission.code}
                     checked={selectedPermissions.includes(permission.code)}
                     onChange={(e) => handlePermissionToggle(permission.code, e.currentTarget.checked)}

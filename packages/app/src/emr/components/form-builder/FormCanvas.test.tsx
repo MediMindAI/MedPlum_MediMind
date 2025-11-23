@@ -76,8 +76,9 @@ describe('FormCanvas', () => {
       />
     );
 
-    expect(screen.getByText(/Drag fields here or click \+/i)).toBeInTheDocument();
-    expect(screen.getByText(/Start building your form/i)).toBeInTheDocument();
+    // Updated empty state text in modern design
+    expect(screen.getByText(/Build your form/i)).toBeInTheDocument();
+    expect(screen.getByText(/Drag fields from the palette/i)).toBeInTheDocument();
   });
 
   it('renders list of fields', () => {
@@ -131,7 +132,8 @@ describe('FormCanvas', () => {
       />
     );
 
-    // Check that selected field has border with secondary color
+    // Check that selected field has border with theme secondary color
+    // The theme uses --emr-secondary which is #2b6cb0 = rgb(43, 108, 176)
     expect(container.innerHTML).toContain('var(--emr-secondary)');
   });
 

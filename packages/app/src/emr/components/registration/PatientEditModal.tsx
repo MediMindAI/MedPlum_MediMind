@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Loader, Text, Stack, Button, Grid, Select, TextInput, Box, Modal } from '@mantine/core';
+import { Loader, Text, Stack, Button, Grid, Box, Modal } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
 import type { Patient } from '@medplum/fhirtypes';
@@ -14,7 +14,7 @@ import { InternationalPhoneInput } from './InternationalPhoneInput';
 import { CitizenshipSelect } from './CitizenshipSelect';
 import { CollapsibleSection } from './CollapsibleSection';
 import { validateGeorgianPersonalId, validateEmail } from '../../services/validators';
-import { EMRDatePicker } from '../common/EMRDatePicker';
+import { EMRTextInput, EMRSelect, EMRDatePicker } from '../shared/EMRFormFields';
 
 interface PatientEditModalProps {
   opened: boolean;
@@ -418,15 +418,14 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                 <Stack gap="md">
                   <Grid>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.personalId')}
                         placeholder="01234567891"
                         {...form.getInputProps('personalId')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <Select
+                      <EMRSelect
                         label={t('registration.field.gender')}
                         placeholder={t('registration.field.selectGender') || 'Select gender'}
                         data={[
@@ -437,36 +436,32 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                         ]}
                         {...form.getInputProps('gender')}
                         required
-                        size="md"
                       />
                     </Grid.Col>
                   </Grid>
 
                   <Grid>
                     <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.firstName')}
                         placeholder="სახელი"
                         {...form.getInputProps('firstName')}
                         required
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.lastName')}
                         placeholder="გვარი"
                         {...form.getInputProps('lastName')}
                         required
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.fatherName')}
                         placeholder="მამის სახელი"
                         {...form.getInputProps('fatherName')}
-                        size="md"
                       />
                     </Grid.Col>
                   </Grid>
@@ -494,19 +489,17 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                     error={form.errors.phoneNumber as string}
                   />
 
-                  <TextInput
+                  <EMRTextInput
                     label={t('registration.field.email')}
                     type="email"
                     placeholder="email@example.com"
                     {...form.getInputProps('email')}
-                    size="md"
                   />
 
-                  <TextInput
+                  <EMRTextInput
                     label={t('registration.field.address')}
                     placeholder={t('registration.field.addressPlaceholder') || 'Full address'}
                     {...form.getInputProps('address')}
-                    size="md"
                   />
                 </Stack>
               </CollapsibleSection>
@@ -520,7 +513,7 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                 <Stack gap="md">
                   <Grid>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <Select
+                      <EMRSelect
                         label={t('registration.field.maritalStatus')}
                         placeholder={t('registration.field.selectMaritalStatus') || 'Select'}
                         data={[
@@ -530,7 +523,6 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                           { value: 'widowed', label: t('registration.maritalStatus.widowed') || 'Widowed' },
                         ]}
                         {...form.getInputProps('maritalStatus')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
@@ -544,61 +536,55 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
 
                   <Grid>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.workplace')}
                         placeholder={t('registration.field.workplacePlaceholder') || 'Occupation'}
                         {...form.getInputProps('workplace')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.workplaceAddress')}
                         placeholder={t('registration.field.workplaceAddressPlaceholder') || 'Workplace address'}
                         {...form.getInputProps('workplaceAddress')}
-                        size="md"
                       />
                     </Grid.Col>
                   </Grid>
 
                   <Grid>
                     <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.city')}
                         placeholder={t('registration.field.cityPlaceholder') || 'City'}
                         {...form.getInputProps('city')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.district')}
                         placeholder={t('registration.field.districtPlaceholder') || 'District'}
                         {...form.getInputProps('district')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.building')}
                         placeholder={t('registration.field.buildingPlaceholder') || 'Building/Street'}
                         {...form.getInputProps('building')}
-                        size="md"
                       />
                     </Grid.Col>
                   </Grid>
 
                   <Grid>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.region')}
                         placeholder={t('registration.field.regionPlaceholder') || 'Region'}
                         {...form.getInputProps('region')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <Select
+                      <EMRSelect
                         label={t('registration.field.educationLevel')}
                         placeholder={t('registration.field.selectEducation') || 'Select'}
                         data={[
@@ -608,16 +594,14 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                           { value: 'postgraduate', label: t('registration.education.postgraduate') || 'Postgraduate' },
                         ]}
                         {...form.getInputProps('educationLevel')}
-                        size="md"
                       />
                     </Grid.Col>
                   </Grid>
 
-                  <TextInput
+                  <EMRTextInput
                     label={t('registration.field.familyRelationship')}
                     placeholder={t('registration.field.familyRelationshipPlaceholder') || 'Family relationship'}
                     {...form.getInputProps('familyRelationship')}
-                    size="md"
                   />
                 </Stack>
               </CollapsibleSection>
@@ -631,7 +615,7 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                 <Stack gap="md">
                   <Grid>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <Select
+                      <EMRSelect
                         label={t('registration.field.guardianRelationship')}
                         placeholder={t('registration.field.selectRelationship') || 'Select relationship'}
                         data={[
@@ -646,38 +630,34 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                           { value: 'familyMember', label: t('registration.relationship.familyMember') || 'Family Member' },
                         ]}
                         {...form.getInputProps('guardianRelationship')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.guardianPersonalId')}
                         placeholder="01234567891"
                         {...form.getInputProps('guardianPersonalId')}
-                        size="md"
                       />
                     </Grid.Col>
                   </Grid>
 
                   <Grid>
                     <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.guardianFirstName')}
                         placeholder="სახელი"
                         {...form.getInputProps('guardianFirstName')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.guardianLastName')}
                         placeholder="გვარი"
                         {...form.getInputProps('guardianLastName')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <Select
+                      <EMRSelect
                         label={t('registration.field.guardianGender')}
                         placeholder={t('registration.field.selectGender') || 'Select'}
                         data={[
@@ -686,7 +666,6 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                           { value: 'other', label: t('registration.gender.other') || 'Other' },
                         ]}
                         {...form.getInputProps('guardianGender')}
-                        size="md"
                       />
                     </Grid.Col>
                   </Grid>
@@ -712,7 +691,7 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
 
                   <Grid>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <Select
+                      <EMRSelect
                         label={t('registration.field.guardianMaritalStatus')}
                         placeholder={t('registration.field.selectMaritalStatus') || 'Select'}
                         data={[
@@ -722,15 +701,13 @@ export function PatientEditModal({ opened, onClose, patientId, onSuccess }: Pati
                           { value: 'widowed', label: t('registration.maritalStatus.widowed') || 'Widowed' },
                         ]}
                         {...form.getInputProps('guardianMaritalStatus')}
-                        size="md"
                       />
                     </Grid.Col>
                     <Grid.Col span={{ base: 12, sm: 6 }}>
-                      <TextInput
+                      <EMRTextInput
                         label={t('registration.field.guardianAddress')}
                         placeholder={t('registration.field.addressPlaceholder') || 'Full address'}
                         {...form.getInputProps('guardianAddress')}
-                        size="md"
                       />
                     </Grid.Col>
                   </Grid>

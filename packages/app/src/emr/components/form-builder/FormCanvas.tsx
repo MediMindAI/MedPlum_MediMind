@@ -23,7 +23,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { IconGripVertical, IconTrash, IconPlus } from '@tabler/icons-react';
+import { IconGripVertical, IconTrash, IconPlus, IconLayoutList } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import type { FieldConfig, FieldType } from '../../types/form-builder';
 
@@ -68,7 +68,7 @@ const SortableFieldItem = memo(function SortableFieldItem({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
+    opacity: isDragging ? 0.8 : 1,
   };
 
   // Handle keyboard navigation
@@ -100,14 +100,17 @@ const SortableFieldItem = memo(function SortableFieldItem({
       ref={setNodeRef}
       style={{
         ...style,
-        padding: 'var(--mantine-spacing-md)',
-        backgroundColor: isSelected ? 'var(--emr-section-active-bg)' : 'white',
+        padding: '14px 16px',
+        background: isSelected ? 'var(--emr-selected-bg)' : 'var(--emr-gradient-card)',
         border: `2px solid ${isSelected ? 'var(--emr-secondary)' : 'var(--emr-gray-200)'}`,
-        borderRadius: 'var(--mantine-radius-md)',
+        borderRadius: 'var(--emr-border-radius-xl)',
         cursor: 'pointer',
-        marginBottom: 'var(--mantine-spacing-sm)',
-        minHeight: `${TOUCH_MIN_SIZE}px`, // Touch-friendly minimum height
+        marginBottom: '10px',
+        minHeight: `${TOUCH_MIN_SIZE}px`,
         outline: 'none',
+        transition: 'var(--emr-transition-smooth)',
+        boxShadow: isSelected ? 'var(--emr-shadow-glow), var(--emr-shadow-soft-md)' : 'var(--emr-shadow-soft)',
+        transform: isSelected ? 'scale(1.01)' : 'scale(1)',
       }}
       onClick={onSelect}
       onKeyDown={handleKeyDown}
@@ -116,51 +119,89 @@ const SortableFieldItem = memo(function SortableFieldItem({
       aria-selected={isSelected}
       aria-label={`${field.label || 'Untitled Field'}, ${field.type}${field.required ? ', required' : ''}`}
       data-testid={`field-item-${field.id}`}
+      onMouseEnter={(e) => {
+        if (!isSelected && !isDragging) {
+          e.currentTarget.style.borderColor = 'var(--emr-accent)';
+          e.currentTarget.style.boxShadow = 'var(--emr-shadow-soft-md)';
+          e.currentTarget.style.transform = 'scale(1.01)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isSelected && !isDragging) {
+          e.currentTarget.style.borderColor = 'var(--emr-gray-200)';
+          e.currentTarget.style.boxShadow = 'var(--emr-shadow-soft)';
+          e.currentTarget.style.transform = 'scale(1)';
+        }
+      }}
     >
       <Group justify="space-between" align="center" wrap="nowrap">
-        {/* Drag Handle - Touch-friendly size */}
+        {/* Modern Drag Handle */}
         <Box
           {...attributes}
           {...listeners}
           style={{
             cursor: 'grab',
-            color: 'var(--emr-gray-400)',
+            color: isSelected ? 'var(--emr-secondary)' : 'var(--emr-gray-400)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             minWidth: `${TOUCH_MIN_SIZE}px`,
             minHeight: `${TOUCH_MIN_SIZE}px`,
-            touchAction: 'none', // Prevent scroll interference on touch
+            touchAction: 'none',
+            borderRadius: 'var(--emr-border-radius-lg)',
+            backgroundColor: isSelected ? 'rgba(59, 130, 246, 0.1)' : 'var(--emr-gray-100)',
+            transition: 'var(--emr-transition-smooth)',
           }}
           data-testid={`drag-handle-${field.id}`}
         >
-          <IconGripVertical size={20} />
+          <IconGripVertical size={18} />
         </Box>
 
         {/* Field Info */}
-        <Box style={{ flex: 1, minWidth: 0 }}>
-          <Text size="sm" fw={500} truncate>
+        <Box style={{ flex: 1, minWidth: 0, marginLeft: 12 }}>
+          <Text size="sm" fw={600} truncate style={{ color: isSelected ? 'var(--emr-primary)' : 'var(--emr-gray-700)' }}>
             {field.label || 'Untitled Field'}
           </Text>
-          <Text size="xs" c="dimmed" truncate>
-            {field.type}
-            {field.required && ' • Required'}
-          </Text>
+          <Group gap={6} mt={2}>
+            <Text size="xs" style={{ color: 'var(--emr-gray-500)' }}>
+              {field.type}
+            </Text>
+            {field.required && (
+              <Text size="xs" fw={500} style={{ color: 'var(--emr-secondary)' }}>
+                Required
+              </Text>
+            )}
+          </Group>
         </Box>
 
-        {/* Delete Button - Touch-friendly size */}
+        {/* Modern Delete Button */}
         <ActionIcon
           variant="subtle"
-          color="red"
-          size={TOUCH_MIN_SIZE}
+          size={40}
+          radius="lg"
           onClick={(e) => {
             e.stopPropagation();
             onDelete();
           }}
           aria-label={`Delete ${field.label || 'field'}`}
           data-testid={`delete-button-${field.id}`}
+          style={{
+            backgroundColor: 'var(--emr-gray-100)',
+            color: 'var(--emr-gray-400)',
+            transition: 'var(--emr-transition-smooth)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+            e.currentTarget.style.color = '#ef4444';
+            e.currentTarget.style.transform = 'scale(1.1)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--emr-gray-100)';
+            e.currentTarget.style.color = 'var(--emr-gray-400)';
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
         >
-          <IconTrash size={20} />
+          <IconTrash size={16} />
         </ActionIcon>
       </Group>
     </Box>
@@ -344,55 +385,99 @@ export const FormCanvas = memo(function FormCanvas({
       </div>
 
       <Box
-        style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+        style={{
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          background: 'var(--emr-glass-bg)',
+          backdropFilter: 'var(--emr-backdrop-blur)',
+          borderLeft: '1px solid rgba(0, 0, 0, 0.06)',
+          borderRight: '1px solid rgba(0, 0, 0, 0.06)',
+        }}
         data-testid="form-canvas"
         role="region"
         aria-label={t('formUI.builder.canvas') || 'Form Canvas'}
       >
-        {/* Header */}
-        <Group justify="space-between" align="center" mb="md">
-          <Text size="lg" fw={600}>
-            {t('formUI.builder.canvas')}
-          </Text>
+        {/* Subtle Panel Header - matching FieldPalette style */}
+        <Box
+          style={{
+            padding: '12px 20px',
+            background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+            borderBottom: '1px solid var(--emr-gray-200)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Group gap="xs" align="center">
+            <IconLayoutList size={16} style={{ color: 'var(--emr-gray-400)' }} />
+            <Text size="xs" fw={600} c="dimmed" tt="uppercase" style={{ letterSpacing: '0.05em' }}>
+              {t('formUI.builder.canvas')}
+            </Text>
+          </Group>
           {!isPreview && (
             <Button
+              size="xs"
+              radius="xl"
               variant="light"
-              size="md"
-              leftSection={<IconPlus size={18} />}
+              leftSection={<IconPlus size={14} />}
               onClick={handleAddField}
-              style={{ minHeight: `${TOUCH_MIN_SIZE}px` }}
+              style={{
+                minHeight: '32px',
+                fontWeight: 500,
+              }}
               data-testid="add-field-button"
             >
               {t('formUI.buttons.addField')}
             </Button>
           )}
-        </Group>
+        </Box>
 
-        {/* Drop Zone */}
+        {/* Modern Drop Zone */}
         <Box
           ref={setNodeRef}
           style={{
             flex: 1,
-            padding: 'var(--mantine-spacing-md)',
-            backgroundColor: isDragOver || isOver ? 'var(--emr-section-hover-bg)' : 'transparent',
+            padding: '20px',
+            background: isDragOver || isOver
+              ? 'linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(99, 179, 237, 0.08) 100%)'
+              : 'var(--emr-gradient-canvas)',
             border: `2px dashed ${isDragOver || isOver ? 'var(--emr-secondary)' : 'var(--emr-gray-300)'}`,
-            borderRadius: 'var(--mantine-radius-md)',
+            borderRadius: 'var(--emr-border-radius-xl)',
+            margin: '16px',
             minHeight: '400px',
-            transition: 'all 0.2s ease',
+            transition: 'var(--emr-transition-smooth)',
+            position: 'relative',
           }}
         >
           {fields.length === 0 ? (
-            <Stack align="center" justify="center" style={{ height: '100%', minHeight: '300px' }}>
-              <Text size="lg" c="dimmed" ta="center">
-                Drag fields here or click +
+            <Stack align="center" justify="center" style={{ height: '100%', minHeight: '350px' }}>
+              {/* Modern empty state */}
+              <Box
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(99, 179, 237, 0.15) 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: 16,
+                  boxShadow: 'var(--emr-shadow-soft-md)',
+                }}
+              >
+                <IconPlus size={36} style={{ color: 'var(--emr-secondary)' }} />
+              </Box>
+              <Text size="lg" fw={600} style={{ color: 'var(--emr-gray-700)' }} ta="center">
+                Build your form
               </Text>
-              <Text size="sm" c="dimmed" ta="center">
-                Start building your form by adding fields from the palette
+              <Text size="sm" style={{ color: 'var(--emr-gray-500)', maxWidth: 280 }} ta="center">
+                Drag fields from the palette or click the + button to start adding form elements
               </Text>
             </Stack>
           ) : (
             <SortableContext items={fields.map((f) => f.id)} strategy={verticalListSortingStrategy}>
-              <Stack gap="xs" role="listbox" aria-label="Form fields">
+              <Stack gap={0} role="listbox" aria-label="Form fields">
                 {fields.map((field, index) => (
                   <SortableFieldItem
                     key={field.id}
@@ -409,32 +494,48 @@ export const FormCanvas = memo(function FormCanvas({
         </Box>
       </Box>
 
-      {/* DragOverlay for smooth drag animation */}
+      {/* Modern DragOverlay */}
       <DragOverlay>
         {activeField ? (
           <Box
             style={{
-              padding: 'var(--mantine-spacing-md)',
-              backgroundColor: 'white',
+              padding: '14px 16px',
+              background: 'white',
               border: '2px solid var(--emr-secondary)',
-              borderRadius: 'var(--mantine-radius-md)',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              borderRadius: 'var(--emr-border-radius-xl)',
+              boxShadow: '0 8px 32px rgba(59, 130, 246, 0.25), 0 4px 12px rgba(0, 0, 0, 0.1)',
               cursor: 'grabbing',
-              opacity: 0.9,
             }}
           >
             <Group justify="space-between" align="center" wrap="nowrap">
-              <Box style={{ display: 'flex', alignItems: 'center', color: 'var(--emr-gray-400)' }}>
+              <Box
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 40,
+                  height: 40,
+                  borderRadius: 'var(--emr-border-radius-lg)',
+                  backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                  color: 'var(--emr-secondary)',
+                }}
+              >
                 <IconGripVertical size={18} />
               </Box>
-              <Box style={{ flex: 1, minWidth: 0 }}>
-                <Text size="sm" fw={500} truncate>
+              <Box style={{ flex: 1, minWidth: 0, marginLeft: 12 }}>
+                <Text size="sm" fw={600} truncate style={{ color: 'var(--emr-primary)' }}>
                   {activeField.label || 'Untitled Field'}
                 </Text>
-                <Text size="xs" c="dimmed" truncate>
-                  {activeField.type}
-                  {activeField.required && ' • Required'}
-                </Text>
+                <Group gap={6} mt={2}>
+                  <Text size="xs" style={{ color: 'var(--emr-gray-500)' }}>
+                    {activeField.type}
+                  </Text>
+                  {activeField.required && (
+                    <Text size="xs" fw={500} style={{ color: 'var(--emr-secondary)' }}>
+                      Required
+                    </Text>
+                  )}
+                </Group>
               </Box>
             </Group>
           </Box>

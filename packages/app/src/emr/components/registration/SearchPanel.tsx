@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Stack, TextInput, Button, ActionIcon, Group, Text } from '@mantine/core';
+import { Box, Stack, Button, ActionIcon, Group, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { IconX, IconSearch, IconEraser } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { EMRTextInput } from '../shared/EMRFormFields';
 
 interface SearchFilters {
   personalId?: string;
@@ -121,88 +122,28 @@ export function SearchPanel({ opened, onClose, onSearch }: SearchPanelProps) {
         <Box p="xl">
           <form onSubmit={form.onSubmit(handleSearch)}>
             <Stack gap="md">
-              <TextInput
+              <EMRTextInput
                 label={t('registration.search.personalId') || 'პირადი ნომერი'}
                 placeholder="01234567891"
                 {...form.getInputProps('personalId')}
-                styles={{
-                  input: {
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    '&:focus': {
-                      borderColor: 'var(--emr-secondary)',
-                      boxShadow: '0 0 0 2px rgba(43, 108, 176, 0.1)',
-                    },
-                  },
-                  label: {
-                    fontWeight: 600,
-                    marginBottom: '6px',
-                    color: 'var(--emr-text-primary)',
-                  },
-                }}
               />
 
-              <TextInput
+              <EMRTextInput
                 label={t('registration.search.firstName') || 'სახელი'}
                 placeholder="სახელი"
                 {...form.getInputProps('firstName')}
-                styles={{
-                  input: {
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    '&:focus': {
-                      borderColor: 'var(--emr-secondary)',
-                      boxShadow: '0 0 0 2px rgba(43, 108, 176, 0.1)',
-                    },
-                  },
-                  label: {
-                    fontWeight: 600,
-                    marginBottom: '6px',
-                    color: 'var(--emr-text-primary)',
-                  },
-                }}
               />
 
-              <TextInput
+              <EMRTextInput
                 label={t('registration.search.lastName') || 'გვარი'}
                 placeholder="გვარი"
                 {...form.getInputProps('lastName')}
-                styles={{
-                  input: {
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    '&:focus': {
-                      borderColor: 'var(--emr-secondary)',
-                      boxShadow: '0 0 0 2px rgba(43, 108, 176, 0.1)',
-                    },
-                  },
-                  label: {
-                    fontWeight: 600,
-                    marginBottom: '6px',
-                    color: 'var(--emr-text-primary)',
-                  },
-                }}
               />
 
-              <TextInput
+              <EMRTextInput
                 label={t('registration.search.registrationNumber') || 'რეგისტრაციის ნომერი'}
                 placeholder="10357-2025"
                 {...form.getInputProps('registrationNumber')}
-                styles={{
-                  input: {
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    '&:focus': {
-                      borderColor: 'var(--emr-secondary)',
-                      boxShadow: '0 0 0 2px rgba(43, 108, 176, 0.1)',
-                    },
-                  },
-                  label: {
-                    fontWeight: 600,
-                    marginBottom: '6px',
-                    color: 'var(--emr-text-primary)',
-                  },
-                }}
               />
 
               <Group grow mt="md">

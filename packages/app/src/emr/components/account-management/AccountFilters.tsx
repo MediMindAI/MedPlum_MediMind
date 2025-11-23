@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Paper, TextInput, Select, Group, SegmentedControl, ActionIcon, Text } from '@mantine/core';
+import { Paper, Group, SegmentedControl, ActionIcon, Text } from '@mantine/core';
 import { IconSearch, IconX, IconFilter } from '@tabler/icons-react';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { EMRTextInput, EMRSelect } from '../shared/EMRFormFields';
 
 export interface AccountFiltersState {
   searchQuery: string;
@@ -94,7 +95,7 @@ export function AccountFilters({
     >
       <Group justify="space-between" wrap="nowrap" mb="lg">
         {/* Search Input */}
-        <TextInput
+        <EMRTextInput
           placeholder={t('accountManagement.filters.searchPlaceholder')}
           leftSection={<IconSearch size={18} color="var(--emr-primary)" />}
           rightSection={
@@ -105,22 +106,11 @@ export function AccountFilters({
             )
           }
           value={localSearchQuery}
-          onChange={(e) => setLocalSearchQuery(e.target.value)}
-          size="md"
+          onChange={(value) => setLocalSearchQuery(value)}
           style={{
             flex: 1,
             minWidth: '200px',
             maxWidth: '400px',
-          }}
-          styles={{
-            input: {
-              minHeight: '44px',
-              borderColor: 'var(--emr-gray-300)',
-              '&:focus': {
-                borderColor: 'var(--emr-primary)',
-                boxShadow: '0 0 0 2px rgba(26, 54, 93, 0.1)',
-              },
-            },
           }}
         />
 
@@ -167,7 +157,7 @@ export function AccountFilters({
         />
 
         {/* Role Filter */}
-        <Select
+        <EMRSelect
           placeholder={t('accountManagement.filters.rolePlaceholder')}
           leftSection={<IconFilter size={16} color="var(--emr-primary)" />}
           data={[{ value: '', label: t('accountManagement.filters.allRoles') }, ...roleOptions]}
@@ -175,15 +165,8 @@ export function AccountFilters({
           onChange={handleRoleChange}
           clearable
           searchable
-          size="md"
           style={{
             minWidth: '200px',
-          }}
-          styles={{
-            input: {
-              borderColor: 'var(--emr-gray-300)',
-              minHeight: '44px',
-            },
           }}
         />
       </Group>

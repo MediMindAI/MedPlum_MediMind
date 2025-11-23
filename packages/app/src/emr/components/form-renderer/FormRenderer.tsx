@@ -9,8 +9,6 @@ import {
   Button,
   Text,
   Alert,
-  Title,
-  Divider,
   Modal,
   Badge,
 } from '@mantine/core';
@@ -24,8 +22,8 @@ import type { FormRendererConfig, SignatureData } from '../../types/form-rendere
 import type { PatientEncounterData } from '../../types/patient-binding';
 import { populateQuestionnaire, validateFormValues } from '../../services/formRendererService';
 import { generateSchema } from '../../services/formValidationService';
-import { evaluateEnableWhen, getFieldsToClear } from '../../services/conditionEvaluator';
-import { createCompletionTimeExtension, COMPLETION_TIME_EXTENSION_URL } from '../../services/formAnalyticsService';
+// Note: evaluateEnableWhen and getFieldsToClear are used by ConditionalLogic component
+import { createCompletionTimeExtension } from '../../services/formAnalyticsService';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAutoSave } from '../../hooks/useAutoSave';
 import { useDraftRecovery } from '../../hooks/useDraftRecovery';
@@ -38,6 +36,46 @@ import { FormLoadingSkeleton } from '../common/FormLoadingSkeleton';
  * Forms with more items than this will use virtualization
  */
 const VIRTUAL_SCROLL_THRESHOLD = 50;
+
+/**
+ * Extract initial values from FHIR Questionnaire items
+ * Reads the `initial` property from each item and returns a map of linkId -> value
+ */
+function extractQuestionnaireInitialValues(questionnaire: Questionnaire): Record<string, unknown> {
+  const values: Record<string, unknown> = {};
+
+  const processItem = (item: QuestionnaireItem): void => {
+    if (item.initial && item.initial.length > 0) {
+      const initialValue = item.initial[0];
+      // Extract value based on type
+      if (initialValue.valueString !== undefined) {
+        values[item.linkId] = initialValue.valueString;
+      } else if (initialValue.valueInteger !== undefined) {
+        values[item.linkId] = initialValue.valueInteger;
+      } else if (initialValue.valueDecimal !== undefined) {
+        values[item.linkId] = initialValue.valueDecimal;
+      } else if (initialValue.valueBoolean !== undefined) {
+        values[item.linkId] = initialValue.valueBoolean;
+      } else if (initialValue.valueDate !== undefined) {
+        values[item.linkId] = initialValue.valueDate;
+      } else if (initialValue.valueDateTime !== undefined) {
+        values[item.linkId] = initialValue.valueDateTime;
+      } else if (initialValue.valueTime !== undefined) {
+        values[item.linkId] = initialValue.valueTime;
+      } else if (initialValue.valueCoding !== undefined) {
+        values[item.linkId] = initialValue.valueCoding.code;
+      }
+    }
+
+    // Process nested items
+    if (item.item) {
+      item.item.forEach(processItem);
+    }
+  };
+
+  questionnaire.item?.forEach(processItem);
+  return values;
+}
 
 /**
  * FormRenderer Props
@@ -242,6 +280,11 @@ export function FormRenderer({
     [patient, encounter]
   );
 
+  // Get initial values from FHIR Questionnaire items (item.initial)
+  const questionnaireInitialValues = useMemo(() => {
+    return extractQuestionnaireInitialValues(questionnaire);
+  }, [questionnaire]);
+
   // Get auto-populated values from patient/encounter data
   const populatedValues = useMemo(() => {
     if (!enablePatientBinding) {
@@ -250,11 +293,12 @@ export function FormRenderer({
     return populateQuestionnaire(questionnaire, patientData);
   }, [questionnaire, patientData, enablePatientBinding]);
 
-  // Merge initial values with populated values (initial takes precedence)
+  // Merge initial values with populated values
+  // Priority: initialValues (prop) > populatedValues (patient) > questionnaireInitialValues (FHIR item.initial)
   const mergedInitialValues = useMemo(() => {
-    const merged = { ...populatedValues, ...initialValues };
+    const merged = { ...questionnaireInitialValues, ...populatedValues, ...initialValues };
     return merged;
-  }, [populatedValues, initialValues]);
+  }, [questionnaireInitialValues, populatedValues, initialValues]);
 
   // Generate Zod schema for validation
   const zodSchema = useMemo(() => {
@@ -492,28 +536,25 @@ export function FormRenderer({
       </div>
 
       <Stack gap="md">
-        {/* Form title */}
-        {questionnaire.title && (
-          <Title order={3} id="form-title">{questionnaire.title}</Title>
-        )}
-
-        {/* Form description */}
-        {questionnaire.description && (
-          <Text c="dimmed" size="sm" id="form-description">
-            {questionnaire.description}
-          </Text>
-        )}
-
-        <Divider />
-
         {/* Validation errors summary */}
         {totalErrorCount > 0 && (
           <Alert
-            icon={<IconAlertCircle size={16} />}
+            icon={<IconAlertCircle size={18} />}
             color="red"
             variant="light"
             role="alert"
             aria-live="assertive"
+            radius="sm"
+            styles={{
+              root: {
+                border: '1px solid var(--mantine-color-red-6)',
+                backgroundColor: 'var(--mantine-color-red-0)',
+              },
+              message: {
+                color: 'var(--emr-primary)',
+                fontWeight: 500,
+              },
+            }}
           >
             {t('formUI.messages.validationErrors', { count: totalErrorCount }) ||
               `${totalErrorCount} validation error${totalErrorCount === 1 ? '' : 's'}. Please review the form below.`}
@@ -522,7 +563,21 @@ export function FormRenderer({
 
         {/* Patient binding info */}
         {enablePatientBinding && patient && autoPopulatedFields.size > 0 && showBindingIndicators && (
-          <Alert icon={<IconCheck size={16} />} color="teal" variant="light">
+          <Alert
+            icon={<IconCheck size={18} />}
+            color="teal"
+            variant="light"
+            radius="sm"
+            styles={{
+              root: {
+                border: '1px solid var(--emr-secondary)',
+                backgroundColor: 'var(--emr-light-accent)',
+              },
+              message: {
+                color: 'var(--emr-primary)',
+              },
+            }}
+          >
             {t('formUI.messages.autoPopulated') || `${autoPopulatedFields.size} field(s) auto-populated from patient data`}
           </Alert>
         )}
@@ -635,37 +690,79 @@ export function FormRenderer({
           </Box>
         ) : (
           // Standard rendering for smaller forms
-          <Stack gap="md" role="group" aria-label="Form fields">
+          <Stack
+            gap="lg"
+            role="group"
+            aria-label="Form fields"
+            style={{
+              padding: '4px 0',
+            }}
+          >
             {questionnaire.item?.map((item, index) => renderField(item, index))}
           </Stack>
         )}
 
         {/* Action buttons */}
         {!hideButtons && mode === 'fill' && (
-          <>
-            <Divider />
+          <Box
+            mt="xl"
+            pt="lg"
+            style={{
+              borderTop: '1px solid var(--emr-border-color)',
+            }}
+          >
             <Group justify="flex-end" gap="md" role="group" aria-label="Form actions">
               {onSaveDraft && (
                 <Button
                   variant="outline"
-                  leftSection={<IconDeviceFloppy size={16} />}
+                  size="md"
+                  leftSection={<IconDeviceFloppy size={18} />}
                   onClick={handleSaveDraft}
                   disabled={isSubmitting}
                   aria-label={saveDraftButtonText || t('formUI.buttons.saveDraft') || 'Save Draft'}
+                  styles={{
+                    root: {
+                      borderColor: 'var(--emr-gray-800)',
+                      color: 'var(--emr-primary)',
+                      fontWeight: 500,
+                      padding: '10px 20px',
+                      height: '44px',
+                      borderRadius: 'var(--emr-border-radius-sm)',
+                      transition: 'var(--emr-transition-base)',
+                      '&:hover:not(:disabled)': {
+                        borderColor: 'var(--emr-secondary)',
+                        backgroundColor: 'var(--emr-gray-50)',
+                      },
+                    },
+                  }}
                 >
                   {saveDraftButtonText || t('formUI.buttons.saveDraft') || 'Save Draft'}
                 </Button>
               )}
               <Button
                 type="submit"
-                leftSection={<IconCheck size={16} />}
+                size="md"
+                leftSection={<IconCheck size={18} />}
                 loading={isSubmitting}
                 aria-label={submitButtonText || t('formUI.buttons.submit') || 'Submit'}
+                styles={{
+                  root: {
+                    backgroundColor: 'var(--emr-secondary)',
+                    fontWeight: 600,
+                    padding: '10px 28px',
+                    height: '44px',
+                    borderRadius: 'var(--emr-border-radius-sm)',
+                    transition: 'var(--emr-transition-base)',
+                    '&:hover:not(:disabled)': {
+                      backgroundColor: 'var(--emr-primary)',
+                    },
+                  },
+                }}
               >
                 {submitButtonText || t('formUI.buttons.submit') || 'Submit'}
               </Button>
             </Group>
-          </>
+          </Box>
         )}
       </Stack>
     </Box>

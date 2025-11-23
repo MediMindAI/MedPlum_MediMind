@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React from 'react';
-import { Table, ActionIcon, Box, Text } from '@mantine/core';
-import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { Text } from '@mantine/core';
+import { IconEdit, IconTrash, IconFolder } from '@tabler/icons-react';
 import type { DeviceDefinition } from '@medplum/fhirtypes';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { ColorBarDisplay } from './ColorBarDisplay';
 import { extractSyringeFormValues } from '../../../services/syringeService';
+import { EMRTable } from '../../shared/EMRTable';
+import type { EMRTableColumn } from '../../shared/EMRTable';
 
 interface SyringeTableProps {
   /** Array of syringes to display */
@@ -20,95 +22,79 @@ interface SyringeTableProps {
   loading?: boolean;
 }
 
+// Extended type for table data
+interface SyringeRow extends DeviceDefinition {
+  id: string;
+}
+
 /**
  * SyringeTable Component
- * @param root0
- * @param root0.syringes
- * @param root0.onEdit
- * @param root0.onDelete
- * @param root0.loading
+ * Now using EMRTable component for consistent Apple-inspired styling
  */
-export function SyringeTable({ syringes, onEdit, onDelete, loading }: SyringeTableProps): JSX.Element {
+export function SyringeTable({ syringes, onEdit, onDelete, loading }: SyringeTableProps): React.JSX.Element {
   const { t } = useTranslation();
 
-  if (loading) {
-    return (
-      <Box p="md">
-        <Text c="dimmed">{t('laboratory.syringes.table.noData')}</Text>
-      </Box>
-    );
-  }
+  // Filter to ensure all syringes have IDs
+  const validSyringes = syringes.filter((s): s is SyringeRow => !!s.id);
 
-  if (syringes.length === 0) {
-    return (
-      <Box p="md" style={{ textAlign: 'center' }}>
-        <Text c="dimmed">{t('laboratory.syringes.table.noData')}</Text>
-      </Box>
-    );
-  }
+  // Define columns
+  const columns: EMRTableColumn<SyringeRow>[] = [
+    {
+      key: 'name',
+      title: t('laboratory.syringes.field.name'),
+      minWidth: 200,
+      render: (syringe) => {
+        const values = extractSyringeFormValues(syringe);
+        return (
+          <Text fw={500} size="sm">
+            {values.name}
+          </Text>
+        );
+      },
+    },
+    {
+      key: 'color',
+      title: t('laboratory.syringes.field.color'),
+      width: 150,
+      render: (syringe) => {
+        const values = extractSyringeFormValues(syringe);
+        return <ColorBarDisplay color={values.color} height={24} />;
+      },
+    },
+    {
+      key: 'volume',
+      title: t('laboratory.syringes.field.volume'),
+      width: 100,
+      render: (syringe) => {
+        const values = extractSyringeFormValues(syringe);
+        return (
+          <Text size="sm" c="dimmed">
+            {values.volume || '-'}
+          </Text>
+        );
+      },
+    },
+  ];
 
   return (
-    <Table
+    <EMRTable
+      columns={columns}
+      data={validSyringes}
+      loading={loading}
+      loadingConfig={{ rows: 5 }}
+      getRowId={(syringe) => syringe.id}
       striped
-      highlightOnHover
-      style={{
-        tableLayout: 'fixed',
+      emptyState={{
+        icon: IconFolder,
+        title: t('laboratory.syringes.table.noData'),
       }}
-    >
-      <thead
-        style={{
-          background: 'var(--emr-gradient-submenu)',
-          color: '#ffffff',
-        }}
-      >
-        <tr>
-          <th style={{ width: '40%', padding: '12px' }}>{t('laboratory.syringes.field.name')}</th>
-          <th style={{ width: '30%', padding: '12px' }}>{t('laboratory.syringes.field.color')}</th>
-          <th style={{ width: '15%', padding: '12px' }}>{t('laboratory.syringes.field.volume')}</th>
-          <th style={{ width: '15%', padding: '12px', textAlign: 'center' }}>
-            {t('laboratory.action.edit')} / {t('laboratory.action.delete')}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {syringes.map((syringe) => {
-          const values = extractSyringeFormValues(syringe);
-
-          return (
-            <tr key={syringe.id}>
-              <td style={{ padding: '8px' }}>
-                <Text size="sm">{values.name}</Text>
-              </td>
-              <td style={{ padding: '8px' }}>
-                <ColorBarDisplay color={values.color} height={24} />
-              </td>
-              <td style={{ padding: '8px' }}>
-                <Text size="sm">{values.volume || '-'}</Text>
-              </td>
-              <td style={{ padding: '8px', textAlign: 'center' }}>
-                <Box style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-                  <ActionIcon
-                    color="blue"
-                    onClick={() => syringe.id && onEdit(syringe.id)}
-                    title={t('laboratory.action.edit')}
-                    size="sm"
-                  >
-                    <IconPencil size={16} />
-                  </ActionIcon>
-                  <ActionIcon
-                    color="red"
-                    onClick={() => syringe.id && onDelete(syringe.id)}
-                    title={t('laboratory.action.delete')}
-                    size="sm"
-                  >
-                    <IconTrash size={16} />
-                  </ActionIcon>
-                </Box>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </Table>
+      actions={(syringe) => ({
+        primary: { icon: IconEdit, label: t('laboratory.action.edit'), onClick: () => onEdit(syringe.id) },
+        secondary: [
+          { icon: IconTrash, label: t('laboratory.action.delete'), color: 'red' as const, onClick: () => onDelete(syringe.id) },
+        ],
+      })}
+      ariaLabel="Syringes table"
+    />
   );
 }

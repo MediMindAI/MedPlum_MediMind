@@ -82,12 +82,12 @@ export function HorizontalSubMenu({ section }: HorizontalSubMenuProps) {
   return (
     <Box
       style={{
-        height: '45px',
+        height: '30px',
         background: 'linear-gradient(90deg, #3182ce 0%, #63b3ed 50%, #bee3f8 100%)',
         display: 'flex',
         alignItems: 'center',
-        padding: '0 1rem',
-        gap: '0.5rem',
+        padding: '0 0.75rem',
+        gap: '0.35rem',
         overflowX: 'auto',
         borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
       }}
@@ -99,13 +99,13 @@ export function HorizontalSubMenu({ section }: HorizontalSubMenuProps) {
             key={item.key}
             onClick={() => navigate(item.path)}
             style={{
-              padding: '0.5rem 1rem',
-              fontSize: '13px',
-              fontWeight: 500,
+              padding: '0.25rem 0.65rem',
+              fontSize: 'var(--emr-font-base)',
+              fontWeight: 'var(--emr-font-medium)',
               cursor: 'pointer',
               color: 'white',
               background: 'transparent',
-              borderBottom: active ? '3px solid white' : '3px solid transparent',
+              borderBottom: active ? '2px solid white' : '2px solid transparent',
               borderLeft: 'none',
               borderRight: 'none',
               borderTop: 'none',

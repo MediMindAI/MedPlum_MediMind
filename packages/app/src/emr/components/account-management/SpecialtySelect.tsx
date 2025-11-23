@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 import type { SelectProps } from '@mantine/core';
-import { Select } from '@mantine/core';
 import { useMemo } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import specialtiesData from '../../translations/medical-specialties.json';
+import { EMRSelect } from '../shared/EMRFormFields';
 
 /**
  * Props for SpecialtySelect component
@@ -74,19 +74,13 @@ export function SpecialtySelect({ value, onChange, label, ...props }: SpecialtyS
   }, [label, lang]);
 
   return (
-    <Select
+    <EMRSelect
       label={displayLabel}
       placeholder={placeholder}
       data={specialtyOptions}
       value={value}
       onChange={onChange}
       searchable
-      size="md"
-      styles={{
-        input: {
-          minHeight: '44px', // Touch-friendly tap target
-        },
-      }}
       {...props}
     />
   );

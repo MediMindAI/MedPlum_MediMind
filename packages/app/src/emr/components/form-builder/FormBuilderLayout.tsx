@@ -2,9 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useState, useCallback } from 'react';
-import { Box, Button, Group, Text } from '@mantine/core';
+import { Box } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconEye, IconEyeOff } from '@tabler/icons-react';
 import { DndContext, DragEndEvent, DragStartEvent, closestCenter, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { FieldPalette } from './FieldPalette';
 import { FormCanvas } from './FormCanvas';
@@ -162,52 +161,34 @@ export function FormBuilderLayout({
       onDragEnd={handleDragEnd}
     >
       <Box style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-        {/* Header with Preview Toggle */}
-        <Box
-          style={{
-            padding: 'var(--mantine-spacing-sm) var(--mantine-spacing-md)',
-            borderBottom: '1px solid var(--emr-gray-200)',
-            backgroundColor: 'var(--emr-gray-50)',
-          }}
-        >
-          <Group justify="space-between" align="center">
-            <Text fw={600} size="lg">{formTitle || t('formUI.builder.title')}</Text>
-            <Button
-              variant="subtle"
-              leftSection={isPreview ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-              onClick={handleTogglePreview}
-            >
-              {isPreview ? t('formUI.buttons.edit') : t('formUI.builder.preview')}
-            </Button>
-          </Group>
-        </Box>
-
         {/* Three-panel layout using flexbox for proper scrolling */}
-        <Box style={{ flex: 1, overflow: 'hidden', display: 'flex', minHeight: 0 }}>
-          {/* Left Panel: Field Palette (20%) */}
+        <Box style={{ flex: 1, overflow: 'hidden', display: 'flex', minHeight: 0, background: 'var(--emr-gray-50)' }}>
+          {/* Left Panel: Field Palette (fixed 280px - enhanced width for better UX) */}
           {!isMobile && !isPreview && (
             <Box
               style={{
-                width: '20%',
-                minWidth: '200px',
-                maxWidth: '280px',
+                width: 'var(--emr-panel-width-palette)',
+                flexShrink: 0,
                 borderRight: '1px solid var(--emr-gray-200)',
-                backgroundColor: 'var(--emr-gray-50)',
+                background: 'white',
                 display: 'flex',
                 flexDirection: 'column',
                 overflow: 'hidden',
+                boxShadow: 'var(--emr-shadow-panel)',
               }}
             >
               <FieldPalette />
             </Box>
           )}
 
-          {/* Center Panel: Form Canvas */}
+          {/* Center Panel: Form Canvas (flexible) */}
           <Box
             style={{
               flex: 1,
+              minWidth: 0,
               overflowY: 'auto',
-              padding: 'var(--mantine-spacing-md)',
+              padding: '20px',
+              background: 'var(--emr-gradient-canvas)',
             }}
           >
             <FormCanvas
@@ -234,16 +215,18 @@ export function FormBuilderLayout({
             </Box>
           )}
 
-          {/* Right Panel: Properties Panel (25%) */}
+          {/* Right Panel: Properties Panel (fixed 320px - enhanced width for better UX) */}
           {!isMobile && !isPreview && selectedField && (
             <Box
               style={{
-                width: '25%',
-                minWidth: '280px',
-                maxWidth: '400px',
+                width: '340px',
+                flexShrink: 0,
                 borderLeft: '1px solid var(--emr-gray-200)',
-                backgroundColor: 'var(--emr-gray-50)',
-                overflowY: 'auto',
+                background: 'white',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden',
+                boxShadow: '-2px 0 12px rgba(0, 0, 0, 0.04)',
               }}
             >
               <PropertiesPanel
@@ -252,19 +235,6 @@ export function FormBuilderLayout({
               />
             </Box>
           )}
-        </Box>
-
-        {/* Real-time field count indicator */}
-        <Box
-          style={{
-            padding: 'var(--mantine-spacing-xs) var(--mantine-spacing-md)',
-            borderTop: '1px solid var(--emr-gray-200)',
-            backgroundColor: 'var(--emr-gray-50)',
-          }}
-        >
-          <Text size="xs" c="dimmed">
-            {t('formUI.builder.fieldCount', { count: fields.length })} | {t('formUI.builder.selected')}: {selectedField?.label || t('formUI.builder.none')}
-          </Text>
         </Box>
       </Box>
     </DndContext>

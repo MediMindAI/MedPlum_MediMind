@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Modal, Text, Button, Stack, Textarea, Group, Box } from '@mantine/core';
+import { Modal, Text, Button, Stack, Group, Box } from '@mantine/core';
 import { useState } from 'react';
 import { useTranslation } from '../../../hooks/useTranslation';
 import type { AccountRow } from '../../../types/account-management';
+import { EMRTextarea } from '../../shared/EMRFormFields';
 
 interface DeactivationConfirmationModalProps {
   account: AccountRow | null;
@@ -117,13 +118,12 @@ export function DeactivationConfirmationModal({
 
         {/* Reason Input (optional) */}
         {!isReactivation && (
-          <Textarea
+          <EMRTextarea
             label={t('accountManagement.deactivate.reasonLabel')}
             placeholder={t('accountManagement.deactivate.reasonPlaceholder')}
             value={reason}
-            onChange={(e) => setReason(e.currentTarget.value)}
+            onChange={(value) => setReason(value)}
             rows={3}
-            size="md"
           />
         )}
 

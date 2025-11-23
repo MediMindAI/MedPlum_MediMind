@@ -122,9 +122,12 @@ describe('FieldPalette', () => {
   it('applies theme colors to field items', () => {
     const { container } = renderWithProviders(<FieldPalette />);
 
-    // Check that theme CSS variables are used
+    // Check that theme CSS variables and modern colors are used
     expect(container.innerHTML).toContain('var(--emr-gray-200)');
-    expect(container.innerHTML).toContain('var(--emr-secondary)');
+    // Modern design uses direct gradients and shadow panel items
+    expect(container.innerHTML).toContain('var(--emr-shadow-panel-item)');
+    // Check for new panel styling
+    expect(container.innerHTML).toContain('var(--emr-panel-padding)');
   });
 
   it('field items have grab cursor', () => {

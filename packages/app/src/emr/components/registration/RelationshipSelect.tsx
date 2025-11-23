@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Select } from '@mantine/core';
 import { useTranslation } from '../../hooks/useTranslation';
+import { EMRSelect } from '../shared/EMRFormFields';
 
 interface RelationshipSelectProps {
   value: string;
@@ -37,7 +37,7 @@ export function RelationshipSelect({ value, onChange, error, required }: Relatio
   ];
 
   return (
-    <Select
+    <EMRSelect
       label={t('registration.representative.relationship')}
       placeholder={t('registration.representative.selectRelationship') || 'Select relationship'}
       data={relationships}

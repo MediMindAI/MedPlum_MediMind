@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Grid, TextInput, Select, Button, Stack, Box, Group, Text, ActionIcon, Badge, Alert } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { Grid, Button, Stack, Box, Group, Text, ActionIcon, Badge, Alert } from '@mantine/core';
 import { IconPlus, IconTrash, IconAlertTriangle } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useAccountForm } from '../../hooks/useAccountForm';
@@ -10,6 +9,7 @@ import type { AccountFormValues, RoleAssignment } from '../../types/account-mana
 import { SpecialtySelect } from './SpecialtySelect';
 import { RoleAssignmentPanel } from '../role-management/RoleAssignmentPanel';
 import accountRolesData from '../../translations/account-roles.json';
+import { EMRTextInput, EMRSelect, EMRDatePicker } from '../shared/EMRFormFields';
 
 interface AccountFormProps {
   onSubmit: (values: AccountFormValues) => void | Promise<void>;
@@ -110,54 +110,44 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
         {/* Basic Information */}
         <Grid gutter="md">
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('accountManagement.form.firstName')}
               placeholder={t('accountManagement.form.firstNamePlaceholder')}
-              size="md"
-              styles={{ input: { minHeight: '44px' } }}
               required
               {...form.getInputProps('firstName')}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('accountManagement.form.lastName')}
               placeholder={t('accountManagement.form.lastNamePlaceholder')}
-              size="md"
-              styles={{ input: { minHeight: '44px' } }}
               required
               {...form.getInputProps('lastName')}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('accountManagement.form.fatherName')}
               placeholder={t('accountManagement.form.fatherNamePlaceholder')}
-              size="md"
-              styles={{ input: { minHeight: '44px' } }}
               {...form.getInputProps('fatherName')}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <EMRSelect
               label={t('accountManagement.form.gender')}
               placeholder={t('accountManagement.form.genderPlaceholder')}
-              size="md"
               data={genderOptions}
               {...form.getInputProps('gender')}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <DateInput
+            <EMRDatePicker
               label={t('accountManagement.form.birthDate')}
               placeholder={t('accountManagement.form.birthDatePlaceholder')}
-              size="md"
-              valueFormat="YYYY-MM-DD"
-              clearable
               {...form.getInputProps('birthDate')}
             />
           </Grid.Col>
@@ -166,11 +156,9 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
         {/* Contact Information */}
         <Grid gutter="md">
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('accountManagement.form.email')}
               placeholder={t('accountManagement.form.emailPlaceholder')}
-              size="md"
-              styles={{ input: { minHeight: '44px' } }}
               type="email"
               required
               {...form.getInputProps('email')}
@@ -178,11 +166,9 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('accountManagement.form.phoneNumber')}
               placeholder={t('accountManagement.form.phoneNumberPlaceholder')}
-              size="md"
-              styles={{ input: { minHeight: '44px' } }}
               {...form.getInputProps('phoneNumber')}
             />
           </Grid.Col>
@@ -191,22 +177,17 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
         {/* Employment Details */}
         <Grid gutter="md">
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <EMRTextInput
               label={t('accountManagement.form.staffId')}
               placeholder={t('accountManagement.form.staffIdPlaceholder')}
-              size="md"
-              styles={{ input: { minHeight: '44px' } }}
               {...form.getInputProps('staffId')}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <DateInput
+            <EMRDatePicker
               label={t('accountManagement.form.hireDate')}
               placeholder={t('accountManagement.form.hireDatePlaceholder')}
-              size="md"
-              valueFormat="YYYY-MM-DD"
-              clearable
               {...form.getInputProps('hireDate')}
             />
           </Grid.Col>
@@ -268,10 +249,9 @@ export function AccountForm({ onSubmit, initialValues, loading }: AccountFormPro
 
                   <Grid gutter="md">
                     <Grid.Col span={{ base: 12, md: 6 }}>
-                      <Select
+                      <EMRSelect
                         label={t('accountManagement.form.role')}
                         placeholder={t('accountManagement.form.selectRole')}
-                        size="md"
                         data={roleOptions}
                         searchable
                         value={roleAssignment.code}

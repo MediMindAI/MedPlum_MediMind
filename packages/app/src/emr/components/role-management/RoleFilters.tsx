@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
-import { TextInput, Select, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
+import { EMRTextInput, EMRSelect } from '../shared/EMRFormFields';
 import { IconSearch } from '@tabler/icons-react';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
@@ -29,14 +30,14 @@ export function RoleFilters({ onSearchChange, onStatusChange }: RoleFiltersProps
 
   return (
     <Group gap="md">
-      <TextInput
+      <EMRTextInput
         placeholder={t('roleManagement.searchRoles')}
         leftSection={<IconSearch size={16} />}
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={setSearch}
         style={{ flex: 1 }}
       />
-      <Select
+      <EMRSelect
         placeholder={t('roleManagement.filterByStatus')}
         data={[
           { value: 'all', label: 'All Roles' },

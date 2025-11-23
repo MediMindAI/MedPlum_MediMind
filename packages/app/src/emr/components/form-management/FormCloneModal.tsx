@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Modal, TextInput, Button, Group, Stack, Text } from '@mantine/core';
+import { Modal, Button, Group, Stack, Text } from '@mantine/core';
 import { useState, useEffect } from 'react';
 import { IconCopy } from '@tabler/icons-react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { EMRTextInput } from '../shared/EMRFormFields';
 
 /**
  * Props for FormCloneModal component
@@ -87,13 +88,6 @@ export function FormCloneModal({
     }
   };
 
-  // Handle key press (Enter to submit)
-  const handleKeyPress = (e: React.KeyboardEvent): void => {
-    if (e.key === 'Enter' && !loading) {
-      handleConfirm();
-    }
-  };
-
   return (
     <Modal
       opened={opened}
@@ -115,12 +109,16 @@ export function FormCloneModal({
           {t('formManagement.clone.description')}
         </Text>
 
-        <TextInput
+        <EMRTextInput
           label={t('formManagement.clone.newTitleLabel')}
           placeholder={t('formManagement.clone.titlePlaceholder')}
           value={newTitle}
-          onChange={(e) => handleTitleChange(e.currentTarget.value)}
-          onKeyPress={handleKeyPress}
+          onChange={handleTitleChange}
+          onKeyDown={(e: React.KeyboardEvent) => {
+            if (e.key === 'Enter' && !loading) {
+              handleConfirm();
+            }
+          }}
           error={error}
           disabled={loading}
           required

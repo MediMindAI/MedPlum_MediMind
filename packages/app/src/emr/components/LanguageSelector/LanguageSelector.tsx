@@ -5,11 +5,15 @@ import { Group, UnstyledButton, Text } from '@mantine/core';
 import { useTranslation } from '../../hooks/useTranslation';
 import type { Language } from '../../hooks/useTranslation';
 
+interface LanguageSelectorProps {
+  compact?: boolean;
+}
+
 /**
  * Language selector component with 3 options: Georgian (ka), English (en), Russian (ru)
  * Displays as horizontal buttons with active state highlight
  */
-export function LanguageSelector(): JSX.Element {
+export function LanguageSelector({ compact = false }: LanguageSelectorProps): JSX.Element {
   const { lang, setLang } = useTranslation();
 
   const languages: { code: Language; label: string }[] = [
@@ -19,7 +23,7 @@ export function LanguageSelector(): JSX.Element {
   ];
 
   return (
-    <Group gap="xs">
+    <Group gap={compact ? 4 : 'xs'}>
       {languages.map((language) => {
         const isActive = lang === language.code;
         return (
@@ -27,15 +31,15 @@ export function LanguageSelector(): JSX.Element {
             key={language.code}
             onClick={() => setLang(language.code)}
             style={{
-              padding: '4px 12px',
-              borderRadius: '4px',
+              padding: compact ? '2px 6px' : '4px 12px',
+              borderRadius: compact ? '3px' : '4px',
               backgroundColor: isActive ? 'var(--emr-accent)' : 'transparent',
               color: isActive ? 'white' : 'inherit',
               fontWeight: isActive ? 600 : 400,
               transition: 'all 0.2s ease',
             }}
           >
-            <Text size="sm">{language.label}</Text>
+            <Text size={compact ? 'xs' : 'sm'} style={{ fontSize: 'var(--emr-font-base)' }}>{language.label}</Text>
           </UnstyledButton>
         );
       })}

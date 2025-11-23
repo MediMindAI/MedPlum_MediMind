@@ -5,24 +5,23 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Box,
-  Container,
-  Stack,
   Paper,
   Title,
   Text,
   Alert,
   Button,
   Group,
-  Breadcrumbs,
-  Anchor,
   Skeleton,
-  Badge,
-  Card,
+  ThemeIcon,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconAlertCircle, IconArrowLeft, IconUser, IconCalendar, IconCheck } from '@tabler/icons-react';
+import {
+  IconAlertCircle,
+  IconArrowLeft,
+  IconCheck,
+} from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
-import type { Questionnaire, Patient, Encounter, QuestionnaireResponse } from '@medplum/fhirtypes';
+import type { Questionnaire, Patient, Encounter } from '@medplum/fhirtypes';
 import { FormRenderer } from '../../components/form-renderer/FormRenderer';
 import {
   fetchFormData,
@@ -35,20 +34,10 @@ import { useTranslation } from '../../hooks/useTranslation';
 /**
  * FormFillerView Component
  *
- * Renders a form for filling out a FHIR Questionnaire.
- * Supports patient data auto-population when patientId is provided.
+ * Official medical document/certificate style form filling interface.
+ * Paper-like aesthetic with numbered fields and underline inputs.
  *
  * Route: /emr/forms/fill/:id
- * Query params:
- *   - patientId: Optional patient ID for auto-population
- *   - encounterId: Optional encounter ID for auto-population
- *
- * @example
- * ```
- * /emr/forms/fill/questionnaire-123
- * /emr/forms/fill/questionnaire-123?patientId=patient-456
- * /emr/forms/fill/questionnaire-123?patientId=patient-456&encounterId=encounter-789
- * ```
  */
 export function FormFillerView(): JSX.Element {
   const { id: questionnaireId } = useParams<{ id: string }>();
@@ -128,7 +117,6 @@ export function FormFillerView(): JSX.Element {
           icon: <IconCheck size={16} />,
         });
 
-        // Navigate to success page or form list
         navigate('/emr/forms/search', {
           state: { submittedResponseId: response.id },
         });
@@ -196,30 +184,58 @@ export function FormFillerView(): JSX.Element {
   // Render loading state
   if (isLoading) {
     return (
-      <Container size="md" py="xl">
-        <Stack gap="md">
-          <Skeleton height={40} />
-          <Skeleton height={100} />
-          <Skeleton height={60} />
-          <Skeleton height={60} />
-          <Skeleton height={60} />
-        </Stack>
-      </Container>
+      <Box
+        style={{
+          minHeight: 'calc(100vh - var(--emr-topnav-height) - var(--emr-mainmenu-height))',
+          backgroundColor: 'var(--emr-gray-200)',
+          padding: 'var(--emr-spacing-2xl)',
+        }}
+      >
+        <Box style={{ maxWidth: '900px', margin: '0 auto' }}>
+          <Skeleton height={600} radius="md" style={{ backgroundColor: 'var(--emr-gray-50)' }} />
+        </Box>
+      </Box>
     );
   }
 
   // Render error state
   if (error || !questionnaire) {
     return (
-      <Container size="md" py="xl">
-        <Stack gap="md">
-          <Alert
-            icon={<IconAlertCircle size={24} />}
-            title={t('formUI.messages.error') || 'Error'}
+      <Box
+        style={{
+          minHeight: 'calc(100vh - var(--emr-topnav-height) - var(--emr-mainmenu-height))',
+          backgroundColor: 'var(--emr-gray-200)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '32px',
+        }}
+      >
+        <Paper
+          p="xl"
+          radius="md"
+          style={{
+            maxWidth: '500px',
+            textAlign: 'center',
+            backgroundColor: 'var(--emr-gray-50)',
+            boxShadow: 'var(--emr-shadow-lg)',
+          }}
+        >
+          <ThemeIcon
+            size={64}
+            radius="xl"
             color="red"
+            variant="light"
+            style={{ margin: '0 auto 16px' }}
           >
+            <IconAlertCircle size={32} />
+          </ThemeIcon>
+          <Title order={3} mb="sm" style={{ color: 'var(--emr-primary)' }}>
+            {t('formUI.messages.error') || 'Error'}
+          </Title>
+          <Text c="dimmed" mb="lg">
             {error || 'Questionnaire not found'}
-          </Alert>
+          </Text>
           <Button
             variant="outline"
             leftSection={<IconArrowLeft size={16} />}
@@ -227,104 +243,139 @@ export function FormFillerView(): JSX.Element {
           >
             {t('common.goBack') || 'Go Back'}
           </Button>
-        </Stack>
-      </Container>
+        </Paper>
+      </Box>
     );
   }
 
   return (
-    <Container size="md" py="xl">
-      <Stack gap="lg">
-        {/* Breadcrumbs */}
-        <Breadcrumbs>
-          <Anchor href="/emr/forms" onClick={(e) => { e.preventDefault(); navigate('/emr/forms'); }}>
-            {t('menu.forms') || 'Forms'}
-          </Anchor>
-          <Anchor href="/emr/forms/search" onClick={(e) => { e.preventDefault(); navigate('/emr/forms/search'); }}>
-            {t('submenu.forms.search') || 'Search'}
-          </Anchor>
-          <Text>{questionnaire.title || 'Fill Form'}</Text>
-        </Breadcrumbs>
+    <Box
+      style={{
+        minHeight: 'calc(100vh - var(--emr-topnav-height) - var(--emr-mainmenu-height))',
+        backgroundColor: 'var(--emr-gray-200)',
+        padding: 'var(--emr-spacing-2xl) var(--emr-spacing-lg)',
+      }}
+    >
+      {/* Back Button */}
+      <Box style={{ maxWidth: '900px', margin: '0 auto 16px' }}>
+        <Button
+          variant="subtle"
+          leftSection={<IconArrowLeft size={18} />}
+          onClick={handleBack}
+          style={{
+            color: 'var(--emr-gray-600)',
+            fontWeight: 500,
+          }}
+        >
+          {t('common.goBack') || 'უკან დაბრუნება'}
+        </Button>
+      </Box>
 
-        {/* Back button */}
-        <Group>
-          <Button
-            variant="subtle"
-            leftSection={<IconArrowLeft size={16} />}
-            onClick={handleBack}
-          >
-            {t('common.goBack') || 'Back'}
-          </Button>
-        </Group>
+      {/* Document Container */}
+      <Box
+        style={{
+          maxWidth: '900px',
+          margin: '0 auto',
+          backgroundColor: 'var(--emr-gray-50)',
+          borderRadius: 'var(--emr-border-radius-sm)',
+          boxShadow: 'var(--emr-shadow-lg)',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Document Header - Official Stamp Area */}
+        <Box
+          style={{
+            padding: '24px 40px',
+            borderBottom: '1px solid var(--emr-border-color)',
+          }}
+        >
+          {/* Right-aligned approval text */}
+          <Box style={{ textAlign: 'right', marginBottom: '24px' }}>
+            <Text size="xs" style={{ color: 'var(--emr-gray-500)', lineHeight: 1.6 }}>
+              დამტკიცებულია
+              <br />
+              საქართველოს შრომის, ჯანმრთელობისა
+              <br />
+              და სოციალური დაცვის მინისტრის
+              <br />
+              2008 წ. 15.10 №230/ნ ბრძანებით
+            </Text>
+          </Box>
 
-        {/* Patient context card */}
+          {/* Centered Form Title */}
+          <Box style={{ textAlign: 'center' }}>
+            <Text size="sm" style={{ color: 'var(--emr-gray-600)', marginBottom: '8px' }}>
+              სამედიცინო დოკუმენტაცია ფორმა № IV-100/ა
+            </Text>
+            <Title
+              order={2}
+              style={{
+                color: 'var(--emr-primary)',
+                fontWeight: 700,
+                fontSize: '28px',
+                marginBottom: '4px',
+              }}
+            >
+              {questionnaire.title || 'ცნობა'}
+            </Title>
+            {questionnaire.description && (
+              <Title
+                order={3}
+                style={{
+                  color: 'var(--emr-gray-700)',
+                  fontWeight: 600,
+                  fontSize: '20px',
+                }}
+              >
+                {questionnaire.description}
+              </Title>
+            )}
+          </Box>
+        </Box>
+
+        {/* Patient Info Banner (if patient context) */}
         {patient && patientInfo && (
-          <Card shadow="sm" padding="md" radius="md" withBorder>
-            <Group justify="space-between" wrap="wrap">
-              <Group gap="xs">
-                <IconUser size={20} color="var(--emr-turquoise)" />
-                <Text fw={500}>{patientInfo.fullName || patientInfo.name}</Text>
-                {patientInfo.personalId && (
-                  <Badge variant="light" color="gray">
-                    {patientInfo.personalId}
-                  </Badge>
-                )}
-              </Group>
-              <Group gap="xs">
-                {patientInfo.dob && (
-                  <Group gap={4}>
-                    <IconCalendar size={16} />
-                    <Text size="sm" c="dimmed">
-                      {patientInfo.dob}
-                      {patientInfo.age && ` (${patientInfo.age} years)`}
-                    </Text>
-                  </Group>
-                )}
-                {patientInfo.gender && (
-                  <Badge variant="light" color={patientInfo.gender === 'male' ? 'blue' : 'pink'}>
-                    {patientInfo.gender}
-                  </Badge>
-                )}
-              </Group>
-            </Group>
-          </Card>
-        )}
-
-        {/* Encounter context info */}
-        {encounter && (
-          <Alert color="gray" variant="light">
-            <Group gap="xs">
-              <Text size="sm" fw={500}>
-                {t('formUI.encounter') || 'Encounter'}:
-              </Text>
-              <Text size="sm">
-                {encounter.period?.start
-                  ? new Date(encounter.period.start).toLocaleDateString()
-                  : 'N/A'}
-              </Text>
-              <Badge size="sm" variant="light" color={
-                encounter.status === 'in-progress' ? 'green' :
-                encounter.status === 'finished' ? 'gray' : 'blue'
-              }>
-                {encounter.status}
-              </Badge>
-            </Group>
-          </Alert>
-        )}
-
-        {/* No patient warning */}
-        {!patient && patientId && (
-          <Alert
-            icon={<IconAlertCircle size={16} />}
-            color="yellow"
-            variant="light"
+          <Box
+            style={{
+              padding: '12px 40px',
+              backgroundColor: 'var(--emr-light-accent)',
+              borderBottom: '1px solid var(--emr-border-color)',
+            }}
           >
-            {t('formUI.messages.patientNotFound') || 'Patient not found. Form will not be auto-populated.'}
-          </Alert>
+            <Group gap="lg">
+              <Text size="sm" fw={500}>
+                პაციენტი: <span style={{ color: 'var(--emr-primary)' }}>{patientInfo.fullName || patientInfo.name}</span>
+              </Text>
+              {patientInfo.personalId && (
+                <Text size="sm" c="dimmed">
+                  პ/ნ: {patientInfo.personalId}
+                </Text>
+              )}
+              {patientInfo.dob && (
+                <Text size="sm" c="dimmed">
+                  დაბ. თარიღი: {patientInfo.dob}
+                </Text>
+              )}
+            </Group>
+          </Box>
         )}
 
-        {/* Form */}
-        <Paper shadow="sm" p="md" radius="md" withBorder>
+        {/* No Patient Warning */}
+        {!patient && patientId && (
+          <Box style={{ padding: '0 40px', marginTop: '16px' }}>
+            <Alert
+              icon={<IconAlertCircle size={18} />}
+              color="yellow"
+              variant="light"
+              radius="sm"
+            >
+              {t('formUI.messages.patientNotFound') || 'Patient not found. Form will not be auto-populated.'}
+            </Alert>
+          </Box>
+        )}
+
+        {/* Form Content */}
+        <Box style={{ padding: '32px 40px 40px' }}>
           <FormRenderer
             questionnaire={questionnaire}
             patient={patient}
@@ -335,27 +386,30 @@ export function FormFillerView(): JSX.Element {
             onSubmit={handleSubmit}
             onSaveDraft={handleSaveDraft}
             isSubmitting={isSubmitting || isSavingDraft}
-            submitButtonText={t('formUI.buttons.submit') || 'Submit'}
-            saveDraftButtonText={t('formUI.buttons.saveDraft') || 'Save Draft'}
+            submitButtonText={t('formUI.buttons.submit') || 'გაგზავნა'}
+            saveDraftButtonText={t('formUI.buttons.saveDraft') || 'შენახვა'}
           />
-        </Paper>
+        </Box>
 
-        {/* Draft indicator */}
+        {/* Draft Indicator */}
         {savedResponseId && (
-          <Alert color="blue" variant="light">
+          <Box
+            style={{
+              padding: '12px 40px',
+              backgroundColor: 'var(--emr-light-accent)',
+              borderTop: '1px solid var(--emr-border-color)',
+            }}
+          >
             <Group gap="xs">
-              <IconCheck size={16} />
-              <Text size="sm">
-                {t('formUI.messages.draftSavedIndicator') || 'Draft saved'}
-              </Text>
-              <Text size="xs" c="dimmed">
-                ID: {savedResponseId}
+              <IconCheck size={16} style={{ color: 'var(--emr-secondary)' }} />
+              <Text size="sm" style={{ color: 'var(--emr-secondary)' }}>
+                {t('formUI.messages.draftSavedIndicator') || 'მონახაზი შენახულია'}
               </Text>
             </Group>
-          </Alert>
+          </Box>
         )}
-      </Stack>
-    </Container>
+      </Box>
+    </Box>
   );
 }
 

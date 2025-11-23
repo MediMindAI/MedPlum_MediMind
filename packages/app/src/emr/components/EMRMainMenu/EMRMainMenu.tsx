@@ -39,7 +39,7 @@ export function EMRMainMenu() {
   };
 
   return (
-    <Box style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+    <Box style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
       {menuItems.map((item) => {
         const active = isActive(item.path);
         return (
@@ -47,10 +47,10 @@ export function EMRMainMenu() {
             key={item.key}
             onClick={() => navigate(item.path)}
             style={{
-              padding: '10px 20px',
-              borderRadius: '8px',
-              fontSize: '15px',
-              fontWeight: 600,
+              padding: '6px 14px',
+              borderRadius: '6px',
+              fontSize: 'var(--emr-font-base)',
+              fontWeight: 'var(--emr-font-semibold)',
               cursor: 'pointer',
               color: active ? 'white' : '#374151',
               background: active
@@ -58,9 +58,9 @@ export function EMRMainMenu() {
                 : 'transparent',
               transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
               border: 'none',
-              boxShadow: active ? '0 4px 12px rgba(26, 54, 93, 0.3)' : 'none',
-              transform: active ? 'translateY(-1px)' : 'none',
-              letterSpacing: '-0.2px',
+              boxShadow: active ? '0 3px 8px rgba(26, 54, 93, 0.3)' : 'none',
+              transform: active ? 'translateY(-0.5px)' : 'none',
+              letterSpacing: '-0.1px',
             }}
             onMouseEnter={(e) => {
               if (!active) {

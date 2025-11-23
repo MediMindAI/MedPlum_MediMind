@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useState, memo, useCallback } from 'react';
-import { Stack, TextInput, Box, Text, Badge, Group } from '@mantine/core';
+import { Stack, Box, Text, Badge, Group } from '@mantine/core';
+import { EMRTextInput } from '../shared/EMRFormFields';
 import { useDraggable } from '@dnd-kit/core';
 import {
   IconTextSize,
@@ -31,36 +32,37 @@ interface FieldTypeConfig {
 }
 
 const fieldTypeConfigs: FieldTypeConfig[] = [
-  { type: 'text', icon: <IconTextSize size={18} />, category: 'basic' },
-  { type: 'textarea', icon: <IconTextWrap size={18} />, category: 'basic' },
-  { type: 'date', icon: <IconCalendar size={18} />, category: 'basic' },
-  { type: 'integer', icon: <IconNumber size={18} />, category: 'basic' },
-  { type: 'decimal', icon: <IconDecimal size={18} />, category: 'basic' },
-  { type: 'boolean', icon: <IconSquareCheck size={18} />, category: 'basic' },
-  { type: 'choice', icon: <IconSelect size={18} />, category: 'basic' },
-  { type: 'time', icon: <IconClock size={18} />, category: 'advanced' },
-  { type: 'datetime', icon: <IconCalendarTime size={18} />, category: 'advanced' },
-  { type: 'open-choice', icon: <IconCircleDot size={18} />, category: 'advanced' },
-  { type: 'signature', icon: <IconSignature size={18} />, category: 'advanced' },
-  { type: 'attachment', icon: <IconPaperclip size={18} />, category: 'advanced' },
-  { type: 'group', icon: <IconLayoutList size={18} />, category: 'layout' },
-  { type: 'display', icon: <IconEye size={18} />, category: 'layout' },
+  { type: 'text', icon: <IconTextSize size={20} />, category: 'basic' },
+  { type: 'textarea', icon: <IconTextWrap size={20} />, category: 'basic' },
+  { type: 'date', icon: <IconCalendar size={20} />, category: 'basic' },
+  { type: 'integer', icon: <IconNumber size={20} />, category: 'basic' },
+  { type: 'decimal', icon: <IconDecimal size={20} />, category: 'basic' },
+  { type: 'boolean', icon: <IconSquareCheck size={20} />, category: 'basic' },
+  { type: 'choice', icon: <IconSelect size={20} />, category: 'basic' },
+  { type: 'time', icon: <IconClock size={20} />, category: 'advanced' },
+  { type: 'datetime', icon: <IconCalendarTime size={20} />, category: 'advanced' },
+  { type: 'open-choice', icon: <IconCircleDot size={20} />, category: 'advanced' },
+  { type: 'signature', icon: <IconSignature size={20} />, category: 'advanced' },
+  { type: 'attachment', icon: <IconPaperclip size={20} />, category: 'advanced' },
+  { type: 'group', icon: <IconLayoutList size={20} />, category: 'layout' },
+  { type: 'display', icon: <IconEye size={20} />, category: 'layout' },
 ];
 
 /**
  * DraggableFieldType Component
- * Individual draggable field type item
+ * Individual draggable field type item - Modern glass-card design
  * Memoized for performance
  */
 const DraggableFieldType = memo(function DraggableFieldType({ type, icon, label }: { type: FieldType; icon: React.ReactElement; label: string }): React.ReactElement {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: `field-type-${type}`,
     data: { type },
   });
 
   const style = transform
     ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) scale(1.03)`,
+        zIndex: 100,
       }
     : undefined;
 
@@ -69,19 +71,69 @@ const DraggableFieldType = memo(function DraggableFieldType({ type, icon, label 
       ref={setNodeRef}
       style={{
         ...style,
-        padding: 'var(--mantine-spacing-sm)',
-        backgroundColor: 'white',
-        border: '1px solid var(--emr-gray-200)',
-        borderRadius: 'var(--mantine-radius-md)',
+        padding: '14px 16px',
+        background: 'linear-gradient(135deg, #ffffff 0%, #fafbfc 100%)',
+        border: '1.5px solid var(--emr-gray-200)',
+        borderRadius: '12px',
         cursor: 'grab',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+        boxShadow: isDragging
+          ? '0 8px 24px rgba(43, 108, 176, 0.2), 0 4px 12px rgba(0, 0, 0, 0.1)'
+          : 'var(--emr-shadow-panel-item)',
+        opacity: isDragging ? 0.95 : 1,
+        minHeight: '62px',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+      onMouseEnter={(e) => {
+        if (!isDragging) {
+          e.currentTarget.style.transform = 'translateY(-3px)';
+          e.currentTarget.style.boxShadow = 'var(--emr-shadow-panel-item-hover)';
+          e.currentTarget.style.borderColor = 'var(--emr-accent)';
+          e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isDragging) {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = 'var(--emr-shadow-panel-item)';
+          e.currentTarget.style.borderColor = 'var(--emr-gray-200)';
+          e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #fafbfc 100%)';
+        }
       }}
       {...listeners}
       {...attributes}
     >
-      <Group gap="xs" wrap="nowrap">
-        <Box style={{ color: 'var(--emr-secondary)' }}>{icon}</Box>
-        <Text size="sm" style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+      <Group gap="md" wrap="nowrap" style={{ width: '100%' }}>
+        <Box
+          style={{
+            color: 'var(--emr-secondary)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 42,
+            height: 42,
+            background: 'linear-gradient(135deg, rgba(99, 179, 237, 0.15) 0%, rgba(43, 108, 176, 0.1) 100%)',
+            borderRadius: '10px',
+            flexShrink: 0,
+            boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+          }}
+        >
+          {icon}
+        </Box>
+        <Text
+          size="sm"
+          fw={500}
+          style={{
+            flex: 1,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            color: 'var(--emr-gray-700)',
+            lineHeight: 1.4,
+            fontSize: '13px',
+          }}
+        >
           {label}
         </Text>
       </Group>
@@ -104,10 +156,6 @@ export const FieldPalette = memo(function FieldPalette(): React.ReactElement {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeCategory, setActiveCategory] = useState<'all' | 'basic' | 'advanced' | 'layout'>('all');
 
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.currentTarget.value);
-  }, []);
-
   const handleCategoryChange = useCallback((category: 'all' | 'basic' | 'advanced' | 'layout') => {
     setActiveCategory(category);
   }, []);
@@ -125,41 +173,79 @@ export const FieldPalette = memo(function FieldPalette(): React.ReactElement {
 
   return (
     <Stack
-      gap="md"
+      gap="lg"
       style={{
-        padding: 'var(--mantine-spacing-md)',
+        padding: 'var(--emr-panel-padding)',
         height: '100%',
         maxHeight: '100%',
         overflow: 'hidden',
+        background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+        backdropFilter: 'var(--emr-backdrop-blur)',
+        borderRight: '1px solid rgba(0, 0, 0, 0.08)',
+        boxShadow: 'var(--emr-shadow-panel)',
       }}
       role="region"
       aria-label={t('formUI.builder.palette') || 'Field Palette'}
     >
-      {/* Header */}
-      <Box>
-        <Text size="lg" fw={600} style={{ marginBottom: 'var(--mantine-spacing-xs)' }} id="palette-heading">
-          {t('formUI.builder.palette')}
-        </Text>
-        <Text size="xs" c="dimmed">
-          Drag fields to canvas
+      {/* Enhanced Panel Header */}
+      <Box
+        style={{
+          padding: '16px 20px',
+          margin: '-20px -20px 0 -20px',
+          background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+          borderBottom: '1px solid var(--emr-gray-200)',
+        }}
+      >
+        <Group gap="sm" align="center">
+          <Box
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: '8px',
+              background: 'linear-gradient(135deg, rgba(99, 179, 237, 0.15) 0%, rgba(43, 108, 176, 0.1) 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <IconLayoutList size={18} style={{ color: 'var(--emr-secondary)' }} />
+          </Box>
+          <Text size="sm" fw={600} tt="uppercase" style={{ letterSpacing: '0.05em', color: 'var(--emr-gray-700)' }} id="palette-heading">
+            {t('formUI.builder.palette')}
+          </Text>
+        </Group>
+        <Text size="xs" c="dimmed" mt={8} style={{ lineHeight: 1.5 }}>
+          {t('formUI.builder.dragToCanvas')}
         </Text>
       </Box>
 
-      {/* Search */}
-      <TextInput
+      {/* Enhanced Search Input */}
+      <EMRTextInput
         placeholder={t('formUI.search.placeholder')}
-        leftSection={<IconSearch size={16} />}
+        leftSection={<IconSearch size={18} style={{ color: 'var(--emr-gray-400)' }} />}
         value={searchQuery}
-        onChange={handleSearchChange}
-        size="sm"
+        onChange={(value) => setSearchQuery(value)}
         aria-label={t('formUI.search.placeholder') || 'Search fields'}
       />
 
-      {/* Category Filters */}
-      <Group gap="xs" role="tablist" aria-label="Field categories">
+      {/* Enhanced Category Filters */}
+      <Group gap={8} role="tablist" aria-label="Field categories" wrap="wrap">
         <Badge
           variant={activeCategory === 'all' ? 'filled' : 'light'}
-          style={{ cursor: 'pointer' }}
+          radius="xl"
+          size="lg"
+          style={{
+            cursor: 'pointer',
+            background: activeCategory === 'all' ? 'var(--emr-gradient-primary)' : 'white',
+            color: activeCategory === 'all' ? 'white' : 'var(--emr-gray-600)',
+            border: activeCategory === 'all' ? 'none' : '1.5px solid var(--emr-gray-200)',
+            padding: '0 16px',
+            height: '34px',
+            fontWeight: 500,
+            fontSize: '13px',
+            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: activeCategory === 'all' ? 'var(--emr-shadow-soft-md)' : 'none',
+          }}
           onClick={() => handleCategoryChange('all')}
           role="tab"
           aria-selected={activeCategory === 'all'}
@@ -170,13 +256,25 @@ export const FieldPalette = memo(function FieldPalette(): React.ReactElement {
             }
           }}
         >
-          All ({fieldTypeConfigs.length})
+          {t('formUI.categories.all')} ({fieldTypeConfigs.length})
         </Badge>
         <Badge
           variant={activeCategory === 'basic' ? 'filled' : 'light'}
-          style={{ cursor: 'pointer' }}
+          radius="xl"
+          size="lg"
+          style={{
+            cursor: 'pointer',
+            background: activeCategory === 'basic' ? 'var(--emr-gradient-secondary)' : 'white',
+            color: activeCategory === 'basic' ? 'white' : 'var(--emr-gray-600)',
+            border: activeCategory === 'basic' ? 'none' : '1.5px solid var(--emr-gray-200)',
+            padding: '0 16px',
+            height: '34px',
+            fontWeight: 500,
+            fontSize: '13px',
+            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: activeCategory === 'basic' ? 'var(--emr-shadow-soft-md)' : 'none',
+          }}
           onClick={() => handleCategoryChange('basic')}
-          color="blue"
           role="tab"
           aria-selected={activeCategory === 'basic'}
           tabIndex={activeCategory === 'basic' ? 0 : -1}
@@ -186,13 +284,25 @@ export const FieldPalette = memo(function FieldPalette(): React.ReactElement {
             }
           }}
         >
-          Basic ({categoryCount('basic')})
+          {t('formUI.categories.basic')} ({categoryCount('basic')})
         </Badge>
         <Badge
           variant={activeCategory === 'advanced' ? 'filled' : 'light'}
-          style={{ cursor: 'pointer' }}
+          radius="xl"
+          size="lg"
+          style={{
+            cursor: 'pointer',
+            background: activeCategory === 'advanced' ? 'var(--emr-gradient-secondary)' : 'white',
+            color: activeCategory === 'advanced' ? 'white' : 'var(--emr-gray-600)',
+            border: activeCategory === 'advanced' ? 'none' : '1.5px solid var(--emr-gray-200)',
+            padding: '0 16px',
+            height: '34px',
+            fontWeight: 500,
+            fontSize: '13px',
+            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: activeCategory === 'advanced' ? 'var(--emr-shadow-soft-md)' : 'none',
+          }}
           onClick={() => handleCategoryChange('advanced')}
-          color="cyan"
           role="tab"
           aria-selected={activeCategory === 'advanced'}
           tabIndex={activeCategory === 'advanced' ? 0 : -1}
@@ -202,13 +312,25 @@ export const FieldPalette = memo(function FieldPalette(): React.ReactElement {
             }
           }}
         >
-          Advanced ({categoryCount('advanced')})
+          {t('formUI.categories.advanced')} ({categoryCount('advanced')})
         </Badge>
         <Badge
           variant={activeCategory === 'layout' ? 'filled' : 'light'}
-          style={{ cursor: 'pointer' }}
+          radius="xl"
+          size="lg"
+          style={{
+            cursor: 'pointer',
+            background: activeCategory === 'layout' ? 'var(--emr-gradient-secondary)' : 'white',
+            color: activeCategory === 'layout' ? 'white' : 'var(--emr-gray-600)',
+            border: activeCategory === 'layout' ? 'none' : '1.5px solid var(--emr-gray-200)',
+            padding: '0 16px',
+            height: '34px',
+            fontWeight: 500,
+            fontSize: '13px',
+            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: activeCategory === 'layout' ? 'var(--emr-shadow-soft-md)' : 'none',
+          }}
           onClick={() => handleCategoryChange('layout')}
-          color="grape"
           role="tab"
           aria-selected={activeCategory === 'layout'}
           tabIndex={activeCategory === 'layout' ? 0 : -1}
@@ -218,26 +340,54 @@ export const FieldPalette = memo(function FieldPalette(): React.ReactElement {
             }
           }}
         >
-          Layout ({categoryCount('layout')})
+          {t('formUI.categories.layout')} ({categoryCount('layout')})
         </Badge>
       </Group>
 
       {/* Field Types List */}
       <Stack
-        gap="xs"
+        gap="var(--emr-palette-item-gap)"
         style={{
           flex: 1,
           overflowY: 'auto',
           minHeight: 0, /* Critical for flex overflow to work */
-          paddingBottom: 'var(--mantine-spacing-md)',
+          paddingBottom: 'var(--mantine-spacing-lg)',
+          paddingRight: 6,
         }}
         role="listbox"
         aria-label="Available field types"
+        className="emr-scrollbar"
       >
         {filteredFields.length === 0 ? (
-          <Text size="sm" c="dimmed" ta="center" style={{ marginTop: 'var(--mantine-spacing-xl)' }} role="status">
-            {t('formUI.messages.noResults')}
-          </Text>
+          <Box
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '48px 20px',
+              color: 'var(--emr-gray-400)',
+            }}
+            role="status"
+          >
+            <Box
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, rgba(107, 114, 128, 0.1) 0%, rgba(107, 114, 128, 0.05) 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginBottom: 16,
+              }}
+            >
+              <IconSearch size={24} style={{ opacity: 0.5 }} />
+            </Box>
+            <Text size="sm" c="dimmed" ta="center" style={{ lineHeight: 1.5 }}>
+              {t('formUI.messages.noResults')}
+            </Text>
+          </Box>
         ) : (
           filteredFields.map((config) => (
             <DraggableFieldType

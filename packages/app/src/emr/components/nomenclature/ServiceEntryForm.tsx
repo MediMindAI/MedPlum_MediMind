@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Grid, TextInput, Button, Group, Badge } from '@mantine/core';
+import { Grid, Button, Group, Badge } from '@mantine/core';
 import { useMedplum } from '@medplum/react-hooks';
 import type { ActivityDefinition } from '@medplum/fhirtypes';
 import { notifications } from '@mantine/notifications';
@@ -15,6 +15,7 @@ import ServiceTypeSelect from './ServiceTypeSelect';
 import ServiceCategorySelect from './ServiceCategorySelect';
 import { SectionCard } from '../common/SectionCard';
 import { NOMENCLATURE_EXTENSION_URLS, NOMENCLATURE_IDENTIFIER_SYSTEMS } from '../../types/nomenclature';
+import { EMRTextInput } from '../shared/EMRFormFields';
 
 interface ServiceEntryFormProps {
   /** Callback when service is successfully created/updated */
@@ -246,26 +247,20 @@ export function ServiceEntryForm({ onSuccess, serviceToEdit, isEditMode = false,
         <Grid align="flex-end" gutter="md">
           {/* Code - 15% width on desktop, full width on mobile */}
           <Grid.Col span={{ base: 12, sm: 6, md: 2 }}>
-            <TextInput
+            <EMRTextInput
               label={t('nomenclature.field.code') || 'Code'}
               placeholder={t('nomenclature.field.codePlaceholder') || 'Service code'}
               required
-              size="md"
-              styles={{ input: { minHeight: '44px' } }}
-              withAsterisk
               {...form.getInputProps('code')}
             />
           </Grid.Col>
 
           {/* Name - 30% width on desktop, full width on mobile */}
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <TextInput
+            <EMRTextInput
               label={t('nomenclature.field.name') || 'Name'}
               placeholder={t('nomenclature.field.namePlaceholder') || 'Service name'}
               required
-              size="md"
-              styles={{ input: { minHeight: '44px' } }}
-              withAsterisk
               {...form.getInputProps('name')}
             />
           </Grid.Col>

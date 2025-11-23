@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Container, Group, Button, TextInput, Textarea, Stack, Badge, Text, Skeleton, Alert } from '@mantine/core';
-import { IconArrowLeft, IconDeviceFloppy, IconRotate, IconRotateClockwise, IconAlertCircle } from '@tabler/icons-react';
+import { Box, Group, Button, Stack, Badge, Text, Skeleton, Alert, ThemeIcon, Paper } from '@mantine/core';
+import { EMRTextInput, EMRTextarea } from '../../components/shared/EMRFormFields';
+import { IconArrowLeft, IconDeviceFloppy, IconRotate, IconRotateClockwise, IconAlertCircle, IconForms, IconEye } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
 import { notifications } from '@mantine/notifications';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -167,29 +168,32 @@ export function FormEditView(): JSX.Element {
       >
         <Box
           style={{
-            padding: 'var(--mantine-spacing-md)',
-            borderBottom: '1px solid var(--emr-gray-200)',
-            backgroundColor: 'var(--emr-gray-50)',
+            padding: 'var(--mantine-spacing-md) var(--mantine-spacing-xl)',
+            background: 'var(--emr-gradient-secondary)',
           }}
         >
-          <Container size="xl">
-            <Stack gap="md">
-              <Group justify="space-between" align="center">
-                <Skeleton height={36} width={100} />
-                <Group gap="sm">
-                  <Skeleton height={36} width={80} />
-                  <Skeleton height={36} width={80} />
-                  <Skeleton height={36} width={100} />
-                </Group>
-              </Group>
-              <Group grow>
-                <Skeleton height={56} />
-                <Skeleton height={56} />
-              </Group>
-            </Stack>
-          </Container>
+          <Group justify="space-between" align="center">
+            <Skeleton height={36} width={100} />
+            <Group gap="sm">
+              <Skeleton height={36} width={80} />
+              <Skeleton height={36} width={80} />
+              <Skeleton height={36} width={100} />
+            </Group>
+          </Group>
         </Box>
-        <Box style={{ padding: 'var(--mantine-spacing-md)' }}>
+        <Box
+          style={{
+            padding: 'var(--mantine-spacing-md) var(--mantine-spacing-xl)',
+            backgroundColor: 'white',
+            borderBottom: '1px solid var(--emr-gray-200)',
+          }}
+        >
+          <Group grow>
+            <Skeleton height={56} />
+            <Skeleton height={56} />
+          </Group>
+        </Box>
+        <Box style={{ padding: 'var(--mantine-spacing-xl)' }}>
           <Skeleton height={400} />
         </Box>
       </Box>
@@ -229,114 +233,236 @@ export function FormEditView(): JSX.Element {
 
   return (
     <Box
-      style={{ height: 'calc(100vh - var(--emr-topnav-height) - var(--emr-mainmenu-height))' }}
+      style={{
+        minHeight: 'calc(100vh - var(--emr-topnav-height) - var(--emr-mainmenu-height))',
+        backgroundColor: 'var(--emr-gray-50)',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
       onKeyDown={handleKeyDown}
       data-testid="form-edit-view"
     >
-      {/* Header */}
+      {/* Hero Header with Gradient */}
       <Box
         style={{
-          padding: 'var(--mantine-spacing-md)',
-          borderBottom: '1px solid var(--emr-gray-200)',
-          backgroundColor: 'var(--emr-gray-50)',
+          background: 'var(--emr-gradient-secondary)',
+          padding: 'var(--mantine-spacing-md) var(--mantine-spacing-xl)',
         }}
       >
-        <Container size="xl">
-          <Stack gap="md">
-            {/* Top row: Back button, Undo/Redo, Save */}
-            <Group justify="space-between" align="center">
-              <Button variant="subtle" leftSection={<IconArrowLeft size={18} />} onClick={handleBack}>
-                {t('formUI.buttons.cancel')}
-              </Button>
-
-              <Group gap="sm">
-                {/* Undo/Redo buttons */}
-                <Group gap="xs">
-                  <Button
-                    variant="default"
-                    size="sm"
-                    leftSection={<IconRotate size={16} />}
-                    onClick={undo}
-                    disabled={!canUndo}
-                    title="Undo (Ctrl+Z)"
-                  >
-                    Undo
-                  </Button>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    leftSection={<IconRotateClockwise size={16} />}
-                    onClick={redo}
-                    disabled={!canRedo}
-                    title="Redo (Ctrl+Shift+Z)"
-                  >
-                    Redo
-                  </Button>
-                </Group>
-
-                {/* Version badge */}
-                {questionnaire?.version && (
-                  <Badge variant="light" color="cyan">
-                    v{questionnaire.version}
-                  </Badge>
-                )}
-
-                {/* Status badge */}
-                <Badge color={state.status === 'active' ? 'green' : state.status === 'draft' ? 'blue' : 'gray'}>
-                  {state.status.charAt(0).toUpperCase() + state.status.slice(1)}
-                </Badge>
-
-                {/* Save button */}
-                <Button
-                  variant="gradient"
-                  gradient={{ from: 'var(--emr-primary)', to: 'var(--emr-secondary)' }}
-                  leftSection={<IconDeviceFloppy size={18} />}
-                  onClick={handleSave}
-                  loading={saving}
-                  title="Save (Ctrl+S)"
-                >
-                  {t('formUI.buttons.save')}
-                </Button>
-              </Group>
-            </Group>
-
-            {/* Form metadata */}
-            <Group grow align="flex-start">
-              <TextInput
-                label="Form Title"
-                placeholder="Enter form title..."
-                value={state.title}
-                onChange={(e) => actions.setTitle(e.currentTarget.value)}
-                required
-                size="md"
-                styles={{
-                  input: {
-                    fontSize: '1.125rem',
-                    fontWeight: 600,
-                  },
+        <Group justify="space-between" align="center" wrap="wrap" gap="md">
+          {/* Left: Back button and title */}
+          <Group gap="md">
+            <Button
+              variant="white"
+              leftSection={<IconArrowLeft size={18} />}
+              onClick={handleBack}
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                color: 'white',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+              }}
+            >
+              {t('formUI.buttons.cancel')}
+            </Button>
+            <Group gap="sm">
+              <ThemeIcon
+                size={44}
+                radius="md"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                  color: 'white',
                 }}
-              />
-              <Textarea
-                label="Description"
-                placeholder="Enter form description (optional)..."
-                value={state.description}
-                onChange={(e) => actions.setDescription(e.currentTarget.value)}
-                minRows={1}
-                maxRows={3}
-                size="md"
-              />
+              >
+                <IconForms size={24} />
+              </ThemeIcon>
+              <Text size="lg" fw={600} style={{ color: 'white' }}>
+                {t('formUI.builder.editForm')}
+              </Text>
+            </Group>
+          </Group>
+
+          {/* Right: Actions */}
+          <Group gap="sm">
+            {/* Undo/Redo buttons */}
+            <Group gap={4}>
+              <Button
+                variant="white"
+                size="sm"
+                leftSection={<IconRotate size={16} />}
+                onClick={undo}
+                disabled={!canUndo}
+                title="Undo (Ctrl+Z)"
+                style={{
+                  backgroundColor: canUndo ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.5)',
+                  color: canUndo ? 'var(--emr-primary)' : 'var(--emr-gray-400)',
+                }}
+              >
+                Undo
+              </Button>
+              <Button
+                variant="white"
+                size="sm"
+                leftSection={<IconRotateClockwise size={16} />}
+                onClick={redo}
+                disabled={!canRedo}
+                title="Redo (Ctrl+Shift+Z)"
+                style={{
+                  backgroundColor: canRedo ? 'rgba(255, 255, 255, 0.9)' : 'rgba(255, 255, 255, 0.5)',
+                  color: canRedo ? 'var(--emr-primary)' : 'var(--emr-gray-400)',
+                }}
+              >
+                Redo
+              </Button>
             </Group>
 
-            {/* Debug info */}
-            <Text size="xs" c="dimmed">
-              ID: {id} | Fields: {state.fields.length} | Selected: {state.selectedFieldId || 'None'} | Can Undo: {canUndo ? 'Yes' : 'No'} | Can Redo: {canRedo ? 'Yes' : 'No'}
-            </Text>
-          </Stack>
-        </Container>
+            {/* Version badge */}
+            {questionnaire?.version && (
+              <Badge
+                variant="light"
+                size="lg"
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  color: 'var(--emr-primary)',
+                }}
+              >
+                v{questionnaire.version}
+              </Badge>
+            )}
+
+            {/* Status badge */}
+            <Badge
+              size="lg"
+              style={{
+                backgroundColor: state.status === 'active' ? 'rgba(34, 197, 94, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                color: state.status === 'active' ? 'white' : 'var(--emr-secondary)',
+              }}
+            >
+              {state.status.toUpperCase()}
+            </Badge>
+
+            {/* Preview button */}
+            <Button
+              variant="white"
+              size="md"
+              leftSection={<IconEye size={18} />}
+              onClick={() => navigate(`/emr/forms/fill/${id}`)}
+              style={{
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                color: 'var(--emr-primary)',
+                fontWeight: 600,
+              }}
+            >
+              {t('formUI.builder.preview')}
+            </Button>
+
+            {/* Save button */}
+            <Button
+              variant="white"
+              size="md"
+              leftSection={<IconDeviceFloppy size={18} />}
+              onClick={handleSave}
+              loading={saving}
+              title="Save (Ctrl+S)"
+              style={{
+                backgroundColor: 'white',
+                color: 'var(--emr-primary)',
+                fontWeight: 600,
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+              }}
+            >
+              {t('formUI.buttons.save')}
+            </Button>
+          </Group>
+        </Group>
+      </Box>
+
+      {/* Form Metadata Section */}
+      <Box
+        style={{
+          padding: 'var(--mantine-spacing-md) var(--mantine-spacing-xl)',
+          backgroundColor: 'white',
+          borderBottom: '1px solid var(--emr-gray-200)',
+        }}
+      >
+        <Group grow align="flex-start" gap="lg">
+          <EMRTextInput
+            label={
+              <Text size="sm" fw={500} c="var(--emr-gray-600)" mb={4}>
+                Form Title <span style={{ color: 'var(--emr-secondary)' }}>*</span>
+              </Text>
+            }
+            placeholder={t('formUI.builder.enterTitle')}
+            value={state.title}
+            onChange={(value) => actions.setTitle(value)}
+            required
+            size="md"
+            styles={{
+              input: {
+                fontSize: '1rem',
+                fontWeight: 600,
+                border: '1px solid var(--emr-gray-200)',
+                '&:focus': {
+                  borderColor: 'var(--emr-secondary)',
+                  boxShadow: '0 0 0 2px var(--emr-light-accent)',
+                },
+              },
+            }}
+          />
+          <EMRTextarea
+            label={
+              <Text size="sm" fw={500} c="var(--emr-gray-600)" mb={4}>
+                Description
+              </Text>
+            }
+            placeholder={t('formUI.builder.enterDescription')}
+            value={state.description}
+            onChange={(value) => actions.setDescription(value)}
+            minRows={1}
+            maxRows={3}
+            size="md"
+            styles={{
+              input: {
+                border: '1px solid var(--emr-gray-200)',
+                '&:focus': {
+                  borderColor: 'var(--emr-secondary)',
+                  boxShadow: '0 0 0 2px var(--emr-light-accent)',
+                },
+              },
+            }}
+          />
+        </Group>
+
+        {/* Info bar */}
+        <Group
+          mt="sm"
+          gap="lg"
+          style={{
+            padding: '8px 12px',
+            backgroundColor: 'var(--emr-gray-50)',
+            borderRadius: 'var(--emr-border-radius)',
+            border: '1px solid var(--emr-gray-200)',
+          }}
+        >
+          <Text size="xs" c="var(--emr-gray-500)">
+            ID: <span style={{ color: 'var(--emr-gray-700)', fontFamily: 'monospace' }}>{id}</span>
+          </Text>
+          <Text size="xs" c="var(--emr-gray-500)">
+            Fields: <span style={{ color: 'var(--emr-secondary)', fontWeight: 600 }}>{state.fields.length}</span>
+          </Text>
+          <Text size="xs" c="var(--emr-gray-500)">
+            Selected: <span style={{ color: 'var(--emr-gray-700)' }}>{state.selectedFieldId || 'None'}</span>
+          </Text>
+          <Text size="xs" c="var(--emr-gray-500)">
+            Can Undo: <span style={{ color: canUndo ? 'var(--emr-secondary)' : 'var(--emr-gray-400)' }}>{canUndo ? 'Yes' : 'No'}</span>
+          </Text>
+          <Text size="xs" c="var(--emr-gray-500)">
+            Can Redo: <span style={{ color: canRedo ? 'var(--emr-secondary)' : 'var(--emr-gray-400)' }}>{canRedo ? 'Yes' : 'No'}</span>
+          </Text>
+        </Group>
       </Box>
 
       {/* Form Builder Layout - Integrated with useFormBuilder state */}
-      <Box style={{ height: 'calc(100% - 220px)' }}>
+      <Box style={{ flex: 1, minHeight: '500px' }}>
         <FormBuilderLayout
           fields={state.fields}
           formTitle={state.title}

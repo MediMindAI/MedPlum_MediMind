@@ -2,23 +2,21 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import {
-  Stack,
   Group,
-  TextInput,
-  NumberInput,
-  Checkbox,
   Button,
-  Select,
   Paper,
   Box,
   Text,
   Collapse,
   Grid,
+  Badge,
+  Tooltip,
 } from '@mantine/core';
+import { EMRTextInput, EMRNumberInput, EMRCheckbox, EMRSelect } from '../shared/EMRFormFields';
 import { useDebouncedValue, useDisclosure } from '@mantine/hooks';
 import { IconSearch, IconX, IconFilter, IconChevronDown, IconChevronUp, IconFileSpreadsheet } from '@tabler/icons-react';
 import type { JSX } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import ServiceGroupSelect from './ServiceGroupSelect';
 import { ServiceSubgroupSelect } from './ServiceSubgroupSelect';
@@ -91,8 +89,23 @@ export function ServiceFilters({
   const [debouncedCode] = useDebouncedValue(localCode, 500);
   const [debouncedName] = useDebouncedValue(localName, 500);
 
-  // Collapsible section for filters (collapsed by default on mobile)
-  const [filtersOpened, { toggle: toggleFilters }] = useDisclosure(true);
+  // Collapsible section for filters (collapsed by default for compact UI)
+  const [filtersOpened, { toggle: toggleFilters }] = useDisclosure(false);
+
+  // Count active filters to show badge when collapsed
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (localCode) count++;
+    if (localName) count++;
+    if (localGroup) count++;
+    if (localType) count++;
+    if (localSubgroup) count++;
+    if (localPriceStart) count++;
+    if (localPriceEnd) count++;
+    if (localStatus !== 'active') count++;
+    if (localDepartmentAssignment) count++;
+    return count;
+  }, [localCode, localName, localGroup, localType, localSubgroup, localPriceStart, localPriceEnd, localStatus, localDepartmentAssignment]);
 
   // Department options from translations
   const departmentOptions = departmentsData.departments
@@ -158,91 +171,95 @@ export function ServiceFilters({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedCode, debouncedName]);
 
-  // Section card style
-  const sectionCardStyle = {
-    backgroundColor: 'var(--emr-gray-50, #f9fafb)',
-    borderLeft: '3px solid var(--emr-turquoise, #17a2b8)',
-    borderRadius: 'var(--emr-border-radius, 6px)',
-    padding: '12px 16px',
+  // Compact input style - smaller padding
+  const compactInputStyle = {
+    input: {
+      '&:focus': {
+        borderColor: 'var(--emr-turquoise, #17a2b8)',
+        boxShadow: '0 0 0 2px rgba(23, 162, 184, 0.2)',
+      },
+    },
   };
 
   return (
     <Paper
-      shadow="sm"
+      shadow="xs"
       radius="md"
       style={{
         overflow: 'hidden',
         border: '1px solid var(--emr-border-color, #e5e7eb)',
       }}
     >
-      {/* Gradient Header - Clickable to expand/collapse */}
+      {/* Compact Header - Clickable to expand/collapse */}
       <Box
-        p="md"
+        px="sm"
+        py="xs"
         onClick={toggleFilters}
         style={{
           background: 'var(--emr-gradient-submenu, linear-gradient(90deg, #138496 0%, #17a2b8 50%, #20c4dd 100%))',
           cursor: 'pointer',
         }}
       >
-        <Group justify="space-between" align="center" wrap="wrap">
-          <Group gap="sm">
-            <IconFilter size={20} color="white" />
-            <Text size="lg" fw={600} c="white">
+        <Group justify="space-between" align="center" wrap="nowrap">
+          <Group gap="xs">
+            <IconFilter size={18} color="white" />
+            <Text size="sm" fw={600} c="white">
               {t('nomenclature.medical1.filter.title')}
             </Text>
+            {activeFilterCount > 0 && (
+              <Tooltip label={`${activeFilterCount} ${t('nomenclature.medical1.filter.activeFilters')}`}>
+                <Badge size="sm" color="white" variant="filled" style={{ color: '#17a2b8' }}>
+                  {activeFilterCount}
+                </Badge>
+              </Tooltip>
+            )}
             {filtersOpened ? (
-              <IconChevronUp size={20} color="white" />
+              <IconChevronUp size={16} color="white" />
             ) : (
-              <IconChevronDown size={20} color="white" />
+              <IconChevronDown size={16} color="white" />
             )}
           </Group>
-          <Group gap="sm" onClick={(e) => e.stopPropagation()}>
-            <Button
-              variant="subtle"
-              color="white"
-              size="sm"
-              leftSection={<IconX size={16} />}
-              onClick={handleClearAll}
-              disabled={loading}
-              styles={{
-                root: {
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  },
-                  '&:disabled': {
-                    color: 'rgba(255, 255, 255, 0.5)',
-                    cursor: 'not-allowed',
-                  },
-                },
-              }}
-            >
-              {t('nomenclature.medical1.filter.clearAll')}
-            </Button>
-            {onExport && (
-              <Button
-                variant="white"
-                size="sm"
-                leftSection={<IconFileSpreadsheet size={16} />}
-                onClick={onExport}
-                disabled={loading}
-                styles={{
-                  root: {
-                    color: '#10b981',
-                    fontWeight: 600,
-                    '&:hover': {
-                      backgroundColor: '#f0fdf4',
+          <Group gap="xs" onClick={(e) => e.stopPropagation()}>
+            {activeFilterCount > 0 && (
+              <Tooltip label={t('nomenclature.medical1.filter.clearAll')}>
+                <Button
+                  variant="subtle"
+                  color="white"
+                  
+                  px="xs"
+                  onClick={handleClearAll}
+                  disabled={loading}
+                  styles={{
+                    root: {
+                      color: 'white',
+                      '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.15)' },
                     },
-                  },
-                }}
-              >
-                {t('nomenclature.medical1.filter.exportExcel')}
-              </Button>
+                  }}
+                >
+                  <IconX size={14} />
+                </Button>
+              </Tooltip>
+            )}
+            {onExport && (
+              <Tooltip label={t('nomenclature.medical1.filter.exportExcel')}>
+                <Button
+                  variant="white"
+                  
+                  px="xs"
+                  onClick={onExport}
+                  disabled={loading}
+                  styles={{
+                    root: { color: '#10b981' },
+                  }}
+                >
+                  <IconFileSpreadsheet size={16} />
+                </Button>
+              </Tooltip>
             )}
             <Button
               variant="white"
-              size="sm"
-              leftSection={<IconSearch size={16} />}
+              
+              leftSection={<IconSearch size={14} />}
               onClick={handleSearch}
               loading={loading}
               styles={{
@@ -258,226 +275,136 @@ export function ServiceFilters({
         </Group>
       </Box>
 
-      {/* Filter Content - Collapsible */}
-      <Collapse in={filtersOpened} transitionDuration={300} transitionTimingFunction="ease">
-        <Stack gap="md" p="md">
-          {/* Code & Name Search Section */}
-          <Box style={sectionCardStyle}>
-            <Text size="xs" fw={600} c="var(--emr-text-secondary, #6b7280)" mb="xs" tt="uppercase">
-              {t('nomenclature.medical1.filter.codeSearch')} / {t('nomenclature.medical1.filter.nameSearch')}
-            </Text>
-            <Grid gutter="md">
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <TextInput
-                  label={t('nomenclature.medical1.filter.codeSearch')}
-                  placeholder={t('nomenclature.medical1.form.codePlaceholder')}
-                  value={localCode}
-                  onChange={(e) => setLocalCode(e.currentTarget.value)}
-                  disabled={loading}
-                  styles={{
-                    input: {
-                      '&:focus': {
-                        borderColor: 'var(--emr-turquoise, #17a2b8)',
-                        boxShadow: '0 0 0 3px rgba(23, 162, 184, 0.3)',
-                      },
-                    },
-                  }}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <TextInput
-                  label={t('nomenclature.medical1.filter.nameSearch')}
-                  placeholder={t('nomenclature.medical1.form.namePlaceholder')}
-                  value={localName}
-                  onChange={(e) => setLocalName(e.currentTarget.value)}
-                  disabled={loading}
-                  styles={{
-                    input: {
-                      '&:focus': {
-                        borderColor: 'var(--emr-turquoise, #17a2b8)',
-                        boxShadow: '0 0 0 3px rgba(23, 162, 184, 0.3)',
-                      },
-                    },
-                  }}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
-
-          {/* Service Categorization Section */}
-          <Box style={sectionCardStyle}>
-            <Text size="xs" fw={600} c="var(--emr-text-secondary, #6b7280)" mb="xs" tt="uppercase">
-              {t('nomenclature.medical1.filter.groupFilter')} / {t('nomenclature.medical1.filter.typeFilter')}
-            </Text>
-            <Grid gutter="md">
-              <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
-                <ServiceGroupSelect
-                  value={localGroup}
-                  onChange={setLocalGroup}
-                  label={t('nomenclature.medical1.filter.groupFilter')}
-                  disabled={loading}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
-                <ServiceTypeSelect
-                  value={localType}
-                  onChange={setLocalType}
-                  label={t('nomenclature.medical1.filter.typeFilter')}
-                  disabled={loading}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6, md: 4 }}>
-                <ServiceSubgroupSelect
-                  value={localSubgroup ?? ''}
-                  onChange={setLocalSubgroup}
-                  label={t('nomenclature.medical1.filter.subgroupFilter')}
-                  disabled={loading}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
-
-          {/* Price Range Section */}
-          <Box style={sectionCardStyle}>
-            <Group justify="space-between" align="center" mb="xs">
-              <Text size="xs" fw={600} c="var(--emr-text-secondary, #6b7280)" tt="uppercase">
-                {t('nomenclature.medical1.filter.startAmount')} / {t('nomenclature.medical1.filter.endAmount')}
-              </Text>
-              <Checkbox
-                label={t('nomenclature.medical1.filter.disablePriceRange')}
-                checked={priceRangeDisabled}
-                onChange={(e) => setPriceRangeDisabled(e.currentTarget.checked)}
+      {/* Filter Content - Collapsible - Compact single grid layout */}
+      <Collapse in={filtersOpened} transitionDuration={200} transitionTimingFunction="ease">
+        <Box p="sm" style={{ backgroundColor: 'var(--emr-gray-50, #f9fafb)' }}>
+          <Grid gutter="xs">
+            {/* Row 1: Code, Name */}
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <EMRTextInput
+                label={t('nomenclature.medical1.filter.codeSearch')}
+                placeholder={t('nomenclature.medical1.form.codePlaceholder')}
+                value={localCode}
+                onChange={setLocalCode}
                 disabled={loading}
-                size="sm"
-                styles={{
-                  label: {
-                    fontSize: '12px',
-                    color: 'var(--emr-text-secondary, #6b7280)',
-                  },
-                }}
               />
-            </Group>
-            <Grid gutter="md">
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <NumberInput
-                  label={t('nomenclature.medical1.filter.startAmount')}
-                  placeholder="0.00"
-                  value={localPriceStart}
-                  onChange={setLocalPriceStart}
-                  min={0}
-                  decimalScale={2}
-                  disabled={loading || priceRangeDisabled}
-                  prefix="₾ "
-                  thousandSeparator=","
-                  styles={{
-                    input: {
-                      '&:focus': {
-                        borderColor: 'var(--emr-turquoise, #17a2b8)',
-                        boxShadow: '0 0 0 3px rgba(23, 162, 184, 0.3)',
-                      },
-                    },
-                  }}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <NumberInput
-                  label={t('nomenclature.medical1.filter.endAmount')}
-                  placeholder="0.00"
-                  value={localPriceEnd}
-                  onChange={setLocalPriceEnd}
-                  min={0}
-                  decimalScale={2}
-                  disabled={loading || priceRangeDisabled}
-                  prefix="₾ "
-                  thousandSeparator=","
-                  styles={{
-                    input: {
-                      '&:focus': {
-                        borderColor: 'var(--emr-turquoise, #17a2b8)',
-                        boxShadow: '0 0 0 3px rgba(23, 162, 184, 0.3)',
-                      },
-                    },
-                  }}
-                />
-              </Grid.Col>
-            </Grid>
-          </Box>
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <EMRTextInput
+                label={t('nomenclature.medical1.filter.nameSearch')}
+                placeholder={t('nomenclature.medical1.form.namePlaceholder')}
+                value={localName}
+                onChange={setLocalName}
+                disabled={loading}
+              />
+            </Grid.Col>
+            {/* Row 1: Group, Type */}
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <ServiceGroupSelect
+                value={localGroup}
+                onChange={setLocalGroup}
+                label={t('nomenclature.medical1.filter.groupFilter')}
+                disabled={loading}
+                
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <ServiceTypeSelect
+                value={localType}
+                onChange={setLocalType}
+                label={t('nomenclature.medical1.filter.typeFilter')}
+                disabled={loading}
+                
+              />
+            </Grid.Col>
 
-          {/* Status & Department Section */}
-          <Box style={sectionCardStyle}>
-            <Text size="xs" fw={600} c="var(--emr-text-secondary, #6b7280)" mb="xs" tt="uppercase">
-              {t('nomenclature.medical1.filter.statusFilter')} / {t('nomenclature.medical1.filter.departmentAssignment')}
-            </Text>
-            <Grid gutter="md">
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <Select
-                  label={t('nomenclature.medical1.filter.statusFilter')}
-                  placeholder={t('nomenclature.medical1.filter.all')}
-                  value={localStatus}
-                  onChange={(value) => setLocalStatus(value || 'active')}
-                  data={statusOptions}
+            {/* Row 2: Subgroup, Price Range, Status */}
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <ServiceSubgroupSelect
+                value={localSubgroup ?? ''}
+                onChange={setLocalSubgroup}
+                label={t('nomenclature.medical1.filter.subgroupFilter')}
+                disabled={loading}
+                
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 6, sm: 3, md: 2 }}>
+              <EMRNumberInput
+                label={t('nomenclature.medical1.filter.startAmount')}
+                placeholder="0"
+                value={localPriceStart}
+                onChange={setLocalPriceStart}
+                min={0}
+                decimalScale={2}
+                disabled={loading || priceRangeDisabled}
+                prefix="₾"
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 6, sm: 3, md: 2 }}>
+              <EMRNumberInput
+                label={t('nomenclature.medical1.filter.endAmount')}
+                placeholder="0"
+                value={localPriceEnd}
+                onChange={setLocalPriceEnd}
+                min={0}
+                decimalScale={2}
+                disabled={loading || priceRangeDisabled}
+                prefix="₾"
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, md: 2 }}>
+              <EMRSelect
+                label={t('nomenclature.medical1.filter.statusFilter')}
+                value={localStatus}
+                onChange={(value) => setLocalStatus(value || 'active')}
+                data={statusOptions}
+                disabled={loading}
+              />
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+              <EMRSelect
+                label={t('nomenclature.medical1.filter.departmentAssignment')}
+                placeholder={t('nomenclature.medical1.filter.all')}
+                value={localDepartmentAssignment}
+                onChange={(value) => {
+                  setLocalDepartmentAssignment(value || '');
+                  if (!value) {
+                    setLocalDepartmentId('');
+                  }
+                }}
+                data={departmentAssignmentOptions}
+                disabled={loading}
+                clearable
+              />
+            </Grid.Col>
+
+            {/* Conditional: Department selector + Price disable checkbox */}
+            {localDepartmentAssignment && (
+              <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+                <EMRSelect
+                  label={t('nomenclature.medical1.filter.department')}
+                  placeholder={t('nomenclature.medical1.filter.department')}
+                  value={localDepartmentId}
+                  onChange={(value) => setLocalDepartmentId(value || '')}
+                  data={departmentOptions}
                   disabled={loading}
-                  styles={{
-                    input: {
-                      '&:focus': {
-                        borderColor: 'var(--emr-turquoise, #17a2b8)',
-                        boxShadow: '0 0 0 3px rgba(23, 162, 184, 0.3)',
-                      },
-                    },
-                  }}
-                />
-              </Grid.Col>
-              <Grid.Col span={{ base: 12, sm: 6 }}>
-                <Select
-                  label={t('nomenclature.medical1.filter.departmentAssignment')}
-                  placeholder={t('nomenclature.medical1.filter.all')}
-                  value={localDepartmentAssignment}
-                  onChange={(value) => {
-                    setLocalDepartmentAssignment(value || '');
-                    if (!value) {
-                      setLocalDepartmentId(''); // Clear department when assignment is cleared
-                    }
-                  }}
-                  data={departmentAssignmentOptions}
-                  disabled={loading}
+                  searchable
                   clearable
-                  styles={{
-                    input: {
-                      '&:focus': {
-                        borderColor: 'var(--emr-turquoise, #17a2b8)',
-                        boxShadow: '0 0 0 3px rgba(23, 162, 184, 0.3)',
-                      },
-                    },
-                  }}
                 />
               </Grid.Col>
-
-              {/* Conditional Department Selector - Only show when assignment is selected */}
-              {localDepartmentAssignment && (
-                <Grid.Col span={{ base: 12 }}>
-                  <Select
-                    label={t('nomenclature.medical1.filter.department')}
-                    placeholder={t('nomenclature.medical1.filter.department')}
-                    value={localDepartmentId}
-                    onChange={(value) => setLocalDepartmentId(value || '')}
-                    data={departmentOptions}
-                    disabled={loading}
-                    searchable
-                    clearable
-                    styles={{
-                      input: {
-                        '&:focus': {
-                          borderColor: 'var(--emr-turquoise, #17a2b8)',
-                          boxShadow: '0 0 0 3px rgba(23, 162, 184, 0.3)',
-                        },
-                      },
-                    }}
-                  />
-                </Grid.Col>
-              )}
-            </Grid>
-          </Box>
-        </Stack>
+            )}
+            <Grid.Col span={{ base: 12, sm: 6, md: localDepartmentAssignment ? 3 : 12 }}>
+              <Box style={{ marginTop: 'var(--mantine-spacing-lg)' }}>
+                <EMRCheckbox
+                  label={t('nomenclature.medical1.filter.disablePriceRange')}
+                  checked={priceRangeDisabled}
+                  onChange={setPriceRangeDisabled}
+                  disabled={loading}
+                />
+              </Box>
+            </Grid.Col>
+          </Grid>
+        </Box>
       </Collapse>
     </Paper>
   );

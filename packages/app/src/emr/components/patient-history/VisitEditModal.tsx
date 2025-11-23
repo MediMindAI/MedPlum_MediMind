@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Modal, Text, Group, Button, TextInput, Select, NumberInput, Paper, Tabs, Stack, LoadingOverlay } from '@mantine/core';
-import { DateInput } from '@mantine/dates';
+import { Modal, Text, Group, Button, Paper, Tabs, Stack, LoadingOverlay } from '@mantine/core';
 import type { JSX } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useVisitEdit } from '../../hooks/useVisitEdit';
 import { InsuranceSelect } from './InsuranceSelect';
+import { EMRTextInput, EMRSelect, EMRNumberInput, EMRDatePicker } from '../shared/EMRFormFields';
 
 interface VisitEditModalProps {
   opened: boolean;
@@ -55,12 +55,12 @@ export function VisitEditModal({
           <Text fw={600} mb="sm">{t('patientHistory.edit.registration')}</Text>
           <Stack gap="sm">
             <Group grow>
-              <DateInput
+              <EMRDatePicker
                 label={t('patientHistory.edit.visitDate')}
                 required
                 {...form.getInputProps('visitDate')}
               />
-              <Select
+              <EMRSelect
                 label={t('patientHistory.edit.registrationType')}
                 required
                 data={[
@@ -72,19 +72,19 @@ export function VisitEditModal({
               />
             </Group>
             <Group grow>
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.stationaryNumber')}
                 placeholder="10357-2025"
                 {...form.getInputProps('stationaryNumber')}
               />
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.ambulatoryNumber')}
                 placeholder="a-6871-2025"
                 {...form.getInputProps('ambulatoryNumber')}
               />
             </Group>
             <Group grow>
-              <Select
+              <EMRSelect
                 label={t('patientHistory.edit.statusType')}
                 data={[
                   { value: 'planned', label: t('patientHistory.edit.planned') },
@@ -94,17 +94,17 @@ export function VisitEditModal({
                 ]}
                 {...form.getInputProps('statusType')}
               />
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.referrer')}
                 {...form.getInputProps('referrer')}
               />
             </Group>
             <Group grow>
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.visitPurpose')}
                 {...form.getInputProps('visitPurpose')}
               />
-              <Select
+              <EMRSelect
                 label={t('patientHistory.edit.admissionType')}
                 data={[
                   { value: 'routine', label: t('patientHistory.edit.routine') },
@@ -114,7 +114,7 @@ export function VisitEditModal({
               />
             </Group>
             <Group grow>
-              <Select
+              <EMRSelect
                 label={t('patientHistory.edit.dischargeType')}
                 data={[
                   { value: 'home', label: t('patientHistory.edit.home') },
@@ -122,28 +122,27 @@ export function VisitEditModal({
                 ]}
                 {...form.getInputProps('dischargeType')}
               />
-              <DateInput
+              <EMRDatePicker
                 label={t('patientHistory.edit.dischargeDate')}
                 {...form.getInputProps('dischargeDate')}
-                clearable
               />
             </Group>
             <Group grow>
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.attendingDoctor')}
                 {...form.getInputProps('attendingDoctor')}
               />
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.department')}
                 {...form.getInputProps('department')}
               />
             </Group>
             <Group grow>
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.room')}
                 {...form.getInputProps('room')}
               />
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.bed')}
                 {...form.getInputProps('bed')}
               />
@@ -156,48 +155,48 @@ export function VisitEditModal({
           <Text fw={600} mb="sm">{t('patientHistory.edit.demographics')}</Text>
           <Stack gap="sm">
             <Group grow>
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.region')}
                 disabled
                 {...form.getInputProps('region')}
               />
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.district')}
                 disabled
                 {...form.getInputProps('district')}
               />
             </Group>
             <Group grow>
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.city')}
                 disabled
                 {...form.getInputProps('city')}
               />
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.address')}
                 disabled
                 {...form.getInputProps('address')}
               />
             </Group>
             <Group grow>
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.education')}
                 disabled
                 {...form.getInputProps('education')}
               />
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.familyStatus')}
                 disabled
                 {...form.getInputProps('familyStatus')}
               />
             </Group>
             <Group grow>
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.employment')}
                 disabled
                 {...form.getInputProps('employment')}
               />
-              <TextInput
+              <EMRTextInput
                 label={t('patientHistory.edit.workplace')}
                 disabled
                 {...form.getInputProps('workplace')}
@@ -222,21 +221,21 @@ export function VisitEditModal({
                 {...form.getInputProps('insuranceCompany')}
               />
               <Group grow>
-                <TextInput
+                <EMRTextInput
                   label={t('patientHistory.edit.insuranceType')}
                   {...form.getInputProps('insuranceType')}
                 />
-                <TextInput
+                <EMRTextInput
                   label={t('patientHistory.edit.policyNumber')}
                   {...form.getInputProps('policyNumber')}
                 />
               </Group>
               <Group grow>
-                <TextInput
+                <EMRTextInput
                   label={t('patientHistory.edit.referralNumber')}
                   {...form.getInputProps('referralNumber')}
                 />
-                <NumberInput
+                <EMRNumberInput
                   label={t('patientHistory.edit.copayPercent')}
                   min={0}
                   max={100}
@@ -245,15 +244,13 @@ export function VisitEditModal({
                 />
               </Group>
               <Group grow>
-                <DateInput
+                <EMRDatePicker
                   label={t('patientHistory.edit.issueDate')}
                   {...form.getInputProps('issueDate')}
-                  clearable
                 />
-                <DateInput
+                <EMRDatePicker
                   label={t('patientHistory.edit.expirationDate')}
                   {...form.getInputProps('expirationDate')}
-                  clearable
                 />
               </Group>
             </Stack>
@@ -267,21 +264,21 @@ export function VisitEditModal({
                 {...form.getInputProps('insuranceCompany2')}
               />
               <Group grow>
-                <TextInput
+                <EMRTextInput
                   label={t('patientHistory.edit.insuranceType')}
                   {...form.getInputProps('insuranceType2')}
                 />
-                <TextInput
+                <EMRTextInput
                   label={t('patientHistory.edit.policyNumber')}
                   {...form.getInputProps('policyNumber2')}
                 />
               </Group>
               <Group grow>
-                <TextInput
+                <EMRTextInput
                   label={t('patientHistory.edit.referralNumber')}
                   {...form.getInputProps('referralNumber2')}
                 />
-                <NumberInput
+                <EMRNumberInput
                   label={t('patientHistory.edit.copayPercent')}
                   min={0}
                   max={100}
@@ -290,15 +287,13 @@ export function VisitEditModal({
                 />
               </Group>
               <Group grow>
-                <DateInput
+                <EMRDatePicker
                   label={t('patientHistory.edit.issueDate')}
                   {...form.getInputProps('issueDate2')}
-                  clearable
                 />
-                <DateInput
+                <EMRDatePicker
                   label={t('patientHistory.edit.expirationDate')}
                   {...form.getInputProps('expirationDate2')}
-                  clearable
                 />
               </Group>
             </Stack>
@@ -312,21 +307,21 @@ export function VisitEditModal({
                 {...form.getInputProps('insuranceCompany3')}
               />
               <Group grow>
-                <TextInput
+                <EMRTextInput
                   label={t('patientHistory.edit.insuranceType')}
                   {...form.getInputProps('insuranceType3')}
                 />
-                <TextInput
+                <EMRTextInput
                   label={t('patientHistory.edit.policyNumber')}
                   {...form.getInputProps('policyNumber3')}
                 />
               </Group>
               <Group grow>
-                <TextInput
+                <EMRTextInput
                   label={t('patientHistory.edit.referralNumber')}
                   {...form.getInputProps('referralNumber3')}
                 />
-                <NumberInput
+                <EMRNumberInput
                   label={t('patientHistory.edit.copayPercent')}
                   min={0}
                   max={100}
@@ -335,15 +330,13 @@ export function VisitEditModal({
                 />
               </Group>
               <Group grow>
-                <DateInput
+                <EMRDatePicker
                   label={t('patientHistory.edit.issueDate')}
                   {...form.getInputProps('issueDate3')}
-                  clearable
                 />
-                <DateInput
+                <EMRDatePicker
                   label={t('patientHistory.edit.expirationDate')}
                   {...form.getInputProps('expirationDate3')}
-                  clearable
                 />
               </Group>
             </Stack>

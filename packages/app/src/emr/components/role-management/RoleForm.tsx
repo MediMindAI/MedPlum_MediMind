@@ -1,10 +1,11 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
-import { Stack, TextInput, Textarea, Select, Text } from '@mantine/core';
+import { Stack, Text } from '@mantine/core';
 import type { UseFormReturnType } from '@mantine/form';
 import type { RoleFormValues } from '../../types/role-management';
 import { useTranslation } from '../../hooks/useTranslation';
 import { PermissionTree } from './PermissionTree';
+import { EMRTextInput, EMRTextarea, EMRSelect } from '../shared/EMRFormFields';
 
 interface RoleFormProps {
   form: UseFormReturnType<RoleFormValues>;
@@ -29,7 +30,7 @@ export function RoleForm({ form, hidePermissions = false, loading = false }: Rol
   return (
     <Stack gap="md">
       {/* Role Name */}
-      <TextInput
+      <EMRTextInput
         label={t('roleManagement.roleName')}
         placeholder="e.g., Physician, Nurse, Lab Technician"
         required
@@ -37,16 +38,15 @@ export function RoleForm({ form, hidePermissions = false, loading = false }: Rol
       />
 
       {/* Role Code */}
-      <TextInput
+      <EMRTextInput
         label={t('roleManagement.roleCode')}
-        placeholder="e.g., physician, nurse, lab-tech"
-        description="Lowercase with hyphens only"
+        placeholder="e.g., physician, nurse, lab-tech (lowercase with hyphens only)"
         required
         {...form.getInputProps('code')}
       />
 
       {/* Description */}
-      <Textarea
+      <EMRTextarea
         label={t('roleManagement.roleDescription')}
         placeholder="Brief description of this role's responsibilities"
         minRows={3}
@@ -55,7 +55,7 @@ export function RoleForm({ form, hidePermissions = false, loading = false }: Rol
       />
 
       {/* Status */}
-      <Select
+      <EMRSelect
         label={t('roleManagement.roleStatus')}
         data={[
           { value: 'active', label: t('roleManagement.active') },

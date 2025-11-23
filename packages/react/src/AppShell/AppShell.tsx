@@ -58,7 +58,7 @@ export function AppShell(props: AppShellProps): JSX.Element {
 
   return (
     <MantineAppShell
-      header={{ height: 60 }}
+      header={{ height: 50 }}
       navbar={{
         width: 250,
         breakpoint: 'sm',

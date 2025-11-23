@@ -1,0 +1,384 @@
+/**
+ * Form 100 (IV-100/a) - Health Status Certificate Print Stylesheet
+ *
+ * Georgian official medical document form for health status certification.
+ * Optimized for A4 paper printing with proper Georgian font support.
+ *
+ * Legal Reference: Ministry Order #230/n dated 15.10.2008
+ */
+
+/* ============================================================================
+   Form 100 Container
+   ============================================================================ */
+
+.form-100-container {
+  font-family: 'DejaVu Sans', 'Noto Sans Georgian', 'BPG Arial', Arial, sans-serif;
+  font-size: 12pt;
+  line-height: 1.4;
+  color: #000;
+  background: #fff;
+  padding: 20px;
+  max-width: 210mm; /* A4 width */
+  margin: 0 auto;
+}
+
+.form-100-document {
+  border: 2px dashed #333;
+  padding: 24px;
+  background: #e8eaf6; /* Light lavender/blue background */
+  min-height: calc(297mm - 60px); /* A4 height minus padding */
+}
+
+/* ============================================================================
+   Header Section (Right-aligned Ministry Info)
+   ============================================================================ */
+
+.form-100-header {
+  text-align: right;
+  font-size: 10pt;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+.form-100-header-ministry {
+  font-weight: normal;
+}
+
+/* ============================================================================
+   Title Section (Center)
+   ============================================================================ */
+
+.form-100-title-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.form-100-doc-title {
+  font-size: 14pt;
+  font-weight: normal;
+  margin: 0 0 8px 0;
+}
+
+.form-100-main-title {
+  font-size: 17pt;
+  font-weight: bold;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+}
+
+.form-100-subtitle {
+  font-size: 15pt;
+  font-weight: bold;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* ============================================================================
+   Form Fields
+   ============================================================================ */
+
+.form-100-field {
+  margin-bottom: 16px;
+}
+
+.form-100-field-label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: normal;
+}
+
+.form-100-field-number {
+  font-weight: bold;
+  margin-right: 4px;
+}
+
+.form-100-field-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #333;
+  background: transparent;
+  padding: 4px 0;
+  font-size: 12pt;
+  font-family: inherit;
+  min-height: 24px;
+}
+
+.form-100-field-input:focus {
+  outline: none;
+  border-bottom-color: #1976d2;
+}
+
+.form-100-field-textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 8px;
+  font-size: 12pt;
+  font-family: inherit;
+  min-height: 60px;
+  resize: vertical;
+  border-radius: 2px;
+}
+
+.form-100-field-note {
+  font-size: 10pt;
+  color: #666;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ============================================================================
+   Two-Column Destination Fields
+   ============================================================================ */
+
+.form-100-destination-row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.form-100-destination-col {
+  flex: 1;
+}
+
+.form-100-destination-col .form-100-field-label {
+  font-weight: bold;
+}
+
+/* ============================================================================
+   Date Fields Row
+   ============================================================================ */
+
+.form-100-dates-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.form-100-date-field {
+  flex: 1;
+  min-width: 150px;
+}
+
+.form-100-date-field .form-100-field-label {
+  font-size: 11pt;
+}
+
+/* ============================================================================
+   Signature Section
+   ============================================================================ */
+
+.form-100-signature-section {
+  margin-top: 32px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.form-100-seal-placeholder {
+  text-align: right;
+  font-size: 12pt;
+  font-style: italic;
+  color: #666;
+  padding: 20px;
+  border: 1px dashed #999;
+  border-radius: 4px;
+  min-width: 150px;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ============================================================================
+   Print Styles
+   ============================================================================ */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 15mm;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .form-100-container {
+    padding: 0;
+    max-width: none;
+    background: #fff;
+  }
+
+  .form-100-document {
+    border: 2px dashed #333 !important;
+    background: #e8eaf6 !important;
+    page-break-inside: avoid;
+    box-shadow: none;
+  }
+
+  .form-100-field-textarea {
+    border: 1px solid #ccc !important;
+    background: #fff !important;
+    min-height: auto;
+    height: auto;
+  }
+
+  .form-100-field-input {
+    border-bottom: 1px solid #333 !important;
+  }
+
+  /* Hide interactive elements */
+  .form-100-print-hide {
+    display: none !important;
+  }
+
+  /* Ensure proper page breaks */
+  .form-100-field {
+    page-break-inside: avoid;
+  }
+
+  /* Print-specific font adjustments */
+  .form-100-container {
+    font-size: 11pt;
+  }
+
+  .form-100-header {
+    font-size: 9pt;
+  }
+
+  .form-100-main-title {
+    font-size: 15pt;
+  }
+
+  .form-100-subtitle {
+    font-size: 13pt;
+  }
+
+  .form-100-seal-placeholder {
+    border: 1px dashed #999 !important;
+  }
+}
+
+/* ============================================================================
+   Screen Preview Styles
+   ============================================================================ */
+
+@media screen {
+  .form-100-container {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  .form-100-document {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* ============================================================================
+   Action Buttons (Screen Only)
+   ============================================================================ */
+
+.form-100-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+@media print {
+  .form-100-actions {
+    display: none !important;
+  }
+}
+
+/* ============================================================================
+   Georgian Font Support
+   ============================================================================ */
+
+/* Ensure proper Georgian character rendering */
+.form-100-container {
+  unicode-bidi: normal;
+  direction: ltr;
+}
+
+/* mtavruli (Georgian uppercase) support */
+.form-100-mtavruli {
+  font-variant: small-caps;
+  text-transform: uppercase;
+}
+
+/* ============================================================================
+   Responsive Styles (Screen Only)
+   ============================================================================ */
+
+@media screen and (max-width: 768px) {
+  .form-100-container {
+    padding: 12px;
+    font-size: 11pt;
+  }
+
+  .form-100-document {
+    padding: 16px;
+  }
+
+  .form-100-destination-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-100-dates-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-100-date-field {
+    min-width: auto;
+  }
+
+  .form-100-header {
+    font-size: 9pt;
+  }
+
+  .form-100-main-title {
+    font-size: 14pt;
+  }
+
+  .form-100-subtitle {
+    font-size: 12pt;
+  }
+}
+
+/* ============================================================================
+   Accessibility
+   ============================================================================ */
+
+.form-100-field-label:focus-visible,
+.form-100-field-input:focus-visible,
+.form-100-field-textarea:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .form-100-document {
+    border-width: 3px;
+    border-color: #000;
+  }
+
+  .form-100-field-input {
+    border-bottom-width: 2px;
+    border-bottom-color: #000;
+  }
+
+  .form-100-field-textarea {
+    border-width: 2px;
+    border-color: #000;
+  }
+}

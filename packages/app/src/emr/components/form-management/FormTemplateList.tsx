@@ -1,12 +1,15 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Table, Badge, ActionIcon, Group, Text, Tooltip, TextInput, Select, Box, Skeleton, Stack } from '@mantine/core';
-import { IconEdit, IconCopy, IconArchive, IconHistory, IconArchiveOff, IconSearch } from '@tabler/icons-react';
+import { Badge, Group, Text, Stack } from '@mantine/core';
+import { EMRTextInput, EMRSelect } from '../shared/EMRFormFields';
+import { IconEdit, IconCopy, IconArchive, IconHistory, IconArchiveOff, IconSearch, IconFolderOpen } from '@tabler/icons-react';
 import { useState, useMemo } from 'react';
 import type { Questionnaire } from '@medplum/fhirtypes';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useDebouncedValue } from '@mantine/hooks';
+import { EMRTable } from '../shared/EMRTable';
+import type { EMRTableColumn } from '../shared/EMRTable';
 
 /**
  * Props for FormTemplateList component
@@ -32,23 +35,22 @@ export interface FormTemplateListProps {
   showArchived?: boolean;
 }
 
+// Extended type for table data
+interface FormTableRow extends Questionnaire {
+  id: string;
+}
+
 /**
  * FormTemplateList Component
  *
  * Table view for displaying form templates with search and filter capabilities.
- *
- * Columns:
- * - Name
- * - Description
- * - Version
- * - Status (draft/active/retired)
- * - Last Modified
- * - Actions (Edit, Clone, Archive, History)
+ * Now using the reusable EMRTable component for consistent styling.
  *
  * Features:
+ * - Apple-inspired light/minimal design
  * - Search by name (debounced 500ms)
  * - Filter by status
- * - Sortable columns
+ * - Combined action pattern (Edit visible, others in menu)
  * - Loading skeleton
  */
 export function FormTemplateList({
@@ -116,7 +118,7 @@ export function FormTemplateList({
 
   // Filter and search questionnaires
   const filteredQuestionnaires = useMemo(() => {
-    let filtered = questionnaires;
+    let filtered = questionnaires.filter((q): q is FormTableRow => !!q.id);
 
     // Filter by archived status
     if (!showArchived) {
@@ -148,35 +150,75 @@ export function FormTemplateList({
     ...(showArchived ? [{ value: 'retired', label: t('formManagement.status.archived') }] : []),
   ];
 
-  // Loading skeleton
-  if (loading) {
-    return (
-      <Stack gap="md">
-        <Group gap="md">
-          <Skeleton height={36} width={300} />
-          <Skeleton height={36} width={150} />
-        </Group>
-        <Skeleton height={40} />
-        {[1, 2, 3, 4, 5].map((i) => (
-          <Skeleton key={i} height={50} />
-        ))}
-      </Stack>
-    );
-  }
+  // Define columns using EMRTable column type
+  const columns: EMRTableColumn<FormTableRow>[] = [
+    {
+      key: 'title',
+      title: t('formManagement.columns.name'),
+      sortable: true,
+      minWidth: 200,
+      render: (row) => (
+        <Text fw={500} size="sm">
+          {row.title || t('formManagement.untitled')}
+        </Text>
+      ),
+    },
+    {
+      key: 'description',
+      title: t('formManagement.columns.description'),
+      hideOnMobile: true,
+      render: (row) => (
+        <Text size="sm" c="dimmed" lineClamp={1}>
+          {row.description || '-'}
+        </Text>
+      ),
+    },
+    {
+      key: 'version',
+      title: t('formManagement.columns.version'),
+      width: 80,
+      align: 'center',
+      render: (row) => (
+        <Badge variant="light" color="blue" size="sm" radius="sm" style={{ fontWeight: 500 }}>
+          V{row.version || '1.0'}
+        </Badge>
+      ),
+    },
+    {
+      key: 'status',
+      title: t('formManagement.columns.status'),
+      width: 100,
+      align: 'center',
+      render: (row) => (
+        <Badge color={getStatusColor(row.status || 'draft')} size="sm">
+          {getStatusLabel(row.status || 'draft')}
+        </Badge>
+      ),
+    },
+    {
+      key: 'lastModified',
+      title: t('formManagement.columns.lastModified'),
+      width: 160,
+      hideOnMobile: true,
+      render: (row) => (
+        <Text size="sm">{formatDate(row.meta?.lastUpdated || row.date)}</Text>
+      ),
+    },
+  ];
 
   return (
     <Stack gap="md">
       {/* Search and Filter Controls */}
       <Group gap="md">
-        <TextInput
+        <EMRTextInput
           placeholder={t('formManagement.searchPlaceholder')}
           leftSection={<IconSearch size={16} />}
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.currentTarget.value)}
+          onChange={setSearchQuery}
           style={{ flex: 1, maxWidth: 400 }}
           data-testid="search-input"
         />
-        <Select
+        <EMRSelect
           placeholder={t('formManagement.filterByStatus')}
           data={statusOptions}
           value={statusFilter}
@@ -192,163 +234,49 @@ export function FormTemplateList({
         {t('formManagement.resultsCount', { count: filteredQuestionnaires.length })}
       </Text>
 
-      {/* Table */}
-      <Box style={{ overflowX: 'auto' }}>
-        <Table
-          striped
-          highlightOnHover
-          withTableBorder
-          withColumnBorders
-          data-testid="form-template-table"
-        >
-          <Table.Thead
-            style={{
-              background: 'linear-gradient(90deg, #138496, #17a2b8, #20c4dd)',
-            }}
-          >
-            <Table.Tr>
-              <Table.Th style={{ color: 'white', fontWeight: 600 }}>
-                {t('formManagement.columns.name')}
-              </Table.Th>
-              <Table.Th style={{ color: 'white', fontWeight: 600 }}>
-                {t('formManagement.columns.description')}
-              </Table.Th>
-              <Table.Th style={{ color: 'white', fontWeight: 600, width: 100 }}>
-                {t('formManagement.columns.version')}
-              </Table.Th>
-              <Table.Th style={{ color: 'white', fontWeight: 600, width: 100 }}>
-                {t('formManagement.columns.status')}
-              </Table.Th>
-              <Table.Th style={{ color: 'white', fontWeight: 600, width: 180 }}>
-                {t('formManagement.columns.lastModified')}
-              </Table.Th>
-              <Table.Th style={{ color: 'white', fontWeight: 600, width: 150 }}>
-                {t('formManagement.columns.actions')}
-              </Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>
-            {filteredQuestionnaires.length === 0 ? (
-              <Table.Tr>
-                <Table.Td colSpan={6}>
-                  <Text ta="center" c="dimmed" py="xl">
-                    {t('formManagement.noResults')}
-                  </Text>
-                </Table.Td>
-              </Table.Tr>
-            ) : (
-              filteredQuestionnaires.map((q) => {
-                const id = q.id || '';
-                const isArchived = q.status === 'retired';
+      {/* EMRTable with modern styling */}
+      <EMRTable
+        columns={columns}
+        data={filteredQuestionnaires}
+        loading={loading}
+        loadingConfig={{ rows: 5 }}
+        striped
+        stickyHeader
+        minWidth={700}
+        getRowId={(row) => row.id}
+        onRowClick={onRowClick ? (row) => onRowClick(row.id) : undefined}
+        highlightRow={(row) => row.status === 'retired' ? 'rgba(0, 0, 0, 0.04)' : false}
+        emptyState={{
+          icon: IconFolderOpen,
+          title: t('formManagement.noResults'),
+          description: t('formManagement.noResultsDescription'),
+        }}
+        actions={(row) => {
+          const id = row.id;
+          const isArchived = row.status === 'retired';
 
-                return (
-                  <Table.Tr
-                    key={id}
-                    style={{
-                      cursor: onRowClick ? 'pointer' : 'default',
-                      opacity: isArchived ? 0.6 : 1,
-                    }}
-                    onClick={() => onRowClick && id && onRowClick(id)}
-                    data-testid={`row-${id}`}
-                  >
-                    <Table.Td>
-                      <Text fw={500} lineClamp={1}>
-                        {q.title || t('formManagement.untitled')}
-                      </Text>
-                    </Table.Td>
-                    <Table.Td>
-                      <Text size="sm" c="dimmed" lineClamp={1}>
-                        {q.description || '-'}
-                      </Text>
-                    </Table.Td>
-                    <Table.Td>
-                      <Badge variant="light" color="cyan" size="sm">
-                        v{q.version || '1.0'}
-                      </Badge>
-                    </Table.Td>
-                    <Table.Td>
-                      <Badge color={getStatusColor(q.status || 'draft')} size="sm">
-                        {getStatusLabel(q.status || 'draft')}
-                      </Badge>
-                    </Table.Td>
-                    <Table.Td>
-                      <Text size="sm">{formatDate(q.meta?.lastUpdated || q.date)}</Text>
-                    </Table.Td>
-                    <Table.Td onClick={(e) => e.stopPropagation()}>
-                      <Group gap="xs" wrap="nowrap">
-                        {onEdit && (
-                          <Tooltip label={t('formManagement.actions.edit')}>
-                            <ActionIcon
-                              variant="subtle"
-                              color="blue"
-                              onClick={() => onEdit(id)}
-                              data-testid={`edit-btn-${id}`}
-                            >
-                              <IconEdit size={16} />
-                            </ActionIcon>
-                          </Tooltip>
-                        )}
-
-                        {onClone && (
-                          <Tooltip label={t('formManagement.actions.clone')}>
-                            <ActionIcon
-                              variant="subtle"
-                              color="teal"
-                              onClick={() => onClone(id)}
-                              data-testid={`clone-btn-${id}`}
-                            >
-                              <IconCopy size={16} />
-                            </ActionIcon>
-                          </Tooltip>
-                        )}
-
-                        {onViewHistory && (
-                          <Tooltip label={t('formManagement.actions.viewHistory')}>
-                            <ActionIcon
-                              variant="subtle"
-                              color="violet"
-                              onClick={() => onViewHistory(id)}
-                              data-testid={`history-btn-${id}`}
-                            >
-                              <IconHistory size={16} />
-                            </ActionIcon>
-                          </Tooltip>
-                        )}
-
-                        {isArchived && onRestore ? (
-                          <Tooltip label={t('formManagement.actions.restore')}>
-                            <ActionIcon
-                              variant="subtle"
-                              color="green"
-                              onClick={() => onRestore(id)}
-                              data-testid={`restore-btn-${id}`}
-                            >
-                              <IconArchiveOff size={16} />
-                            </ActionIcon>
-                          </Tooltip>
-                        ) : (
-                          onArchive && (
-                            <Tooltip label={t('formManagement.actions.archive')}>
-                              <ActionIcon
-                                variant="subtle"
-                                color="orange"
-                                onClick={() => onArchive(id)}
-                                data-testid={`archive-btn-${id}`}
-                              >
-                                <IconArchive size={16} />
-                              </ActionIcon>
-                            </Tooltip>
-                          )
-                        )}
-                      </Group>
-                    </Table.Td>
-                  </Table.Tr>
-                );
-              })
-            )}
-          </Table.Tbody>
-        </Table>
-      </Box>
+          return {
+            primary: onEdit
+              ? { icon: IconEdit, label: t('formManagement.actions.edit'), onClick: () => onEdit(id) }
+              : undefined,
+            secondary: [
+              ...(onClone
+                ? [{ icon: IconCopy, label: t('formManagement.actions.clone'), onClick: () => onClone(id) }]
+                : []),
+              ...(onViewHistory
+                ? [{ icon: IconHistory, label: t('formManagement.actions.viewHistory'), onClick: () => onViewHistory(id) }]
+                : []),
+              ...(isArchived && onRestore
+                ? [{ icon: IconArchiveOff, label: t('formManagement.actions.restore'), onClick: () => onRestore(id), color: 'green' as const }]
+                : []),
+              ...(!isArchived && onArchive
+                ? [{ icon: IconArchive, label: t('formManagement.actions.archive'), onClick: () => onArchive(id), color: 'gray' as const }]
+                : []),
+            ],
+          };
+        }}
+        ariaLabel="Form templates table"
+      />
     </Stack>
   );
 }

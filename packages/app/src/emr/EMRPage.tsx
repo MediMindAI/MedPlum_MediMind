@@ -45,18 +45,18 @@ export function EMRPage(): JSX.Element {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          height: 'calc(100vh - 92px)', // Account for Medplum AppShell header (80px) + padding (12px)
+          height: 'calc(100vh - 50px)', // Account for Medplum AppShell header (50px)
           overflow: 'hidden',
         }}
       >
         {/* Row 1: Main Navigation Menu */}
         <Box
           style={{
-            height: '52px',
+            height: '35px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 24px',
+            padding: '0 16px',
             background: 'white',
             borderBottom: '1px solid #e5e7eb',
           }}

@@ -16,7 +16,11 @@
     "lint:fix": "turbo run lint:fix --filter=!@medplum/docs",
     "prettier": "prettier --write \"**/*.{ts,tsx,cts,mts,js,jsx,cjs,mjs,json}\"",
     "sort-package-json": "sort-package-json package.json \"packages/*/package.json\" \"examples/*/package.json\"",
-    "test": "turbo run test --filter=!@medplum/docs"
+    "test": "turbo run test --filter=!@medplum/docs",
+    "playwright:install": "npx playwright install chromium",
+    "playwright:navigate": "npx tsx scripts/playwright/navigate.ts",
+    "playwright:screenshot": "npx tsx scripts/playwright/screenshot.ts",
+    "playwright:close": "npx tsx scripts/playwright/close.ts"
   },
   "prettier": {
     "plugins": [
@@ -43,6 +47,7 @@
     "whatwg-url": "14.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.52.0",
     "@babel/core": "7.28.5",
     "@babel/preset-env": "7.28.5",
     "@babel/preset-react": "7.28.5",

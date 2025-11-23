@@ -59,10 +59,13 @@ describe('PropertiesPanel', () => {
   it('displays field type', () => {
     const mockOnFieldUpdate = jest.fn();
 
-    renderWithProviders(<PropertiesPanel selectedField={mockField} onFieldUpdate={mockOnFieldUpdate} />);
+    const { container } = renderWithProviders(<PropertiesPanel selectedField={mockField} onFieldUpdate={mockOnFieldUpdate} />);
 
-    expect(screen.getByText('Field Type')).toBeInTheDocument();
-    expect(screen.getByText('Text')).toBeInTheDocument();
+    // Field Type label (using regex for flexibility with translations)
+    expect(screen.getByText(/Field Type/i)).toBeInTheDocument();
+    // Field type value in badge (check for badge element)
+    const badge = container.querySelector('.mantine-Badge-root');
+    expect(badge).toBeInTheDocument();
   });
 
   it('renders label input with current value', () => {
@@ -139,7 +142,8 @@ describe('PropertiesPanel', () => {
 
     renderWithProviders(<PropertiesPanel selectedField={mockField} onFieldUpdate={mockOnFieldUpdate} />);
 
-    expect(screen.getByText('Field ID')).toBeInTheDocument();
+    // Field ID label (using regex for flexibility with translations)
+    expect(screen.getByText(/Field ID/i)).toBeInTheDocument();
     expect(screen.getByText('field-1')).toBeInTheDocument();
   });
 
@@ -159,16 +163,19 @@ describe('PropertiesPanel', () => {
     expect(screen.getByText(/Field Styling/i)).toBeInTheDocument();
   });
 
-  it('renders all form sections with dividers', () => {
+  it('renders all form sections with proper structure', () => {
     const mockOnFieldUpdate = jest.fn();
 
     const { container } = renderWithProviders(
       <PropertiesPanel selectedField={mockField} onFieldUpdate={mockOnFieldUpdate} />
     );
 
-    // Check for divider elements
-    const dividers = container.querySelectorAll('[role="separator"]');
-    expect(dividers.length).toBeGreaterThanOrEqual(2);
+    // Check for field info card section (contains Field Type and Field ID)
+    expect(screen.getByText(/Field Type/i)).toBeInTheDocument();
+    expect(screen.getByText(/Field ID/i)).toBeInTheDocument();
+
+    // Check for accordion sections
+    expect(container.querySelector('[data-accordion="true"]')).toBeInTheDocument();
   });
 
   it('displays format validation select for text fields', () => {
@@ -218,7 +225,7 @@ describe('PropertiesPanel', () => {
 
     // Check for Mantine Accordion component
     expect(container.querySelector('[data-accordion="true"]')).toBeInTheDocument();
-    // Check for Mantine ScrollArea
-    expect(container.querySelector('.mantine-ScrollArea-root')).toBeInTheDocument();
+    // Check for custom scrollbar class (new design uses emr-scrollbar)
+    expect(container.querySelector('.emr-scrollbar')).toBeInTheDocument();
   });
 });

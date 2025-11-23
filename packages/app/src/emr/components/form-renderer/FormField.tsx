@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useState, useCallback } from 'react';
 import {
   Box,
   TextInput,
@@ -10,22 +9,106 @@ import {
   Checkbox,
   Select,
   Radio,
-  Group,
   Text,
   Alert,
-  Paper,
   Title,
   Stack,
   FileInput,
   Anchor,
 } from '@mantine/core';
-import { DateInput, TimeInput } from '@mantine/dates';
-import { IconAlertCircle, IconUpload, IconSignature } from '@tabler/icons-react';
+import { TimeInput } from '@mantine/dates';
+import { EMRDatePicker } from '../common/EMRDatePicker';
+import { IconAlertCircle, IconUpload } from '@tabler/icons-react';
 import type { QuestionnaireItem } from '@medplum/fhirtypes';
 import type { BindingKey } from '../../types/patient-binding';
 import { BINDING_CONFIGS } from '../../types/patient-binding';
 import { SignatureField } from './SignatureField';
 import type { SignatureData, SignatureIntent } from '../../types/form-renderer';
+
+/**
+ * Document-style input styling - underline only, official medical form look
+ * Uses theme colors from packages/app/src/emr/styles/theme.css
+ */
+const documentInputStyles = {
+  input: {
+    minHeight: '36px',
+    fontSize: '14px',
+    fontWeight: 400,
+    color: 'var(--emr-primary)',
+    backgroundColor: 'transparent',
+    border: 'none',
+    borderBottom: '1px solid var(--emr-gray-800)',
+    borderRadius: '0',
+    transition: 'var(--emr-transition-base)',
+    padding: '8px 4px',
+    '&:hover:not(:disabled):not(:focus)': {
+      borderBottomColor: 'var(--emr-secondary)',
+    },
+    '&:focus': {
+      borderBottomColor: 'var(--emr-secondary)',
+      borderBottomWidth: '2px',
+      outline: 'none',
+    },
+    '&:disabled': {
+      backgroundColor: 'transparent',
+      color: 'var(--emr-gray-500)',
+      cursor: 'not-allowed',
+    },
+    '&::placeholder': {
+      color: 'var(--emr-gray-400)',
+    },
+  },
+  label: {
+    fontSize: '14px',
+    fontWeight: 400,
+    color: 'var(--emr-primary)',
+    marginBottom: '0',
+  },
+  description: {
+    fontSize: '12px',
+    color: 'var(--emr-gray-500)',
+    marginTop: '4px',
+    fontStyle: 'italic',
+  },
+  error: {
+    fontSize: '12px',
+    color: 'var(--mantine-color-red-7)',
+    marginTop: '4px',
+  },
+  required: {
+    color: 'var(--mantine-color-red-7)',
+  },
+};
+
+/**
+ * Textarea document style - subtle border box
+ */
+const documentTextareaStyles = {
+  input: {
+    fontSize: '14px',
+    fontWeight: 400,
+    color: 'var(--emr-primary)',
+    backgroundColor: 'transparent',
+    border: '1px solid var(--emr-gray-800)',
+    borderRadius: 'var(--emr-border-radius-sm)',
+    padding: '12px',
+    '&:focus': {
+      borderColor: 'var(--emr-secondary)',
+      outline: 'none',
+    },
+  },
+};
+
+/**
+ * Styling for auto-populated fields in document style
+ */
+const autoPopulatedStyles = {
+  root: {
+    position: 'relative' as const,
+    paddingLeft: '12px',
+    borderLeft: '3px solid var(--emr-secondary)',
+  },
+};
 
 /**
  * Props for FormField component
@@ -128,9 +211,7 @@ export function FormField({
   };
 
   // Auto-populated field styling
-  const autoPopulatedStyle = isAutoPopulated
-    ? { borderLeft: '3px solid var(--emr-turquoise)', paddingLeft: '8px' }
-    : undefined;
+  const autoPopulatedStyle = isAutoPopulated ? autoPopulatedStyles.root : undefined;
 
   // Map FHIR type to our renderer
   const fieldType = mapFhirType(item.type);
@@ -146,7 +227,11 @@ export function FormField({
           onChange={(e) => onChange(e.target.value)}
           size="md"
           styles={{
-            input: { minHeight: '44px' },
+            input: documentInputStyles.input,
+            label: documentInputStyles.label,
+            description: documentInputStyles.description,
+            error: documentInputStyles.error,
+            required: documentInputStyles.required,
             root: autoPopulatedStyle,
           }}
         />
@@ -162,6 +247,11 @@ export function FormField({
           autosize
           size="md"
           styles={{
+            input: documentTextareaStyles.input,
+            label: documentInputStyles.label,
+            description: documentInputStyles.description,
+            error: documentInputStyles.error,
+            required: documentInputStyles.required,
             root: autoPopulatedStyle,
           }}
         />
@@ -176,7 +266,11 @@ export function FormField({
           allowDecimal={false}
           size="md"
           styles={{
-            input: { minHeight: '44px' },
+            input: documentInputStyles.input,
+            label: documentInputStyles.label,
+            description: documentInputStyles.description,
+            error: documentInputStyles.error,
+            required: documentInputStyles.required,
             root: autoPopulatedStyle,
           }}
         />
@@ -191,7 +285,11 @@ export function FormField({
           decimalScale={2}
           size="md"
           styles={{
-            input: { minHeight: '44px' },
+            input: documentInputStyles.input,
+            label: documentInputStyles.label,
+            description: documentInputStyles.description,
+            error: documentInputStyles.error,
+            required: documentInputStyles.required,
             root: autoPopulatedStyle,
           }}
         />
@@ -199,30 +297,40 @@ export function FormField({
 
     case 'date':
       return (
-        <DateInput
-          {...commonProps}
-          value={value ? new Date(value) : null}
-          onChange={(date) => onChange(date?.toISOString().split('T')[0])}
-          size="md"
-          styles={{
-            input: { minHeight: '44px' },
-            root: autoPopulatedStyle,
-          }}
-        />
+        <Box style={autoPopulatedStyle}>
+          <EMRDatePicker
+            label={commonProps.label}
+            required={commonProps.required}
+            error={commonProps.error}
+            value={value ? new Date(value) : null}
+            onChange={(date) => onChange(date?.toISOString().split('T')[0])}
+            placeholder="dd.mm.yyyy"
+          />
+          {isAutoPopulated && bindingConfig && (
+            <Text size="xs" c="dimmed" mt={4}>
+              Auto-populated from {bindingConfig.label}
+            </Text>
+          )}
+        </Box>
       );
 
     case 'dateTime':
       return (
-        <DateInput
-          {...commonProps}
-          value={value ? new Date(value) : null}
-          onChange={(date) => onChange(date?.toISOString())}
-          size="md"
-          styles={{
-            input: { minHeight: '44px' },
-            root: autoPopulatedStyle,
-          }}
-        />
+        <Box style={autoPopulatedStyle}>
+          <EMRDatePicker
+            label={commonProps.label}
+            required={commonProps.required}
+            error={commonProps.error}
+            value={value ? new Date(value) : null}
+            onChange={(date) => onChange(date?.toISOString())}
+            placeholder="dd.mm.yyyy"
+          />
+          {isAutoPopulated && bindingConfig && (
+            <Text size="xs" c="dimmed" mt={4}>
+              Auto-populated from {bindingConfig.label}
+            </Text>
+          )}
+        </Box>
       );
 
     case 'time':
@@ -233,7 +341,10 @@ export function FormField({
           onChange={(e) => onChange(e.target.value)}
           size="md"
           styles={{
-            input: { minHeight: '44px' },
+            input: documentInputStyles.input,
+            label: documentInputStyles.label,
+            description: documentInputStyles.description,
+            error: documentInputStyles.error,
             root: autoPopulatedStyle,
           }}
         />
@@ -250,6 +361,11 @@ export function FormField({
           size="md"
           styles={{
             root: autoPopulatedStyle,
+            label: {
+              fontSize: '14px',
+              fontWeight: 500,
+              color: 'var(--emr-gray-700)',
+            },
           }}
         />
       );
@@ -268,8 +384,25 @@ export function FormField({
           clearable
           size="md"
           styles={{
-            input: { minHeight: '44px' },
+            input: documentInputStyles.input,
+            label: documentInputStyles.label,
+            description: documentInputStyles.description,
+            error: documentInputStyles.error,
             root: autoPopulatedStyle,
+            dropdown: {
+              borderRadius: 'var(--emr-border-radius-sm)',
+              boxShadow: 'var(--emr-shadow-md)',
+              border: '1px solid var(--emr-gray-800)',
+            },
+            option: {
+              borderRadius: 'var(--emr-border-radius-sm)',
+              '&[data-selected]': {
+                backgroundColor: 'var(--emr-secondary)',
+              },
+              '&[data-hovered]': {
+                backgroundColor: 'var(--emr-gray-50)',
+              },
+            },
           }}
         />
       );
@@ -296,12 +429,23 @@ export function FormField({
               onChange(undefined);
             }
           }}
-          leftSection={<IconUpload size={16} />}
+          leftSection={<IconUpload size={16} style={{ color: 'var(--emr-secondary)' }} />}
           placeholder={value?.title || 'Click to upload file'}
           accept="image/*,application/pdf,.doc,.docx"
           size="md"
           styles={{
-            input: { minHeight: '44px' },
+            input: {
+              ...documentInputStyles.input,
+              border: '1px solid var(--emr-gray-800)',
+              borderRadius: 'var(--emr-border-radius-sm)',
+              cursor: 'pointer',
+              '&:hover': {
+                borderColor: 'var(--emr-secondary)',
+              },
+            },
+            label: documentInputStyles.label,
+            description: documentInputStyles.description,
+            error: documentInputStyles.error,
             root: autoPopulatedStyle,
           }}
         />
@@ -326,8 +470,21 @@ export function FormField({
 
     case 'display':
       return (
-        <Box py="xs">
-          <Text size="md" c="dimmed">
+        <Box
+          py="sm"
+          style={{
+            borderBottom: '1px solid var(--emr-border-color)',
+            marginBottom: '8px',
+          }}
+        >
+          <Text
+            size="sm"
+            style={{
+              color: 'var(--emr-primary)',
+              lineHeight: 1.6,
+              fontStyle: 'italic',
+            }}
+          >
             {item.text}
           </Text>
         </Box>
@@ -335,9 +492,27 @@ export function FormField({
 
     case 'group':
       return (
-        <Paper p="md" withBorder>
+        <Box
+          style={{
+            marginTop: '16px',
+            paddingTop: '16px',
+            borderTop: '1px solid var(--emr-border-color)',
+          }}
+        >
           <Stack gap="md">
-            {item.text && <Title order={5}>{item.text}</Title>}
+            {item.text && (
+              <Title
+                order={5}
+                style={{
+                  color: 'var(--emr-primary)',
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  marginBottom: '8px',
+                }}
+              >
+                {item.text}
+              </Title>
+            )}
             {item.item?.map((nestedItem) => (
               <FormField
                 key={nestedItem.linkId}
@@ -352,7 +527,7 @@ export function FormField({
               />
             ))}
           </Stack>
-        </Paper>
+        </Box>
       );
 
     case 'url':
@@ -365,12 +540,25 @@ export function FormField({
             placeholder="https://example.com"
             size="md"
             styles={{
-              input: { minHeight: '44px' },
+              input: documentInputStyles.input,
+              label: documentInputStyles.label,
+              description: documentInputStyles.description,
+              error: documentInputStyles.error,
               root: autoPopulatedStyle,
             }}
           />
           {value && isValidUrl(value) && (
-            <Anchor href={value} target="_blank" rel="noopener noreferrer" size="sm" mt="xs">
+            <Anchor
+              href={value}
+              target="_blank"
+              rel="noopener noreferrer"
+              size="sm"
+              mt="xs"
+              style={{
+                color: 'var(--emr-secondary)',
+                fontWeight: 500,
+              }}
+            >
               Open link
             </Anchor>
           )}
@@ -408,6 +596,10 @@ function renderChoiceField(
         error={commonProps.error}
         value={value || ''}
         onChange={onChange}
+        styles={{
+          label: documentInputStyles.label,
+          error: documentInputStyles.error,
+        }}
       >
         <Stack gap="xs" mt="xs" style={autoPopulatedStyle}>
           {item.answerOption?.map((option) => (
@@ -417,6 +609,20 @@ function renderChoiceField(
               label={option.valueCoding?.display || option.valueString}
               disabled={readOnly || item.readOnly}
               size="md"
+              styles={{
+                radio: {
+                  borderColor: 'var(--emr-gray-800)',
+                  '&:checked': {
+                    backgroundColor: 'var(--emr-secondary)',
+                    borderColor: 'var(--emr-secondary)',
+                  },
+                },
+                label: {
+                  fontSize: '14px',
+                  color: 'var(--emr-primary)',
+                  cursor: 'pointer',
+                },
+              }}
             />
           ))}
         </Stack>
@@ -432,8 +638,25 @@ function renderChoiceField(
       data={getOptionData(item)}
       size="md"
       styles={{
-        input: { minHeight: '44px' },
+        input: documentInputStyles.input,
+        label: documentInputStyles.label,
+        description: documentInputStyles.description,
+        error: documentInputStyles.error,
         root: autoPopulatedStyle,
+        dropdown: {
+          borderRadius: 'var(--emr-border-radius-sm)',
+          boxShadow: 'var(--emr-shadow-md)',
+          border: '1px solid var(--emr-gray-800)',
+        },
+        option: {
+          borderRadius: 'var(--emr-border-radius-sm)',
+          '&[data-selected]': {
+            backgroundColor: 'var(--emr-secondary)',
+          },
+          '&[data-hovered]': {
+            backgroundColor: 'var(--emr-gray-50)',
+          },
+        },
       }}
     />
   );

@@ -7,15 +7,11 @@ import {
   Stack,
   Group,
   Grid,
-  Select,
-  NumberInput,
-  Checkbox,
   Button,
   ActionIcon,
   Table,
-  TextInput,
-  Textarea,
 } from '@mantine/core';
+import { EMRTextInput, EMRTextarea, EMRSelect, EMRNumberInput, EMRCheckbox } from '../../shared/EMRFormFields';
 import { IconPlus, IconPencil, IconTrash } from '@tabler/icons-react';
 import type { ActivityDefinition } from '@medplum/fhirtypes';
 import type { JSX } from 'react';
@@ -210,23 +206,15 @@ export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
               <Text size="sm" fw={500} mb="xs" c="var(--emr-primary)">
                 შემსრულებლები
               </Text>
-              <Select
+              <EMRSelect
                 placeholder="აირჩიეთ პოზიცია"
                 data={salaryPositionsData}
                 value={selectedPosition}
                 onChange={setSelectedPosition}
                 searchable
                 clearable
-                styles={{
-                  input: {
-                    transition: 'border-color 200ms ease-in-out',
-                    '&:focus': {
-                      borderColor: 'var(--emr-accent)',
-                    },
-                  },
-                }}
               />
-              <Select
+              <EMRSelect
                 placeholder="აირჩიეთ პრაქტიკოსი"
                 data={practitionerOptions}
                 value={selectedPractitioner}
@@ -234,47 +222,23 @@ export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
                 searchable
                 clearable
                 disabled={!selectedPosition || loadingPractitioners}
-                styles={{
-                  input: {
-                    transition: 'border-color 200ms ease-in-out',
-                    '&:focus': {
-                      borderColor: 'var(--emr-accent)',
-                    },
-                  },
-                }}
               />
               <Group grow>
-                <Select
+                <EMRSelect
                   placeholder="აირჩიეთ ტიპი"
                   data={salaryCalculationTypesData}
                   value={selectedCalculationType}
                   onChange={setSelectedCalculationType}
                   searchable
                   clearable
-                  styles={{
-                    input: {
-                      transition: 'border-color 200ms ease-in-out',
-                      '&:focus': {
-                        borderColor: 'var(--emr-accent)',
-                      },
-                    },
-                  }}
                 />
-                <NumberInput
+                <EMRNumberInput
                   placeholder="0"
                   min={0}
                   step={0.01}
                   decimalScale={2}
                   value={salary}
                   onChange={setSalary}
-                  styles={{
-                    input: {
-                      transition: 'border-color 200ms ease-in-out',
-                      '&:focus': {
-                        borderColor: 'var(--emr-accent)',
-                      },
-                    },
-                  }}
                 />
               </Group>
               <Button
@@ -298,7 +262,7 @@ export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
               <Text size="sm" fw={500} mb="xs" c="var(--emr-primary)">
                 სავარაუდო პერსონალი
               </Text>
-              <Select
+              <EMRSelect
                 placeholder="აირჩიეთ პრაქტიკოსი"
                 data={practitionerOptions}
                 value={selectedExpectedPersonnel}
@@ -306,14 +270,6 @@ export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
                 searchable
                 clearable
                 disabled={loadingPractitioners}
-                styles={{
-                  input: {
-                    transition: 'border-color 200ms ease-in-out',
-                    '&:focus': {
-                      borderColor: 'var(--emr-accent)',
-                    },
-                  },
-                }}
               />
               <Button
                 leftSection={<IconPlus size={16} />}
@@ -373,7 +329,7 @@ export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
                   </Table.Td>
                   <Table.Td style={{ padding: '12px 16px', fontWeight: 500 }}>{performer.salary}</Table.Td>
                   <Table.Td style={{ textAlign: 'center', padding: '12px 16px' }}>
-                    <Checkbox checked={performer.isDefault} onChange={() => handleToggleDefault(index)} />
+                    <EMRCheckbox checked={performer.isDefault} onChange={() => handleToggleDefault(index)} />
                   </Table.Td>
                   <Table.Td style={{ textAlign: 'center', padding: '12px 16px' }}>
                     <Group gap="xs" justify="center">
@@ -422,7 +378,7 @@ export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
             {personnelList.map((person, index) => (
               <Group key={index} justify="space-between" p="xs" style={{ backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
                 <Group gap="sm">
-                  <Checkbox
+                  <EMRCheckbox
                     checked={person.isChecked}
                     onChange={() => handleTogglePersonnelCheckbox(index)}
                   />
@@ -449,7 +405,7 @@ export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
         </Text>
 
         <Group grow mb="md">
-          <TextInput
+          <EMRTextInput
             placeholder="დაამატეთ სხვა ხელფასი"
             value={otherSalaryInput}
             onChange={(event) => setOtherSalaryInput(event.currentTarget.value)}
@@ -491,7 +447,7 @@ export function SalaryTab({ service, onSave }: SalaryTabProps): JSX.Element {
         <Text fw={600} mb="md" p="sm" style={{ backgroundColor: '#E8E8F5', borderRadius: '4px' }}>
           დასახელება
         </Text>
-        <Textarea
+        <EMRTextarea
           placeholder="შეიყვანეთ აღწერა"
           minRows={4}
           autosize
