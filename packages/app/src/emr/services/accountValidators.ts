@@ -156,22 +156,46 @@ function getCountryName(countryCode: string): string {
 /**
  * Validate date format and constraints
  *
- * @param dateString - ISO 8601 date string (YYYY-MM-DD)
+ * @param dateValue - ISO 8601 date string (YYYY-MM-DD) or Date object
  * @param allowFuture - Whether to allow future dates (default: false)
  * @param maxYearsAgo - Maximum years in the past (default: 120)
  * @returns ValidationResult with isValid boolean and optional error message
  *
  * @example
  * validateDate('1986-01-26') // { isValid: true }
+ * validateDate(new Date('1986-01-26')) // { isValid: true }
  * validateDate('2026-01-01', false) // { isValid: false, error: 'Future dates not allowed' }
  * validateDate('1850-01-01') // { isValid: false, error: 'Date too far in the past' }
  */
 export function validateDate(
-  dateString: string,
+  dateValue: Date | string | null | undefined,
   allowFuture: boolean = false,
   maxYearsAgo: number = 120
 ): ValidationResult {
-  if (!dateString || dateString.trim() === '') {
+  // Handle null/undefined
+  if (!dateValue) {
+    // Date is optional
+    return { isValid: true };
+  }
+
+  // Convert Date object to ISO string
+  let dateString: string;
+  if (dateValue instanceof Date) {
+    // Check if valid Date object
+    if (isNaN(dateValue.getTime())) {
+      return {
+        isValid: false,
+        error: 'Invalid date object',
+      };
+    }
+    // Convert to YYYY-MM-DD format (ISO 8601)
+    dateString = dateValue.toISOString().split('T')[0];
+  } else {
+    dateString = dateValue;
+  }
+
+  // Handle empty string
+  if (dateString.trim() === '') {
     // Date is optional
     return { isValid: true };
   }

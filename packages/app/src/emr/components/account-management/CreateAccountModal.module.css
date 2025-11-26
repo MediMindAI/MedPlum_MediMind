@@ -90,9 +90,10 @@
 }
 
 .modalBody {
-  padding: 40px 48px 48px;
+  padding: 40px 48px 120px; /* Generous bottom padding to ensure all buttons are fully visible */
   max-height: calc(85vh - 140px);
-  overflow-y: auto;
+  overflow-y: auto; /* Scrollable modal body */
+  overflow-x: hidden;
   background: linear-gradient(180deg, #fafbfc 0%, #f5f7fa 100%);
 }
 

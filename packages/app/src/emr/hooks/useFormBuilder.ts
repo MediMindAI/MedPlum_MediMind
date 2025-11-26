@@ -74,6 +74,8 @@ export interface FormBuilderState {
   title: string;
   description: string;
   status: 'draft' | 'active' | 'retired';
+  formGroup: string | undefined;
+  formType: string | undefined;
 }
 
 /**
@@ -88,6 +90,8 @@ export type FormBuilderAction =
   | { type: 'SET_TITLE'; title: string }
   | { type: 'SET_DESCRIPTION'; description: string }
   | { type: 'SET_STATUS'; status: 'draft' | 'active' | 'retired' }
+  | { type: 'SET_FORM_GROUP'; formGroup: string | undefined }
+  | { type: 'SET_FORM_TYPE'; formType: string | undefined }
   | { type: 'UNDO' }
   | { type: 'REDO' }
   | { type: 'RESET'; state: FormBuilderState };
@@ -110,6 +114,8 @@ const initialState: FormBuilderState = {
   title: '',
   description: '',
   status: 'draft',
+  formGroup: undefined,
+  formType: undefined,
 };
 
 /**
@@ -218,6 +224,14 @@ function formBuilderReducer(state: HistoryState, action: FormBuilderAction): His
           case 'SET_STATUS':
             draft.status = action.status;
             break;
+
+          case 'SET_FORM_GROUP':
+            draft.formGroup = action.formGroup;
+            break;
+
+          case 'SET_FORM_TYPE':
+            draft.formType = action.formType;
+            break;
         }
       });
 
@@ -252,6 +266,8 @@ export interface FormBuilderActions {
   setTitle: (title: string) => void;
   setDescription: (description: string) => void;
   setStatus: (status: 'draft' | 'active' | 'retired') => void;
+  setFormGroup: (formGroup: string | undefined) => void;
+  setFormType: (formType: string | undefined) => void;
 }
 
 /**
@@ -315,6 +331,8 @@ export function useFormBuilder(initialFormState?: Partial<FormBuilderState>) {
       setTitle: (title: string) => dispatch({ type: 'SET_TITLE', title }),
       setDescription: (description: string) => dispatch({ type: 'SET_DESCRIPTION', description }),
       setStatus: (status: 'draft' | 'active' | 'retired') => dispatch({ type: 'SET_STATUS', status }),
+      setFormGroup: (formGroup: string | undefined) => dispatch({ type: 'SET_FORM_GROUP', formGroup }),
+      setFormType: (formType: string | undefined) => dispatch({ type: 'SET_FORM_TYPE', formType }),
     }),
     []
   );
@@ -350,6 +368,8 @@ export function useFormBuilder(initialFormState?: Partial<FormBuilderState>) {
         description: state.description,
         status: state.status,
         fields: state.fields,
+        formGroup: state.formGroup,
+        formType: state.formType,
         lastModified: new Date().toISOString(),
       };
 

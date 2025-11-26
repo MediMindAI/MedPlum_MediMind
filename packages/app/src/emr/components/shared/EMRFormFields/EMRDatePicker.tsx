@@ -156,6 +156,8 @@ export const EMRDatePicker = forwardRef<HTMLInputElement, EMRDatePickerProps>(
           popoverProps={{
             shadow: 'md',
             offset: 4,
+            zIndex: 10001, // Ensure popover appears above modals (z-index: 10000)
+            withinPortal: true, // Render outside modal DOM to avoid overflow clipping
           }}
           classNames={{
             input: inputClasses,

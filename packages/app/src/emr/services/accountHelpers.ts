@@ -148,15 +148,15 @@ export function practitionerToFormValues(
   return {
     firstName: name?.given?.[0] || '',
     lastName: name?.family || '',
-    fatherName: name?.given?.[1], // Patronymic as second given name
+    fatherName: name?.given?.[1] || '', // Patronymic as second given name
     gender: practitioner.gender || 'unknown',
-    birthDate: practitioner.birthDate,
+    birthDate: practitioner.birthDate || '', // Ensure empty string instead of undefined
 
     email: getTelecomValue(practitioner, 'email', 'work') || '',
-    phoneNumber: getTelecomValue(practitioner, 'phone', 'work'),
-    workPhone: getTelecomValue(practitioner, 'phone', 'work'),
+    phoneNumber: getTelecomValue(practitioner, 'phone', 'work') || '', // Ensure empty string
+    workPhone: getTelecomValue(practitioner, 'phone', 'work') || '', // Ensure empty string
 
-    staffId: getStaffId(practitioner),
+    staffId: getStaffId(practitioner) || '', // Ensure empty string
 
     // Single role for MVP
     role: primaryRole?.code?.[0]?.coding?.[0]?.code,

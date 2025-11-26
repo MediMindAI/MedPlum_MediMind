@@ -168,13 +168,33 @@ export function toQuestionnaire(formData: FormTemplate): Questionnaire {
   }
 
   // Add created by as extension
+  const extensions: Extension[] = [];
+
   if (formData.createdBy) {
-    questionnaire.extension = [
-      {
-        url: 'http://medimind.ge/created-by',
-        valueString: formData.createdBy,
-      },
-    ];
+    extensions.push({
+      url: 'http://medimind.ge/created-by',
+      valueString: formData.createdBy,
+    });
+  }
+
+  // Add form group extension
+  if (formData.formGroup) {
+    extensions.push({
+      url: 'http://medimind.ge/form-group',
+      valueString: formData.formGroup,
+    });
+  }
+
+  // Add form type extension
+  if (formData.formType) {
+    extensions.push({
+      url: 'http://medimind.ge/form-type',
+      valueString: formData.formType,
+    });
+  }
+
+  if (extensions.length > 0) {
+    questionnaire.extension = extensions;
   }
 
   return questionnaire;
@@ -346,6 +366,8 @@ export function fromQuestionnaire(questionnaire: Questionnaire): FormTemplate {
       ?.filter((tag) => tag.system === 'http://medimind.ge/form-category')
       .map((tag) => tag.code || ''),
     createdBy: questionnaire.extension?.find((ext) => ext.url === 'http://medimind.ge/created-by')?.valueString,
+    formGroup: questionnaire.extension?.find((ext) => ext.url === 'http://medimind.ge/form-group')?.valueString,
+    formType: questionnaire.extension?.find((ext) => ext.url === 'http://medimind.ge/form-type')?.valueString,
   };
 
   return formData;

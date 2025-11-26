@@ -179,7 +179,7 @@ export async function getAccountAuditHistory(
 ): Promise<AuditLogEntryExtended[]> {
   const searchParams: Record<string, string> = {
     entity: `Practitioner/${practitionerId}`,
-    _sort: '-recorded',
+    _sort: '-date', // Use 'date' search parameter which searches the 'recorded' field
     _count: '100',
   };
 

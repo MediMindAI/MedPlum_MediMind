@@ -20,6 +20,10 @@ export interface FormTemplate {
   resourceType?: 'Questionnaire';
   // Form-level styling for container and title
   formStyling?: FormStyling;
+  // Form group from service-groups.json (optional)
+  formGroup?: string;
+  // Form type: ambulatory, stationary, etc. (optional)
+  formType?: string;
 }
 
 /**

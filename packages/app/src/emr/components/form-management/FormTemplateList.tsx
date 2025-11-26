@@ -10,6 +10,8 @@ import { useTranslation } from '../../hooks/useTranslation';
 import { useDebouncedValue } from '@mantine/hooks';
 import { EMRTable } from '../shared/EMRTable';
 import type { EMRTableColumn } from '../shared/EMRTable';
+import serviceGroupsData from '../../translations/service-groups.json';
+import formTypesData from '../../translations/form-types.json';
 
 /**
  * Props for FormTemplateList component
@@ -116,6 +118,22 @@ export function FormTemplateList({
     }
   };
 
+  // Get form group name from extension
+  const getFormGroupName = (questionnaire: Questionnaire): string => {
+    const groupValue = questionnaire.extension?.find((ext) => ext.url === 'http://medimind.ge/form-group')?.valueString;
+    if (!groupValue) return '-';
+    const group = serviceGroupsData.groups.find((g) => g.value === groupValue);
+    return group ? group[lang as 'ka' | 'en' | 'ru'] : '-';
+  };
+
+  // Get form type name from extension
+  const getFormTypeName = (questionnaire: Questionnaire): string => {
+    const typeValue = questionnaire.extension?.find((ext) => ext.url === 'http://medimind.ge/form-type')?.valueString;
+    if (!typeValue) return '-';
+    const type = formTypesData.formTypes.find((t) => t.value === typeValue);
+    return type ? type[lang as 'ka' | 'en' | 'ru'] : '-';
+  };
+
   // Filter and search questionnaires
   const filteredQuestionnaires = useMemo(() => {
     let filtered = questionnaires.filter((q): q is FormTableRow => !!q.id);
@@ -170,6 +188,26 @@ export function FormTemplateList({
       render: (row) => (
         <Text size="sm" c="dimmed" lineClamp={1}>
           {row.description || '-'}
+        </Text>
+      ),
+    },
+    {
+      key: 'formGroup',
+      title: t('formManagement.columns.group'),
+      width: 150,
+      render: (row) => (
+        <Text size="sm">
+          {getFormGroupName(row)}
+        </Text>
+      ),
+    },
+    {
+      key: 'formType',
+      title: t('formManagement.columns.formType'),
+      width: 150,
+      render: (row) => (
+        <Text size="sm">
+          {getFormTypeName(row)}
         </Text>
       ),
     },

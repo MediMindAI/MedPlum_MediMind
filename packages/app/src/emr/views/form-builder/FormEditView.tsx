@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Group, Button, Stack, Badge, Text, Skeleton, Alert, ThemeIcon, Paper } from '@mantine/core';
-import { EMRTextInput, EMRTextarea } from '../../components/shared/EMRFormFields';
+import { Box, Group, Button, Stack, Badge, Text, Skeleton, Alert, ThemeIcon, Paper, Grid } from '@mantine/core';
+import { EMRTextInput } from '../../components/shared/EMRFormFields';
 import { IconArrowLeft, IconDeviceFloppy, IconRotate, IconRotateClockwise, IconAlertCircle, IconForms, IconEye } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
 import { notifications } from '@mantine/notifications';
@@ -13,6 +13,8 @@ import { useFormBuilder } from '../../hooks/useFormBuilder';
 import { FormBuilderLayout } from '../../components/form-builder/FormBuilderLayout';
 import { useTranslation } from '../../hooks/useTranslation';
 import { getQuestionnaire, updateWithVersioning, questionnaireToFormTemplate } from '../../services/formBuilderService';
+import FormGroupSelect from '../../components/form-management/FormGroupSelect';
+import FormTypeSelect from '../../components/form-management/FormTypeSelect';
 
 /**
  * FormEditView Component
@@ -69,6 +71,8 @@ export function FormEditView(): JSX.Element {
           description: formTemplate.description || '',
           status: formTemplate.status,
           fields: formTemplate.fields,
+          formGroup: formTemplate.formGroup,
+          formType: formTemplate.formType,
           selectedFieldId: null,
         });
 
@@ -106,6 +110,8 @@ export function FormEditView(): JSX.Element {
         description: state.description,
         status: state.status,
         fields: state.fields,
+        formGroup: state.formGroup,
+        formType: state.formType,
         version: questionnaire.version,
       };
 
@@ -379,15 +385,16 @@ export function FormEditView(): JSX.Element {
       {/* Form Metadata Section */}
       <Box
         style={{
-          padding: 'var(--mantine-spacing-md) var(--mantine-spacing-xl)',
+          padding: '4px 24px',
           backgroundColor: 'white',
           borderBottom: '1px solid var(--emr-gray-200)',
         }}
       >
-        <Group grow align="flex-start" gap="lg">
-          <EMRTextInput
+        <Grid gutter="sm">
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+            <EMRTextInput
             label={
-              <Text size="sm" fw={500} c="var(--emr-gray-600)" mb={4}>
+              <Text size="sm" fw={500} c="var(--emr-gray-600)">
                 Form Title <span style={{ color: 'var(--emr-secondary)' }}>*</span>
               </Text>
             }
@@ -395,7 +402,7 @@ export function FormEditView(): JSX.Element {
             value={state.title}
             onChange={(value) => actions.setTitle(value)}
             required
-            size="md"
+            size="sm"
             styles={{
               input: {
                 fontSize: '1rem',
@@ -408,18 +415,18 @@ export function FormEditView(): JSX.Element {
               },
             }}
           />
-          <EMRTextarea
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+          <EMRTextInput
             label={
-              <Text size="sm" fw={500} c="var(--emr-gray-600)" mb={4}>
+              <Text size="sm" fw={500} c="var(--emr-gray-600)">
                 Description
               </Text>
             }
             placeholder={t('formUI.builder.enterDescription')}
             value={state.description}
             onChange={(value) => actions.setDescription(value)}
-            minRows={1}
-            maxRows={3}
-            size="md"
+            size="sm"
             styles={{
               input: {
                 border: '1px solid var(--emr-gray-200)',
@@ -430,35 +437,22 @@ export function FormEditView(): JSX.Element {
               },
             }}
           />
-        </Group>
-
-        {/* Info bar */}
-        <Group
-          mt="sm"
-          gap="lg"
-          style={{
-            padding: '8px 12px',
-            backgroundColor: 'var(--emr-gray-50)',
-            borderRadius: 'var(--emr-border-radius)',
-            border: '1px solid var(--emr-gray-200)',
-          }}
-        >
-          <Text size="xs" c="var(--emr-gray-500)">
-            ID: <span style={{ color: 'var(--emr-gray-700)', fontFamily: 'monospace' }}>{id}</span>
-          </Text>
-          <Text size="xs" c="var(--emr-gray-500)">
-            Fields: <span style={{ color: 'var(--emr-secondary)', fontWeight: 600 }}>{state.fields.length}</span>
-          </Text>
-          <Text size="xs" c="var(--emr-gray-500)">
-            Selected: <span style={{ color: 'var(--emr-gray-700)' }}>{state.selectedFieldId || 'None'}</span>
-          </Text>
-          <Text size="xs" c="var(--emr-gray-500)">
-            Can Undo: <span style={{ color: canUndo ? 'var(--emr-secondary)' : 'var(--emr-gray-400)' }}>{canUndo ? 'Yes' : 'No'}</span>
-          </Text>
-          <Text size="xs" c="var(--emr-gray-500)">
-            Can Redo: <span style={{ color: canRedo ? 'var(--emr-secondary)' : 'var(--emr-gray-400)' }}>{canRedo ? 'Yes' : 'No'}</span>
-          </Text>
-        </Group>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+            <FormGroupSelect
+              value={state.formGroup}
+              onChange={(value) => actions.setFormGroup(value || undefined)}
+              size="sm"
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+            <FormTypeSelect
+              value={state.formType}
+              onChange={(value) => actions.setFormType(value || undefined)}
+              size="sm"
+            />
+          </Grid.Col>
+        </Grid>
       </Box>
 
       {/* Form Builder Layout - Integrated with useFormBuilder state */}

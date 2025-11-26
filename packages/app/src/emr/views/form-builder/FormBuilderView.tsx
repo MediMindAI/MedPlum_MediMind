@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { Box, Group, Button, Badge, Text, ThemeIcon, ActionIcon, Tooltip } from '@mantine/core';
+import { Box, Group, Button, Badge, Text, ThemeIcon, ActionIcon, Tooltip, Stack, Grid } from '@mantine/core';
 import { EMRTextInput } from '../../components/shared/EMRFormFields';
 import { IconArrowLeft, IconDeviceFloppy, IconArrowBackUp, IconArrowForwardUp, IconForms } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { useFormBuilder } from '../../hooks/useFormBuilder';
 import { FormBuilderLayout } from '../../components/form-builder/FormBuilderLayout';
 import { useTranslation } from '../../hooks/useTranslation';
+import FormGroupSelect from '../../components/form-management/FormGroupSelect';
+import FormTypeSelect from '../../components/form-management/FormTypeSelect';
 
 /**
  * FormBuilderView Component
@@ -282,26 +284,46 @@ export function FormBuilderView(): JSX.Element {
       {/* Compact Form Metadata Section */}
       <Box
         style={{
-          padding: '12px 24px',
+          padding: '4px 24px',
           background: 'white',
           borderBottom: '1px solid var(--emr-gray-200)',
         }}
       >
-        <Group grow align="center" gap="lg">
-          <EMRTextInput
-            label={t('formUI.labels.title')}
-            placeholder={t('formUI.builder.enterTitle')}
-            value={state.title}
-            onChange={(value) => actions.setTitle(value)}
-            required
-          />
-          <EMRTextInput
-            label={t('formUI.labels.description')}
-            placeholder={t('formUI.builder.enterDescription')}
-            value={state.description}
-            onChange={(value) => actions.setDescription(value)}
-          />
-        </Group>
+        <Grid gutter="sm">
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+            <EMRTextInput
+              label={t('formUI.labels.title')}
+              placeholder={t('formUI.builder.enterTitle')}
+              value={state.title}
+              onChange={(value) => actions.setTitle(value)}
+              required
+              size="sm"
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+            <EMRTextInput
+              label={t('formUI.labels.description')}
+              placeholder={t('formUI.builder.enterDescription')}
+              value={state.description}
+              onChange={(value) => actions.setDescription(value)}
+              size="sm"
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+            <FormGroupSelect
+              value={state.formGroup}
+              onChange={(value) => actions.setFormGroup(value || undefined)}
+              size="sm"
+            />
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }}>
+            <FormTypeSelect
+              value={state.formType}
+              onChange={(value) => actions.setFormType(value || undefined)}
+              size="sm"
+            />
+          </Grid.Col>
+        </Grid>
       </Box>
 
       {/* Form Builder Layout - Integrated with useFormBuilder state */}
