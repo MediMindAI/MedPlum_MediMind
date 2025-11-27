@@ -1,14 +1,17 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
-import { Modal, Button, Group, Box, ScrollArea, Text, Progress, Stack } from '@mantine/core';
+import { Modal, Button, Group, Box, ScrollArea, Text, Progress, Stack, Divider } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
 import { IconShieldLock, IconKey, IconCheck, IconSparkles } from '@tabler/icons-react';
 import { RoleForm } from './RoleForm';
+import { RoleTemplateSelector } from './RoleTemplateSelector';
 import { useRoleForm } from '../../hooks/useRoleForm';
 import { createRole } from '../../services/roleService';
 import { useTranslation } from '../../hooks/useTranslation';
+import type { RoleTemplate } from '../../types/role-management';
+import { useState } from 'react';
 
 interface RoleCreateModalProps {
   opened: boolean;
@@ -30,6 +33,7 @@ export function RoleCreateModal({ opened, onClose, onSuccess, templateCode }: Ro
   const medplum = useMedplum();
   const { t, lang } = useTranslation();
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const [selectedTemplateCode, setSelectedTemplateCode] = useState<string | undefined>(templateCode || undefined);
 
   const { form, handleSubmit } = useRoleForm({
     onSubmit: async (values) => {
@@ -53,6 +57,22 @@ export function RoleCreateModal({ opened, onClose, onSuccess, templateCode }: Ro
       }
     },
   });
+
+  // Handle template selection
+  const handleTemplateSelect = (template: RoleTemplate): void => {
+    setSelectedTemplateCode(template.code);
+
+    // Populate form with template values
+    form.setFieldValue('name', template.name);
+    form.setFieldValue('description', template.description);
+    form.setFieldValue('permissions', template.defaultPermissions);
+
+    // Optionally set a default code based on template
+    // This can be edited by the user
+    if (!form.values.code) {
+      form.setFieldValue('code', template.code);
+    }
+  };
 
   // Get permission count for display
   const permissionCount = form.values.permissions?.length || 0;
@@ -87,6 +107,7 @@ export function RoleCreateModal({ opened, onClose, onSuccess, templateCode }: Ro
       fullScreen={isMobile}
       centered
       padding={0}
+      zIndex={1100}
       styles={{
         header: {
           display: 'none',
@@ -206,7 +227,35 @@ export function RoleCreateModal({ opened, onClose, onSuccess, templateCode }: Ro
             type="always"
           >
             <Box p="xl" px={36} py={32}>
-              <RoleForm form={form} hidePermissions={false} />
+              <Stack gap="lg">
+                {/* Role Template Selector */}
+                <Box
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(43, 108, 176, 0.05), rgba(99, 179, 237, 0.03))',
+                    border: '1px solid var(--emr-gray-200)',
+                    borderRadius: 12,
+                    padding: 20,
+                  }}
+                >
+                  <RoleTemplateSelector
+                    onSelect={handleTemplateSelect}
+                    selectedCode={selectedTemplateCode}
+                    size="md"
+                  />
+                  <Text size="xs" c="dimmed" mt="xs" style={{ fontSize: 12 }}>
+                    {lang === 'ka'
+                      ? 'შაბლონი ავტომატურად შეავსებს როლის დეტალებს და უფლებებს'
+                      : lang === 'ru'
+                      ? 'Шаблон автоматически заполнит детали роли и разрешения'
+                      : 'Template will automatically populate role details and permissions'}
+                  </Text>
+                </Box>
+
+                <Divider />
+
+                {/* Role Form */}
+                <RoleForm form={form} hidePermissions={false} />
+              </Stack>
             </Box>
           </ScrollArea>
 

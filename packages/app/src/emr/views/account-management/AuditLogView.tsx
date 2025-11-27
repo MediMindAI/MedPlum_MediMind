@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { useMemo, useState } from 'react';
-import { Stack, Group, Text, Box, SimpleGrid } from '@mantine/core';
+import React, { useMemo, useState } from 'react';
+import { Stack, Group, Text, Box, Title, Paper, Collapse, ActionIcon } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import type { AuditLogEntryExtended } from '../../types/account-management';
 import {
@@ -14,6 +14,10 @@ import {
   IconAlertTriangle,
   IconX,
   IconDownload,
+  IconChartBar,
+  IconChevronDown,
+  IconChevronUp,
+  IconFilter,
 } from '@tabler/icons-react';
 import { AuditLogTable } from '../../components/account-management/AuditLogTable';
 import { AuditLogFilters } from '../../components/account-management/AuditLogFilters';
@@ -50,8 +54,12 @@ interface StatCardData {
  * @returns AuditLogView component
  */
 export function AuditLogView(): JSX.Element {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const { events, loading, total, page, pageSize, setPage, filters, setFilters } = useAuditLogs();
+
+  // Collapsible sections state (default collapsed)
+  const [statsExpanded, setStatsExpanded] = useState(false);
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
 
   // State for detail drawer
   const [selectedEvent, setSelectedEvent] = useState<AuditLogEntryExtended | null>(null);
@@ -177,61 +185,163 @@ export function AuditLogView(): JSX.Element {
     }
   };
 
-  /**
-   * Get variant class for stat card
-   */
-  const getStatCardClass = (variant: string): string => {
-    switch (variant) {
-      case 'total':
-        return styles.statCardTotal;
-      case 'success':
-        return styles.statCardSuccess;
-      case 'warning':
-        return styles.statCardWarning;
-      case 'error':
-        return styles.statCardError;
-      default:
-        return styles.statCardTotal;
-    }
-  };
-
   return (
     <Box className={styles.auditContainer}>
       <Stack gap="xl">
-        {/* Premium Header Card */}
-        <Box className={styles.headerCard}>
-          <Box className={styles.headerGradient}>
-            <Group gap={18} align="center">
-              <Box className={styles.headerIconBadge}>
-                <IconHistory size={28} stroke={1.8} color="white" />
+        {/* Page Header - Glassmorphism Design (matching Accounts/Roles) */}
+        <Box className={styles.headerSection}>
+          <Group justify="space-between" align="center" wrap="wrap" gap="md">
+            <Group gap="md" align="center">
+              {/* Icon container */}
+              <Box className={styles.headerIcon}>
+                <IconHistory size={18} stroke={1.8} />
               </Box>
-              <Box>
-                <Text component="h2" className={styles.headerTitle}>
-                  {t('accountManagement.audit.title')}
-                </Text>
-                <Text className={styles.headerSubtitle}>
-                  Track system activity and security events
-                </Text>
-              </Box>
-            </Group>
-          </Box>
 
-          {/* Quick Stats */}
-          <Box className={styles.headerBody}>
-            <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md" className={styles.statsGrid}>
-              {stats.map((stat, index) => (
-                <Box key={stat.label} className={`${styles.statCard} ${getStatCardClass(stat.variant)}`}>
-                  <Box className={styles.statIcon}>{stat.icon}</Box>
-                  <Text className={styles.statValue}>{loading ? '-' : stat.value.toLocaleString()}</Text>
-                  <Text className={styles.statLabel}>{stat.label}</Text>
+              <Box>
+                <Title order={3} className={styles.headerTitle}>
+                  {t('accountManagement.audit.title')}
+                </Title>
+                <Text className={styles.headerSubtitle}>
+                  {lang === 'ka' ? 'სისტემის აქტივობისა და უსაფრთხოების თვალყურის დევნება' :
+                   lang === 'ru' ? 'Отслеживание активности системы и событий безопасности' :
+                   'Track system activity and security events'}
+                </Text>
+              </Box>
+
+              {total > 0 && (
+                <Box className={styles.auditBadge}>
+                  {total} {lang === 'ka' ? 'მოვლენა' : lang === 'ru' ? 'событий' : 'events'}
                 </Box>
-              ))}
-            </SimpleGrid>
-          </Box>
+              )}
+            </Group>
+          </Group>
         </Box>
 
-        {/* Filters Section */}
-        <AuditLogFilters filters={filters} onChange={setFilters} />
+        {/* Stats Section - Collapsible (compact inline design) */}
+        <Paper
+          p="sm"
+          style={{
+            background: 'rgba(255, 255, 255, 0.95)',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.6)',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06)',
+          }}
+        >
+          <Group
+            gap="md"
+            align="center"
+            mb={statsExpanded ? 'sm' : 0}
+            onClick={() => setStatsExpanded(!statsExpanded)}
+            style={{ cursor: 'pointer', userSelect: 'none' }}
+          >
+            <Box className={styles.sectionIcon}>
+              <IconChartBar size={18} stroke={2} />
+            </Box>
+            <Text fw={600} size="sm" c="var(--emr-text-primary)" style={{ letterSpacing: '-0.2px' }}>
+              {t('accountManagement.dashboard.metrics')}
+            </Text>
+            <ActionIcon
+              variant="subtle"
+              color="gray"
+              size="sm"
+              style={{ marginLeft: 'auto' }}
+            >
+              {statsExpanded ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+            </ActionIcon>
+          </Group>
+          <Collapse in={statsExpanded}>
+            {/* Compact inline stats bar */}
+            <Box
+              style={{
+                background: 'rgba(255, 255, 255, 0.95)',
+                border: '1px solid var(--emr-gray-200)',
+                borderRadius: '10px',
+                padding: '10px 20px',
+              }}
+            >
+              <Group justify="space-between" wrap="nowrap">
+                {stats.map((stat, index) => (
+                  <React.Fragment key={stat.label}>
+                    {index > 0 && <Box style={{ width: '1px', height: '28px', background: 'var(--emr-gray-200)' }} />}
+                    <Group gap={8} align="center" wrap="nowrap">
+                      <Box
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '6px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          background: stat.variant === 'total' ? 'rgba(59, 130, 246, 0.1)' :
+                                      stat.variant === 'success' ? 'rgba(16, 185, 129, 0.1)' :
+                                      stat.variant === 'warning' ? 'rgba(245, 158, 11, 0.1)' :
+                                      'rgba(239, 68, 68, 0.1)',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {stat.variant === 'total' && <IconActivity size={16} color="#3b82f6" stroke={2} />}
+                        {stat.variant === 'success' && <IconShieldCheck size={16} color="#10b981" stroke={2} />}
+                        {stat.variant === 'warning' && <IconAlertTriangle size={16} color="#f59e0b" stroke={2} />}
+                        {stat.variant === 'error' && <IconX size={16} color="#ef4444" stroke={2} />}
+                      </Box>
+                      <Text
+                        fw={700}
+                        style={{
+                          fontSize: '18px',
+                          lineHeight: 1,
+                          fontVariantNumeric: 'tabular-nums',
+                          color: 'var(--emr-text-primary)',
+                        }}
+                      >
+                        {loading ? '-' : stat.value.toLocaleString()}
+                      </Text>
+                      <Text size="xs" fw={500} c="dimmed" style={{ whiteSpace: 'nowrap' }}>
+                        {stat.label}
+                      </Text>
+                    </Group>
+                  </React.Fragment>
+                ))}
+              </Group>
+            </Box>
+          </Collapse>
+        </Paper>
+
+        {/* Filters Section - Collapsible */}
+        <Paper
+          p="sm"
+          style={{
+            background: 'rgba(255, 255, 255, 0.95)',
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 255, 255, 0.6)',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06)',
+          }}
+        >
+          <Group
+            gap="md"
+            align="center"
+            mb={filtersExpanded ? 'sm' : 0}
+            onClick={() => setFiltersExpanded(!filtersExpanded)}
+            style={{ cursor: 'pointer', userSelect: 'none' }}
+          >
+            <Box className={styles.sectionIcon}>
+              <IconFilter size={18} stroke={2} />
+            </Box>
+            <Text fw={600} size="sm" c="var(--emr-text-primary)" style={{ letterSpacing: '-0.2px' }}>
+              {lang === 'ka' ? 'ძიება და ფილტრები' : lang === 'ru' ? 'Поиск и фильтры' : 'Search and Filters'}
+            </Text>
+            <ActionIcon
+              variant="subtle"
+              color="gray"
+              size="sm"
+              style={{ marginLeft: 'auto' }}
+            >
+              {filtersExpanded ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+            </ActionIcon>
+          </Group>
+          <Collapse in={filtersExpanded}>
+            <AuditLogFilters filters={filters} onChange={setFilters} inline />
+          </Collapse>
+        </Paper>
 
         {/* Audit Log Table Card */}
         <Box className={styles.tableCard}>

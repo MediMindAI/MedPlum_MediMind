@@ -79,12 +79,18 @@ export function RoleTable({ roles, loading, onEdit, onDelete, onDeactivate, onRe
       title: t('roleManagement.roleName'),
       sortable: true,
       minWidth: 150,
-      render: (role) => (
-        <>
-          <Text fw={500}>{role.name}</Text>
-          <Text size="xs" c="dimmed">{role.code}</Text>
-        </>
-      ),
+      render: (role) => {
+        // Try to get translated role name, fallback to stored name
+        const translatedName = t(`roles.${role.code}`) !== `roles.${role.code}`
+          ? t(`roles.${role.code}`)
+          : role.name;
+        return (
+          <>
+            <Text fw={500}>{translatedName}</Text>
+            <Text size="xs" c="dimmed">{role.code}</Text>
+          </>
+        );
+      },
     },
     {
       key: 'description',

@@ -5,6 +5,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
+import { MedplumProvider } from '@medplum/react-hooks';
+import { MockClient } from '@medplum/mock';
 import { PatientHistoryTable } from './PatientHistoryTable';
 import type { VisitTableRow } from '../../types/patient-history';
 
@@ -15,7 +17,19 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
+// Mock useActionPermission hook to allow all actions by default
+jest.mock('../../hooks/useActionPermission', () => ({
+  useActionPermission: () => ({
+    canView: true,
+    canCreate: true,
+    canEdit: true,
+    canDelete: true,
+    loading: false,
+  }),
+}));
+
 describe('PatientHistoryTable', () => {
+  let medplum: MockClient;
   const mockOnEdit = jest.fn();
   const mockOnDelete = jest.fn();
   const mockOnSort = jest.fn();
@@ -58,6 +72,7 @@ describe('PatientHistoryTable', () => {
   ];
 
   beforeEach(() => {
+    medplum = new MockClient();
     localStorage.clear();
     localStorage.setItem('emrLanguage', 'ka');
     jest.clearAllMocks();
@@ -65,9 +80,11 @@ describe('PatientHistoryTable', () => {
 
   const renderWithProviders = (component: React.ReactElement) => {
     return render(
-      <MantineProvider>
-        <MemoryRouter>{component}</MemoryRouter>
-      </MantineProvider>
+      <MedplumProvider medplum={medplum}>
+        <MantineProvider>
+          <MemoryRouter>{component}</MemoryRouter>
+        </MantineProvider>
+      </MedplumProvider>
     );
   };
 

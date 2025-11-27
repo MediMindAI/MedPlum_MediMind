@@ -17,6 +17,8 @@ export interface AuditLogFiltersProps {
   filters: AuditLogFiltersType;
   /** Callback when filters change */
   onChange: (filters: AuditLogFiltersType) => void;
+  /** If true, render without wrapper card (for embedding in collapsible sections) */
+  inline?: boolean;
 }
 
 /**
@@ -53,7 +55,7 @@ const OUTCOME_OPTIONS = [
  * @param props - Component props
  * @returns AuditLogFilters component
  */
-export function AuditLogFilters({ filters, onChange }: AuditLogFiltersProps): JSX.Element {
+export function AuditLogFilters({ filters, onChange, inline = false }: AuditLogFiltersProps): JSX.Element {
   const { t } = useTranslation();
 
   /**
@@ -130,6 +132,120 @@ export function AuditLogFilters({ filters, onChange }: AuditLogFiltersProps): JS
     filters.actorId,
   ].filter(Boolean).length;
 
+  // Filter fields content (shared between inline and wrapped modes)
+  const filterFieldsContent = (
+    <Grid gutter="md">
+      {/* Date From */}
+      <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+        <Box className={inline ? undefined : styles.filterField}>
+          <Text className={styles.filterLabel}>
+            <IconCalendarEvent size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+            Date From
+          </Text>
+          <EMRDatePicker
+            placeholder="Select start date"
+            value={filters.dateFrom ?? null}
+            onChange={handleDateFromChange}
+            maxDate={filters.dateTo ?? new Date()}
+          />
+        </Box>
+      </Grid.Col>
+
+      {/* Date To */}
+      <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+        <Box className={inline ? undefined : styles.filterField}>
+          <Text className={styles.filterLabel}>
+            <IconCalendarEvent size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+            Date To
+          </Text>
+          <EMRDatePicker
+            placeholder="Select end date"
+            value={filters.dateTo ?? null}
+            onChange={handleDateToChange}
+            minDate={filters.dateFrom ?? undefined}
+            maxDate={new Date()}
+          />
+        </Box>
+      </Grid.Col>
+
+      {/* Action Filter */}
+      <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+        <Box className={inline ? undefined : styles.filterField}>
+          <Text className={styles.filterLabel}>
+            <IconAdjustments size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+            {t('accountManagement.audit.action')}
+          </Text>
+          <Select
+            aria-label="Action"
+            placeholder="All Actions"
+            data={ACTION_OPTIONS}
+            value={filters.action || null}
+            onChange={handleActionChange}
+            clearable
+            size="sm"
+            leftSection={<IconAdjustments size={16} style={{ color: 'var(--emr-gray-400)' }} />}
+            styles={{
+              input: {
+                minHeight: '42px',
+                borderRadius: '10px',
+                border: '1.5px solid var(--emr-gray-200)',
+                background: 'white',
+                transition: 'all 0.2s ease',
+                '&:focus': {
+                  borderColor: 'var(--emr-secondary)',
+                  boxShadow: '0 0 0 3px rgba(43, 108, 176, 0.12)',
+                },
+              },
+            }}
+          />
+        </Box>
+      </Grid.Col>
+
+      {/* Outcome Filter */}
+      <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
+        <Box className={inline ? undefined : styles.filterField}>
+          <Text className={styles.filterLabel}>
+            <IconAlertCircle size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+            {t('accountManagement.audit.outcome')}
+          </Text>
+          <Select
+            aria-label="Outcome"
+            placeholder="All Outcomes"
+            data={OUTCOME_OPTIONS}
+            value={filters.outcome !== undefined ? filters.outcome.toString() : null}
+            onChange={handleOutcomeChange}
+            clearable
+            size="sm"
+            leftSection={<IconAlertCircle size={16} style={{ color: 'var(--emr-gray-400)' }} />}
+            styles={{
+              input: {
+                minHeight: '42px',
+                borderRadius: '10px',
+                border: '1.5px solid var(--emr-gray-200)',
+                background: 'white',
+                transition: 'all 0.2s ease',
+                '&:focus': {
+                  borderColor: 'var(--emr-secondary)',
+                  boxShadow: '0 0 0 3px rgba(43, 108, 176, 0.12)',
+                },
+              },
+            }}
+          />
+        </Box>
+      </Grid.Col>
+    </Grid>
+  );
+
+  // Inline mode: just render the filter fields without wrapper
+  if (inline) {
+    return (
+      <Box data-testid="audit-filters">
+        {filterFieldsContent}
+      </Box>
+    );
+  }
+
+  // Wrapped mode: full card with header
   return (
     <Box className={styles.filtersCard} data-testid="audit-filters">
       {/* Premium Header */}
@@ -169,106 +285,7 @@ export function AuditLogFilters({ filters, onChange }: AuditLogFiltersProps): JS
 
       {/* Filter Fields */}
       <Box className={styles.filtersBody}>
-        <Grid gutter="md">
-          {/* Date From */}
-          <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box className={styles.filterField}>
-              <Text className={styles.filterLabel}>
-                <IconCalendarEvent size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
-                Date From
-              </Text>
-              <EMRDatePicker
-                placeholder="Select start date"
-                value={filters.dateFrom ?? null}
-                onChange={handleDateFromChange}
-                maxDate={filters.dateTo ?? new Date()}
-              />
-            </Box>
-          </Grid.Col>
-
-          {/* Date To */}
-          <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box className={styles.filterField}>
-              <Text className={styles.filterLabel}>
-                <IconCalendarEvent size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
-                Date To
-              </Text>
-              <EMRDatePicker
-                placeholder="Select end date"
-                value={filters.dateTo ?? null}
-                onChange={handleDateToChange}
-                minDate={filters.dateFrom ?? undefined}
-                maxDate={new Date()}
-              />
-            </Box>
-          </Grid.Col>
-
-          {/* Action Filter */}
-          <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box className={styles.filterField}>
-              <Text className={styles.filterLabel}>
-                <IconAdjustments size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
-                {t('accountManagement.audit.action')}
-              </Text>
-              <Select
-                aria-label="Action"
-                placeholder="All Actions"
-                data={ACTION_OPTIONS}
-                value={filters.action || null}
-                onChange={handleActionChange}
-                clearable
-                size="sm"
-                leftSection={<IconAdjustments size={16} style={{ color: 'var(--emr-gray-400)' }} />}
-                styles={{
-                  input: {
-                    minHeight: '42px',
-                    borderRadius: '10px',
-                    border: '1.5px solid var(--emr-gray-200)',
-                    background: 'white',
-                    transition: 'all 0.2s ease',
-                    '&:focus': {
-                      borderColor: 'var(--emr-secondary)',
-                      boxShadow: '0 0 0 3px rgba(43, 108, 176, 0.12)',
-                    },
-                  },
-                }}
-              />
-            </Box>
-          </Grid.Col>
-
-          {/* Outcome Filter */}
-          <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
-            <Box className={styles.filterField}>
-              <Text className={styles.filterLabel}>
-                <IconAlertCircle size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} />
-                {t('accountManagement.audit.outcome')}
-              </Text>
-              <Select
-                aria-label="Outcome"
-                placeholder="All Outcomes"
-                data={OUTCOME_OPTIONS}
-                value={filters.outcome !== undefined ? filters.outcome.toString() : null}
-                onChange={handleOutcomeChange}
-                clearable
-                size="sm"
-                leftSection={<IconAlertCircle size={16} style={{ color: 'var(--emr-gray-400)' }} />}
-                styles={{
-                  input: {
-                    minHeight: '42px',
-                    borderRadius: '10px',
-                    border: '1.5px solid var(--emr-gray-200)',
-                    background: 'white',
-                    transition: 'all 0.2s ease',
-                    '&:focus': {
-                      borderColor: 'var(--emr-secondary)',
-                      boxShadow: '0 0 0 3px rgba(43, 108, 176, 0.12)',
-                    },
-                  },
-                }}
-              />
-            </Box>
-          </Grid.Col>
-        </Grid>
+        {filterFieldsContent}
       </Box>
     </Box>
   );

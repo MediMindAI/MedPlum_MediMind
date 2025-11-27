@@ -168,6 +168,7 @@ export function RoleEditModal({ opened, onClose, onSuccess, role }: RoleEditModa
       fullScreen={isMobile}
       centered
       padding={0}
+      zIndex={1100}
       styles={{
         header: {
           display: 'none',

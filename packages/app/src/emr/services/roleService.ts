@@ -472,3 +472,86 @@ export async function getRoleUserCount(medplum: MedplumClient, roleId: string): 
   return bundle.total || 0;
 }
 
+/**
+ * Creates a department-scoped role
+ * Restricts role permissions to resources within a specific department
+ *
+ * @param medplum - Medplum client instance
+ * @param values - Role form values
+ * @param departmentId - Organization ID for department scoping
+ * @returns Created AccessPolicy resource with department scoping
+ */
+export async function createDepartmentScopedRole(
+  medplum: MedplumClient,
+  values: RoleFormValues,
+  departmentId: string
+): Promise<AccessPolicy> {
+  // Import dynamically to avoid circular dependency
+  const { permissionsToAccessPolicy, addDepartmentScoping } = await import('./permissionService');
+
+  // Convert permissions to AccessPolicy resources
+  const resources = permissionsToAccessPolicy(values.permissions);
+
+  // Apply department scoping
+  const scopedResources = addDepartmentScoping(resources, departmentId);
+
+  const tags = [
+    {
+      system: 'http://medimind.ge/role-identifier',
+      code: values.code,
+      display: values.name,
+    },
+    {
+      system: 'http://medimind.ge/role-status',
+      code: values.status,
+      display: values.status === 'active' ? 'Active' : 'Inactive',
+    },
+    {
+      system: 'http://medimind.ge/department-scope',
+      code: departmentId,
+      display: 'Department Scoped',
+    },
+  ];
+
+  // Store description in a tag (AccessPolicy doesn't have a description field)
+  if (values.description) {
+    tags.push({
+      system: 'http://medimind.ge/role-description',
+      code: 'description',
+      display: values.description,
+    });
+  }
+
+  const role: AccessPolicy = {
+    resourceType: 'AccessPolicy',
+    meta: {
+      tag: tags,
+    },
+    resource: scopedResources,
+  };
+
+  const created = await medplum.createResource(role);
+
+  // Create audit event for role creation
+  const { createAuditEvent } = await import('./auditService');
+  try {
+    await createAuditEvent(
+      medplum,
+      'C',
+      { reference: `AccessPolicy/${created.id}`, display: values.name },
+      0, // success
+      `Department-scoped role created: ${values.name} (Department: ${departmentId})`,
+      {
+        roleCode: values.code,
+        departmentId,
+        permissions: values.permissions.join(', '),
+      }
+    );
+    console.log('✅ Audit event created for department-scoped role creation:', values.name);
+  } catch (auditError) {
+    console.error('❌ Failed to create audit event for role creation:', auditError);
+  }
+
+  return created;
+}
+

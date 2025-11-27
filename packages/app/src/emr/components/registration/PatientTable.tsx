@@ -8,6 +8,7 @@ import { useMedplum } from '@medplum/react-hooks';
 import type { Patient } from '@medplum/fhirtypes';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useActionPermission } from '../../hooks/useActionPermission';
 import { PatientEditModal } from './PatientEditModal';
 import { PatientDeletionConfirmationModal } from './PatientDeletionConfirmationModal';
 import { EMRTable } from '../shared/EMRTable';
@@ -39,6 +40,7 @@ interface PatientRow extends Patient {
 export function PatientTable({ searchFilters, onPatientClick, onCountChange }: PatientTableProps) {
   const { t } = useTranslation();
   const medplum = useMedplum();
+  const { canEdit, canDelete } = useActionPermission('patient');
   const [patients, setPatients] = useState<PatientRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [editModalOpened, setEditModalOpened] = useState(false);
@@ -203,15 +205,21 @@ export function PatientTable({ searchFilters, onPatientClick, onCountChange }: P
         actions={(patient) => ({
           primary: {
             icon: IconEdit,
-            label: t('registration.action.edit') || 'რედაქტირება',
+            label: canEdit
+              ? t('registration.action.edit') || 'რედაქტირება'
+              : t('common.noPermission') || 'No permission to edit',
             onClick: () => handleEdit(patient.id),
+            disabled: !canEdit,
           },
           secondary: [
             {
               icon: IconTrash,
-              label: t('registration.action.delete') || 'წაშლა',
+              label: canDelete
+                ? t('registration.action.delete') || 'წაშლა'
+                : t('common.noPermission') || 'No permission to delete',
               color: 'red',
               onClick: () => handleDelete(patient),
+              disabled: !canDelete,
             },
           ],
         })}

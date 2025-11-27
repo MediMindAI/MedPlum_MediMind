@@ -18,18 +18,30 @@
   }
 }
 
-/* ==================== PREMIUM HEADER ==================== */
-.headerCard {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+/* ==================== COMPACT HEADER (matching Accounts/Roles) ==================== */
+.headerSection {
+  padding: 17px 20px;
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px;
+  border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.04),
-    0 8px 24px rgba(26, 54, 93, 0.08);
+    0 4px 16px rgba(26, 54, 93, 0.06);
+  position: relative;
   overflow: hidden;
   animation: slideInDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.headerSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--emr-gradient-submenu);
 }
 
 @keyframes slideInDown {
@@ -43,32 +55,63 @@
   }
 }
 
+.headerIcon {
+  width: 39px;
+  height: 39px;
+  border-radius: 11px;
+  background: var(--emr-gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 11px rgba(26, 54, 93, 0.25);
+  color: white;
+}
+
+.headerTitle {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.35px;
+  background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.headerSubtitle {
+  font-size: 10px;
+  color: var(--emr-gray-500);
+  margin-top: 1px;
+}
+
+.auditBadge {
+  background: linear-gradient(135deg, rgba(43, 108, 176, 0.1), rgba(99, 179, 237, 0.15));
+  color: var(--emr-secondary);
+  border: 1px solid rgba(43, 108, 176, 0.15);
+  font-weight: 600;
+  font-size: 11px;
+  padding: 6px 11px;
+  border-radius: 14px;
+}
+
+/* Legacy header styles (kept for backwards compatibility) */
+.headerCard {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(26, 54, 93, 0.08);
+  overflow: hidden;
+}
+
 .headerGradient {
   background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 50%, #3182ce 100%);
   padding: 24px 28px;
   position: relative;
   overflow: hidden;
-}
-
-.headerGradient::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 60%;
-  height: 200%;
-  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.1) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.headerGradient::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
 }
 
 .headerIconBadge {
@@ -83,32 +126,27 @@
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.headerIconBadge:hover {
-  transform: scale(1.05) rotate(-3deg);
-}
-
-.headerTitle {
-  font-size: 24px;
-  font-weight: 700;
-  color: white;
-  letter-spacing: -0.5px;
-  margin: 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.headerSubtitle {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 4px;
-  font-weight: 500;
 }
 
 .headerBody {
   padding: 20px 28px;
   background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
+}
+
+/* Section icon for stats/filters headers */
+.sectionIcon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 10px;
+  background: var(--emr-gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 2px 8px rgba(26, 54, 93, 0.2);
+  flex-shrink: 0;
 }
 
 /* ==================== STATS GRID ==================== */
@@ -810,6 +848,19 @@
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
+  .headerSection {
+    padding: 12px 14px;
+  }
+
+  .headerIcon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .headerTitle {
+    font-size: 14px;
+  }
+
   .headerGradient {
     padding: 20px;
   }
@@ -817,10 +868,6 @@
   .headerIconBadge {
     width: 48px;
     height: 48px;
-  }
-
-  .headerTitle {
-    font-size: 20px;
   }
 
   .headerBody {

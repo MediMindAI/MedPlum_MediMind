@@ -78,8 +78,9 @@ describe('PermissionTree', () => {
     render(<PermissionTree selectedPermissions={[]} onChange={onChange} />, { wrapper: TestWrapper });
 
     await waitFor(() => {
-      expect(screen.getByText('(3 permissions)')).toBeInTheDocument();
-      expect(screen.getByText('(1 permissions)')).toBeInTheDocument();
+      // Component shows "0/3" format badges (selectedCount/totalCount)
+      expect(screen.getByText('0/3')).toBeInTheDocument();
+      expect(screen.getByText('0/1')).toBeInTheDocument();
     });
   });
 

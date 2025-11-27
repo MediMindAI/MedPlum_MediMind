@@ -43,6 +43,16 @@ const categoryDescriptions: Record<string, Record<SupportedLanguage, string>> = 
     en: 'Permissions for analytics, exports, and compliance reports',
     ru: 'Разрешения для аналитики, экспорта и отчетов о соответствии',
   },
+  nomenclature: {
+    ka: 'სერვისების, დიაგნოზების და მედიკამენტების კატალოგების მართვის უფლებები',
+    en: 'Permissions for managing service, diagnosis, and medication catalogs',
+    ru: 'Разрешения для управления каталогами услуг, диагнозов и лекарств',
+  },
+  scheduling: {
+    ka: 'ვიზიტების დანიშვნის, განრიგისა და ხელმისაწვდომობის მართვის უფლებები',
+    en: 'Permissions for appointment scheduling and availability management',
+    ru: 'Разрешения для планирования встреч и управления доступностью',
+  },
 };
 
 // Permission descriptions for each language
@@ -230,7 +240,7 @@ function getCategoryDescription(code: string, lang: SupportedLanguage): string {
 }
 
 /**
- * Returns the complete permission tree with all 6 categories and permissions
+ * Returns the complete permission tree with all 8 categories and 104 permissions
  * Now supports multiple languages
  *
  * @param lang - Language code ('ka', 'en', 'ru')
@@ -243,13 +253,14 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
       name: getCategoryName('patient-management', lang),
       description: getCategoryDescription('patient-management', lang),
       displayOrder: 1,
-      icon: 'user',
+      icon: 'IconUsers',
       permissions: [
         {
           code: 'view-patient-list',
           name: getPermissionName('view-patient-list', lang),
           description: getPermissionDescription('view-patient-list', lang),
           category: 'patient-management',
+          displayOrder: 1,
           resourceType: 'Patient',
           accessLevel: 'read',
         },
@@ -258,14 +269,17 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
           name: getPermissionName('view-patient-demographics', lang),
           description: getPermissionDescription('view-patient-demographics', lang),
           category: 'patient-management',
+          displayOrder: 2,
           resourceType: 'Patient',
           accessLevel: 'read',
+          dependencies: ['view-patient-list'],
         },
         {
           code: 'edit-patient-demographics',
           name: getPermissionName('edit-patient-demographics', lang),
           description: getPermissionDescription('edit-patient-demographics', lang),
           category: 'patient-management',
+          displayOrder: 3,
           resourceType: 'Patient',
           accessLevel: 'write',
           dependencies: ['view-patient-demographics'],
@@ -275,6 +289,7 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
           name: getPermissionName('create-patient', lang),
           description: getPermissionDescription('create-patient', lang),
           category: 'patient-management',
+          displayOrder: 4,
           resourceType: 'Patient',
           accessLevel: 'write',
           dependencies: ['view-patient-list'],
@@ -284,16 +299,110 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
           name: getPermissionName('delete-patient', lang),
           description: getPermissionDescription('delete-patient', lang),
           category: 'patient-management',
+          displayOrder: 5,
           resourceType: 'Patient',
           accessLevel: 'delete',
-          dependencies: ['view-patient-demographics', 'edit-patient-demographics'],
+          dependencies: ['view-patient-demographics'],
+          dangerous: true,
         },
         {
           code: 'view-patient-history',
           name: getPermissionName('view-patient-history', lang),
           description: getPermissionDescription('view-patient-history', lang),
           category: 'patient-management',
+          displayOrder: 6,
           resourceType: 'Encounter',
+          accessLevel: 'read',
+          dependencies: ['view-patient-list'],
+        },
+        {
+          code: 'merge-patients',
+          name: getPermissionName('merge-patients', lang),
+          description: getPermissionDescription('merge-patients', lang),
+          category: 'patient-management',
+          displayOrder: 7,
+          resourceType: 'Patient',
+          accessLevel: 'admin',
+          dependencies: ['edit-patient-demographics'],
+          dangerous: true,
+        },
+        {
+          code: 'export-patient-data',
+          name: getPermissionName('export-patient-data', lang),
+          description: getPermissionDescription('export-patient-data', lang),
+          category: 'patient-management',
+          displayOrder: 8,
+          resourceType: 'Patient',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'view-patient-documents',
+          name: getPermissionName('view-patient-documents', lang),
+          description: getPermissionDescription('view-patient-documents', lang),
+          category: 'patient-management',
+          displayOrder: 9,
+          resourceType: 'DocumentReference',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'upload-patient-documents',
+          name: getPermissionName('upload-patient-documents', lang),
+          description: getPermissionDescription('upload-patient-documents', lang),
+          category: 'patient-management',
+          displayOrder: 10,
+          resourceType: 'DocumentReference',
+          accessLevel: 'write',
+          dependencies: ['view-patient-documents'],
+        },
+        {
+          code: 'view-patient-photo',
+          name: getPermissionName('view-patient-photo', lang),
+          description: getPermissionDescription('view-patient-photo', lang),
+          category: 'patient-management',
+          displayOrder: 11,
+          resourceType: 'Patient',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'upload-patient-photo',
+          name: getPermissionName('upload-patient-photo', lang),
+          description: getPermissionDescription('upload-patient-photo', lang),
+          category: 'patient-management',
+          displayOrder: 12,
+          resourceType: 'Patient',
+          accessLevel: 'write',
+          dependencies: ['view-patient-photo'],
+        },
+        {
+          code: 'view-patient-contacts',
+          name: getPermissionName('view-patient-contacts', lang),
+          description: getPermissionDescription('view-patient-contacts', lang),
+          category: 'patient-management',
+          displayOrder: 13,
+          resourceType: 'RelatedPerson',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'edit-patient-contacts',
+          name: getPermissionName('edit-patient-contacts', lang),
+          description: getPermissionDescription('edit-patient-contacts', lang),
+          category: 'patient-management',
+          displayOrder: 14,
+          resourceType: 'RelatedPerson',
+          accessLevel: 'write',
+          dependencies: ['view-patient-contacts'],
+        },
+        {
+          code: 'view-patient-insurance',
+          name: getPermissionName('view-patient-insurance', lang),
+          description: getPermissionDescription('view-patient-insurance', lang),
+          category: 'patient-management',
+          displayOrder: 15,
+          resourceType: 'Coverage',
           accessLevel: 'read',
           dependencies: ['view-patient-demographics'],
         },
@@ -304,21 +413,24 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
       name: getCategoryName('clinical-documentation', lang),
       description: getCategoryDescription('clinical-documentation', lang),
       displayOrder: 2,
-      icon: 'file-text',
+      icon: 'IconClipboard',
       permissions: [
         {
           code: 'view-encounters',
           name: getPermissionName('view-encounters', lang),
           description: getPermissionDescription('view-encounters', lang),
           category: 'clinical-documentation',
+          displayOrder: 1,
           resourceType: 'Encounter',
           accessLevel: 'read',
+          dependencies: ['view-patient-history'],
         },
         {
           code: 'create-encounter',
           name: getPermissionName('create-encounter', lang),
           description: getPermissionDescription('create-encounter', lang),
           category: 'clinical-documentation',
+          displayOrder: 2,
           resourceType: 'Encounter',
           accessLevel: 'write',
           dependencies: ['view-encounters'],
@@ -328,35 +440,162 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
           name: getPermissionName('edit-encounter', lang),
           description: getPermissionDescription('edit-encounter', lang),
           category: 'clinical-documentation',
+          displayOrder: 3,
           resourceType: 'Encounter',
           accessLevel: 'write',
           dependencies: ['view-encounters'],
+        },
+        {
+          code: 'delete-encounter',
+          name: getPermissionName('delete-encounter', lang),
+          description: getPermissionDescription('delete-encounter', lang),
+          category: 'clinical-documentation',
+          displayOrder: 4,
+          resourceType: 'Encounter',
+          accessLevel: 'delete',
+          dependencies: ['edit-encounter'],
+          dangerous: true,
         },
         {
           code: 'view-clinical-notes',
           name: getPermissionName('view-clinical-notes', lang),
           description: getPermissionDescription('view-clinical-notes', lang),
           category: 'clinical-documentation',
+          displayOrder: 5,
           resourceType: 'DocumentReference',
           accessLevel: 'read',
+          dependencies: ['view-encounters'],
         },
         {
           code: 'create-clinical-notes',
           name: getPermissionName('create-clinical-notes', lang),
           description: getPermissionDescription('create-clinical-notes', lang),
           category: 'clinical-documentation',
+          displayOrder: 6,
           resourceType: 'DocumentReference',
           accessLevel: 'write',
           dependencies: ['view-clinical-notes'],
         },
         {
-          code: 'sign-clinical-documents',
-          name: getPermissionName('sign-clinical-documents', lang),
-          description: getPermissionDescription('sign-clinical-documents', lang),
+          code: 'edit-clinical-notes',
+          name: getPermissionName('edit-clinical-notes', lang),
+          description: getPermissionDescription('edit-clinical-notes', lang),
           category: 'clinical-documentation',
+          displayOrder: 7,
           resourceType: 'DocumentReference',
           accessLevel: 'write',
-          dependencies: ['view-clinical-notes', 'create-clinical-notes'],
+          dependencies: ['create-clinical-notes'],
+        },
+        {
+          code: 'sign-clinical-notes',
+          name: getPermissionName('sign-clinical-notes', lang),
+          description: getPermissionDescription('sign-clinical-notes', lang),
+          category: 'clinical-documentation',
+          displayOrder: 8,
+          resourceType: 'DocumentReference',
+          accessLevel: 'admin',
+          dependencies: ['edit-clinical-notes'],
+        },
+        {
+          code: 'view-diagnoses',
+          name: getPermissionName('view-diagnoses', lang),
+          description: getPermissionDescription('view-diagnoses', lang),
+          category: 'clinical-documentation',
+          displayOrder: 9,
+          resourceType: 'Condition',
+          accessLevel: 'read',
+          dependencies: ['view-encounters'],
+        },
+        {
+          code: 'create-diagnosis',
+          name: getPermissionName('create-diagnosis', lang),
+          description: getPermissionDescription('create-diagnosis', lang),
+          category: 'clinical-documentation',
+          displayOrder: 10,
+          resourceType: 'Condition',
+          accessLevel: 'write',
+          dependencies: ['view-diagnoses'],
+        },
+        {
+          code: 'edit-diagnosis',
+          name: getPermissionName('edit-diagnosis', lang),
+          description: getPermissionDescription('edit-diagnosis', lang),
+          category: 'clinical-documentation',
+          displayOrder: 11,
+          resourceType: 'Condition',
+          accessLevel: 'write',
+          dependencies: ['create-diagnosis'],
+        },
+        {
+          code: 'view-procedures',
+          name: getPermissionName('view-procedures', lang),
+          description: getPermissionDescription('view-procedures', lang),
+          category: 'clinical-documentation',
+          displayOrder: 12,
+          resourceType: 'Procedure',
+          accessLevel: 'read',
+          dependencies: ['view-encounters'],
+        },
+        {
+          code: 'create-procedure',
+          name: getPermissionName('create-procedure', lang),
+          description: getPermissionDescription('create-procedure', lang),
+          category: 'clinical-documentation',
+          displayOrder: 13,
+          resourceType: 'Procedure',
+          accessLevel: 'write',
+          dependencies: ['view-procedures'],
+        },
+        {
+          code: 'view-medications',
+          name: getPermissionName('view-medications', lang),
+          description: getPermissionDescription('view-medications', lang),
+          category: 'clinical-documentation',
+          displayOrder: 14,
+          resourceType: 'MedicationRequest',
+          accessLevel: 'read',
+          dependencies: ['view-encounters'],
+        },
+        {
+          code: 'prescribe-medication',
+          name: getPermissionName('prescribe-medication', lang),
+          description: getPermissionDescription('prescribe-medication', lang),
+          category: 'clinical-documentation',
+          displayOrder: 15,
+          resourceType: 'MedicationRequest',
+          accessLevel: 'write',
+          dependencies: ['view-medications'],
+        },
+        {
+          code: 'view-allergies',
+          name: getPermissionName('view-allergies', lang),
+          description: getPermissionDescription('view-allergies', lang),
+          category: 'clinical-documentation',
+          displayOrder: 16,
+          resourceType: 'AllergyIntolerance',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'edit-allergies',
+          name: getPermissionName('edit-allergies', lang),
+          description: getPermissionDescription('edit-allergies', lang),
+          category: 'clinical-documentation',
+          displayOrder: 17,
+          resourceType: 'AllergyIntolerance',
+          accessLevel: 'write',
+          dependencies: ['view-allergies'],
+        },
+        {
+          code: 'edit-locked-records',
+          name: getPermissionName('edit-locked-records', lang),
+          description: getPermissionDescription('edit-locked-records', lang),
+          category: 'clinical-documentation',
+          displayOrder: 18,
+          resourceType: 'Encounter',
+          accessLevel: 'admin',
+          dependencies: ['edit-encounter'],
+          dangerous: true,
         },
       ],
     },
@@ -365,41 +604,127 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
       name: getCategoryName('laboratory', lang),
       description: getCategoryDescription('laboratory', lang),
       displayOrder: 3,
-      icon: 'flask',
+      icon: 'IconMicroscope',
       permissions: [
+        {
+          code: 'view-lab-orders',
+          name: getPermissionName('view-lab-orders', lang),
+          description: getPermissionDescription('view-lab-orders', lang),
+          category: 'laboratory',
+          displayOrder: 1,
+          resourceType: 'ServiceRequest',
+          accessLevel: 'read',
+          dependencies: ['view-encounters'],
+        },
+        {
+          code: 'create-lab-order',
+          name: getPermissionName('create-lab-order', lang),
+          description: getPermissionDescription('create-lab-order', lang),
+          category: 'laboratory',
+          displayOrder: 2,
+          resourceType: 'ServiceRequest',
+          accessLevel: 'write',
+          dependencies: ['view-lab-orders'],
+        },
+        {
+          code: 'edit-lab-order',
+          name: getPermissionName('edit-lab-order', lang),
+          description: getPermissionDescription('edit-lab-order', lang),
+          category: 'laboratory',
+          displayOrder: 3,
+          resourceType: 'ServiceRequest',
+          accessLevel: 'write',
+          dependencies: ['create-lab-order'],
+        },
+        {
+          code: 'cancel-lab-order',
+          name: getPermissionName('cancel-lab-order', lang),
+          description: getPermissionDescription('cancel-lab-order', lang),
+          category: 'laboratory',
+          displayOrder: 4,
+          resourceType: 'ServiceRequest',
+          accessLevel: 'write',
+          dependencies: ['edit-lab-order'],
+        },
         {
           code: 'view-lab-results',
           name: getPermissionName('view-lab-results', lang),
           description: getPermissionDescription('view-lab-results', lang),
           category: 'laboratory',
+          displayOrder: 5,
           resourceType: 'Observation',
           accessLevel: 'read',
+          dependencies: ['view-lab-orders'],
         },
         {
-          code: 'order-lab-tests',
-          name: getPermissionName('order-lab-tests', lang),
-          description: getPermissionDescription('order-lab-tests', lang),
+          code: 'enter-lab-results',
+          name: getPermissionName('enter-lab-results', lang),
+          description: getPermissionDescription('enter-lab-results', lang),
           category: 'laboratory',
-          resourceType: 'ServiceRequest',
+          displayOrder: 6,
+          resourceType: 'Observation',
           accessLevel: 'write',
+          dependencies: ['view-lab-results'],
         },
         {
           code: 'edit-lab-results',
           name: getPermissionName('edit-lab-results', lang),
           description: getPermissionDescription('edit-lab-results', lang),
           category: 'laboratory',
+          displayOrder: 7,
           resourceType: 'Observation',
           accessLevel: 'write',
-          dependencies: ['view-lab-results'],
+          dependencies: ['enter-lab-results'],
         },
         {
           code: 'approve-lab-results',
           name: getPermissionName('approve-lab-results', lang),
           description: getPermissionDescription('approve-lab-results', lang),
           category: 'laboratory',
+          displayOrder: 8,
           resourceType: 'Observation',
+          accessLevel: 'admin',
+          dependencies: ['edit-lab-results'],
+        },
+        {
+          code: 'view-specimens',
+          name: getPermissionName('view-specimens', lang),
+          description: getPermissionDescription('view-specimens', lang),
+          category: 'laboratory',
+          displayOrder: 9,
+          resourceType: 'Specimen',
+          accessLevel: 'read',
+          dependencies: ['view-lab-orders'],
+        },
+        {
+          code: 'manage-specimens',
+          name: getPermissionName('manage-specimens', lang),
+          description: getPermissionDescription('manage-specimens', lang),
+          category: 'laboratory',
+          displayOrder: 10,
+          resourceType: 'Specimen',
           accessLevel: 'write',
-          dependencies: ['view-lab-results', 'edit-lab-results'],
+          dependencies: ['view-specimens'],
+        },
+        {
+          code: 'view-lab-equipment',
+          name: getPermissionName('view-lab-equipment', lang),
+          description: getPermissionDescription('view-lab-equipment', lang),
+          category: 'laboratory',
+          displayOrder: 11,
+          resourceType: 'Device',
+          accessLevel: 'read',
+          dependencies: ['view-lab-results'],
+        },
+        {
+          code: 'manage-lab-equipment',
+          name: getPermissionName('manage-lab-equipment', lang),
+          description: getPermissionDescription('manage-lab-equipment', lang),
+          category: 'laboratory',
+          displayOrder: 12,
+          resourceType: 'Device',
+          accessLevel: 'write',
+          dependencies: ['view-lab-equipment'],
         },
       ],
     },
@@ -408,48 +733,159 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
       name: getCategoryName('billing-financial', lang),
       description: getCategoryDescription('billing-financial', lang),
       displayOrder: 4,
-      icon: 'currency-dollar',
+      icon: 'IconCoin',
       permissions: [
         {
           code: 'view-invoices',
           name: getPermissionName('view-invoices', lang),
           description: getPermissionDescription('view-invoices', lang),
           category: 'billing-financial',
+          displayOrder: 1,
           resourceType: 'Invoice',
           accessLevel: 'read',
+          dependencies: ['view-encounters'],
         },
         {
-          code: 'create-invoices',
-          name: getPermissionName('create-invoices', lang),
-          description: getPermissionDescription('create-invoices', lang),
+          code: 'create-invoice',
+          name: getPermissionName('create-invoice', lang),
+          description: getPermissionDescription('create-invoice', lang),
           category: 'billing-financial',
+          displayOrder: 2,
           resourceType: 'Invoice',
           accessLevel: 'write',
           dependencies: ['view-invoices'],
         },
         {
-          code: 'process-payments',
-          name: getPermissionName('process-payments', lang),
-          description: getPermissionDescription('process-payments', lang),
+          code: 'edit-invoice',
+          name: getPermissionName('edit-invoice', lang),
+          description: getPermissionDescription('edit-invoice', lang),
           category: 'billing-financial',
+          displayOrder: 3,
+          resourceType: 'Invoice',
+          accessLevel: 'write',
+          dependencies: ['create-invoice'],
+        },
+        {
+          code: 'void-invoice',
+          name: getPermissionName('void-invoice', lang),
+          description: getPermissionDescription('void-invoice', lang),
+          category: 'billing-financial',
+          displayOrder: 4,
+          resourceType: 'Invoice',
+          accessLevel: 'delete',
+          dependencies: ['edit-invoice'],
+          dangerous: true,
+        },
+        {
+          code: 'view-payments',
+          name: getPermissionName('view-payments', lang),
+          description: getPermissionDescription('view-payments', lang),
+          category: 'billing-financial',
+          displayOrder: 5,
+          resourceType: 'PaymentReconciliation',
+          accessLevel: 'read',
+          dependencies: ['view-invoices'],
+        },
+        {
+          code: 'process-payment',
+          name: getPermissionName('process-payment', lang),
+          description: getPermissionDescription('process-payment', lang),
+          category: 'billing-financial',
+          displayOrder: 6,
           resourceType: 'PaymentReconciliation',
           accessLevel: 'write',
+          dependencies: ['view-payments'],
+        },
+        {
+          code: 'refund-payment',
+          name: getPermissionName('refund-payment', lang),
+          description: getPermissionDescription('refund-payment', lang),
+          category: 'billing-financial',
+          displayOrder: 7,
+          resourceType: 'PaymentReconciliation',
+          accessLevel: 'write',
+          dependencies: ['process-payment'],
+          dangerous: true,
+        },
+        {
+          code: 'view-claims',
+          name: getPermissionName('view-claims', lang),
+          description: getPermissionDescription('view-claims', lang),
+          category: 'billing-financial',
+          displayOrder: 8,
+          resourceType: 'Claim',
+          accessLevel: 'read',
+          dependencies: ['view-invoices'],
+        },
+        {
+          code: 'submit-claim',
+          name: getPermissionName('submit-claim', lang),
+          description: getPermissionDescription('submit-claim', lang),
+          category: 'billing-financial',
+          displayOrder: 9,
+          resourceType: 'Claim',
+          accessLevel: 'write',
+          dependencies: ['view-claims'],
+        },
+        {
+          code: 'view-insurance-auth',
+          name: getPermissionName('view-insurance-auth', lang),
+          description: getPermissionDescription('view-insurance-auth', lang),
+          category: 'billing-financial',
+          displayOrder: 10,
+          resourceType: 'CoverageEligibilityResponse',
+          accessLevel: 'read',
+          dependencies: ['view-invoices'],
+        },
+        {
+          code: 'request-insurance-auth',
+          name: getPermissionName('request-insurance-auth', lang),
+          description: getPermissionDescription('request-insurance-auth', lang),
+          category: 'billing-financial',
+          displayOrder: 11,
+          resourceType: 'CoverageEligibilityRequest',
+          accessLevel: 'write',
+          dependencies: ['view-insurance-auth'],
         },
         {
           code: 'view-financial-reports',
           name: getPermissionName('view-financial-reports', lang),
           description: getPermissionDescription('view-financial-reports', lang),
           category: 'billing-financial',
-          resourceType: 'Invoice',
+          displayOrder: 12,
+          resourceType: 'MeasureReport',
           accessLevel: 'read',
+          dependencies: ['view-invoices'],
         },
         {
-          code: 'manage-insurance-claims',
-          name: getPermissionName('manage-insurance-claims', lang),
-          description: getPermissionDescription('manage-insurance-claims', lang),
+          code: 'export-financial-data',
+          name: getPermissionName('export-financial-data', lang),
+          description: getPermissionDescription('export-financial-data', lang),
           category: 'billing-financial',
-          resourceType: 'Claim',
+          displayOrder: 13,
+          resourceType: 'Invoice',
+          accessLevel: 'read',
+          dependencies: ['view-financial-reports'],
+        },
+        {
+          code: 'view-debt-management',
+          name: getPermissionName('view-debt-management', lang),
+          description: getPermissionDescription('view-debt-management', lang),
+          category: 'billing-financial',
+          displayOrder: 14,
+          resourceType: 'Invoice',
+          accessLevel: 'read',
+          dependencies: ['view-invoices'],
+        },
+        {
+          code: 'manage-debt',
+          name: getPermissionName('manage-debt', lang),
+          description: getPermissionDescription('manage-debt', lang),
+          category: 'billing-financial',
+          displayOrder: 15,
+          resourceType: 'Invoice',
           accessLevel: 'write',
+          dependencies: ['view-debt-management'],
         },
       ],
     },
@@ -458,13 +894,14 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
       name: getCategoryName('administration', lang),
       description: getCategoryDescription('administration', lang),
       displayOrder: 5,
-      icon: 'settings',
+      icon: 'IconSettings',
       permissions: [
         {
           code: 'view-users',
           name: getPermissionName('view-users', lang),
           description: getPermissionDescription('view-users', lang),
           category: 'administration',
+          displayOrder: 1,
           resourceType: 'Practitioner',
           accessLevel: 'read',
         },
@@ -473,6 +910,7 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
           name: getPermissionName('create-user', lang),
           description: getPermissionDescription('create-user', lang),
           category: 'administration',
+          displayOrder: 2,
           resourceType: 'Practitioner',
           accessLevel: 'write',
           dependencies: ['view-users'],
@@ -482,15 +920,38 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
           name: getPermissionName('edit-user', lang),
           description: getPermissionDescription('edit-user', lang),
           category: 'administration',
+          displayOrder: 3,
           resourceType: 'Practitioner',
           accessLevel: 'write',
           dependencies: ['view-users'],
+        },
+        {
+          code: 'deactivate-user',
+          name: getPermissionName('deactivate-user', lang),
+          description: getPermissionDescription('deactivate-user', lang),
+          category: 'administration',
+          displayOrder: 4,
+          resourceType: 'Practitioner',
+          accessLevel: 'write',
+          dependencies: ['edit-user'],
+        },
+        {
+          code: 'delete-user',
+          name: getPermissionName('delete-user', lang),
+          description: getPermissionDescription('delete-user', lang),
+          category: 'administration',
+          displayOrder: 5,
+          resourceType: 'Practitioner',
+          accessLevel: 'delete',
+          dependencies: ['deactivate-user'],
+          dangerous: true,
         },
         {
           code: 'view-roles',
           name: getPermissionName('view-roles', lang),
           description: getPermissionDescription('view-roles', lang),
           category: 'administration',
+          displayOrder: 6,
           resourceType: 'AccessPolicy',
           accessLevel: 'read',
         },
@@ -499,6 +960,7 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
           name: getPermissionName('create-role', lang),
           description: getPermissionDescription('create-role', lang),
           category: 'administration',
+          displayOrder: 7,
           resourceType: 'AccessPolicy',
           accessLevel: 'write',
           dependencies: ['view-roles'],
@@ -508,6 +970,7 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
           name: getPermissionName('edit-role', lang),
           description: getPermissionDescription('edit-role', lang),
           category: 'administration',
+          displayOrder: 8,
           resourceType: 'AccessPolicy',
           accessLevel: 'write',
           dependencies: ['view-roles'],
@@ -517,26 +980,158 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
           name: getPermissionName('delete-role', lang),
           description: getPermissionDescription('delete-role', lang),
           category: 'administration',
+          displayOrder: 9,
           resourceType: 'AccessPolicy',
           accessLevel: 'delete',
-          dependencies: ['view-roles', 'edit-role'],
+          dependencies: ['edit-role'],
+          dangerous: true,
         },
         {
           code: 'assign-roles',
           name: getPermissionName('assign-roles', lang),
           description: getPermissionDescription('assign-roles', lang),
           category: 'administration',
+          displayOrder: 10,
           resourceType: 'PractitionerRole',
           accessLevel: 'write',
           dependencies: ['view-roles', 'view-users'],
+        },
+        {
+          code: 'view-departments',
+          name: getPermissionName('view-departments', lang),
+          description: getPermissionDescription('view-departments', lang),
+          category: 'administration',
+          displayOrder: 11,
+          resourceType: 'Organization',
+          accessLevel: 'read',
+        },
+        {
+          code: 'manage-departments',
+          name: getPermissionName('manage-departments', lang),
+          description: getPermissionDescription('manage-departments', lang),
+          category: 'administration',
+          displayOrder: 12,
+          resourceType: 'Organization',
+          accessLevel: 'write',
+          dependencies: ['view-departments'],
         },
         {
           code: 'view-audit-logs',
           name: getPermissionName('view-audit-logs', lang),
           description: getPermissionDescription('view-audit-logs', lang),
           category: 'administration',
+          displayOrder: 13,
           resourceType: 'AuditEvent',
           accessLevel: 'read',
+        },
+        {
+          code: 'export-audit-logs',
+          name: getPermissionName('export-audit-logs', lang),
+          description: getPermissionDescription('export-audit-logs', lang),
+          category: 'administration',
+          displayOrder: 14,
+          resourceType: 'AuditEvent',
+          accessLevel: 'read',
+          dependencies: ['view-audit-logs'],
+        },
+        {
+          code: 'view-system-settings',
+          name: getPermissionName('view-system-settings', lang),
+          description: getPermissionDescription('view-system-settings', lang),
+          category: 'administration',
+          displayOrder: 15,
+          resourceType: 'Parameters',
+          accessLevel: 'read',
+        },
+        {
+          code: 'edit-system-settings',
+          name: getPermissionName('edit-system-settings', lang),
+          description: getPermissionDescription('edit-system-settings', lang),
+          category: 'administration',
+          displayOrder: 16,
+          resourceType: 'Parameters',
+          accessLevel: 'admin',
+          dependencies: ['view-system-settings'],
+          dangerous: true,
+        },
+        {
+          code: 'view-access-logs',
+          name: getPermissionName('view-access-logs', lang),
+          description: getPermissionDescription('view-access-logs', lang),
+          category: 'administration',
+          displayOrder: 17,
+          resourceType: 'AuditEvent',
+          accessLevel: 'read',
+        },
+        {
+          code: 'view-sensitive-mental-health',
+          name: getPermissionName('view-sensitive-mental-health', lang),
+          description: getPermissionDescription('view-sensitive-mental-health', lang),
+          category: 'administration',
+          displayOrder: 18,
+          resourceType: 'Observation',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'view-sensitive-hiv',
+          name: getPermissionName('view-sensitive-hiv', lang),
+          description: getPermissionDescription('view-sensitive-hiv', lang),
+          category: 'administration',
+          displayOrder: 19,
+          resourceType: 'Observation',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'view-sensitive-substance-abuse',
+          name: getPermissionName('view-sensitive-substance-abuse', lang),
+          description: getPermissionDescription('view-sensitive-substance-abuse', lang),
+          category: 'administration',
+          displayOrder: 20,
+          resourceType: 'Observation',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'view-sensitive-genetic',
+          name: getPermissionName('view-sensitive-genetic', lang),
+          description: getPermissionDescription('view-sensitive-genetic', lang),
+          category: 'administration',
+          displayOrder: 21,
+          resourceType: 'Observation',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'view-sensitive-reproductive',
+          name: getPermissionName('view-sensitive-reproductive', lang),
+          description: getPermissionDescription('view-sensitive-reproductive', lang),
+          category: 'administration',
+          displayOrder: 22,
+          resourceType: 'Observation',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'view-sensitive-vip',
+          name: getPermissionName('view-sensitive-vip', lang),
+          description: getPermissionDescription('view-sensitive-vip', lang),
+          category: 'administration',
+          displayOrder: 23,
+          resourceType: 'Patient',
+          accessLevel: 'read',
+          dependencies: ['view-patient-demographics'],
+        },
+        {
+          code: 'emergency-access',
+          name: getPermissionName('emergency-access', lang),
+          description: getPermissionDescription('emergency-access', lang),
+          category: 'administration',
+          displayOrder: 24,
+          resourceType: '*',
+          accessLevel: 'admin',
+          dangerous: true,
         },
       ],
     },
@@ -545,8 +1140,280 @@ export function getPermissionTree(lang: SupportedLanguage = 'en'): PermissionCat
       name: getCategoryName('reports', lang),
       description: getCategoryDescription('reports', lang),
       displayOrder: 6,
-      icon: 'chart-bar',
-      permissions: [],
+      icon: 'IconChartBar',
+      permissions: [
+        {
+          code: 'view-clinical-reports',
+          name: getPermissionName('view-clinical-reports', lang),
+          description: getPermissionDescription('view-clinical-reports', lang),
+          category: 'reports',
+          displayOrder: 1,
+          resourceType: 'MeasureReport',
+          accessLevel: 'read',
+          dependencies: ['view-encounters'],
+        },
+        {
+          code: 'view-operational-reports',
+          name: getPermissionName('view-operational-reports', lang),
+          description: getPermissionDescription('view-operational-reports', lang),
+          category: 'reports',
+          displayOrder: 2,
+          resourceType: 'MeasureReport',
+          accessLevel: 'read',
+        },
+        {
+          code: 'view-financial-summary',
+          name: getPermissionName('view-financial-summary', lang),
+          description: getPermissionDescription('view-financial-summary', lang),
+          category: 'reports',
+          displayOrder: 3,
+          resourceType: 'MeasureReport',
+          accessLevel: 'read',
+          dependencies: ['view-invoices'],
+        },
+        {
+          code: 'generate-report',
+          name: getPermissionName('generate-report', lang),
+          description: getPermissionDescription('generate-report', lang),
+          category: 'reports',
+          displayOrder: 4,
+          resourceType: 'MeasureReport',
+          accessLevel: 'write',
+          dependencies: ['view-clinical-reports'],
+        },
+        {
+          code: 'export-reports',
+          name: getPermissionName('export-reports', lang),
+          description: getPermissionDescription('export-reports', lang),
+          category: 'reports',
+          displayOrder: 5,
+          resourceType: 'MeasureReport',
+          accessLevel: 'read',
+          dependencies: ['view-clinical-reports'],
+        },
+        {
+          code: 'schedule-reports',
+          name: getPermissionName('schedule-reports', lang),
+          description: getPermissionDescription('schedule-reports', lang),
+          category: 'reports',
+          displayOrder: 6,
+          resourceType: 'Task',
+          accessLevel: 'write',
+          dependencies: ['generate-report'],
+        },
+        {
+          code: 'view-analytics-dashboard',
+          name: getPermissionName('view-analytics-dashboard', lang),
+          description: getPermissionDescription('view-analytics-dashboard', lang),
+          category: 'reports',
+          displayOrder: 7,
+          resourceType: 'MeasureReport',
+          accessLevel: 'read',
+        },
+        {
+          code: 'view-quality-metrics',
+          name: getPermissionName('view-quality-metrics', lang),
+          description: getPermissionDescription('view-quality-metrics', lang),
+          category: 'reports',
+          displayOrder: 8,
+          resourceType: 'MeasureReport',
+          accessLevel: 'read',
+          dependencies: ['view-clinical-reports'],
+        },
+        {
+          code: 'view-utilization-reports',
+          name: getPermissionName('view-utilization-reports', lang),
+          description: getPermissionDescription('view-utilization-reports', lang),
+          category: 'reports',
+          displayOrder: 9,
+          resourceType: 'MeasureReport',
+          accessLevel: 'read',
+          dependencies: ['view-operational-reports'],
+        },
+        {
+          code: 'view-compliance-reports',
+          name: getPermissionName('view-compliance-reports', lang),
+          description: getPermissionDescription('view-compliance-reports', lang),
+          category: 'reports',
+          displayOrder: 10,
+          resourceType: 'MeasureReport',
+          accessLevel: 'read',
+          dependencies: ['view-audit-logs'],
+        },
+      ],
+    },
+    {
+      code: 'nomenclature',
+      name: getCategoryName('nomenclature', lang),
+      description: getCategoryDescription('nomenclature', lang),
+      displayOrder: 7,
+      icon: 'IconList',
+      permissions: [
+        {
+          code: 'view-services',
+          name: getPermissionName('view-services', lang),
+          description: getPermissionDescription('view-services', lang),
+          category: 'nomenclature',
+          displayOrder: 1,
+          resourceType: 'ActivityDefinition',
+          accessLevel: 'read',
+        },
+        {
+          code: 'edit-services',
+          name: getPermissionName('edit-services', lang),
+          description: getPermissionDescription('edit-services', lang),
+          category: 'nomenclature',
+          displayOrder: 2,
+          resourceType: 'ActivityDefinition',
+          accessLevel: 'write',
+          dependencies: ['view-services'],
+        },
+        {
+          code: 'view-diagnoses-catalog',
+          name: getPermissionName('view-diagnoses-catalog', lang),
+          description: getPermissionDescription('view-diagnoses-catalog', lang),
+          category: 'nomenclature',
+          displayOrder: 3,
+          resourceType: 'ValueSet',
+          accessLevel: 'read',
+        },
+        {
+          code: 'edit-diagnoses-catalog',
+          name: getPermissionName('edit-diagnoses-catalog', lang),
+          description: getPermissionDescription('edit-diagnoses-catalog', lang),
+          category: 'nomenclature',
+          displayOrder: 4,
+          resourceType: 'ValueSet',
+          accessLevel: 'write',
+          dependencies: ['view-diagnoses-catalog'],
+        },
+        {
+          code: 'view-medications-catalog',
+          name: getPermissionName('view-medications-catalog', lang),
+          description: getPermissionDescription('view-medications-catalog', lang),
+          category: 'nomenclature',
+          displayOrder: 5,
+          resourceType: 'Medication',
+          accessLevel: 'read',
+        },
+        {
+          code: 'edit-medications-catalog',
+          name: getPermissionName('edit-medications-catalog', lang),
+          description: getPermissionDescription('edit-medications-catalog', lang),
+          category: 'nomenclature',
+          displayOrder: 6,
+          resourceType: 'Medication',
+          accessLevel: 'write',
+          dependencies: ['view-medications-catalog'],
+        },
+        {
+          code: 'view-lab-catalog',
+          name: getPermissionName('view-lab-catalog', lang),
+          description: getPermissionDescription('view-lab-catalog', lang),
+          category: 'nomenclature',
+          displayOrder: 7,
+          resourceType: 'ObservationDefinition',
+          accessLevel: 'read',
+        },
+        {
+          code: 'edit-lab-catalog',
+          name: getPermissionName('edit-lab-catalog', lang),
+          description: getPermissionDescription('edit-lab-catalog', lang),
+          category: 'nomenclature',
+          displayOrder: 8,
+          resourceType: 'ObservationDefinition',
+          accessLevel: 'write',
+          dependencies: ['view-lab-catalog'],
+        },
+      ],
+    },
+    {
+      code: 'scheduling',
+      name: getCategoryName('scheduling', lang),
+      description: getCategoryDescription('scheduling', lang),
+      displayOrder: 8,
+      icon: 'IconCalendar',
+      permissions: [
+        {
+          code: 'view-appointments',
+          name: getPermissionName('view-appointments', lang),
+          description: getPermissionDescription('view-appointments', lang),
+          category: 'scheduling',
+          displayOrder: 1,
+          resourceType: 'Appointment',
+          accessLevel: 'read',
+          dependencies: ['view-patient-list'],
+        },
+        {
+          code: 'create-appointment',
+          name: getPermissionName('create-appointment', lang),
+          description: getPermissionDescription('create-appointment', lang),
+          category: 'scheduling',
+          displayOrder: 2,
+          resourceType: 'Appointment',
+          accessLevel: 'write',
+          dependencies: ['view-appointments'],
+        },
+        {
+          code: 'edit-appointment',
+          name: getPermissionName('edit-appointment', lang),
+          description: getPermissionDescription('edit-appointment', lang),
+          category: 'scheduling',
+          displayOrder: 3,
+          resourceType: 'Appointment',
+          accessLevel: 'write',
+          dependencies: ['create-appointment'],
+        },
+        {
+          code: 'cancel-appointment',
+          name: getPermissionName('cancel-appointment', lang),
+          description: getPermissionDescription('cancel-appointment', lang),
+          category: 'scheduling',
+          displayOrder: 4,
+          resourceType: 'Appointment',
+          accessLevel: 'write',
+          dependencies: ['edit-appointment'],
+        },
+        {
+          code: 'view-schedules',
+          name: getPermissionName('view-schedules', lang),
+          description: getPermissionDescription('view-schedules', lang),
+          category: 'scheduling',
+          displayOrder: 5,
+          resourceType: 'Schedule',
+          accessLevel: 'read',
+        },
+        {
+          code: 'manage-schedules',
+          name: getPermissionName('manage-schedules', lang),
+          description: getPermissionDescription('manage-schedules', lang),
+          category: 'scheduling',
+          displayOrder: 6,
+          resourceType: 'Schedule',
+          accessLevel: 'write',
+          dependencies: ['view-schedules'],
+        },
+        {
+          code: 'view-availability',
+          name: getPermissionName('view-availability', lang),
+          description: getPermissionDescription('view-availability', lang),
+          category: 'scheduling',
+          displayOrder: 7,
+          resourceType: 'Slot',
+          accessLevel: 'read',
+          dependencies: ['view-schedules'],
+        },
+        {
+          code: 'manage-availability',
+          name: getPermissionName('manage-availability', lang),
+          description: getPermissionDescription('manage-availability', lang),
+          category: 'scheduling',
+          displayOrder: 8,
+          resourceType: 'Slot',
+          accessLevel: 'write',
+          dependencies: ['view-availability'],
+        },
+      ],
     },
   ];
 }
@@ -585,31 +1452,61 @@ export function resolvePermissionDependencies(selectedPermissions: string[]): st
 
 /**
  * Converts permission codes to AccessPolicy resource rules
+ * Uses interaction[] array format with FHIR CRUD operations
  *
  * @param permissions - Array of permission codes
- * @returns Array of AccessPolicyResource
+ * @returns Array of AccessPolicyResource with interaction arrays
  */
 export function permissionsToAccessPolicy(permissions: string[]): AccessPolicyResource[] {
   const permissionTree = getPermissionTree();
   const allPermissions = permissionTree.flatMap((category) => category.permissions);
 
-  // Map resource type to readonly status
-  const resourceMap = new Map<string, boolean>();
+  // Resolve dependencies first
+  const resolvedPermissions = resolvePermissionDependencies(permissions);
 
-  permissions.forEach((permCode) => {
+  // Map resource type to set of interactions
+  const resourceMap = new Map<string, Set<string>>();
+
+  resolvedPermissions.forEach((permCode) => {
     const permission = allPermissions.find((p) => p.code === permCode);
     if (permission?.resourceType) {
-      const readonly = permission.accessLevel === 'read';
-      const existing = resourceMap.get(permission.resourceType);
+      // Get or create interaction set for this resource type
+      if (!resourceMap.has(permission.resourceType)) {
+        resourceMap.set(permission.resourceType, new Set<string>());
+      }
+      const interactions = resourceMap.get(permission.resourceType)!;
 
-      // If any permission is read-write, resource is read-write
-      resourceMap.set(permission.resourceType, existing !== undefined ? existing && readonly : readonly);
+      // Map accessLevel to interactions
+      switch (permission.accessLevel) {
+        case 'read':
+          interactions.add('read');
+          interactions.add('search');
+          break;
+        case 'write':
+          interactions.add('read');
+          interactions.add('create');
+          interactions.add('update');
+          interactions.add('search');
+          break;
+        case 'delete':
+          interactions.add('delete');
+          // Note: read dependency is added via resolvePermissionDependencies
+          break;
+        case 'admin':
+          interactions.add('read');
+          interactions.add('create');
+          interactions.add('update');
+          interactions.add('delete');
+          interactions.add('search');
+          break;
+      }
     }
   });
 
-  return Array.from(resourceMap.entries()).map(([resourceType, readonly]) => ({
+  // Convert map to AccessPolicyResource array
+  return Array.from(resourceMap.entries()).map(([resourceType, interactions]) => ({
     resourceType,
-    readonly,
+    interaction: Array.from(interactions).sort(), // Sort for consistency
   }));
 }
 
@@ -980,6 +1877,49 @@ export function resolvePermissionDependenciesForOperation(
 }
 
 // ============================================================================
+// Department-Scoped Access
+// ============================================================================
+
+/**
+ * Adds department scoping criteria to AccessPolicyResource array.
+ * Restricts access to resources within a specific department compartment.
+ *
+ * @param resources - Array of AccessPolicyResource rules
+ * @param departmentId - Organization ID for the department
+ * @returns AccessPolicyResource[] - Resources with department scoping applied
+ *
+ * @example
+ * ```typescript
+ * const resources = [
+ *   { resourceType: 'Patient', readonly: false },
+ *   { resourceType: 'Encounter', readonly: false },
+ * ];
+ * const scoped = addDepartmentScoping(resources, 'dept-001');
+ * // Result:
+ * // [
+ * //   { resourceType: 'Patient', readonly: false, criteria: 'Patient?_compartment=Organization/dept-001' },
+ * //   { resourceType: 'Encounter', readonly: false, criteria: 'Encounter?_compartment=Organization/dept-001' },
+ * // ]
+ * ```
+ */
+export function addDepartmentScoping(
+  resources: AccessPolicyResource[],
+  departmentId: string
+): AccessPolicyResource[] {
+  const scopedResourceTypes = ['Patient', 'Encounter', 'Observation', 'DocumentReference', 'ServiceRequest'];
+
+  return resources.map((resource) => {
+    if (scopedResourceTypes.includes(resource.resourceType)) {
+      return {
+        ...resource,
+        criteria: `${resource.resourceType}?_compartment=Organization/${departmentId}`,
+      };
+    }
+    return resource;
+  });
+}
+
+// ============================================================================
 // Combined Permissions from Multiple Roles
 // ============================================================================
 
@@ -1033,4 +1973,128 @@ export async function getCombinedPermissions(
   }
 
   return Array.from(combined.values());
+}
+
+// ============================================================================
+// Permission Check Functions (for usePermissionCheck hook and PermissionContext)
+// ============================================================================
+
+/**
+ * Check if a user has a specific permission by checking their assigned roles.
+ *
+ * This function is used by usePermissionCheck hook and PermissionContext.
+ * It fetches the user's roles, retrieves the associated AccessPolicy resources,
+ * and checks if any role grants the requested permission.
+ *
+ * @param medplum - MedplumClient instance
+ * @param userId - Practitioner ID
+ * @param permissionCode - Permission code to check (e.g., 'view-patient-list')
+ * @returns Promise<boolean> - true if user has the permission, false otherwise
+ *
+ * @example
+ * ```typescript
+ * const hasPermission = await checkPermissionFromServer(medplum, practitionerId, 'view-patient-list');
+ * if (hasPermission) {
+ *   // Allow access to patient list
+ * }
+ * ```
+ */
+export async function checkPermissionFromServer(
+  medplum: MedplumClient,
+  userId: string,
+  permissionCode: string
+): Promise<boolean> {
+  try {
+    // Import getUserRoles dynamically to avoid circular dependency
+    const { getUserRoles } = await import('./roleService');
+
+    // Get all roles for the user
+    const practitionerRoles = await getUserRoles(medplum, userId);
+
+    // Extract role codes from PractitionerRole resources
+    const roleCodes = practitionerRoles
+      .map((pr) => pr.meta?.tag?.find((tag) => tag.system === 'http://medimind.ge/role-assignment')?.code)
+      .filter((code): code is string => code !== undefined);
+
+    // Get AccessPolicy resources for each role code
+    const allPermissions: string[] = [];
+    for (const roleCode of roleCodes) {
+      // Search for AccessPolicy with this role code
+      const bundle = await medplum.search('AccessPolicy', {
+        _tag: `http://medimind.ge/role-identifier|${roleCode}`,
+      });
+
+      const roles = bundle.entry?.map((entry) => entry.resource as AccessPolicy) || [];
+
+      // Extract permissions from each role
+      for (const role of roles) {
+        const permissions = accessPolicyToPermissions(role);
+        allPermissions.push(...permissions);
+      }
+    }
+
+    // Check if permission exists
+    return allPermissions.includes(permissionCode);
+  } catch (error) {
+    console.error('[checkPermissionFromServer] Error checking permission:', error);
+    return false; // fail-closed on error
+  }
+}
+
+/**
+ * Get all permissions for a user by fetching their assigned roles.
+ *
+ * This function is used by PermissionContext to preload all user permissions
+ * into the cache on mount, reducing the number of individual permission checks.
+ *
+ * @param medplum - MedplumClient instance
+ * @param userId - Practitioner ID
+ * @returns Promise<string[]> - Array of permission codes the user has
+ *
+ * @example
+ * ```typescript
+ * const permissions = await getUserPermissions(medplum, practitionerId);
+ * // ['view-patient-list', 'edit-patient-demographics', 'create-patient', ...]
+ *
+ * // Preload into cache
+ * for (const permission of permissions) {
+ *   permissionCache.set(permission, true);
+ * }
+ * ```
+ */
+export async function getUserPermissions(medplum: MedplumClient, userId: string): Promise<string[]> {
+  try {
+    // Import getUserRoles dynamically to avoid circular dependency
+    const { getUserRoles } = await import('./roleService');
+
+    // Get all roles for the user
+    const practitionerRoles = await getUserRoles(medplum, userId);
+
+    // Extract role codes from PractitionerRole resources
+    const roleCodes = practitionerRoles
+      .map((pr) => pr.meta?.tag?.find((tag) => tag.system === 'http://medimind.ge/role-assignment')?.code)
+      .filter((code): code is string => code !== undefined);
+
+    // Get AccessPolicy resources for each role code
+    const allPermissions = new Set<string>();
+    for (const roleCode of roleCodes) {
+      // Search for AccessPolicy with this role code
+      const bundle = await medplum.search('AccessPolicy', {
+        _tag: `http://medimind.ge/role-identifier|${roleCode}`,
+      });
+
+      const roles = bundle.entry?.map((entry) => entry.resource as AccessPolicy) || [];
+
+      // Extract permissions from each role
+      for (const role of roles) {
+        const permissions = accessPolicyToPermissions(role);
+        permissions.forEach((p) => allPermissions.add(p));
+      }
+    }
+
+    return Array.from(allPermissions);
+  } catch (error) {
+    console.error('[getUserPermissions] Error fetching user permissions:', error);
+    return []; // Return empty array on error (fail-closed)
+  }
 }

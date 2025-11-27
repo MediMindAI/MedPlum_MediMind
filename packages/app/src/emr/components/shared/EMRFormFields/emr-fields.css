@@ -219,7 +219,7 @@
 }
 
 .emr-input.has-left-section {
-  padding-left: 40px;
+  padding-left: 44px;
 }
 
 .emr-input.has-right-section {
@@ -659,6 +659,14 @@
   transition: var(--emr-input-transition) !important;
   padding: var(--emr-input-padding-y) var(--emr-input-padding-x) !important;
   background-color: var(--emr-input-bg-solid) !important;
+}
+
+/* Fix: Increase left padding when Mantine input has a left section (icon) */
+.emr-field-wrapper .mantine-TextInput-wrapper:has(.mantine-TextInput-section[data-position="left"]) .mantine-TextInput-input,
+.emr-field-wrapper .mantine-Select-wrapper:has(.mantine-Select-section[data-position="left"]) .mantine-Select-input,
+.emr-field-wrapper .mantine-NumberInput-wrapper:has(.mantine-NumberInput-section[data-position="left"]) .mantine-NumberInput-input,
+.emr-field-wrapper .mantine-Textarea-wrapper:has(.mantine-Textarea-section[data-position="left"]) .mantine-Textarea-input {
+  padding-left: 40px !important;
 }
 
 /* Hover state - with shadow lift */

@@ -6,14 +6,28 @@ import { createContext, useContext, useState, useCallback } from 'react';
 import kaTranslations from '../translations/ka.json';
 import enTranslations from '../translations/en.json';
 import ruTranslations from '../translations/ru.json';
+// Additional translation files for Settings tabs
+import unitsAdminRoutesKa from '../translations/units-admin-routes-ka.json';
+import unitsAdminRoutesEn from '../translations/units-admin-routes-en.json';
+import unitsAdminRoutesRu from '../translations/units-admin-routes-ru.json';
 
 export type Language = 'ka' | 'en' | 'ru';
 
 // JSON imports in Vite may come as objects with 'default' property
+const getTranslations = (main: any, ...extras: any[]): Record<string, string> => {
+  const base = main.default || main;
+  const merged = { ...base };
+  for (const extra of extras) {
+    const extraData = extra.default || extra;
+    Object.assign(merged, extraData);
+  }
+  return merged;
+};
+
 const translations: Record<Language, Record<string, string>> = {
-  ka: (kaTranslations as any).default || kaTranslations,
-  en: (enTranslations as any).default || enTranslations,
-  ru: (ruTranslations as any).default || ruTranslations,
+  ka: getTranslations(kaTranslations, unitsAdminRoutesKa),
+  en: getTranslations(enTranslations, unitsAdminRoutesEn),
+  ru: getTranslations(ruTranslations, unitsAdminRoutesRu),
 };
 
 const STORAGE_KEY = 'emrLanguage';

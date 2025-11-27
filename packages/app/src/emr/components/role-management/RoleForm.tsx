@@ -4,7 +4,7 @@ import { Stack, Text, Box, Group, Paper, SimpleGrid } from '@mantine/core';
 import type { UseFormReturnType } from '@mantine/form';
 import type { RoleFormValues } from '../../types/role-management';
 import { useTranslation } from '../../hooks/useTranslation';
-import { PermissionTree } from './PermissionTree';
+import { PermissionMatrix } from './PermissionMatrix';
 import { EMRTextInput, EMRTextarea, EMRSelect } from '../shared/EMRFormFields';
 import { IconUser, IconFileText, IconKey } from '@tabler/icons-react';
 
@@ -193,9 +193,20 @@ export function RoleForm({ form, hidePermissions = false, loading = false }: Rol
           title={sectionTitles.permissions[lang] || sectionTitles.permissions.en}
           accentColor="#10b981"
         >
-          <PermissionTree
+          <PermissionMatrix
             selectedPermissions={form.values.permissions}
-            onChange={(permissions) => form.setFieldValue('permissions', permissions)}
+            onTogglePermission={(permissionCode) => {
+              const current = form.values.permissions;
+              const isSelected = current.includes(permissionCode);
+
+              if (isSelected) {
+                // Remove permission
+                form.setFieldValue('permissions', current.filter(p => p !== permissionCode));
+              } else {
+                // Add permission
+                form.setFieldValue('permissions', [...current, permissionCode]);
+              }
+            }}
           />
         </FormSection>
       )}

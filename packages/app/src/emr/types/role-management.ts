@@ -29,9 +29,12 @@ export interface Permission {
   name: string;
   description: string;
   category: string;
+  displayOrder: number;
   resourceType?: string;
   accessLevel: 'read' | 'write' | 'delete' | 'admin';
   dependencies?: string[];
+  icon?: string;
+  dangerous?: boolean;
 }
 
 export interface PermissionCategory {
@@ -50,4 +53,22 @@ export interface PermissionNode {
   children?: PermissionNode[];
   parent?: string;
   level: number;
+}
+
+/**
+ * Predefined role template for quick role creation
+ */
+export interface RoleTemplate {
+  /** Unique template code, e.g., "physician" */
+  code: string;
+  /** Display name (translated) */
+  name: string;
+  /** Description (translated) */
+  description: string;
+  /** Default permissions for this template */
+  defaultPermissions: string[];
+  /** Whether template uses department scoping */
+  departmentScoped: boolean;
+  /** Default landing page route */
+  defaultPage?: string;
 }

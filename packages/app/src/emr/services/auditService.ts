@@ -9,6 +9,7 @@ import type {
   AuditLogEntryExtended,
 } from '../types/account-management';
 import { AUDIT_EVENT_CODES } from '../types/account-management';
+import type { EmergencyAccessRequest } from '../types/permission-cache';
 import { getPractitionerName } from './accountHelpers';
 
 /**
@@ -374,4 +375,55 @@ export async function getAccountAuditTrail(
   const auditEvents = await medplum.searchResources('AuditEvent', searchParams);
 
   return auditEvents;
+}
+
+/**
+ * Log emergency (break-glass) access with DICOM code DCM 110113
+ *
+ * @param medplum - Medplum client instance
+ * @param request - Emergency access request details
+ * @returns Created AuditEvent resource
+ *
+ * @example
+ * ```typescript
+ * await logEmergencyAccess(medplum, {
+ *   resourceId: 'patient-123',
+ *   resourceType: 'Patient',
+ *   reason: 'Life-threatening emergency - immediate access needed',
+ *   requestedAt: new Date().toISOString(),
+ *   requestedBy: 'practitioner-456'
+ * });
+ * ```
+ */
+export async function logEmergencyAccess(
+  medplum: MedplumClient,
+  request: EmergencyAccessRequest
+): Promise<AuditEvent> {
+  const auditEvent: AuditEvent = {
+    resourceType: 'AuditEvent',
+    type: {
+      system: DICOM_SYSTEM,
+      code: 'DCM 110113',
+      display: 'Emergency Override Started',
+    },
+    recorded: new Date().toISOString(),
+    outcome: '0',
+    outcomeDesc: `Emergency access: ${request.reason}`,
+    agent: [{
+      who: { reference: `Practitioner/${request.requestedBy}` },
+      requestor: true,
+    }],
+    entity: [{
+      what: { reference: `${request.resourceType}/${request.resourceId}` },
+      detail: [{
+        type: 'reason',
+        valueString: request.reason,
+      }],
+    }],
+    source: {
+      observer: { reference: 'Device/medimind-emr' },
+    },
+  };
+
+  return medplum.createResource(auditEvent);
 }

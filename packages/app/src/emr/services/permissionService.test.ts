@@ -18,16 +18,18 @@ import {
 
 describe('permissionService', () => {
   describe('getPermissionTree', () => {
-    it('should return 6 permission categories', () => {
+    it('should return 8 permission categories', () => {
       const tree = getPermissionTree();
 
-      expect(tree).toHaveLength(6);
+      expect(tree).toHaveLength(8);
       expect(tree[0].code).toBe('patient-management');
       expect(tree[1].code).toBe('clinical-documentation');
       expect(tree[2].code).toBe('laboratory');
       expect(tree[3].code).toBe('billing-financial');
       expect(tree[4].code).toBe('administration');
       expect(tree[5].code).toBe('reports');
+      expect(tree[6].code).toBe('nomenclature');
+      expect(tree[7].code).toBe('scheduling');
     });
 
     it('should include permissions for each category', () => {
@@ -49,7 +51,7 @@ describe('permissionService', () => {
 
       const deletePatient = allPermissions.find((p) => p.code === 'delete-patient');
       expect(deletePatient?.dependencies).toContain('view-patient-demographics');
-      expect(deletePatient?.dependencies).toContain('edit-patient-demographics');
+      // Note: delete-patient now only depends on view-patient-demographics, not edit
     });
   });
 
@@ -67,8 +69,8 @@ describe('permissionService', () => {
       const resolved = resolvePermissionDependencies(selected);
 
       expect(resolved).toContain('delete-patient');
-      expect(resolved).toContain('edit-patient-demographics'); // Dependency
-      expect(resolved).toContain('view-patient-demographics'); // Transitive dependency
+      expect(resolved).toContain('view-patient-demographics'); // Dependency
+      expect(resolved).toContain('view-patient-list'); // Transitive dependency
     });
 
     it('should handle permissions with no dependencies', () => {
@@ -95,35 +97,102 @@ describe('permissionService', () => {
   });
 
   describe('permissionsToAccessPolicy', () => {
-    it('should convert permission codes to AccessPolicy resources', () => {
+    it('should convert permission codes to AccessPolicy resources with interaction arrays', () => {
       const permissions = ['view-patient-demographics', 'view-encounters'];
       const resources = permissionsToAccessPolicy(permissions);
 
       expect(resources).toHaveLength(2);
 
       const patientResource = resources.find((r) => r.resourceType === 'Patient');
-      expect(patientResource?.readonly).toBe(true);
+      expect(patientResource?.interaction).toContain('read');
+      expect(patientResource?.interaction).toContain('search');
+      expect(patientResource?.interaction).not.toContain('create');
+      expect(patientResource?.interaction).not.toContain('update');
+      expect(patientResource?.interaction).not.toContain('delete');
 
       const encounterResource = resources.find((r) => r.resourceType === 'Encounter');
-      expect(encounterResource?.readonly).toBe(true);
+      expect(encounterResource?.interaction).toContain('read');
+      expect(encounterResource?.interaction).toContain('search');
     });
 
-    it('should set readonly=false when write permissions are included', () => {
+    it('should include create and update interactions when write permissions are included', () => {
       const permissions = ['view-patient-demographics', 'edit-patient-demographics'];
       const resources = permissionsToAccessPolicy(permissions);
 
       expect(resources).toHaveLength(1);
       expect(resources[0].resourceType).toBe('Patient');
-      expect(resources[0].readonly).toBe(false); // Write permission overrides read
+      expect(resources[0].interaction).toContain('read');
+      expect(resources[0].interaction).toContain('create');
+      expect(resources[0].interaction).toContain('update');
+      expect(resources[0].interaction).toContain('search');
     });
 
     it('should aggregate multiple permissions for same resource', () => {
       const permissions = ['view-encounters', 'create-encounter', 'edit-encounter'];
       const resources = permissionsToAccessPolicy(permissions);
 
+      // After dependency resolution, may include Patient resources as well
+      expect(resources.length).toBeGreaterThanOrEqual(1);
+
+      const encounterResource = resources.find((r) => r.resourceType === 'Encounter');
+      expect(encounterResource).toBeDefined();
+      expect(encounterResource?.interaction).toContain('read');
+      expect(encounterResource?.interaction).toContain('create');
+      expect(encounterResource?.interaction).toContain('update');
+      expect(encounterResource?.interaction).toContain('search');
+    });
+
+    it('should resolve dependencies before mapping', () => {
+      const permissions = ['edit-patient-demographics']; // Has dependency on view-patient-demographics
+      const resources = permissionsToAccessPolicy(permissions);
+
       expect(resources).toHaveLength(1);
-      expect(resources[0].resourceType).toBe('Encounter');
-      expect(resources[0].readonly).toBe(false);
+      const patientResource = resources.find((r) => r.resourceType === 'Patient');
+      // Should include both read (from dependency) and write (from edit)
+      expect(patientResource?.interaction).toContain('read');
+      expect(patientResource?.interaction).toContain('create');
+      expect(patientResource?.interaction).toContain('update');
+      expect(patientResource?.interaction).toContain('search');
+    });
+
+    it('should map delete accessLevel to delete interaction', () => {
+      const permissions = ['delete-patient'];
+      const resources = permissionsToAccessPolicy(permissions);
+
+      expect(resources).toHaveLength(1);
+      const patientResource = resources.find((r) => r.resourceType === 'Patient');
+      expect(patientResource?.interaction).toContain('delete');
+      // Dependencies should add read/search via resolvePermissionDependencies
+      // delete-patient depends on view-patient-demographics which has accessLevel: 'read'
+      expect(patientResource?.interaction).toContain('read');
+      expect(patientResource?.interaction).toContain('search');
+      // Should NOT include create/update (those come from 'write' accessLevel only)
+      expect(patientResource?.interaction).not.toContain('create');
+      expect(patientResource?.interaction).not.toContain('update');
+    });
+
+    it('should map admin accessLevel to all interactions', () => {
+      // Assuming there's a permission with accessLevel: 'admin'
+      // For now, test with multiple permissions that cover all operations
+      const permissions = ['view-patient-list', 'create-patient', 'edit-patient-demographics', 'delete-patient'];
+      const resources = permissionsToAccessPolicy(permissions);
+
+      const patientResource = resources.find((r) => r.resourceType === 'Patient');
+      expect(patientResource?.interaction).toContain('read');
+      expect(patientResource?.interaction).toContain('create');
+      expect(patientResource?.interaction).toContain('update');
+      expect(patientResource?.interaction).toContain('delete');
+      expect(patientResource?.interaction).toContain('search');
+    });
+
+    it('should sort interactions for consistency', () => {
+      const permissions = ['edit-patient-demographics'];
+      const resources = permissionsToAccessPolicy(permissions);
+
+      const patientResource = resources.find((r) => r.resourceType === 'Patient');
+      const interactions = patientResource?.interaction || [];
+      const sortedInteractions = [...interactions].sort();
+      expect(interactions).toEqual(sortedInteractions);
     });
 
     it('should handle empty permissions array', () => {

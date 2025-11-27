@@ -3,11 +3,11 @@
 
 /* ==================== PAGE HEADER ==================== */
 .headerSection {
-  padding: 24px 28px;
+  padding: 17px 20px;
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px;
+  border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.04),
@@ -22,26 +22,26 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 3px;
   background: var(--emr-gradient-submenu);
 }
 
 .headerIcon {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+  width: 39px;
+  height: 39px;
+  border-radius: 11px;
   background: var(--emr-gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(26, 54, 93, 0.25);
+  box-shadow: 0 3px 11px rgba(26, 54, 93, 0.25);
   color: white;
 }
 
 .headerTitle {
-  font-size: 24px;
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.35px;
   background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -49,9 +49,9 @@
 }
 
 .headerSubtitle {
-  font-size: 14px;
+  font-size: 10px;
   color: var(--emr-gray-500);
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .roleBadge {
@@ -59,24 +59,25 @@
   color: var(--emr-secondary);
   border: 1px solid rgba(43, 108, 176, 0.15);
   font-weight: 600;
-  font-size: 13px;
-  padding: 8px 16px;
-  border-radius: 20px;
+  font-size: 11px;
+  padding: 6px 11px;
+  border-radius: 14px;
 }
 
 .createButton {
   background: var(--emr-gradient-primary);
-  box-shadow: 0 4px 12px rgba(26, 54, 93, 0.2);
+  box-shadow: 0 3px 8px rgba(26, 54, 93, 0.2);
   font-weight: 600;
-  min-height: 44px;
-  padding: 0 24px;
-  border-radius: 12px;
+  font-size: 13px;
+  min-height: 31px;
+  padding: 0 17px;
+  border-radius: 8px;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .createButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(26, 54, 93, 0.3);
+  box-shadow: 0 6px 14px rgba(26, 54, 93, 0.3);
 }
 
 /* ==================== SECTION STYLING ==================== */
@@ -353,16 +354,16 @@
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
   .headerSection {
-    padding: 16px 20px;
+    padding: 12px 14px;
   }
 
   .headerIcon {
-    width: 48px;
-    height: 48px;
+    width: 34px;
+    height: 34px;
   }
 
   .headerTitle {
-    font-size: 20px;
+    font-size: 14px;
   }
 
   .statCard {

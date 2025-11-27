@@ -2,145 +2,27 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import React, { useMemo, useState } from 'react';
-import { Switch } from '@mantine/core';
+import { Stack, Paper, Group, Text, Box, Collapse, Checkbox, Badge, Button, Loader } from '@mantine/core';
 import {
   IconRefresh,
   IconDeviceFloppy,
   IconShieldCheck,
-  IconUser,
-  IconStethoscope,
-  IconHeartbeat,
-  IconPill,
-  IconFileText,
-  IconCalendar,
-  IconShield,
-  IconReceipt,
-  IconBuilding,
-  IconMapPin,
-  IconPlus,
-  IconEye,
-  IconPencil,
-  IconTrash,
-  IconSearch,
   IconKey,
-  IconFileInvoice,
-  IconUserCog,
-  IconShieldLock,
-  IconForms,
-  IconClipboardCheck,
-  IconFile,
-  IconList,
-  IconTestPipe,
-  IconFlask,
-  IconDeviceDesktop,
-  IconHistory,
-  IconReportMedical,
   IconChevronDown,
   IconChevronRight,
-  IconInfoCircle,
+  IconAlertTriangle,
 } from '@tabler/icons-react';
-import type { PermissionRow } from '../../types/account-management';
-import { PERMISSION_RESOURCES, PERMISSION_OPERATIONS } from '../../types/account-management';
+import { getPermissionTree, resolvePermissionDependencies } from '../../services/permissionService';
 import { useTranslation } from '../../hooks/useTranslation';
+import type { PermissionCategory, Permission } from '../../types/role-management';
 import styles from './PermissionMatrix.module.css';
 
 /**
- * Resource category mapping for visual grouping
- */
-const RESOURCE_CATEGORIES: Record<string, 'clinical' | 'administrative' | 'financial' | 'diagnostic'> = {
-  // Clinical - Patient Data
-  Patient: 'clinical',
-  Encounter: 'clinical',
-  Observation: 'clinical',
-  MedicationRequest: 'clinical',
-  DiagnosticReport: 'diagnostic',
-
-  // Administrative - Staff & Organization
-  Practitioner: 'administrative',
-  PractitionerRole: 'administrative',
-  AccessPolicy: 'administrative',
-  Organization: 'administrative',
-  Location: 'administrative',
-
-  // Financial - Billing & Insurance
-  Invoice: 'financial',
-  Claim: 'financial',
-  Coverage: 'financial',
-
-  // Forms & Documents
-  Questionnaire: 'administrative',
-  QuestionnaireResponse: 'clinical',
-  DocumentReference: 'clinical',
-
-  // Nomenclature & Catalog
-  ActivityDefinition: 'administrative',
-
-  // Laboratory
-  SpecimenDefinition: 'diagnostic',
-  ObservationDefinition: 'diagnostic',
-  DeviceDefinition: 'diagnostic',
-
-  // Audit & Security
-  AuditEvent: 'administrative',
-};
-
-/**
- * Resource icons mapping
- */
-const RESOURCE_ICONS: Record<string, typeof IconUser> = {
-  // Clinical - Patient Data
-  Patient: IconUser,
-  Encounter: IconCalendar,
-  Observation: IconHeartbeat,
-  MedicationRequest: IconPill,
-  DiagnosticReport: IconReportMedical,
-
-  // Administrative - Staff & Organization
-  Practitioner: IconStethoscope,
-  PractitionerRole: IconUserCog,
-  AccessPolicy: IconShieldLock,
-  Organization: IconBuilding,
-  Location: IconMapPin,
-
-  // Financial - Billing & Insurance
-  Invoice: IconFileInvoice,
-  Claim: IconReceipt,
-  Coverage: IconShield,
-
-  // Forms & Documents
-  Questionnaire: IconForms,
-  QuestionnaireResponse: IconClipboardCheck,
-  DocumentReference: IconFile,
-
-  // Nomenclature & Catalog
-  ActivityDefinition: IconList,
-
-  // Laboratory
-  SpecimenDefinition: IconTestPipe,
-  ObservationDefinition: IconFlask,
-  DeviceDefinition: IconDeviceDesktop,
-
-  // Audit & Security
-  AuditEvent: IconHistory,
-};
-
-/**
- * Operation icons mapping
- */
-const OPERATION_ICONS: Record<string, typeof IconPlus> = {
-  create: IconPlus,
-  read: IconEye,
-  update: IconPencil,
-  delete: IconTrash,
-  search: IconSearch,
-};
-
-/**
- * Props for PermissionMatrix component
+ * Props for PermissionMatrix component (EMR Permissions version)
  */
 export interface PermissionMatrixProps {
-  /** Permission rows to display */
-  permissions: PermissionRow[];
+  /** Selected permission codes */
+  selectedPermissions: string[];
   /** Whether the matrix is in read-only mode */
   readOnly?: boolean;
   /** Loading state */
@@ -148,31 +30,35 @@ export interface PermissionMatrixProps {
   /** Whether there are unsaved changes */
   hasChanges?: boolean;
   /** Callback when a permission is toggled */
-  onPermissionChange?: (resourceType: string, operation: string, value: boolean) => void;
+  onPermissionChange?: (permissionCode: string, value: boolean) => void;
   /** Callback to save permissions */
   onSave?: () => Promise<void>;
   /** Callback to refresh permissions */
   onRefresh?: () => Promise<void>;
 }
 
-
 /**
- * PermissionMatrix - Premium grid showing resources vs operations
+ * PermissionMatrix - EMR Permissions with 8 Categories
  *
- * Displays a visually refined matrix of FHIR resource types (rows) vs CRUD operations (columns).
- * Each cell contains a custom toggle switch to control permissions.
+ * Displays 104 granular EMR permissions organized in 8 collapsible categories:
+ * - Patient Management (15 permissions)
+ * - Clinical Documentation (18 permissions)
+ * - Laboratory (12 permissions)
+ * - Billing & Financial (15 permissions)
+ * - Administration (18 permissions)
+ * - Reports (10 permissions)
+ * - Nomenclature (8 permissions)
+ * - Scheduling (8 permissions)
  *
  * Features:
- * - Premium glassmorphism design
- * - Custom toggle switches instead of checkboxes
- * - Resource icons by category (clinical, administrative, financial, diagnostic)
- * - Translated resource names
- * - Mobile-first responsive design
- * - Auto-enable dependencies (update requires read)
- * - Save/refresh actions with visual feedback
+ * - Collapsible category groups
+ * - Permission dependency resolution (edit requires view)
+ * - Select all / Clear all per category
+ * - Dangerous permission badges
+ * - Inherited permission indicators
  */
 export function PermissionMatrix({
-  permissions,
+  selectedPermissions = [],
   readOnly = false,
   loading = false,
   hasChanges = false,
@@ -180,106 +66,54 @@ export function PermissionMatrix({
   onSave,
   onRefresh,
 }: PermissionMatrixProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
+  const [saving, setSaving] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  // Track which resources are expanded
-  const [expandedResources, setExpandedResources] = useState<Set<string>>(new Set());
+  // Ensure selectedPermissions is always an array
+  const safeSelectedPermissions = selectedPermissions || [];
 
-  // Toggle resource expansion
-  const toggleExpand = (resourceType: string) => {
-    setExpandedResources((prev) => {
-      const next = new Set(prev);
-      if (next.has(resourceType)) {
-        next.delete(resourceType);
-      } else {
-        next.add(resourceType);
-      }
-      return next;
-    });
-  };
+  // Get permission tree with translations
+  const categories = useMemo(() => getPermissionTree(lang as 'ka' | 'en' | 'ru'), [lang]);
 
-  // Get resource description
-  const getResourceDescription = (resourceType: string): string => {
-    const key = `accountManagement.permissions.descriptions.${resourceType}`;
-    const translated = t(key);
-    return translated !== key ? translated : '';
-  };
-
-  // Create a map for quick lookup
-  const permissionMap = useMemo(
-    () => new Map(permissions.map((p) => [p.resourceType, p])),
-    [permissions]
+  // Calculate inherited permissions (auto-enabled due to dependencies)
+  const allPermissionsWithDeps = useMemo(
+    () => resolvePermissionDependencies(safeSelectedPermissions),
+    [safeSelectedPermissions]
   );
 
-  // Operation labels with translations
-  const operationLabels: Record<string, string> = {
-    create: t('accountManagement.permissions.create'),
-    read: t('accountManagement.permissions.read'),
-    update: t('accountManagement.permissions.update'),
-    delete: t('accountManagement.permissions.delete'),
-    search: t('accountManagement.permissions.search'),
-  };
+  const inheritedPermissions = useMemo(
+    () => allPermissionsWithDeps.filter((p) => !safeSelectedPermissions.includes(p)),
+    [allPermissionsWithDeps, safeSelectedPermissions]
+  );
 
-  // Calculate stats
-  const stats = useMemo(() => {
-    let enabled = 0;
-    let total = 0;
-    permissions.forEach((row) => {
-      PERMISSION_OPERATIONS.forEach((op) => {
-        total++;
-        if (row[op as keyof PermissionRow]) {
-          enabled++;
-        }
-      });
-    });
-    return { enabled, total };
-  }, [permissions]);
+  // Calculate total permissions count
+  const totalPermissions = useMemo(
+    () => categories.reduce((sum, cat) => sum + cat.permissions.length, 0),
+    [categories]
+  );
 
-  /**
-   * Get translated resource name
-   */
-  const getResourceName = (resourceType: string): string => {
-    const key = `accountManagement.permissions.resources.${resourceType}`;
-    const translated = t(key);
-    return translated !== key ? translated : resourceType;
-  };
+  const selectedCount = allPermissionsWithDeps.length;
 
-  /**
-   * Handle toggle change
-   */
-  const handleToggle = (resourceType: string, operation: string, currentValue: boolean) => {
-    if (readOnly || !onPermissionChange) {
-      return;
-    }
-    onPermissionChange(resourceType, operation, !currentValue);
-  };
-
-  /**
-   * Check if a permission is enabled
-   */
-  const isEnabled = (resourceType: string, operation: string): boolean => {
-    const row = permissionMap.get(resourceType);
-    if (!row) {
-      return false;
-    }
-    return row[operation as keyof PermissionRow] as boolean;
-  };
-
-  /**
-   * Handle save button click
-   */
+  // Handle save
   const handleSave = async () => {
-    if (onSave) {
+    if (!onSave) return;
+    setSaving(true);
+    try {
       await onSave();
+    } finally {
+      setSaving(false);
     }
   };
 
-  /**
-   * Handle refresh button click
-   */
+  // Handle refresh
   const handleRefresh = async () => {
-    if (onRefresh) {
+    if (!onRefresh) return;
+    setRefreshing(true);
+    try {
       await onRefresh();
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -298,151 +132,316 @@ export function PermissionMatrix({
   }
 
   return (
-    <div className={styles.matrixContainer}>
+    <Stack gap="md">
       {/* Header Section */}
-      <div className={styles.matrixHeader}>
-        <div className={styles.headerLeft}>
-          <div className={styles.headerIcon}>
-            <IconShieldCheck size={22} />
-          </div>
-          <div>
-            <h3 className={styles.headerTitle}>{t('accountManagement.permissions.matrix')}</h3>
-            <p className={styles.headerSubtitle}>
-              {stats.enabled} / {stats.total} {t('accountManagement.permissions.title').toLowerCase()}
-            </p>
-          </div>
-        </div>
+      <Paper p="md" withBorder style={{ background: 'var(--emr-gray-50)' }}>
+        <Group justify="space-between">
+          <Group gap="sm">
+            <Box
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 10,
+                background: 'linear-gradient(135deg, rgba(23, 162, 184, 0.15) 0%, rgba(43, 108, 176, 0.15) 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <IconShieldCheck size={22} style={{ color: 'var(--emr-turquoise)' }} />
+            </Box>
+            <div>
+              <Text size="sm" fw={600} style={{ color: 'var(--emr-text-primary)' }}>
+                {t('accountManagement.permissions.matrix')}
+              </Text>
+              <Text size="xs" style={{ color: 'var(--emr-gray-500)' }}>
+                {t('roleManagement.form.selectPermissions')}
+              </Text>
+            </div>
+          </Group>
 
-        {!readOnly && (
-          <div className={styles.actionButtons}>
-            {onRefresh && (
-              <button type="button" className={styles.refreshButton} onClick={handleRefresh}>
-                <IconRefresh size={16} />
-                {t('common.refresh')}
-              </button>
+          <Group gap="md">
+            {/* Stats */}
+            <div style={{ textAlign: 'right' }}>
+              <Text size="xl" fw={700} style={{ color: 'var(--emr-turquoise)' }}>
+                {selectedCount}
+              </Text>
+              <Text size="xs" style={{ color: 'var(--emr-gray-500)' }}>
+                {t('accountManagement.permissions.ofTotal', { total: totalPermissions }) || `of ${totalPermissions}`}
+              </Text>
+            </div>
+
+            {/* Action Buttons */}
+            {!readOnly && (
+              <Group gap="xs">
+                {onRefresh && (
+                  <Button
+                    variant="subtle"
+                    size="sm"
+                    leftSection={refreshing ? <Loader size={14} /> : <IconRefresh size={16} />}
+                    onClick={handleRefresh}
+                    disabled={refreshing}
+                    style={{ color: 'var(--emr-gray-600)' }}
+                  >
+                    {t('common.refresh')}
+                  </Button>
+                )}
+                {onSave && (
+                  <Button
+                    size="sm"
+                    leftSection={saving ? <Loader size={14} color="white" /> : <IconDeviceFloppy size={16} />}
+                    onClick={handleSave}
+                    disabled={!hasChanges || saving}
+                    style={{
+                      background: hasChanges
+                        ? 'linear-gradient(135deg, var(--emr-turquoise) 0%, #138496 100%)'
+                        : 'var(--emr-gray-300)',
+                    }}
+                  >
+                    {t('common.save')}
+                  </Button>
+                )}
+              </Group>
             )}
-            {onSave && (
-              <button
-                type="button"
-                className={`${styles.saveButton} ${hasChanges ? styles.saveButtonActive : ''}`}
-                onClick={handleSave}
-                disabled={!hasChanges}
-              >
-                <IconDeviceFloppy size={16} />
-                {t('common.save') || t('accountManagement.form.save')}
-              </button>
-            )}
-          </div>
+          </Group>
+        </Group>
+
+        {/* Inherited permissions info */}
+        {inheritedPermissions.length > 0 && (
+          <Text size="xs" mt="sm" style={{ color: 'var(--emr-gray-600)' }}>
+            <IconKey size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+            {inheritedPermissions.length} {t('roleManagement.form.autoEnabled')}
+          </Text>
         )}
-      </div>
+      </Paper>
 
-      {/* Quick Stats */}
-      <div className={styles.quickStats}>
-        <div className={`${styles.statBadge} ${stats.enabled > 0 ? styles.enabled : ''}`}>
-          <IconKey size={14} />
-          <span className={styles.statCount}>{stats.enabled}</span> {t('accountManagement.permissions.title')}
-        </div>
-      </div>
-
-      {/* Permission Table */}
-      <div className={styles.tableWrapper}>
-        <table className={styles.permissionTable}>
-          <thead className={styles.tableHead}>
-            <tr>
-              <th>{t('common.resource')}</th>
-              {PERMISSION_OPERATIONS.map((op) => {
-                const OperationIcon = OPERATION_ICONS[op];
-                return (
-                  <th key={op}>
-                    <div className={styles.operationHeader}>
-                      <div className={`${styles.operationIcon} ${styles[op]}`}>
-                        <OperationIcon size={16} />
-                      </div>
-                      <span className={styles.operationLabel}>{operationLabels[op]}</span>
-                    </div>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody className={styles.tableBody}>
-            {PERMISSION_RESOURCES.map((resourceType) => {
-              const category = RESOURCE_CATEGORIES[resourceType] || 'clinical';
-              const ResourceIcon = RESOURCE_ICONS[resourceType] || IconFileText;
-              const isExpanded = expandedResources.has(resourceType);
-              const description = getResourceDescription(resourceType);
-
-              return (
-                <React.Fragment key={resourceType}>
-                  <tr className={isExpanded ? styles.expandedRow : ''}>
-                    <td>
-                      <div className={styles.resourceCell}>
-                        <button
-                          type="button"
-                          className={styles.expandButton}
-                          onClick={() => toggleExpand(resourceType)}
-                          aria-label={isExpanded ? 'Collapse' : 'Expand'}
-                        >
-                          {isExpanded ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
-                        </button>
-                        <div className={`${styles.resourceIcon} ${styles[category]}`}>
-                          <ResourceIcon size={18} />
-                        </div>
-                        <div className={styles.resourceInfo}>
-                          <span className={styles.resourceName}>{getResourceName(resourceType)}</span>
-                          <span className={styles.resourceCode}>{resourceType}</span>
-                        </div>
-                      </div>
-                    </td>
-                    {PERMISSION_OPERATIONS.map((operation) => {
-                      const enabled = isEnabled(resourceType, operation);
-                      return (
-                        <td key={operation} className={styles.toggleCell}>
-                          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <Switch
-                              checked={enabled}
-                              onChange={() => handleToggle(resourceType, operation, enabled)}
-                              disabled={readOnly}
-                              aria-label={`${resourceType} ${operation}`}
-                              size="md"
-                              color="teal"
-                              styles={{
-                                track: {
-                                  cursor: readOnly ? 'not-allowed' : 'pointer',
-                                },
-                              }}
-                            />
-                          </div>
-                        </td>
-                      );
-                    })}
-                  </tr>
-                  {isExpanded && description && (
-                    <tr key={`${resourceType}-description`} className={styles.descriptionRow}>
-                      <td colSpan={6}>
-                        <div className={styles.descriptionContent}>
-                          <IconInfoCircle size={16} className={styles.descriptionIcon} />
-                          <span>{description}</span>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+      {/* Permission Categories */}
+      {categories.map((category) => (
+        <CategoryPermissionGroup
+          key={category.code}
+          category={category}
+          selectedPermissions={safeSelectedPermissions}
+          inheritedPermissions={inheritedPermissions}
+          readOnly={readOnly}
+          onTogglePermission={(code) => onPermissionChange?.(code, !safeSelectedPermissions.includes(code))}
+          onSelectAll={(codes) => {
+            codes.forEach((code) => {
+              if (!safeSelectedPermissions.includes(code)) {
+                onPermissionChange?.(code, true);
+              }
+            });
+          }}
+          onClearAll={(codes) => {
+            codes.forEach((code) => {
+              if (safeSelectedPermissions.includes(code)) {
+                onPermissionChange?.(code, false);
+              }
+            });
+          }}
+        />
+      ))}
 
       {/* Unsaved Changes Indicator */}
       {hasChanges && !readOnly && (
-        <div className={styles.unsavedIndicator}>
-          <span className={styles.unsavedDot} />
-          <span className={styles.unsavedText}>
-            {t('common.unsavedChanges') || t('formUI.messages.unsavedChanges') || 'You have unsaved changes'}
-          </span>
-        </div>
+        <Paper p="sm" withBorder style={{ background: 'rgba(251, 191, 36, 0.1)', borderColor: 'rgba(251, 191, 36, 0.3)' }}>
+          <Group gap="xs">
+            <IconAlertTriangle size={16} style={{ color: '#f59e0b' }} />
+            <Text size="sm" style={{ color: '#b45309' }}>
+              {t('common.unsavedChanges') || 'You have unsaved changes'}
+            </Text>
+          </Group>
+        </Paper>
       )}
-    </div>
+    </Stack>
   );
 }
+
+/**
+ * Props for CategoryPermissionGroup
+ */
+interface CategoryPermissionGroupProps {
+  category: PermissionCategory;
+  selectedPermissions: string[];
+  inheritedPermissions: string[];
+  readOnly: boolean;
+  onTogglePermission: (code: string) => void;
+  onSelectAll: (codes: string[]) => void;
+  onClearAll: (codes: string[]) => void;
+}
+
+/**
+ * Collapsible category group with permissions
+ */
+function CategoryPermissionGroup({
+  category,
+  selectedPermissions = [],
+  inheritedPermissions = [],
+  readOnly,
+  onTogglePermission,
+  onSelectAll,
+  onClearAll,
+}: CategoryPermissionGroupProps): JSX.Element {
+  const [expanded, setExpanded] = useState(false);
+  const { t } = useTranslation();
+
+  // Ensure arrays are never undefined
+  const safeSelectedPermissions = selectedPermissions || [];
+  const safeInheritedPermissions = inheritedPermissions || [];
+
+  const selectedCount = category.permissions.filter(
+    (p) => safeSelectedPermissions.includes(p.code) || safeInheritedPermissions.includes(p.code)
+  ).length;
+
+  const allCodes = category.permissions.map((p) => p.code);
+  const allSelected = selectedCount === category.permissions.length;
+
+  return (
+    <Paper p="sm" withBorder style={{ background: 'white' }}>
+      {/* Category Header */}
+      <Group justify="space-between">
+        <Group
+          gap="sm"
+          onClick={() => setExpanded(!expanded)}
+          style={{ cursor: 'pointer', flex: 1 }}
+        >
+          {expanded ? (
+            <IconChevronDown size={18} style={{ color: 'var(--emr-gray-500)' }} />
+          ) : (
+            <IconChevronRight size={18} style={{ color: 'var(--emr-gray-500)' }} />
+          )}
+          <Text fw={500} style={{ color: 'var(--emr-text-primary)' }}>
+            {category.name}
+          </Text>
+          <Badge
+            size="sm"
+            variant="light"
+            color={selectedCount > 0 ? 'teal' : 'gray'}
+          >
+            {selectedCount}/{category.permissions.length}
+          </Badge>
+        </Group>
+
+        {/* Select All / Clear All */}
+        {!readOnly && expanded && (
+          <Group gap="xs">
+            <Button
+              variant="subtle"
+              size="xs"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelectAll(allCodes);
+              }}
+              disabled={allSelected}
+              style={{ color: 'var(--emr-turquoise)' }}
+            >
+              {t('common.selectAll')}
+            </Button>
+            <Button
+              variant="subtle"
+              size="xs"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClearAll(allCodes);
+              }}
+              disabled={selectedCount === 0}
+              style={{ color: 'var(--emr-gray-500)' }}
+            >
+              {t('common.clearAll')}
+            </Button>
+          </Group>
+        )}
+      </Group>
+
+      {/* Permissions List */}
+      <Collapse in={expanded}>
+        <Stack gap="xs" mt="md" pl="md">
+          {category.permissions.map((permission) => (
+            <PermissionCheckboxItem
+              key={permission.code}
+              permission={permission}
+              checked={safeSelectedPermissions.includes(permission.code)}
+              inherited={safeInheritedPermissions.includes(permission.code)}
+              disabled={readOnly}
+              onChange={() => onTogglePermission(permission.code)}
+            />
+          ))}
+        </Stack>
+      </Collapse>
+    </Paper>
+  );
+}
+
+/**
+ * Props for PermissionCheckboxItem
+ */
+interface PermissionCheckboxItemProps {
+  permission: Permission;
+  checked: boolean;
+  inherited: boolean;
+  disabled: boolean;
+  onChange: () => void;
+}
+
+/**
+ * Individual permission checkbox with badges
+ */
+function PermissionCheckboxItem({
+  permission,
+  checked,
+  inherited,
+  disabled,
+  onChange,
+}: PermissionCheckboxItemProps): JSX.Element {
+  const { t } = useTranslation();
+
+  return (
+    <Checkbox
+      label={
+        <Group gap="xs">
+          <Text size="sm" style={{ color: 'var(--emr-text-primary)' }}>
+            {permission.name}
+          </Text>
+          {inherited && (
+            <Badge size="xs" variant="outline" color="gray">
+              {t('roleManagement.form.autoEnabled')}
+            </Badge>
+          )}
+          {permission.dangerous && (
+            <Badge size="xs" color="red" variant="light">
+              {t('roleManagement.form.dangerous')}
+            </Badge>
+          )}
+        </Group>
+      }
+      description={permission.description}
+      checked={checked || inherited}
+      disabled={disabled || inherited}
+      onChange={() => {
+        if (!disabled && !inherited) {
+          onChange();
+        }
+      }}
+      styles={{
+        root: {
+          padding: '8px 12px',
+          borderRadius: 8,
+          background: checked || inherited ? 'rgba(23, 162, 184, 0.05)' : 'transparent',
+          border: `1px solid ${checked || inherited ? 'rgba(23, 162, 184, 0.2)' : 'transparent'}`,
+          transition: 'all 0.2s ease',
+          '&:hover': {
+            background: 'rgba(23, 162, 184, 0.08)',
+          },
+        },
+        label: {
+          cursor: disabled || inherited ? 'not-allowed' : 'pointer',
+        },
+        description: {
+          color: 'var(--emr-gray-500)',
+          fontSize: 12,
+        },
+      }}
+    />
+  );
+}
+
+export default PermissionMatrix;

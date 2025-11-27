@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
 import { useState, useMemo } from 'react';
-import { Title, Button, Stack, Box, Paper, Group, Badge, Text } from '@mantine/core';
-import { IconPlus, IconShieldLock, IconChartBar, IconFilter } from '@tabler/icons-react';
+import { Title, Button, Stack, Box, Paper, Group, Badge, Text, Collapse, ActionIcon } from '@mantine/core';
+import { IconPlus, IconShieldLock, IconChartBar, IconFilter, IconChevronUp, IconChevronDown } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useMedplum } from '@medplum/react-hooks';
 import { RoleTable } from '../../components/role-management/RoleTable';
@@ -55,6 +55,10 @@ export function RoleManagementView(): JSX.Element {
   const [cloningRole, setCloningRole] = useState<RoleRow | null>(null);
   // Template code for pre-filling role form (currently unused but reserved for future)
   const [, setTemplateCode] = useState<string | null>(null);
+
+  // Collapsible sections - collapsed by default
+  const [statsExpanded, setStatsExpanded] = useState(false);
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
 
   // Calculate stats
   const stats = useMemo(() => {
@@ -119,7 +123,7 @@ export function RoleManagementView(): JSX.Element {
           <Group gap="lg" align="center">
             {/* Icon container */}
             <Box className={styles.headerIcon}>
-              <IconShieldLock size={26} stroke={1.8} />
+              <IconShieldLock size={18} stroke={1.8} />
             </Box>
 
             <Box>
@@ -144,7 +148,7 @@ export function RoleManagementView(): JSX.Element {
 
           {!showEmptyState && (
             <Button
-              leftSection={<IconPlus size={18} stroke={2} />}
+              leftSection={<IconPlus size={14} stroke={2} />}
               onClick={() => {
                 setTemplateCode(null);
                 setCreateModalOpened(true);
@@ -173,60 +177,121 @@ export function RoleManagementView(): JSX.Element {
         </Paper>
       ) : (
         <>
-          {/* Dashboard Stats - Premium Design */}
-          <Box className={`${styles.animateFadeIn} ${styles.animateDelay1}`}>
-            <Group gap="md" align="center" mb="md">
+          {/* Dashboard Stats - Collapsible */}
+          <Paper
+            p="sm"
+            className={`${styles.animateFadeIn} ${styles.animateDelay1}`}
+            style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.6)',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06)',
+            }}
+          >
+            <Group
+              gap="md"
+              align="center"
+              mb={statsExpanded ? 'sm' : 0}
+              onClick={() => setStatsExpanded(!statsExpanded)}
+              style={{ cursor: 'pointer', userSelect: 'none' }}
+            >
               <Box className={styles.sectionIcon}>
                 <IconChartBar size={18} stroke={2} />
               </Box>
               <Text fw={600} size="sm" c="var(--emr-text-primary)" style={{ letterSpacing: '-0.2px' }}>
                 {lang === 'ka' ? 'სტატისტიკა' : lang === 'ru' ? 'Статистика' : 'Statistics'}
               </Text>
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="sm"
+                style={{ marginLeft: 'auto' }}
+              >
+                {statsExpanded ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+              </ActionIcon>
             </Group>
-            <RoleDashboardStats stats={stats} loading={loading} />
-          </Box>
+            <Collapse in={statsExpanded}>
+              <RoleDashboardStats stats={stats} loading={loading} />
+            </Collapse>
+          </Paper>
 
-          {/* Filters Section - Premium Card */}
-          <Box className={`${styles.animateFadeIn} ${styles.animateDelay2}`}>
-            <Paper className={styles.sectionCard}>
-              <Box className={styles.sectionHeader}>
-                <Box className={styles.sectionIcon}>
-                  <IconFilter size={18} stroke={2} />
-                </Box>
-                <Text className={styles.sectionTitle}>
-                  {lang === 'ka' ? 'ძიება და ფილტრები' : lang === 'ru' ? 'Поиск и фильтры' : 'Search & Filters'}
-                </Text>
+          {/* Filters Section - Collapsible */}
+          <Paper
+            p="sm"
+            className={`${styles.animateFadeIn} ${styles.animateDelay2}`}
+            style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.6)',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06)',
+            }}
+          >
+            <Group
+              gap="md"
+              align="center"
+              mb={filtersExpanded ? 'sm' : 0}
+              onClick={() => setFiltersExpanded(!filtersExpanded)}
+              style={{ cursor: 'pointer', userSelect: 'none' }}
+            >
+              <Box className={styles.sectionIcon}>
+                <IconFilter size={18} stroke={2} />
               </Box>
-              <Box className={styles.sectionContent}>
-                <RoleFilters onSearchChange={setSearchQuery} onStatusChange={setStatusFilter} />
-              </Box>
-            </Paper>
-          </Box>
+              <Text fw={600} size="sm" c="var(--emr-text-primary)" style={{ letterSpacing: '-0.2px' }}>
+                {lang === 'ka' ? 'ძიება და ფილტრები' : lang === 'ru' ? 'Поиск и фильтры' : 'Search & Filters'}
+              </Text>
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="sm"
+                style={{ marginLeft: 'auto' }}
+              >
+                {filtersExpanded ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+              </ActionIcon>
+            </Group>
+            <Collapse in={filtersExpanded}>
+              <RoleFilters onSearchChange={setSearchQuery} onStatusChange={setStatusFilter} />
+            </Collapse>
+          </Paper>
 
           {/* Roles Table - Premium Card */}
-          <Box className={`${styles.animateFadeIn} ${styles.animateDelay3}`}>
-            <Paper className={styles.sectionCard}>
-              <Box className={styles.sectionHeader}>
-                <Box className={styles.sectionIcon}>
-                  <IconShieldLock size={18} stroke={2} />
-                </Box>
-                <Text className={styles.sectionTitle}>
-                  {lang === 'ka' ? 'როლების სია' : lang === 'ru' ? 'Список ролей' : 'Roles List'}
-                </Text>
+          <Paper
+            className={`${styles.animateFadeIn} ${styles.animateDelay3}`}
+            style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              borderRadius: '12px',
+              border: '1px solid rgba(255, 255, 255, 0.6)',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(26, 54, 93, 0.06)',
+              overflow: 'hidden',
+            }}
+          >
+            <Group
+              gap="md"
+              align="center"
+              p="sm"
+              style={{
+                background: 'linear-gradient(180deg, #fafbfc 0%, #f5f7fa 100%)',
+                borderBottom: '1px solid var(--emr-gray-200)',
+              }}
+            >
+              <Box className={styles.sectionIcon}>
+                <IconShieldLock size={18} stroke={2} />
               </Box>
-              <Box p="md">
-                <RoleTable
-                  roles={roles}
-                  loading={loading}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  onDeactivate={handleDeactivate}
-                  onReactivate={handleReactivate}
-                  onClone={handleClone}
-                />
-              </Box>
-            </Paper>
-          </Box>
+              <Text fw={600} size="sm" c="var(--emr-text-primary)" style={{ letterSpacing: '-0.2px' }}>
+                {lang === 'ka' ? 'როლების სია' : lang === 'ru' ? 'Список ролей' : 'Roles List'}
+              </Text>
+            </Group>
+            <Box p="sm">
+              <RoleTable
+                roles={roles}
+                loading={loading}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onDeactivate={handleDeactivate}
+                onReactivate={handleReactivate}
+                onClone={handleClone}
+              />
+            </Box>
+          </Paper>
         </>
       )}
 

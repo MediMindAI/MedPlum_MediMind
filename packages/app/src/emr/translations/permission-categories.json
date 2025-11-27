@@ -2,31 +2,81 @@
   "patient-management": {
     "ka": "პაციენტის მართვა",
     "en": "Patient Management",
-    "ru": "Управление пациентами"
+    "ru": "Управление пациентами",
+    "description": {
+      "ka": "პაციენტის რეგისტრაცია, დემოგრაფიული მონაცემები, დოკუმენტები და დაზღვევა",
+      "en": "Patient registration, demographics, documents, and insurance management",
+      "ru": "Регистрация пациента, демографические данные, документы и страхование"
+    }
   },
   "clinical-documentation": {
     "ka": "კლინიკური დოკუმენტაცია",
     "en": "Clinical Documentation",
-    "ru": "Клиническая документация"
+    "ru": "Клиническая документация",
+    "description": {
+      "ka": "ვიზიტები, დიაგნოზები, პროცედურები, მედიკამენტები და კლინიკური ჩანაწერები",
+      "en": "Encounters, diagnoses, procedures, medications, and clinical notes",
+      "ru": "Визиты, диагнозы, процедуры, лекарства и клинические записи"
+    }
   },
   "laboratory": {
     "ka": "ლაბორატორია",
     "en": "Laboratory",
-    "ru": "Лаборатория"
+    "ru": "Лаборатория",
+    "description": {
+      "ka": "ლაბორატორიული შეკვეთები, შედეგები, ნიმუშები და აღჭურვილობის მართვა",
+      "en": "Lab orders, results, specimens, and equipment management",
+      "ru": "Лабораторные заказы, результаты, образцы и управление оборудованием"
+    }
   },
   "billing-financial": {
     "ka": "ბილინგი და ფინანსები",
     "en": "Billing & Financial",
-    "ru": "Выставление счетов и финансы"
+    "ru": "Биллинг и финансы",
+    "description": {
+      "ka": "ინვოისები, გადახდები, პრეტენზიები, დაზღვევის ავტორიზაცია და ფინანსური ანგარიშები",
+      "en": "Invoices, payments, claims, insurance authorization, and financial reports",
+      "ru": "Счета, платежи, претензии, авторизация страхования и финансовые отчеты"
+    }
   },
   "administration": {
-    "ka": "ადმინისტრაცია",
+    "ka": "ადმინისტრირება",
     "en": "Administration",
-    "ru": "Администрирование"
+    "ru": "Администрирование",
+    "description": {
+      "ka": "მომხმარებლები, როლები, განყოფილებები, აუდიტის ჟურნალები და სისტემის პარამეტრები",
+      "en": "Users, roles, departments, audit logs, and system settings",
+      "ru": "Пользователи, роли, отделы, журналы аудита и системные настройки"
+    }
   },
   "reports": {
     "ka": "ანგარიშები",
     "en": "Reports",
-    "ru": "Отчеты"
+    "ru": "Отчеты",
+    "description": {
+      "ka": "კლინიკური, ოპერაციული და ფინანსური ანგარიშები, ანალიტიკა და მეტრიკა",
+      "en": "Clinical, operational, and financial reports, analytics, and metrics",
+      "ru": "Клинические, операционные и финансовые отчеты, аналитика и метрики"
+    }
+  },
+  "nomenclature": {
+    "ka": "ნომენკლატურა",
+    "en": "Nomenclature",
+    "ru": "Номенклатура",
+    "description": {
+      "ka": "სერვისები, დიაგნოზების კატალოგი, მედიკამენტები და ლაბორატორიული კვლევების კატალოგი",
+      "en": "Services, diagnoses catalog, medications, and lab test catalog",
+      "ru": "Услуги, каталог диагнозов, лекарства и каталог лабораторных тестов"
+    }
+  },
+  "scheduling": {
+    "ka": "განრიგი",
+    "en": "Scheduling",
+    "ru": "Расписание",
+    "description": {
+      "ka": "ვიზიტების ჯავშნები, განრიგები და ხელმისაწვდომობის მართვა",
+      "en": "Appointments, schedules, and availability management",
+      "ru": "Записи на прием, расписания и управление доступностью"
+    }
   }
 }

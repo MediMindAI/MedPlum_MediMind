@@ -40,7 +40,9 @@ describe('usePermissions', () => {
       (cat) => cat.code === 'patient-management'
     );
     expect(patientManagement).toBeDefined();
-    expect(patientManagement?.name).toBe('Patient Management');
+    // Check code instead of name (name is language-dependent)
+    expect(patientManagement?.code).toBe('patient-management');
+    expect(patientManagement?.permissions.length).toBeGreaterThan(0);
   });
 
   it('should include administration category', () => {
@@ -52,7 +54,9 @@ describe('usePermissions', () => {
       (cat) => cat.code === 'administration'
     );
     expect(administration).toBeDefined();
-    expect(administration?.name).toBe('Administration');
+    // Check code instead of name (name is language-dependent)
+    expect(administration?.code).toBe('administration');
+    expect(administration?.permissions.length).toBeGreaterThan(0);
   });
 });
 

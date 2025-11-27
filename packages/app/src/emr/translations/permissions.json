@@ -29,6 +29,51 @@
     "en": "View Patient History",
     "ru": "Просмотр истории пациента"
   },
+  "merge-patients": {
+    "ka": "პაციენტების გაერთიანება",
+    "en": "Merge Patients",
+    "ru": "Объединить пациентов"
+  },
+  "export-patient-data": {
+    "ka": "პაციენტის მონაცემების ექსპორტი",
+    "en": "Export Patient Data",
+    "ru": "Экспорт данных пациента"
+  },
+  "view-patient-documents": {
+    "ka": "პაციენტის დოკუმენტების ნახვა",
+    "en": "View Patient Documents",
+    "ru": "Просмотр документов пациента"
+  },
+  "upload-patient-documents": {
+    "ka": "პაციენტის დოკუმენტების ატვირთვა",
+    "en": "Upload Patient Documents",
+    "ru": "Загрузка документов пациента"
+  },
+  "view-patient-photo": {
+    "ka": "პაციენტის ფოტოს ნახვა",
+    "en": "View Patient Photo",
+    "ru": "Просмотр фотографии пациента"
+  },
+  "upload-patient-photo": {
+    "ka": "პაციენტის ფოტოს ატვირთვა",
+    "en": "Upload Patient Photo",
+    "ru": "Загрузка фотографии пациента"
+  },
+  "view-patient-contacts": {
+    "ka": "პაციენტის კონტაქტების ნახვა",
+    "en": "View Patient Contacts",
+    "ru": "Просмотр контактов пациента"
+  },
+  "edit-patient-contacts": {
+    "ka": "პაციენტის კონტაქტების რედაქტირება",
+    "en": "Edit Patient Contacts",
+    "ru": "Редактирование контактов пациента"
+  },
+  "view-patient-insurance": {
+    "ka": "პაციენტის დაზღვევის ნახვა",
+    "en": "View Patient Insurance",
+    "ru": "Просмотр страховки пациента"
+  },
   "view-encounters": {
     "ka": "ვიზიტების ნახვა",
     "en": "View Encounters",
@@ -44,6 +89,11 @@
     "en": "Edit Encounter",
     "ru": "Редактировать визит"
   },
+  "delete-encounter": {
+    "ka": "ვიზიტის წაშლა",
+    "en": "Delete Encounter",
+    "ru": "Удалить визит"
+  },
   "view-clinical-notes": {
     "ka": "კლინიკური ჩანაწერების ნახვა",
     "en": "View Clinical Notes",
@@ -54,20 +104,95 @@
     "en": "Create Clinical Notes",
     "ru": "Создать клинические заметки"
   },
-  "sign-clinical-documents": {
-    "ka": "კლინიკური დოკუმენტების ხელმოწერა",
-    "en": "Sign Clinical Documents",
-    "ru": "Подписать клинические документы"
+  "edit-clinical-notes": {
+    "ka": "კლინიკური ჩანაწერების რედაქტირება",
+    "en": "Edit Clinical Notes",
+    "ru": "Редактировать клинические заметки"
+  },
+  "sign-clinical-notes": {
+    "ka": "კლინიკური ჩანაწერების ხელმოწერა",
+    "en": "Sign Clinical Notes",
+    "ru": "Подписать клинические заметки"
+  },
+  "view-diagnoses": {
+    "ka": "დიაგნოზების ნახვა",
+    "en": "View Diagnoses",
+    "ru": "Просмотр диагнозов"
+  },
+  "create-diagnosis": {
+    "ka": "დიაგნოზის შექმნა",
+    "en": "Create Diagnosis",
+    "ru": "Создать диагноз"
+  },
+  "edit-diagnosis": {
+    "ka": "დიაგნოზის რედაქტირება",
+    "en": "Edit Diagnosis",
+    "ru": "Редактировать диагноз"
+  },
+  "view-procedures": {
+    "ka": "პროცედურების ნახვა",
+    "en": "View Procedures",
+    "ru": "Просмотр процедур"
+  },
+  "create-procedure": {
+    "ka": "პროცედურის შექმნა",
+    "en": "Create Procedure",
+    "ru": "Создать процедуру"
+  },
+  "view-medications": {
+    "ka": "მედიკამენტების ნახვა",
+    "en": "View Medications",
+    "ru": "Просмотр медикаментов"
+  },
+  "prescribe-medication": {
+    "ka": "მედიკამენტის დანიშვნა",
+    "en": "Prescribe Medication",
+    "ru": "Назначить медикамент"
+  },
+  "view-allergies": {
+    "ka": "ალერგიების ნახვა",
+    "en": "View Allergies",
+    "ru": "Просмотр аллергий"
+  },
+  "edit-allergies": {
+    "ka": "ალერგიების რედაქტირება",
+    "en": "Edit Allergies",
+    "ru": "Редактировать аллергии"
+  },
+  "edit-locked-records": {
+    "ka": "დაბლოკილი ჩანაწერების რედაქტირება",
+    "en": "Edit Locked Records",
+    "ru": "Редактировать заблокированные записи"
+  },
+  "view-lab-orders": {
+    "ka": "ლაბორატორიული დავალებების ნახვა",
+    "en": "View Lab Orders",
+    "ru": "Просмотр лабораторных заказов"
+  },
+  "create-lab-order": {
+    "ka": "ლაბორატორიული დავალების შექმნა",
+    "en": "Create Lab Order",
+    "ru": "Создать лабораторный заказ"
+  },
+  "edit-lab-order": {
+    "ka": "ლაბორატორიული დავალების რედაქტირება",
+    "en": "Edit Lab Order",
+    "ru": "Редактировать лабораторный заказ"
+  },
+  "cancel-lab-order": {
+    "ka": "ლაბორატორიული დავალების გაუქმება",
+    "en": "Cancel Lab Order",
+    "ru": "Отменить лабораторный заказ"
   },
   "view-lab-results": {
     "ka": "ლაბორატორიული შედეგების ნახვა",
     "en": "View Lab Results",
     "ru": "Просмотр результатов лабораторных исследований"
   },
-  "order-lab-tests": {
-    "ka": "ლაბორატორიული ტესტების შეკვეთა",
-    "en": "Order Lab Tests",
-    "ru": "Заказать лабораторные тесты"
+  "enter-lab-results": {
+    "ka": "ლაბორატორიული შედეგების შეყვანა",
+    "en": "Enter Lab Results",
+    "ru": "Ввести результаты лабораторных исследований"
   },
   "edit-lab-results": {
     "ka": "ლაბორატორიული შედეგების რედაქტირება",
@@ -79,30 +204,100 @@
     "en": "Approve Lab Results",
     "ru": "Утвердить результаты лабораторных исследований"
   },
+  "view-specimens": {
+    "ka": "ნიმუშების ნახვა",
+    "en": "View Specimens",
+    "ru": "Просмотр образцов"
+  },
+  "manage-specimens": {
+    "ka": "ნიმუშების მართვა",
+    "en": "Manage Specimens",
+    "ru": "Управление образцами"
+  },
+  "view-lab-equipment": {
+    "ka": "ლაბორატორიული აღჭურვილობის ნახვა",
+    "en": "View Lab Equipment",
+    "ru": "Просмотр лабораторного оборудования"
+  },
+  "manage-lab-equipment": {
+    "ka": "ლაბორატორიული აღჭურვილობის მართვა",
+    "en": "Manage Lab Equipment",
+    "ru": "Управление лабораторным оборудованием"
+  },
   "view-invoices": {
     "ka": "ინვოისების ნახვა",
     "en": "View Invoices",
     "ru": "Просмотр счетов"
   },
-  "create-invoices": {
-    "ka": "ინვოისების შექმნა",
-    "en": "Create Invoices",
-    "ru": "Создать счета"
+  "create-invoice": {
+    "ka": "ინვოისის შექმნა",
+    "en": "Create Invoice",
+    "ru": "Создать счет"
   },
-  "process-payments": {
-    "ka": "გადახდების დამუშავება",
-    "en": "Process Payments",
-    "ru": "Обработать платежи"
+  "edit-invoice": {
+    "ka": "ინვოისის რედაქტირება",
+    "en": "Edit Invoice",
+    "ru": "Редактировать счет"
+  },
+  "void-invoice": {
+    "ka": "ინვოისის გაუქმება",
+    "en": "Void Invoice",
+    "ru": "Аннулировать счет"
+  },
+  "view-payments": {
+    "ka": "გადახდების ნახვა",
+    "en": "View Payments",
+    "ru": "Просмотр платежей"
+  },
+  "process-payment": {
+    "ka": "გადახდის დამუშავება",
+    "en": "Process Payment",
+    "ru": "Обработать платеж"
+  },
+  "refund-payment": {
+    "ka": "გადახდის უკან დაბრუნება",
+    "en": "Refund Payment",
+    "ru": "Вернуть платеж"
+  },
+  "view-claims": {
+    "ka": "პრეტენზიების ნახვა",
+    "en": "View Claims",
+    "ru": "Просмотр претензий"
+  },
+  "submit-claim": {
+    "ka": "პრეტენზიის წარდგენა",
+    "en": "Submit Claim",
+    "ru": "Подать претензию"
+  },
+  "view-insurance-auth": {
+    "ka": "დაზღვევის ავტორიზაციის ნახვა",
+    "en": "View Insurance Authorization",
+    "ru": "Просмотр страховой авторизации"
+  },
+  "request-insurance-auth": {
+    "ka": "დაზღვევის ავტორიზაციის მოთხოვნა",
+    "en": "Request Insurance Authorization",
+    "ru": "Запросить страховую авторизацию"
   },
   "view-financial-reports": {
     "ka": "ფინანსური ანგარიშების ნახვა",
     "en": "View Financial Reports",
     "ru": "Просмотр финансовых отчетов"
   },
-  "manage-insurance-claims": {
-    "ka": "დაზღვევის პრეტენზიების მართვა",
-    "en": "Manage Insurance Claims",
-    "ru": "Управление страховыми претензиями"
+  "export-financial-data": {
+    "ka": "ფინანსური მონაცემების ექსპორტი",
+    "en": "Export Financial Data",
+    "ru": "Экспорт финансовых данных"
+  },
+  "view-debt-management": {
+    "ka": "ვალების მართვის ნახვა",
+    "en": "View Debt Management",
+    "ru": "Просмотр управления долгами"
+  },
+  "manage-debt": {
+    "ka": "ვალების მართვა",
+    "en": "Manage Debt",
+    "ru": "Управление долгами"
   },
   "view-users": {
     "ka": "მომხმარებლების ნახვა",
@@ -118,6 +313,16 @@
     "ka": "მომხმარებლის რედაქტირება",
     "en": "Edit User",
     "ru": "Редактировать пользователя"
+  },
+  "deactivate-user": {
+    "ka": "მომხმარებლის დეაქტივაცია",
+    "en": "Deactivate User",
+    "ru": "Деактивировать пользователя"
+  },
+  "delete-user": {
+    "ka": "მომხმარებლის წაშლა",
+    "en": "Delete User",
+    "ru": "Удалить пользователя"
   },
   "view-roles": {
     "ka": "როლების ნახვა",
@@ -144,9 +349,204 @@
     "en": "Assign Roles",
     "ru": "Назначить роли"
   },
+  "view-departments": {
+    "ka": "დეპარტამენტების ნახვა",
+    "en": "View Departments",
+    "ru": "Просмотр отделений"
+  },
+  "manage-departments": {
+    "ka": "დეპარტამენტების მართვა",
+    "en": "Manage Departments",
+    "ru": "Управление отделениями"
+  },
   "view-audit-logs": {
     "ka": "აუდიტის ჟურნალის ნახვა",
     "en": "View Audit Logs",
     "ru": "Просмотр журнала аудита"
+  },
+  "export-audit-logs": {
+    "ka": "აუდიტის ჟურნალის ექსპორტი",
+    "en": "Export Audit Logs",
+    "ru": "Экспорт журнала аудита"
+  },
+  "view-system-settings": {
+    "ka": "სისტემის პარამეტრების ნახვა",
+    "en": "View System Settings",
+    "ru": "Просмотр системных настроек"
+  },
+  "edit-system-settings": {
+    "ka": "სისტემის პარამეტრების რედაქტირება",
+    "en": "Edit System Settings",
+    "ru": "Редактировать системные настройки"
+  },
+  "view-access-logs": {
+    "ka": "წვდომის ჟურნალის ნახვა",
+    "en": "View Access Logs",
+    "ru": "Просмотр журнала доступа"
+  },
+  "emergency-access": {
+    "ka": "საგანგებო წვდომა",
+    "en": "Emergency Access",
+    "ru": "Экстренный доступ"
+  },
+  "view-clinical-reports": {
+    "ka": "კლინიკური ანგარიშების ნახვა",
+    "en": "View Clinical Reports",
+    "ru": "Просмотр клинических отчетов"
+  },
+  "view-operational-reports": {
+    "ka": "ოპერაციული ანგარიშების ნახვა",
+    "en": "View Operational Reports",
+    "ru": "Просмотр операционных отчетов"
+  },
+  "view-financial-summary": {
+    "ka": "ფინანსური რეზიუმეს ნახვა",
+    "en": "View Financial Summary",
+    "ru": "Просмотр финансовой сводки"
+  },
+  "generate-report": {
+    "ka": "ანგარიშის გენერაცია",
+    "en": "Generate Report",
+    "ru": "Создать отчет"
+  },
+  "export-reports": {
+    "ka": "ანგარიშების ექსპორტი",
+    "en": "Export Reports",
+    "ru": "Экспорт отчетов"
+  },
+  "schedule-reports": {
+    "ka": "ანგარიშების დაგეგმვა",
+    "en": "Schedule Reports",
+    "ru": "Запланировать отчеты"
+  },
+  "view-analytics-dashboard": {
+    "ka": "ანალიტიკის დაფის ნახვა",
+    "en": "View Analytics Dashboard",
+    "ru": "Просмотр панели аналитики"
+  },
+  "view-quality-metrics": {
+    "ka": "ხარისხის მეტრიკების ნახვა",
+    "en": "View Quality Metrics",
+    "ru": "Просмотр показателей качества"
+  },
+  "view-utilization-reports": {
+    "ka": "გამოყენების ანგარიშების ნახვა",
+    "en": "View Utilization Reports",
+    "ru": "Просмотр отчетов использования"
+  },
+  "view-compliance-reports": {
+    "ka": "შესაბამისობის ანგარიშების ნახვა",
+    "en": "View Compliance Reports",
+    "ru": "Просмотр отчетов соответствия"
+  },
+  "view-services": {
+    "ka": "სერვისების ნახვა",
+    "en": "View Services",
+    "ru": "Просмотр услуг"
+  },
+  "edit-services": {
+    "ka": "სერვისების რედაქტირება",
+    "en": "Edit Services",
+    "ru": "Редактировать услуги"
+  },
+  "view-diagnoses-catalog": {
+    "ka": "დიაგნოზების კატალოგის ნახვა",
+    "en": "View Diagnoses Catalog",
+    "ru": "Просмотр каталога диагнозов"
+  },
+  "edit-diagnoses-catalog": {
+    "ka": "დიაგნოზების კატალოგის რედაქტირება",
+    "en": "Edit Diagnoses Catalog",
+    "ru": "Редактировать каталог диагнозов"
+  },
+  "view-medications-catalog": {
+    "ka": "მედიკამენტების კატალოგის ნახვა",
+    "en": "View Medications Catalog",
+    "ru": "Просмотр каталога медикаментов"
+  },
+  "edit-medications-catalog": {
+    "ka": "მედიკამენტების კატალოგის რედაქტირება",
+    "en": "Edit Medications Catalog",
+    "ru": "Редактировать каталог медикаментов"
+  },
+  "view-lab-catalog": {
+    "ka": "ლაბორატორიული კატალოგის ნახვა",
+    "en": "View Lab Catalog",
+    "ru": "Просмотр лабораторного каталога"
+  },
+  "edit-lab-catalog": {
+    "ka": "ლაბორატორიული კატალოგის რედაქტირება",
+    "en": "Edit Lab Catalog",
+    "ru": "Редактировать лабораторный каталог"
+  },
+  "view-appointments": {
+    "ka": "ვიზიტების ნახვა",
+    "en": "View Appointments",
+    "ru": "Просмотр назначений"
+  },
+  "create-appointment": {
+    "ka": "ვიზიტის შექმნა",
+    "en": "Create Appointment",
+    "ru": "Создать назначение"
+  },
+  "edit-appointment": {
+    "ka": "ვიზიტის რედაქტირება",
+    "en": "Edit Appointment",
+    "ru": "Редактировать назначение"
+  },
+  "cancel-appointment": {
+    "ka": "ვიზიტის გაუქმება",
+    "en": "Cancel Appointment",
+    "ru": "Отменить назначение"
+  },
+  "view-schedules": {
+    "ka": "განრიგის ნახვა",
+    "en": "View Schedules",
+    "ru": "Просмотр расписаний"
+  },
+  "manage-schedules": {
+    "ka": "განრიგის მართვა",
+    "en": "Manage Schedules",
+    "ru": "Управление расписаниями"
+  },
+  "view-availability": {
+    "ka": "ხელმისაწვდომობის ნახვა",
+    "en": "View Availability",
+    "ru": "Просмотр доступности"
+  },
+  "manage-availability": {
+    "ka": "ხელმისაწვდომობის მართვა",
+    "en": "Manage Availability",
+    "ru": "Управление доступностью"
+  },
+  "view-sensitive-mental-health": {
+    "ka": "ფსიქიკური ჯანმრთელობის მონაცემების ნახვა",
+    "en": "View Mental Health Records",
+    "ru": "Просмотр записей о психическом здоровье"
+  },
+  "view-sensitive-hiv": {
+    "ka": "აივ სტატუსის ინფორმაციის ნახვა",
+    "en": "View HIV Status Information",
+    "ru": "Просмотр информации о ВИЧ-статусе"
+  },
+  "view-sensitive-substance-abuse": {
+    "ka": "ნარკოტიკული დამოკიდებულების ჩანაწერების ნახვა",
+    "en": "View Substance Abuse Records",
+    "ru": "Просмотр записей о злоупотреблении психоактивными веществами"
+  },
+  "view-sensitive-genetic": {
+    "ka": "გენეტიკური ტესტირების შედეგების ნახვა",
+    "en": "View Genetic Testing Results",
+    "ru": "Просмотр результатов генетического тестирования"
+  },
+  "view-sensitive-reproductive": {
+    "ka": "რეპროდუქციული ჯანმრთელობის ჩანაწერების ნახვა",
+    "en": "View Reproductive Health Records",
+    "ru": "Просмотр записей о репродуктивном здоровье"
+  },
+  "view-sensitive-vip": {
+    "ka": "VIP პაციენტის ინფორმაციის ნახვა",
+    "en": "View VIP Patient Information",
+    "ru": "Просмотр информации о VIP-пациентах"
   }
 }

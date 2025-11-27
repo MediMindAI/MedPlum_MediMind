@@ -5,6 +5,7 @@ import { Text } from '@mantine/core';
 import { IconEdit, IconTrash, IconHistory } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useActionPermission } from '../../hooks/useActionPermission';
 import type { VisitTableRow } from '../../types/patient-history';
 import { EMRTable } from '../shared/EMRTable';
 import type { EMRTableColumn, SortDirection } from '../shared/EMRTable';
@@ -40,6 +41,7 @@ export function PatientHistoryTable({
 }: PatientHistoryTableProps): React.JSX.Element {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { canEdit, canDelete } = useActionPermission('encounter');
 
   // Format currency value to 2 decimal places
   const formatCurrency = (value: number): string => {
@@ -179,15 +181,17 @@ export function PatientHistoryTable({
       actions={(visit) => ({
         primary: {
           icon: IconEdit,
-          label: t('common.edit'),
+          label: canEdit ? t('common.edit') : t('common.noPermission') || 'No permission to edit',
           onClick: () => onEdit(visit.id),
+          disabled: !canEdit,
         },
         secondary: [
           {
             icon: IconTrash,
-            label: t('common.delete'),
+            label: canDelete ? t('common.delete') : t('common.noPermission') || 'No permission to delete',
             color: 'red',
             onClick: () => onDelete(visit.id),
+            disabled: !canDelete,
           },
         ],
       })}

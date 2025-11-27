@@ -123,6 +123,7 @@ export function AccountEditModal({
       padding={0}
       radius={isMobile ? 0 : 24}
       withCloseButton={false}
+      zIndex={1100}
       transitionProps={{
         transition: 'fade',
         duration: 300,

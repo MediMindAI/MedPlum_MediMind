@@ -1,0 +1,876 @@
+openapi: 3.0.3
+info:
+  title: MediMind Permission System API
+  version: 1.0.0
+  description: |
+    API contracts for the production-ready permission system redesign.
+    All operations use Medplum's FHIR-native AccessPolicy and PractitionerRole resources.
+
+servers:
+  - url: /api/v1
+    description: MediMind API
+
+tags:
+  - name: Permissions
+    description: Permission checking and management
+  - name: Roles
+    description: Role definition and management
+  - name: Assignments
+    description: User-role assignments
+  - name: Audit
+    description: Audit logging for permission events
+
+paths:
+  # ============================================================
+  # PERMISSION CHECKING
+  # ============================================================
+  /permissions/check:
+    post:
+      tags: [Permissions]
+      summary: Check if user has specific permissions
+      description: |
+        Batch check multiple permissions for a user.
+        Returns map of permission codes to boolean values.
+        Uses cache when available, fails closed on errors.
+      operationId: checkPermissions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, permissions]
+              properties:
+                userId:
+                  type: string
+                  description: Practitioner ID
+                  example: "Practitioner/123"
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                  description: Permission codes to check
+                  example: ["view-patient-list", "edit-patient-demographics"]
+                context:
+                  type: object
+                  properties:
+                    departmentId:
+                      type: string
+                      description: Optional department context
+                    resourceId:
+                      type: string
+                      description: Optional target resource ID
+      responses:
+        '200':
+          description: Permission check results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: object
+                    additionalProperties:
+                      type: boolean
+                    example:
+                      view-patient-list: true
+                      edit-patient-demographics: false
+                  cached:
+                    type: boolean
+                    description: Whether results came from cache
+                  checkedAt:
+                    type: string
+                    format: date-time
+        '401':
+          description: Unauthorized
+        '500':
+          description: Server error (fail-closed - all permissions denied)
+
+  /permissions/check/{permissionCode}:
+    get:
+      tags: [Permissions]
+      summary: Check single permission
+      description: Quick check for a single permission. Synchronous, cached.
+      operationId: checkSinglePermission
+      parameters:
+        - name: permissionCode
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "view-patient-list"
+        - name: departmentId
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Department context for scoped permissions
+      responses:
+        '200':
+          description: Permission granted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hasPermission:
+                    type: boolean
+                  permissionCode:
+                    type: string
+        '403':
+          description: Permission denied
+
+  /permissions/user/{userId}:
+    get:
+      tags: [Permissions]
+      summary: Get all permissions for a user
+      description: |
+        Returns combined permissions from all assigned roles.
+        Uses union logic - most permissive wins.
+      operationId: getUserPermissions
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: includeInactive
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: User permissions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                  roles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RoleSummary'
+                  departments:
+                    type: array
+                    items:
+                      type: string
+
+  # ============================================================
+  # PERMISSION DEFINITIONS
+  # ============================================================
+  /permissions/definitions:
+    get:
+      tags: [Permissions]
+      summary: Get all permission definitions
+      description: Returns the complete permission tree organized by category
+      operationId: getPermissionDefinitions
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ka, en, ru]
+            default: ka
+      responses:
+        '200':
+          description: Permission definitions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PermissionCategory'
+
+  # ============================================================
+  # ROLE MANAGEMENT
+  # ============================================================
+  /roles:
+    get:
+      tags: [Roles]
+      summary: List all roles
+      operationId: listRoles
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [active, inactive, all]
+            default: active
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Search by role name
+        - name: _count
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: _offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Role list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  roles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Role'
+                  total:
+                    type: integer
+
+    post:
+      tags: [Roles]
+      summary: Create a new role
+      operationId: createRole
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleInput'
+      responses:
+        '201':
+          description: Role created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '400':
+          description: Validation error
+        '409':
+          description: Role code already exists
+
+  /roles/{roleId}:
+    get:
+      tags: [Roles]
+      summary: Get role details
+      operationId: getRole
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Role details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '404':
+          description: Role not found
+
+    put:
+      tags: [Roles]
+      summary: Update a role
+      operationId: updateRole
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleInput'
+      responses:
+        '200':
+          description: Role updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+
+    delete:
+      tags: [Roles]
+      summary: Delete a role
+      description: |
+        Fails if role has assigned users.
+        Use PATCH to deactivate instead.
+      operationId: deleteRole
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Role deleted
+        '409':
+          description: Cannot delete - role has assigned users
+
+  /roles/{roleId}/clone:
+    post:
+      tags: [Roles]
+      summary: Clone an existing role
+      operationId: cloneRole
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, name]
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Role cloned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+
+  /roles/{roleId}/permissions:
+    get:
+      tags: [Roles]
+      summary: Get role's permission matrix
+      operationId: getRolePermissions
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Permission matrix
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionMatrix'
+
+    put:
+      tags: [Roles]
+      summary: Update role's permissions
+      description: |
+        Updates the role's AccessPolicy resource[].
+        Automatically resolves permission dependencies.
+        Creates audit event.
+      operationId: updateRolePermissions
+      parameters:
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [permissions]
+              properties:
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                  description: Permission codes to enable
+      responses:
+        '200':
+          description: Permissions updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionMatrix'
+
+  # ============================================================
+  # USER-ROLE ASSIGNMENTS
+  # ============================================================
+  /assignments:
+    get:
+      tags: [Assignments]
+      summary: List role assignments
+      operationId: listAssignments
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+        - name: roleId
+          in: query
+          schema:
+            type: string
+        - name: departmentId
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, expired]
+      responses:
+        '200':
+          description: Assignment list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleAssignment'
+
+    post:
+      tags: [Assignments]
+      summary: Assign role to user
+      operationId: createAssignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentInput'
+      responses:
+        '201':
+          description: Assignment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleAssignment'
+        '409':
+          description: Conflict - role already assigned
+
+  /assignments/{assignmentId}:
+    delete:
+      tags: [Assignments]
+      summary: Remove role assignment
+      operationId: deleteAssignment
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Assignment removed
+
+  /assignments/conflicts:
+    post:
+      tags: [Assignments]
+      summary: Check for role conflicts
+      description: |
+        Detects separation of duties violations
+        and redundant role assignments.
+      operationId: checkRoleConflicts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [roleCodes]
+              properties:
+                roleCodes:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Conflict check results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  hasConflicts:
+                    type: boolean
+                  conflicts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RoleConflict'
+
+  # ============================================================
+  # EMERGENCY ACCESS
+  # ============================================================
+  /emergency-access:
+    post:
+      tags: [Permissions]
+      summary: Request emergency access
+      description: |
+        Break-glass workflow for accessing restricted data.
+        Requires mandatory reason.
+        Creates audit event with DCM 110113.
+        Notifies privacy officer.
+      operationId: requestEmergencyAccess
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [resourceId, reason]
+              properties:
+                resourceId:
+                  type: string
+                  description: ID of restricted resource
+                reason:
+                  type: string
+                  minLength: 10
+                  description: Mandatory explanation for access
+      responses:
+        '200':
+          description: Emergency access granted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  granted:
+                    type: boolean
+                  auditEventId:
+                    type: string
+                  expiresAt:
+                    type: string
+                    format: date-time
+        '403':
+          description: Emergency access denied (user not eligible)
+
+  # ============================================================
+  # CACHE MANAGEMENT
+  # ============================================================
+  /cache/invalidate:
+    post:
+      tags: [Permissions]
+      summary: Invalidate permission cache
+      description: |
+        Forces cache refresh for specified users or all users.
+        Used after bulk role changes.
+      operationId: invalidateCache
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userIds:
+                  type: array
+                  items:
+                    type: string
+                  description: Specific user IDs (empty = all)
+                roleIds:
+                  type: array
+                  items:
+                    type: string
+                  description: Invalidate for users with these roles
+      responses:
+        '200':
+          description: Cache invalidated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invalidatedCount:
+                    type: integer
+
+  # ============================================================
+  # AUDIT LOGS
+  # ============================================================
+  /audit/permissions:
+    get:
+      tags: [Audit]
+      summary: Get permission-related audit events
+      operationId: getPermissionAuditLogs
+      parameters:
+        - name: userId
+          in: query
+          schema:
+            type: string
+        - name: action
+          in: query
+          schema:
+            type: string
+            enum: [grant, revoke, check, deny, emergency]
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: _count
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: Audit events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuditEventSummary'
+                  total:
+                    type: integer
+
+# ============================================================
+# COMPONENT SCHEMAS
+# ============================================================
+components:
+  schemas:
+    PermissionCategory:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        displayOrder:
+          type: integer
+        icon:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+
+    Permission:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        resourceType:
+          type: string
+        accessLevel:
+          type: string
+          enum: [read, write, delete, admin]
+        dependencies:
+          type: array
+          items:
+            type: string
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive]
+        userCount:
+          type: integer
+        permissionCount:
+          type: integer
+        departmentScoped:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    RoleInput:
+      type: object
+      required: [code, name]
+      properties:
+        code:
+          type: string
+          pattern: '^[a-z][a-z0-9-]*$'
+        name:
+          type: string
+        description:
+          type: string
+        departmentScoped:
+          type: boolean
+          default: false
+        permissions:
+          type: array
+          items:
+            type: string
+
+    RoleSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+
+    PermissionMatrix:
+      type: object
+      properties:
+        roleId:
+          type: string
+        roleName:
+          type: string
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              categoryCode:
+                type: string
+              categoryName:
+                type: string
+              permissions:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    name:
+                      type: string
+                    enabled:
+                      type: boolean
+                    inherited:
+                      type: boolean
+                      description: Enabled due to dependency
+
+    RoleAssignment:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        userName:
+          type: string
+        roleId:
+          type: string
+        roleCode:
+          type: string
+        roleName:
+          type: string
+        departmentId:
+          type: string
+        departmentName:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, expired]
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        assignedBy:
+          type: string
+        assignedAt:
+          type: string
+          format: date-time
+
+    AssignmentInput:
+      type: object
+      required: [userId, roleId]
+      properties:
+        userId:
+          type: string
+        roleId:
+          type: string
+        departmentId:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+
+    RoleConflict:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [separation_of_duties, redundant_roles, permission_conflict]
+        severity:
+          type: string
+          enum: [warning, error]
+        description:
+          type: string
+        affectedRoles:
+          type: array
+          items:
+            type: string
+
+    AuditEventSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        action:
+          type: string
+        outcome:
+          type: string
+          enum: [success, denied, failure]
+        userId:
+          type: string
+        userName:
+          type: string
+        targetResource:
+          type: string
+        details:
+          type: string
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

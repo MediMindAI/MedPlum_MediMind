@@ -29,7 +29,7 @@ export function RoleFilters({ onSearchChange, onStatusChange }: RoleFiltersProps
   }, [debouncedSearch, onSearchChange]);
 
   return (
-    <Group gap="md">
+    <Group gap="sm">
       <EMRTextInput
         placeholder={t('roleManagement.searchRoles')}
         leftSection={<IconSearch size={16} />}

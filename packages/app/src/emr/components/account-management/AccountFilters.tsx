@@ -80,7 +80,7 @@ export function AccountFilters({
   const hasActiveFilters = filters.searchQuery !== '' || filters.statusFilter !== 'all' || filters.roleFilter !== '';
 
   return (
-    <Group gap="md" wrap={isMobile ? 'wrap' : 'nowrap'} align="center">
+    <Group gap="sm" wrap={isMobile ? 'wrap' : 'nowrap'} align="center">
       {/* Search Input - Premium Design */}
       <Box style={{ flex: 1, minWidth: isMobile ? '100%' : '280px' }}>
         <EMRTextInput
@@ -129,7 +129,7 @@ export function AccountFilters({
           label: {
             fontSize: '13px',
             fontWeight: 600,
-            padding: '8px 16px',
+            padding: '6px 12px',
             transition: 'all 0.2s ease',
             '&[data-active]': {
               color: 'white',
@@ -153,7 +153,7 @@ export function AccountFilters({
         />
       </Box>
 
-      {/* Result Count Badge - Premium Design */}
+      {/* Result Count Badge - Compact Design */}
       <Box
         style={{
           whiteSpace: 'nowrap',
@@ -161,8 +161,8 @@ export function AccountFilters({
             ? 'linear-gradient(135deg, rgba(99, 179, 237, 0.15) 0%, rgba(43, 108, 176, 0.1) 100%)'
             : 'var(--emr-gray-100)',
           color: hasActiveFilters ? 'var(--emr-primary)' : 'var(--emr-gray-600)',
-          padding: '8px 14px',
-          borderRadius: '20px',
+          padding: '6px 10px',
+          borderRadius: '16px',
           fontSize: '12px',
           fontWeight: 600,
           border: hasActiveFilters ? '1px solid rgba(99, 179, 237, 0.2)' : '1px solid transparent',

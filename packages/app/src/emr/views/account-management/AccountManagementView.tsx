@@ -4,7 +4,7 @@
 import { Container, Title, Stack, Paper, Group, Button, Modal, Box, Tabs, Select, Text, CloseButton } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useState, useMemo, useCallback } from 'react';
-import { IconPlus, IconChartBar, IconFilter, IconUsers, IconShieldLock, IconHistory, IconKey, IconUserPlus, IconX } from '@tabler/icons-react';
+import { IconPlus, IconChartBar, IconFilter, IconUsers, IconShieldLock, IconHistory, IconKey, IconUserPlus, IconX, IconUsersGroup } from '@tabler/icons-react';
 import modalStyles from '../../components/account-management/CreateAccountModal.module.css';
 import styles from './AccountManagement.module.css';
 import { useMedplum } from '@medplum/react-hooks';
@@ -17,7 +17,7 @@ import { AccountTable } from '../../components/account-management/AccountTable';
 import { AccountForm } from '../../components/account-management/AccountForm';
 import { AccountEditModal } from '../../components/account-management/AccountEditModal';
 import { ActivationLinkModal } from '../../components/account-management/ActivationLinkModal';
-import { CreateAccountFAB } from '../../components/account-management/CreateAccountFAB';
+// CreateAccountFAB removed - using inline header button instead
 import { DeactivationConfirmationModal } from '../../components/account-management/deactivation/DeactivationConfirmationModal';
 import { KeyboardShortcutsHelp } from '../../components/account-management/KeyboardShortcutsHelp';
 import { BulkActionBar } from '../../components/account-management/BulkActionBar';
@@ -37,7 +37,7 @@ import type { AccountFormValues, AccountRowExtended, AccountSearchFiltersExtende
 import { RoleManagementView } from '../role-management/RoleManagementView';
 import { AuditLogView } from './AuditLogView';
 import { PermissionMatrix } from '../../components/account-management/PermissionMatrix';
-import { usePermissionsMatrix } from '../../hooks/usePermissions';
+import { useAccessPolicyPermissions } from '../../hooks/useAccessPolicyPermissions';
 import { useRoles } from '../../hooks/useRoles';
 
 /**
@@ -77,13 +77,13 @@ export function AccountManagementView(): JSX.Element {
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const { roles, loading: rolesLoading } = useRoles();
   const {
-    permissions: matrixPermissions,
+    selectedPermissions,
     loading: permissionsLoading,
     hasChanges: permissionsHasChanges,
-    updatePermission,
+    togglePermission,
     savePermissions,
     refreshPermissions,
-  } = usePermissionsMatrix({ policyId: selectedRoleId || undefined });
+  } = useAccessPolicyPermissions(selectedRoleId || undefined);
 
   // Filter state
   const [filters, setFilters] = useState<AccountFiltersState>({
@@ -453,34 +453,40 @@ export function AccountManagementView(): JSX.Element {
     <Box className={styles.dashboardContainer}>
       <Container size="100%" px={{ base: 16, sm: 24, md: 32, lg: 40 }} py={{ base: 20, md: 28 }} style={{ maxWidth: '1600px' }}>
         <Stack gap="lg">
-          {/* Page Header - Premium Design */}
-          <Group justify="space-between" align="flex-start" wrap="wrap" gap="md" className={styles.pageHeader}>
-            <Stack gap={4}>
-              <Title order={1} className={styles.pageTitle}>
-                {t('accountManagement.title')}
-              </Title>
-              <Text className={styles.pageSubtitle}>
-                {t('accountManagement.dashboard.subtitle') || 'Manage user accounts, roles, and permissions'}
-              </Text>
-            </Stack>
+          {/* Page Header - Glassmorphism Design (matching Roles page) */}
+          <Box className={`${styles.headerSection} ${styles.animateFadeIn}`}>
+            <Group justify="space-between" align="center" wrap="wrap" gap="md">
+              <Group gap="md" align="center">
+                {/* Icon container */}
+                <Box className={styles.headerIcon}>
+                  <IconUsersGroup size={18} stroke={1.8} />
+                </Box>
 
-            {/* Create Button (Mobile only - FAB shown on desktop) */}
-            {isMobile && (
+                <Box>
+                  <Title order={3} className={styles.headerTitle}>
+                    {t('accountManagement.title')}
+                  </Title>
+                  <Text className={styles.headerSubtitle}>
+                    {t('accountManagement.dashboard.subtitle') || 'Manage user accounts, roles, and permissions'}
+                  </Text>
+                </Box>
+
+                {accounts.length > 0 && (
+                  <Box className={styles.accountBadge}>
+                    {accounts.length} {lang === 'ka' ? 'ანგარიში' : lang === 'ru' ? 'аккаунтов' : 'accounts'}
+                  </Box>
+                )}
+              </Group>
+
               <Button
-                leftSection={<IconPlus size={18} />}
+                leftSection={<IconPlus size={14} stroke={2} />}
                 onClick={() => setCreateModalOpened(true)}
-                size="md"
-                style={{
-                  background: 'var(--emr-gradient-primary)',
-                  borderRadius: '12px',
-                  padding: '10px 20px',
-                  boxShadow: '0 4px 12px rgba(26, 54, 93, 0.2)',
-                }}
+                className={styles.createButton}
               >
                 {t('accountManagement.create.title')}
               </Button>
-            )}
-          </Group>
+            </Group>
+          </Box>
 
           {/* Tabs for Accounts, Roles, Permissions, and Audit Log - Premium Design */}
           <Tabs
@@ -759,10 +765,10 @@ export function AccountManagementView(): JSX.Element {
                     }}
                   >
                     <PermissionMatrix
-                      permissions={matrixPermissions}
+                      selectedPermissions={selectedPermissions}
                       loading={permissionsLoading}
                       hasChanges={permissionsHasChanges}
-                      onPermissionChange={updatePermission}
+                      onPermissionChange={togglePermission}
                       onSave={async () => {
                         try {
                           await savePermissions();
@@ -852,8 +858,7 @@ export function AccountManagementView(): JSX.Element {
         </Stack>
       </Container>
 
-      {/* Floating Action Button (Desktop only) */}
-      <CreateAccountFAB onClick={() => setCreateModalOpened(true)} />
+      {/* Floating Action Button removed - using inline header button instead */}
 
       {/* Create Account Modal - Premium Ultra-Wide Design */}
       <Modal
@@ -865,6 +870,7 @@ export function AccountManagementView(): JSX.Element {
         padding={0}
         radius={isMobile ? 0 : 24}
         withCloseButton={false}
+        zIndex={1100}
         transitionProps={{ transition: 'scale-y', duration: 300 }}
         overlayProps={{
           backgroundOpacity: 0.4,

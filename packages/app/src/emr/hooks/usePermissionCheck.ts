@@ -1,64 +1,126 @@
 // SPDX-FileCopyrightText: Copyright Orangebot, Inc. and Medplum contributors
 // SPDX-License-Identifier: Apache-2.0
-import { useMedplum } from '@medplum/react-hooks';
-import type { AccessPolicy } from '@medplum/fhirtypes';
+import { useMedplum, useMedplumProfile } from '@medplum/react-hooks';
 import { useState, useEffect } from 'react';
-import { getUserRoles } from '../services/roleService';
-import { accessPolicyToPermissions } from '../services/permissionService';
+import { permissionCache } from '../services/permissionCacheService';
+import { checkPermissionFromServer } from '../services/permissionService';
 
 /**
- * Hook to check if current user has a specific permission
- * @param permissionCode - Permission code to check
- * @returns Boolean indicating if user has permission
+ * Result of a permission check with loading state and error handling
  */
-export function usePermissionCheck(permissionCode: string): boolean {
+export interface UsePermissionCheckResult {
+  /** Whether user has the permission (false until confirmed - fail-closed) */
+  hasPermission: boolean;
+  /** Whether the permission check is in progress */
+  loading: boolean;
+  /** Error that occurred during permission check, if any */
+  error: Error | null;
+}
+
+/**
+ * Hook to check if current user has a specific permission.
+ *
+ * Implements fail-closed behavior:
+ * - Returns false (deny access) by default
+ * - Returns false while loading
+ * - Returns false on error
+ * - Only returns true when permission is confirmed from cache or server
+ *
+ * Uses permission cache for performance (<50ms latency target).
+ *
+ * @param permissionCode - Permission code to check (e.g., 'view-patient-list')
+ * @returns UsePermissionCheckResult with hasPermission, loading, and error
+ *
+ * @example
+ * ```typescript
+ * const { hasPermission, loading, error } = usePermissionCheck('view-patient-list');
+ *
+ * if (loading) return <Skeleton />;
+ * if (error) return <Alert>Error checking permissions</Alert>;
+ * if (!hasPermission) return <Alert>Access denied</Alert>;
+ *
+ * return <PatientList />;
+ * ```
+ */
+export function usePermissionCheck(permissionCode: string): UsePermissionCheckResult {
   const medplum = useMedplum();
-  const [hasPermission, setHasPermission] = useState(false);
+  const profile = useMedplumProfile();
+  const [hasPermission, setHasPermission] = useState(false); // fail-closed default
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    async function checkPermission(): Promise<void> {
-      try {
-        const profile = medplum.getProfile();
-        if (!profile?.id) {
-          setHasPermission(false);
-          return;
-        }
-
-        // Get all roles for current user
-        const practitionerRoles = await getUserRoles(medplum, profile.id);
-
-        // Extract role codes from PractitionerRole resources
-        const roleCodes = practitionerRoles
-          .map((pr) => pr.meta?.tag?.find((tag) => tag.system === 'http://medimind.ge/role-assignment')?.code)
-          .filter((code): code is string => code !== undefined);
-
-        // Get AccessPolicy resources for each role code
-        const allPermissions: string[] = [];
-        for (const roleCode of roleCodes) {
-          // Search for AccessPolicy with this role code
-          const bundle = await medplum.search('AccessPolicy', {
-            _tag: `http://medimind.ge/role-identifier|${roleCode}`,
-          });
-
-          const roles = (bundle.entry?.map((entry) => entry.resource as AccessPolicy) || []);
-
-          // Extract permissions from each role
-          for (const role of roles) {
-            const permissions = accessPolicyToPermissions(role);
-            allPermissions.push(...permissions);
-          }
-        }
-
-        // Check if permission exists
-        setHasPermission(allPermissions.includes(permissionCode));
-      } catch (error) {
-        console.error('Error checking permission:', error);
-        setHasPermission(false);
-      }
+    if (!profile?.id) {
+      setHasPermission(false);
+      setLoading(false);
+      return;
     }
 
-    checkPermission().catch(console.error);
-  }, [medplum, permissionCode]);
+    const startTime = Date.now();
 
+    // Check cache first
+    const cached = permissionCache.get(permissionCode);
+    if (cached !== null) {
+      // Cache hit - use cached value
+      setHasPermission(cached);
+      setLoading(false);
+
+      // Record cache hit metric
+      const latency = Date.now() - startTime;
+      permissionCache.recordCheck({
+        hit: true,
+        denied: !cached,
+        latencyMs: latency,
+      });
+
+      return;
+    }
+
+    // Cache miss - fetch from server
+    checkPermissionFromServer(medplum, profile.id, permissionCode)
+      .then((result) => {
+        // Update cache
+        permissionCache.set(permissionCode, result);
+
+        // Update state
+        setHasPermission(result);
+        setLoading(false);
+
+        // Record cache miss metric
+        const latency = Date.now() - startTime;
+        permissionCache.recordCheck({
+          hit: false,
+          denied: !result,
+          latencyMs: latency,
+        });
+      })
+      .catch((err) => {
+        console.error('[usePermissionCheck] Error checking permission:', err);
+        setError(err);
+        setHasPermission(false); // fail-closed on error
+        setLoading(false);
+
+        // Record error metric
+        const latency = Date.now() - startTime;
+        permissionCache.recordCheck({
+          hit: false,
+          denied: true,
+          latencyMs: latency,
+        });
+      });
+  }, [medplum, profile?.id, permissionCode]);
+
+  return { hasPermission, loading, error };
+}
+
+/**
+ * Backward-compatible export that returns only the boolean value.
+ * This maintains compatibility with existing code that uses:
+ * `const hasPermission = usePermissionCheck('code')`
+ *
+ * @deprecated Use the full hook result instead to handle loading and error states
+ */
+export function usePermissionCheckBoolean(permissionCode: string): boolean {
+  const { hasPermission } = usePermissionCheck(permissionCode);
   return hasPermission;
 }

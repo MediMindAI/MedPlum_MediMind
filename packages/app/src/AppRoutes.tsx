@@ -73,16 +73,27 @@ import { SignInPage } from './SignInPage';
 import { SmartSearchPage } from './SmartSearchPage';
 import { VerifyEmailPage } from './VerifyEmailPage';
 import { EMRPage } from './emr/EMRPage';
+import { DashboardPage } from './emr/DashboardPage';
 import { PlaceholderView } from './emr/components/PlaceholderView/PlaceholderView';
 import { ProtectedRoute } from './emr/components/ProtectedRoute/ProtectedRoute';
 import { EMRPermission } from './emr/hooks/useEMRPermissions';
 import { PatientHistorySection } from './emr/sections/PatientHistorySection';
 import { RegistrationSection } from './emr/sections/RegistrationSection';
 import { NomenclatureSection } from './emr/sections/NomenclatureSection';
-import { AccountManagementSection } from './emr/sections/AccountManagementSection';
 import { FormsSection } from './emr/sections/FormsSection';
-import { AccountManagementView } from './emr/views/account-management/AccountManagementView';
+// DashboardSection not needed - DashboardPage handles everything
 import { AccountEditView } from './emr/views/account-management/AccountEditView';
+import { DashboardView } from './emr/views/dashboard/DashboardView';
+import { DepartmentsTab } from './emr/views/settings/tabs/organization/DepartmentsTab';
+import { OperatorTypesTab } from './emr/views/settings/tabs/organization/OperatorTypesTab';
+import { CashRegistersTab } from './emr/views/settings/tabs/organization/CashRegistersTab';
+import { AccountsTab, RolesTab, PermissionsTab, AuditLogTab } from './emr/views/settings/tabs/users';
+import { GeneralSettingsTab, LanguageSettingsTab, SystemParametersTab } from './emr/views/settings/tabs/system';
+import { AmbulatoryDataTab } from './emr/views/settings/tabs/medical/AmbulatoryDataTab';
+import { PhysicalDataTab } from './emr/views/settings/tabs/medical/PhysicalDataTab';
+import { PostopDataTab } from './emr/views/settings/tabs/medical/PostopDataTab';
+import { UnitsTab } from './emr/views/settings/tabs/medical/UnitsTab';
+import { AdminRoutesTab } from './emr/views/settings/tabs/medical/AdminRoutesTab';
 import { PatientEditView } from './emr/views/registration/PatientEditView';
 import { UnifiedRegistrationView } from './emr/views/registration/UnifiedRegistrationView';
 import { PatientHistoryView } from './emr/views/patient-history/PatientHistoryView';
@@ -355,18 +366,13 @@ export function AppRoutes(): JSX.Element {
             <Route path="tests" element={<PlaceholderView titleKey="submenu.nomenclature.tests" messageKey="ui.underDevelopment" />} />
           </Route>
 
-          {/* Account Management Section (Admin Only) */}
-          <Route
-            path="account-management"
-            element={
-              <ProtectedRoute requireAdmin={true}>
-                <AccountManagementSection />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<AccountManagementView />} />
-            <Route path="edit/:id" element={<AccountEditView />} />
-          </Route>
+          {/* Backward Compatibility: Redirect old settings routes to new dashboard structure */}
+          <Route path="settings" element={<Navigate to="/emr/dashboard/users/accounts" replace />} />
+          <Route path="settings/*" element={<Navigate to="/emr/dashboard/users/accounts" replace />} />
+
+          {/* Backward Compatibility: Redirect old account-management routes to new dashboard structure */}
+          <Route path="account-management" element={<Navigate to="/emr/dashboard/users/accounts" replace />} />
+          <Route path="account-management/edit/:id" element={<Navigate to="/emr/dashboard/users/accounts/edit/:id" replace />} />
 
           {/* Forms Section */}
           <Route path="forms" element={<FormsSection />}>
@@ -472,6 +478,58 @@ export function AppRoutes(): JSX.Element {
             }
           />
         </Route>
+
+        {/* Dashboard Hub (Admin Only) - Separate UI mode with own navigation */}
+        <Route
+          path="/emr/dashboard"
+          element={
+            <ProtectedRoute requireAdmin={true}>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        >
+          {/* Default route - redirect to users/accounts */}
+          <Route index element={<Navigate to="users/accounts" replace />} />
+
+          {/* Users category */}
+          <Route path="users" element={<DashboardView />}>
+            <Route index element={<Navigate to="accounts" replace />} />
+            <Route path="accounts" element={<AccountsTab />} />
+            <Route path="roles" element={<RolesTab />} />
+            <Route path="permissions" element={<PermissionsTab />} />
+            <Route path="audit" element={<AuditLogTab />} />
+          </Route>
+
+          {/* Organization category */}
+          <Route path="organization" element={<DashboardView />}>
+            <Route index element={<Navigate to="departments" replace />} />
+            <Route path="departments" element={<DepartmentsTab />} />
+            <Route path="operator-types" element={<OperatorTypesTab />} />
+            <Route path="cash-registers" element={<CashRegistersTab />} />
+          </Route>
+
+          {/* Medical category */}
+          <Route path="medical" element={<DashboardView />}>
+            <Route index element={<Navigate to="physical-data" replace />} />
+            <Route path="physical-data" element={<PhysicalDataTab />} />
+            <Route path="postop-data" element={<PostopDataTab />} />
+            <Route path="units" element={<UnitsTab />} />
+            <Route path="routes" element={<AdminRoutesTab />} />
+            <Route path="ambulatory" element={<AmbulatoryDataTab />} />
+          </Route>
+
+          {/* System category */}
+          <Route path="system" element={<DashboardView />}>
+            <Route index element={<Navigate to="general" replace />} />
+            <Route path="general" element={<GeneralSettingsTab />} />
+            <Route path="language" element={<LanguageSettingsTab />} />
+            <Route path="parameters" element={<SystemParametersTab />} />
+          </Route>
+
+          {/* Account edit route (shared across tabs) */}
+          <Route path="users/accounts/edit/:id" element={<AccountEditView />} />
+        </Route>
+
         <Route path="/:resourceType/new" element={<CreateResourcePage />}>
           <Route index element={<FormCreatePage />} />
           <Route path="form" element={<FormCreatePage />} />

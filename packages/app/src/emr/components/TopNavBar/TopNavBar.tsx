@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { Box, Menu, Text, UnstyledButton } from '@mantine/core';
-import { IconUser, IconChevronDown, IconLayoutDashboard, IconSettings, IconLogout } from '@tabler/icons-react';
+import { IconUser, IconChevronDown, IconLayoutDashboard, IconLogout } from '@tabler/icons-react';
 import { useMedplum } from '@medplum/react-hooks';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -52,7 +52,7 @@ export function TopNavBar() {
         {/* Dashboard Button */}
         <UnstyledButton
           className={styles.dashboardBtn}
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/emr/dashboard')}
         >
           <IconLayoutDashboard size={14} />
           <span>{t('topnav.dashboard')}</span>
@@ -95,10 +95,10 @@ export function TopNavBar() {
             {isAdmin() && (
               <>
                 <Menu.Item
-                  leftSection={<IconSettings size={16} />}
-                  onClick={() => navigate('/emr/account-management')}
+                  leftSection={<IconLayoutDashboard size={16} />}
+                  onClick={() => navigate('/emr/dashboard')}
                 >
-                  {t('topnav.accountManagement')}
+                  {t('topnav.dashboard')}
                 </Menu.Item>
                 <Menu.Divider />
               </>

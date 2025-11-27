@@ -1,0 +1,154 @@
+/**
+ * DashboardSubMenu Component Styles
+ *
+ * Sub-navigation tabs with turquoise gradient (matching HorizontalSubMenu):
+ * - Gradient background
+ * - Clean active indicator bar
+ * - Smooth hover transitions
+ * - Horizontal scroll support
+ */
+
+/* Container with turquoise gradient */
+.container {
+  /* Layout */
+  display: flex;
+  width: 100%;
+  height: 36px;
+
+  /* Premium gradient background - turquoise tones */
+  background: linear-gradient(90deg, #2b6cb0 0%, #3182ce 50%, #4299e1 100%);
+
+  /* Visual effects */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+  /* Z-index for proper layering */
+  position: relative;
+  z-index: var(--emr-z-submenu, 100);
+}
+
+/* ScrollArea wrapper */
+.scrollArea {
+  width: 100%;
+  height: 100%;
+}
+
+/* Tab container - horizontal flex layout */
+.tabContainer {
+  /* Horizontal layout */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+
+  /* Prevent wrapping */
+  flex-wrap: nowrap;
+  white-space: nowrap;
+
+  /* Full height */
+  height: 100%;
+  min-width: fit-content;
+  padding: 0 12px;
+}
+
+/* Individual tab styling */
+.tab {
+  /* Layout */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Spacing */
+  padding: 0 14px;
+  margin: 0;
+  height: 100%;
+
+  /* Typography */
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  white-space: nowrap;
+
+  /* Visual styling */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+
+  /* Smooth transitions */
+  transition: all 0.2s ease;
+
+  /* Prevent text selection */
+  user-select: none;
+
+  /* Georgian text rendering support */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Georgian', 'Noto Sans', sans-serif;
+}
+
+/* Tab label */
+.tabLabel {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hover state for inactive tabs */
+.tab:hover:not(.active) {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Active tab styling */
+.tab.active {
+  color: white;
+  font-weight: 600;
+}
+
+/* Active indicator bar - bottom border */
+.activeBar {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 16px);
+  height: 2px;
+  background: white;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+/* Active tab hover */
+.tab.active:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Focus styles for accessibility */
+.tab:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .tab {
+    font-size: 11px;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    height: 32px;
+  }
+
+  .tabContainer {
+    padding: 0 8px;
+    gap: 0;
+  }
+
+  .tab {
+    font-size: 11px;
+    padding: 0 8px;
+  }
+}

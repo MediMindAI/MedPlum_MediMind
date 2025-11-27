@@ -387,9 +387,13 @@ export function PermissionTree({ selectedPermissions, onChange, disabled }: Perm
                         indeterminate={isIndeterminate}
                         onChange={(checked) => handleCategoryToggle(category, checked)}
                         disabled={disabled}
+                        aria-label={`${category.name} - select all`}
                       />
                     </Box>
                     <Box
+                      role="button"
+                      aria-label={isExpanded ? 'Collapse' : 'Expand'}
+                      tabIndex={0}
                       style={{
                         width: 28,
                         height: 28,
@@ -400,6 +404,7 @@ export function PermissionTree({ selectedPermissions, onChange, disabled }: Perm
                         justifyContent: 'center',
                         transition: 'transform 0.25s ease, background 0.2s ease',
                         transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                        cursor: 'pointer',
                       }}
                     >
                       <IconChevronDown size={16} style={{ color: 'var(--emr-gray-600)' }} />
@@ -436,6 +441,7 @@ export function PermissionTree({ selectedPermissions, onChange, disabled }: Perm
                               checked={isSelected}
                               onChange={(checked) => handlePermissionToggle(permission.code, checked)}
                               disabled={disabled}
+                              aria-label={permission.name}
                             />
                             <Box style={{ flex: 1 }}>
                               <Text size="sm" fw={isSelected ? 500 : 400}>

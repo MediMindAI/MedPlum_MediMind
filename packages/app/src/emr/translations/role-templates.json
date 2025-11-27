@@ -1,0 +1,194 @@
+{
+  "owner": {
+    "name": {
+      "ka": "სისტემის მფლობელი",
+      "en": "System Owner",
+      "ru": "Владелец системы"
+    },
+    "description": {
+      "ka": "სრული წვდომა სისტემის ყველა ფუნქციაზე, მათ შორის სისტემის კონფიგურაცია, უსაფრთხოება და ადმინისტრირება.",
+      "en": "Full access to all system features, including system configuration, security, and administration.",
+      "ru": "Полный доступ ко всем функциям системы, включая конфигурацию, безопасность и администрирование."
+    }
+  },
+  "admin": {
+    "name": {
+      "ka": "ადმინისტრატორი",
+      "en": "Administrator",
+      "ru": "Администратор"
+    },
+    "description": {
+      "ka": "სისტემის ადმინისტრირება, მომხმარებლების მართვა, როლების კონფიგურაცია და სისტემის პარამეტრების დაყენება.",
+      "en": "System administration, user management, role configuration, and system settings.",
+      "ru": "Администрирование системы, управление пользователями, настройка ролей и параметров системы."
+    }
+  },
+  "physician": {
+    "name": {
+      "ka": "ექიმი",
+      "en": "Physician",
+      "ru": "Врач"
+    },
+    "description": {
+      "ka": "კლინიკური მოვლა, პაციენტის გამოკვლევა, დიაგნოსტიკა, მკურნალობის დანიშვნა და სამედიცინო დოკუმენტაცია.",
+      "en": "Clinical care, patient examination, diagnosis, treatment prescription, and medical documentation.",
+      "ru": "Клиническая помощь, обследование пациентов, диагностика, назначение лечения и медицинская документация."
+    }
+  },
+  "nurse": {
+    "name": {
+      "ka": "მედდა",
+      "en": "Nurse",
+      "ru": "Медсестра"
+    },
+    "description": {
+      "ka": "პაციენტის მოვლა, ჯანმრთელობის მონიტორინგი, მედიკამენტების მიცემა და სამედიცინო პროცედურების შესრულება.",
+      "en": "Patient care, health monitoring, medication administration, and medical procedure assistance.",
+      "ru": "Уход за пациентами, мониторинг состояния здоровья, введение лекарств и помощь в медицинских процедурах."
+    }
+  },
+  "registrar": {
+    "name": {
+      "ka": "რეგისტრატორი",
+      "en": "Registrar",
+      "ru": "Регистратор"
+    },
+    "description": {
+      "ka": "პაციენტის რეგისტრაცია, ვიზიტის დაგეგმვა, კონტაქტური ინფორმაციის განახლება და დოკუმენტების მართვა.",
+      "en": "Patient registration, appointment scheduling, contact information updates, and document management.",
+      "ru": "Регистрация пациентов, планирование визитов, обновление контактной информации и управление документами."
+    }
+  },
+  "laboratory": {
+    "name": {
+      "ka": "ლაბორანტი",
+      "en": "Laboratory Technician",
+      "ru": "Лаборант"
+    },
+    "description": {
+      "ka": "ლაბორატორიული ანალიზების ჩატარება, ნიმუშების დამუშავება, შედეგების რეგისტრაცია და ხარისხის კონტროლი.",
+      "en": "Laboratory test execution, specimen processing, results recording, and quality control.",
+      "ru": "Проведение лабораторных анализов, обработка образцов, регистрация результатов и контроль качества."
+    }
+  },
+  "cashier": {
+    "name": {
+      "ka": "მოლარე",
+      "en": "Cashier",
+      "ru": "Кассир"
+    },
+    "description": {
+      "ka": "გადახდების დამუშავება, ინვოისების გენერირება, თანხების აღრიცხვა და ფინანსური ოპერაციების მართვა.",
+      "en": "Payment processing, invoice generation, cash handling, and financial transaction management.",
+      "ru": "Обработка платежей, создание счетов, управление наличными и финансовыми операциями."
+    }
+  },
+  "hrManager": {
+    "name": {
+      "ka": "კადრების მენეჯერი",
+      "en": "HR Manager",
+      "ru": "HR менеджер"
+    },
+    "description": {
+      "ka": "თანამშრომლების მართვა, დაქირავება, შესრულების შეფასება, ტრენინგი და კადრების დოკუმენტაცია.",
+      "en": "Employee management, recruitment, performance evaluation, training, and HR documentation.",
+      "ru": "Управление персоналом, найм, оценка производительности, обучение и кадровая документация."
+    }
+  },
+  "seniorNurse": {
+    "name": {
+      "ka": "უფროსი მედდა",
+      "en": "Senior Nurse",
+      "ru": "Старшая медсестра"
+    },
+    "description": {
+      "ka": "საექთნო პერსონალის ხელმძღვანელობა, სამუშაო გრაფიკის მართვა, პროცედურების კოორდინაცია და ხარისხის კონტროლი.",
+      "en": "Nursing staff supervision, work schedule management, procedure coordination, and quality control.",
+      "ru": "Руководство медсестринским персоналом, управление графиком работы, координация процедур и контроль качества."
+    }
+  },
+  "pharmacyManager": {
+    "name": {
+      "ka": "აფთიაქის მენეჯერი",
+      "en": "Pharmacy Manager",
+      "ru": "Менеджер аптеки"
+    },
+    "description": {
+      "ka": "აფთიაქის ოპერაციების მართვა, მედიკამენტების მარაგის კონტროლი, რეცეპტების შესრულება და მედიკამენტების შეძენა.",
+      "en": "Pharmacy operations management, medication inventory control, prescription fulfillment, and drug procurement.",
+      "ru": "Управление операциями аптеки, контроль запасов лекарств, выполнение рецептов и закупка медикаментов."
+    }
+  },
+  "viewAdmin": {
+    "name": {
+      "ka": "მნახველი ადმინისტრატორი",
+      "en": "View Administrator",
+      "ru": "Администратор просмотра"
+    },
+    "description": {
+      "ka": "მხოლოდ ნახვის უფლება ყველა სისტემურ მონაცემზე რედაქტირების ან წაშლის შესაძლებლობის გარეშე.",
+      "en": "Read-only access to all system data without editing or deletion capabilities.",
+      "ru": "Доступ только для просмотра всех системных данных без возможности редактирования или удаления."
+    }
+  },
+  "accounting": {
+    "name": {
+      "ka": "ბუღალტერი",
+      "en": "Accountant",
+      "ru": "Бухгалтер"
+    },
+    "description": {
+      "ka": "ფინანსური მართვა, ბუღალტრული აღრიცხვა, ანგარიშგება, საგადასახადო დოკუმენტაცია და ფინანსური ანალიზი.",
+      "en": "Financial management, accounting records, reporting, tax documentation, and financial analysis.",
+      "ru": "Финансовое управление, бухгалтерский учет, отчетность, налоговая документация и финансовый анализ."
+    }
+  },
+  "manager": {
+    "name": {
+      "ka": "განყოფილების მენეჯერი",
+      "en": "Department Manager",
+      "ru": "Менеджер отделения"
+    },
+    "description": {
+      "ka": "განყოფილების ოპერაციების მართვა, პერსონალის კოორდინაცია, რესურსების განაწილება და შესრულების მონიტორინგი.",
+      "en": "Department operations management, staff coordination, resource allocation, and performance monitoring.",
+      "ru": "Управление операциями отделения, координация персонала, распределение ресурсов и мониторинг производительности."
+    }
+  },
+  "operator": {
+    "name": {
+      "ka": "ოპერატორი",
+      "en": "Data Entry Operator",
+      "ru": "Оператор"
+    },
+    "description": {
+      "ka": "მონაცემების შეყვანა, დოკუმენტების დამუშავება, ინფორმაციის განახლება და სისტემაში ძირითადი ოპერაციები.",
+      "en": "Data entry, document processing, information updates, and basic system operations.",
+      "ru": "Ввод данных, обработка документов, обновление информации и базовые операции в системе."
+    }
+  },
+  "externalOrg": {
+    "name": {
+      "ka": "გარე ორგანიზაცია",
+      "en": "External Organization",
+      "ru": "Внешняя организация"
+    },
+    "description": {
+      "ka": "შეზღუდული წვდომა გარე პარტნიორი ორგანიზაციებისთვის მონაცემთა გაზიარების მიზნით.",
+      "en": "Limited access for external partner organizations for data sharing purposes.",
+      "ru": "Ограниченный доступ для внешних партнерских организаций для целей обмена данными."
+    }
+  },
+  "technician": {
+    "name": {
+      "ka": "სამედიცინო ტექნიკოსი",
+      "en": "Medical Technician",
+      "ru": "Медицинский техник"
+    },
+    "description": {
+      "ka": "სამედიცინო აპარატურის მომსახურება, დიაგნოსტიკური პროცედურების შესრულება და ტექნიკური მხარდაჭერა.",
+      "en": "Medical equipment maintenance, diagnostic procedure execution, and technical support.",
+      "ru": "Обслуживание медицинского оборудования, выполнение диагностических процедур и техническая поддержка."
+    }
+  }
+}

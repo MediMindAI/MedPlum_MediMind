@@ -1,0 +1,80 @@
+[
+  {
+    "code": "owner",
+    "georgian": "მფლობელი",
+    "english": "Owner"
+  },
+  {
+    "code": "externalOrg",
+    "georgian": "გარე ორგანიზაცია",
+    "english": "External Organization"
+  },
+  {
+    "code": "admin",
+    "georgian": "ადმინ",
+    "english": "Admin"
+  },
+  {
+    "code": "doctor",
+    "georgian": "ექიმი",
+    "english": "Doctor",
+    "defaultPage": "2/22"
+  },
+  {
+    "code": "manager",
+    "georgian": "მენეჯერი",
+    "english": "Manager"
+  },
+  {
+    "code": "operator",
+    "georgian": "ოპერატორი",
+    "english": "Operator"
+  },
+  {
+    "code": "registrar",
+    "georgian": "რეგისტრატორი",
+    "english": "Registrar"
+  },
+  {
+    "code": "laboratory",
+    "georgian": "ლაბორატორია / დიაგნოსტიკა",
+    "english": "Laboratory/Diagnostics",
+    "defaultPage": "2/25"
+  },
+  {
+    "code": "nurse",
+    "georgian": "ექთანი",
+    "english": "Nurse",
+    "defaultPage": "2/23"
+  },
+  {
+    "code": "hrManager",
+    "georgian": "კადრების მენეჯერი HR",
+    "english": "HR Personnel Manager"
+  },
+  {
+    "code": "seniorNurse",
+    "georgian": "უფროსი ექთანი",
+    "english": "Senior Nurse"
+  },
+  {
+    "code": "pharmacyManager",
+    "georgian": "აფთიაქსი გამგე",
+    "english": "Pharmacy Manager"
+  },
+  {
+    "code": "cashier",
+    "georgian": "მოლარე",
+    "english": "Cashier"
+  },
+  {
+    "code": "viewAdmin",
+    "georgian": "ადმინი ნახვის უფლებებით",
+    "english": "Admin with View Rights"
+  },
+  {
+    "code": "accounting",
+    "georgian": "ბუღალტერია",
+    "english": "Accounting"
+  }
+]
